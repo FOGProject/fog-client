@@ -22,7 +22,7 @@
 		<Property Id="USETRAY" Value="1"/>
 		<Property Id="WEBROOT" Value="/fog"/>
 		<Property Id="WEBADDRESS" Value="fog-server"/>
-		<Property Id="HTTPS" Value="0"/>
+		<Property Id="HTTPS" Value="0"/> 
 		
 		<UIRef Id="DialogStructure"/>
 		
