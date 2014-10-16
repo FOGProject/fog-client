@@ -9,7 +9,7 @@ namespace FOG
 	public abstract class AbstractModule {
 
 		//Basic variables every module needs
-		private String moduleName;
+		private String moduleName; 
 		private String moduleDescription;
 		private String isActiveURL;
 		private Scope scope;
