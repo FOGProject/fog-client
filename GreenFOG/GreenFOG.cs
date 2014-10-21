@@ -16,15 +16,24 @@ namespace FOG {
 		
 		protected override void doWork() {
 			//Get actions
-			Response actionsResponse = CommunicationHandler.getResponse("/service/greenfog.php?mac=" + CommunicationHandler.getMacAddresses());
+			Response tasksResponse = CommunicationHandler.getResponse("/service/greenfog.php?mac=" + CommunicationHandler.getMacAddresses());
 
 			//Shutdown if a task is avaible and the user is logged out or it is forced
-			if(!actionsResponse.wasError()) {
+			if(!tasksResponse.wasError()) {
+				List<String> tasks = CommunicationHandler.parseDataArray(tasksResponse, "#task", false);
+				
 				//Remove old actions
 				
 				//Check if current actions exist, if not add them
+				createTasks(tasks);
 			}
 			
-		}		
+		}
+		
+		private void createTasks(List<String> tasks) {
+			TaskService taskService = new TaskService();
+			
+			TaskDefinition taskDefinition = taskService.NewTask();
+		}
 	}
 }

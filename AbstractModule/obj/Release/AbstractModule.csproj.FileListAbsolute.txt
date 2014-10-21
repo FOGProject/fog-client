@@ -1,0 +1,3 @@
+D:\fogproject\FOGService\bin\AbstractModule.dll
+D:\fogproject\FOGService\AbstractModule\obj\Release\ResolveAssemblyReference.cache
+D:\fogproject\FOGService\AbstractModule\obj\Release\AbstractModule.dll

@@ -21,7 +21,7 @@ namespace FOG {
 			
 			//Shutdown if a task is avaible and the user is logged out or it is forced
 			if(!dirResponse.wasError()) {
-				foreach(String dir in getDirectories(dirResponse)) {
+				foreach(String dir in CommunicationHandler.parseDataArray(dirResponse, "#dir", true)) {
 					
 					try {
 						LogHandler.log(getName(), "Deleting " + Environment.ExpandEnvironmentVariables(dir));
@@ -33,17 +33,6 @@ namespace FOG {
 				}
 			}
 			
-		}	
-
-		//Get a list of directories
-		private List<String> getDirectories(Response dirResponse) {
-			List<String> dirs = new List<String>();
-
-			foreach(String encodedDirectory in dirResponse.getData().Values) {
-				dirs.Add(EncryptionHandler.decodeBase64(encodedDirectory));
-			}
-			
-			return dirs;
 		}		
 			
 	}

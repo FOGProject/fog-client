@@ -1,0 +1,3 @@
+D:\fogproject\FOGService\bin\ShutdownHandler.dll
+D:\fogproject\FOGService\ShutdownHandler\obj\Release\ResolveAssemblyReference.cache
+D:\fogproject\FOGService\ShutdownHandler\obj\Release\ShutdownHandler.dll

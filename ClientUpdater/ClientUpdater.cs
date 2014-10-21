@@ -26,7 +26,7 @@ namespace FOG
 			//Get task info
 			Response updateResponse = CommunicationHandler.getResponse("/service/updates.php?action=list");	
 			if(!updateResponse.wasError()) {
-				List<String> updates = getUpdateFiles(updateResponse);
+				List<String> updates = CommunicationHandler.parseDataArray(updateResponse, "#update", true);
 				
 				//Loop through each update file and compare its hash to the local copy
 				foreach(String updateFile in updates) {
@@ -123,18 +123,6 @@ namespace FOG
 			} else {
 				LogHandler.log(getName(), "Unable to locate downloaded update file");
 			}
-		}
-		
-		
-		//Get a list of update file's names
-		private List<String> getUpdateFiles(Response updateResponse) {
-			List<String> updates = new List<String>();
-
-			foreach(String encodedFileName in updateResponse.getData().Values) {
-				updates.Add(EncryptionHandler.decodeBase64(encodedFileName));
-			}
-			
-			return updates;
 		}
 	}
 }

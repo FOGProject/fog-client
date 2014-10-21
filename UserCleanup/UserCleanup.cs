@@ -20,7 +20,7 @@ namespace FOG {
 			Response usersResponse = CommunicationHandler.getResponse("/service/usercleanup-users.php?mac=" + CommunicationHandler.getMacAddresses());
 
 			if(!usersResponse.wasError()) {
-				List<String> protectedUsers = getProtectedUsers(usersResponse);
+				List<String> protectedUsers = CommunicationHandler.parseDataArray(usersResponse, "#user", false);
 				
 				if(protectedUsers.Count > 0) {
 					foreach(UserData user in UserHandler.getAllUserData()) {
@@ -34,17 +34,6 @@ namespace FOG {
 			}
 			
 		}
-		
-		//Get a list of protected users
-		private List<String> getProtectedUsers(Response usersResponse) {
-			List<String> protectedUsers = new List<String>();
-
-			foreach(String user in usersResponse.getData().Values) {
-				protectedUsers.Add(user);
-			}
-
-			return protectedUsers;
-		}	
 		
 	}
 }

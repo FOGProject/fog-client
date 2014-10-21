@@ -15,7 +15,7 @@ namespace FOG {
 			if(getRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null) {
 				return getRegisitryValue(@"Software\Wow6432Node\FOG\", name);
 			} else if(getRegisitryValue(@"Software\FOG\", "Server") != null) {
-				LogHandler.log(LOG_NAME, "32 bit registry detected");
+				LogHandler.log(LOG_NAME, "32S bit registry detected");
 			}
 			
 			//If the regisitry keys cannot be found, return null because the program should not procede

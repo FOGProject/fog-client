@@ -207,6 +207,25 @@ namespace FOG {
 			}
 			return response;
 		}
+		
+		//Get an array from a response
+		public static List<String> parseDataArray(Response response, String identifier, Boolean base64Decode) {
+			List<String> dataArray = new List<String>();
+
+			
+			foreach(String key in response.getData().Keys) {
+				if(key.Contains(identifier)) {
+					if(base64Decode) {
+						dataArray.Add(EncryptionHandler.decodeBase64(response.getField(key)));
+					} else {
+						dataArray.Add(response.getField(key));	
+					}
+				}
+			}
+			
+			return dataArray;
+		}
+		
 
 		//Download a file
 		public static Boolean downloadFile(String postfix, String fileName) {
