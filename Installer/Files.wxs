@@ -13,6 +13,7 @@
 						<File Id="CommunicationHandler" Name="CommunicationHandler.dll" Source="..\bin\CommunicationHandler.dll"/>
 						<File Id="DirCleaner" Name="DirCleaner.dll" Source="..\bin\DirCleaner.dll"/>
 						<File Id="DisplayManager" Name="DisplayManager.dll" Source="..\bin\DisplayManager.dll"/>
+						<File Id="GreenFOG" Name="GreenFOG.dll" Source="..\bin\GreenFOG.dll"/>
 						<File Id="HostnameChanger" Name="HostnameChanger.dll" Source="..\bin\HostnameChanger.dll"/>		
 						<File Id="HostRegister" Name="HostRegister.dll" Source="..\bin\HostRegister.dll"/>		
 						<File Id="EncryptionHandler" Name="EncryptionHandler.dll" Source="..\bin\EncryptionHandler.dll"/>
@@ -30,6 +31,8 @@
 						<File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe"/>
 						<File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe"/>
 						<File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe"/>
+						<File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll"/>
+						
 
 						<ServiceInstall
 							Id="ServiceInstaller" 

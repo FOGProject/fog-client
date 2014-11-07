@@ -63,6 +63,10 @@
       <Project>{052A6197-798E-428B-99F9-7ABF12280798}</Project>
       <Name>EncryptionHandler</Name>
     </ProjectReference>
+    <ProjectReference Include="..\GreenFOG\GreenFOG.csproj">
+      <Project>{337FF5F5-EEE2-443E-8D22-9CA76A09275C}</Project>
+      <Name>GreenFOG</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HostnameChanger\HostnameChanger.csproj">
       <Project>{B0C35B47-7A8A-466F-9D83-FA9384536929}</Project>
       <Name>HostnameChanger</Name>

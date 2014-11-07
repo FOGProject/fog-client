@@ -115,6 +115,7 @@ namespace FOG{
 			this.modules.Add(new SnapinClient());
 			this.modules.Add(new DisplayManager());			
 			this.modules.Add(new HostRegister());
+			this.modules.Add(new GreenFOG());
 			this.modules.Add(new DirCleaner());
 			this.modules.Add(new UserCleanup());
 		}
