@@ -36,8 +36,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegistryHandler", "Registry
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientUpdater", "ClientUpdater\ClientUpdater.csproj", "{40D0B176-6E1D-4D08-8150-F75D33F7AD4A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compiler", "Compiler\Compiler.csproj", "{486EC2D1-DBEE-4E58-81A8-72D029EC0890}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayManager", "DisplayManager\DisplayManager.csproj", "{952FBDDC-89B2-476C-88A3-A39E6748B612}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateWaiter", "UpdateWaiter\UpdateWaiter.csproj", "{C7113642-59C8-41C0-BF64-2F29BAE45910}"
@@ -82,10 +80,6 @@ Global
 		{40D0B176-6E1D-4D08-8150-F75D33F7AD4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40D0B176-6E1D-4D08-8150-F75D33F7AD4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40D0B176-6E1D-4D08-8150-F75D33F7AD4A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{486EC2D1-DBEE-4E58-81A8-72D029EC0890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{486EC2D1-DBEE-4E58-81A8-72D029EC0890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{486EC2D1-DBEE-4E58-81A8-72D029EC0890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{486EC2D1-DBEE-4E58-81A8-72D029EC0890}.Release|Any CPU.Build.0 = Release|Any CPU
 		{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}.Release|Any CPU.ActiveCfg = Release|Any CPU
