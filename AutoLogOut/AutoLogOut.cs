@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 
-namespace FOG {
+namespace FOG { 
 	/// <summary>
 	/// Automatically log out the user after X seconds of inactivity
 	/// </summary>
