@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Win32.TaskScheduler;
 
@@ -22,39 +23,51 @@ namespace FOG {
 			if(!tasksResponse.wasError()) {
 				List<String> tasks = CommunicationHandler.parseDataArray(tasksResponse, "#task", false);
 				
-				//Remove old actions
-				RegistryHandler.deleteModule(getName());
-				
-				//Add tasks
+				//Filter existing tasks
+				tasks = filterTasks(tasks);
+				//Add new tasks
 				createTasks(tasks);
 			}
 			
+		}
+		
+		private List<String> filterTasks(List<String> newTasks) {
+			TaskService taskService = new TaskService();			
+			List<Task> existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
+			
+			foreach(Task task in existingTasks) {
+				if(!newTasks.Contains(task.Name)) {
+					LogHandler.log(getName(), "Delete task " + task.Name);
+					taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
+				} else {
+					LogHandler.log(getName(), "Removing " + task.Name + " from queue");
+					newTasks.Remove(task.Name); //Remove the existing task from the queue
+				}
+			}
+			
+			return newTasks;
 		}
 		
 		private void createTasks(List<String> tasks) {
 			TaskService taskService = new TaskService();
 			
 			int index = 0;
-			
+
 			foreach(String task in tasks) {
 				//Split up the response
-				LogHandler.log(getName(), "Adding task: " + task);
 				String[] taskData = task.Split('@');
 				
-				LogHandler.log(getName(), "Creating task definition");
 				//Create task definition
 				TaskDefinition taskDefinition = taskService.NewTask();
-				taskDefinition.RegistrationInfo.Description = "Green FOG";
+				taskDefinition.RegistrationInfo.Description = task;
 				taskDefinition.Principal.UserId = "SYSTEM";
 				
-				LogHandler.log(getName(), "Creating task trigger");
 				//Create task trigger
 				DailyTrigger trigger = new DailyTrigger(1);
 				trigger.StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) + TimeSpan.FromMinutes(int.Parse(taskData[1])); //Run at the specified time
 				
 				taskDefinition.Triggers.Add(trigger);
 				
-				LogHandler.log(getName(), "Creating task action");
 				//Create task action
 				if(taskData[2].Equals("r")) {
 					taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/r /c \"Green FOG\" /t 0", null));
@@ -62,14 +75,15 @@ namespace FOG {
 					taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0", null));
 				}
 				
-				LogHandler.log(getName(), "Registering task definition");
 				//Register the task
 				try {
-					taskService.RootFolder.RegisterTaskDefinition(@"FOG\GreenFOG_ " + index.ToString(), taskDefinition);
+					taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
+					LogHandler.log(getName(), "Registered task: " + task);
 				} catch (Exception ex) {
-					LogHandler.log(getName(), "Error registering tasK");
+					LogHandler.log(getName(), "Error registering task: " + task);
 					LogHandler.log(getName(), "ERROR: " + ex.Message);
 				}
+				
 				index++;
 			}
 			
