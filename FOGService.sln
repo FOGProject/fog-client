@@ -54,6 +54,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GreenFOG", "GreenFOG\GreenF
 EndProject
 Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "Installer", "Installer\Installer.wixproj", "{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationGUI", "NotificationGUI\NotificationGUI.csproj", "{C83363D0-6686-419C-AA0B-09EE999EC3EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeCLI", "PipeCLI\PipeCLI.csproj", "{901E8D28-1AF4-494B-B389-4467FAAE040A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -164,6 +168,14 @@ Global
 		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{901E8D28-1AF4-494B-B389-4467FAAE040A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{901E8D28-1AF4-494B-B389-4467FAAE040A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{901E8D28-1AF4-494B-B389-4467FAAE040A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{901E8D28-1AF4-494B-B389-4467FAAE040A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Service\Service.csproj

@@ -10,16 +10,16 @@ namespace FOG {
 	public static class RegistryHandler {
 
 		private const String LOG_NAME = "RegistryHandler";
-		private static String root = @"Software\FOG\";
+		private static String root = "";
 		
-		public static String getSystemSetting(String name) {
+		private static void updateRoot() {
 			if(getRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null) {
 				root = @"Software\Wow6432Node\FOG\";
 				LogHandler.log(LOG_NAME, "64 bit registry detected");				
+			} else {
+				root = @"Software\FOG\";
+				LogHandler.log(LOG_NAME, "32 bit registry detected");
 			}
-			
-			return getRegisitryValue(root, name);			
-
 		}
 		
 		public static String getRegisitryValue(String keyPath, String keyName) {
@@ -38,20 +38,28 @@ namespace FOG {
 			return null;
 		}
 		
+		public static String getSystemSetting(String name) {
+			return getRegisitryValue(getRoot(), name);
+		}
+		
+		public static Boolean setSystemSetting(String keyName, String value) {
+			return setRegistryValue(getRoot(), keyName, value);
+		}
+		
 		public static String getModuleSetting(String module, String keyName) {
-			return getRegisitryValue(root + @"\" + module, keyName);
+			return getRegisitryValue(getRoot() + @"\" + module, keyName);
 		}
 		
 		public static Boolean setModuleSetting(String module, String keyName, String value) {
-			return setRegistryValue(root + @"\" + module, keyName, value);
+			return setRegistryValue(getRoot() + @"\" + module, keyName, value);
 		}
 		
 		public static Boolean deleteModuleSetting(String module, String keyName) {
-			return deleteKey(root + @"\" + module, keyName);
+			return deleteKey(getRoot() + @"\" + module, keyName);
 		}
 		
 		public static Boolean deleteModule(String module) {
-			return deleteFolder(root + @"\" + module);
+			return deleteFolder(getRoot() + @"\" + module);
 		}
 		
 		
@@ -102,7 +110,13 @@ namespace FOG {
 			return false;			
 		}
 
-		public static String getRoot() { return root; }
+		public static String getRoot() { 
+			if(root.Equals("")) {
+				updateRoot();
+			}
+			
+			return root;
+		}
 		
 	}
 }
