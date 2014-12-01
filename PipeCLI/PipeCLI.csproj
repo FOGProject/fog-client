@@ -60,5 +60,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
+      <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
+      <Name>PipeClient</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

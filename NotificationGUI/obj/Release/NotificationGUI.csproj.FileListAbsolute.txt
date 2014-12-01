@@ -1,0 +1,5 @@
+D:\fogproject\FOGService\bin\FOGNotificationGUI.exe
+D:\fogproject\FOGService\NotificationGUI\obj\Release\ResolveAssemblyReference.cache
+D:\fogproject\FOGService\NotificationGUI\obj\Release\FOG.MainForm.resources
+D:\fogproject\FOGService\NotificationGUI\obj\Release\NotificationGUI.csproj.GenerateResource.Cache
+D:\fogproject\FOGService\NotificationGUI\obj\Release\FOGNotificationGUI.exe

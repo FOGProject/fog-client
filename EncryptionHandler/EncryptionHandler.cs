@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Linq;
 
@@ -13,6 +12,7 @@ namespace FOG {
 	public static class EncryptionHandler {
 		
 		private const String LOG_NAME = "EncryptionHandler";
+		private static RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(2048);
 		
 		//Encode a string to base64
 		public static String encodeBase64(String toEncode) {
@@ -39,32 +39,7 @@ namespace FOG {
 			return "";
 		}
 		
-		//Encode a given string using AES256
-//		private static String encodeAES(String toEncode, String passKey, String ivString) {
-//			byte[] iv = Encoding.UTF8.GetBytes(ivString);
-//			byte[] key = Encoding.UTF8.GetBytes(passKey);
-//			
-//			
-//			try {
-//				RijndaelManaged rijadaelManaged = new RijndaelManaged();
-//				rijadaelManaged.Key = key;
-//				rijadaelManaged.IV = iv;
-//				rijadaelManaged.Mode = CipherMode.CBC;
-//				rijadaelManaged.Padding = PaddingMode.Zeros;
-//				
-//				MemoryStream memoryStream = new MemoryStream(toEncode);
-//				CryptoStream cryptoStream = new CryptoStream(memoryStream, rijadaelManaged.CreateEncryptor(key, iv), CryptoStreamMode.Write);
-//				
-//				return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", String.Empty.Trim());
-//				
-//			} catch (Exception ex) {
-//				LogHandler.log(LOG_NAME, "Error encoding to AES");
-//				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
-//			}
-//		}
-		
 		//Decode AES256
-		//TODO: Remove hotfix of trimming null bytes and change the crypt reader to read the proper length
 		private static String decodeAES(String toDecode, String passKey, String ivString) {
 		    //Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
@@ -76,7 +51,6 @@ namespace FOG {
 		        rijndaelManaged.IV = iv;
 		        rijndaelManaged.Mode = CipherMode.CBC;
 		        rijndaelManaged.Padding = PaddingMode.Zeros;
-		        
 		        MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(toDecode));
 		        CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read);
 		        
@@ -90,6 +64,29 @@ namespace FOG {
 		    }
 			return "";
 		}
+		
+		private static String decodeRSA(String toDecode) {
+			ASCIIEncoding byteConverter = new ASCIIEncoding();
+			
+			byte[] dataToDecrypt = byteConverter.GetBytes(toDecode);
+			byte[] decryptedData = rsa.Decrypt(dataToDecrypt, false);
+			
+			return byteConverter.GetString(decryptedData);
+		}
+		
+		private static String encodeRSA(String toEncode) {
+			ASCIIEncoding byteConverter = new ASCIIEncoding();
+			
+			byte[] dataToEncrypt = byteConverter.GetBytes(toEncode);
+			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, false);
+			
+			return byteConverter.GetString(encryptedData);			
+		}
+		
+		private static String getRSAPublicKey() {
+			return rsa.ToXmlString(false);
+		}
+		
 		
 		//Decode an AES256 encrypted response
 		public static String decodeAESResponse(String response, String passKey) {

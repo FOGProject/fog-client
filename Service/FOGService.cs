@@ -52,7 +52,8 @@ namespace FOG{
 				
 				//Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
 				this.servicePipe = new PipeServer("fog_pipe_service");
-				
+				this.servicePipe.MessageReceived += new PipeServer.MessageReceivedHandler(servicePipeService_MessageReceived);
+					
 				//Unschedule any old updates
 				ShutdownHandler.unScheduleUpdate();
 			}
@@ -82,7 +83,13 @@ namespace FOG{
 		private void notificationPipeServer_MessageReceived(Client client, String message) {
 			LogHandler.log("PipeServer", "Notification message recieved");
 			LogHandler.log("PipeServer",message);
-		}	
+		}
+
+		//Handle recieving a message
+		private void servicePipeService_MessageReceived(Client client, String message) {
+			LogHandler.log("PipeServer", "Server-Pipe message recieved");
+			LogHandler.log("PipeServer",message);
+		}		
 
 		//Called when the service starts
 		protected override void OnStart(string[] args) {

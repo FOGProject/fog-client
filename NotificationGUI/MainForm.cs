@@ -14,7 +14,9 @@ namespace FOG {
 		
 		public MainForm(string[] args) {
 			setGracePeriod();
-			
+			if(gracePeriod == 0) {
+				Environment.Exit(0);
+			}
 			//
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//
