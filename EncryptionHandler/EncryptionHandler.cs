@@ -110,7 +110,6 @@ namespace FOG {
 			LogHandler.log(LOG_NAME, "Modulus= " + byteConverter.GetString(rsaParams.Modulus));
 			rsaParams.Exponent = byteConverter.GetBytes(publicKey.Substring(publicKey.Length-4, 4));
 			LogHandler.log(LOG_NAME, "Exponent= " + byteConverter.GetString(rsaParams.Exponent));
-			rsa.exp
 			serverRSA.ImportParameters(rsaParams);
 		}
 		
