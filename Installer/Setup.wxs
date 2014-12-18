@@ -2,7 +2,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="FOG Service" Language="1033" Version="1.3.0" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA" Manufacturer="FOG">
 		
-		<Package Description="FOG Service" Comments= "A client for the FOG project" InstallerVersion="200" Compressed="yes" InstallScope="perMachine"/>
+		<Package Description="FOG Service" Comments= "A client for the FOG project" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" AdminImage="yes"/>
         
 		<!-- Remove old versions -->
 		<Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">

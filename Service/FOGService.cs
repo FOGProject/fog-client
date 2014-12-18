@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
 using System.ServiceProcess;
 using System.Threading;
-using System.Configuration;
-using System.IO;
-using System.Collections;
-using System.Reflection;
-using System.Net;
+
 
 using FOG;
 
@@ -53,7 +46,7 @@ namespace FOG{
 				//Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
 				this.servicePipe = new PipeServer("fog_pipe_service");
 				this.servicePipe.MessageReceived += new PipeServer.MessageReceivedHandler(servicePipeService_MessageReceived);
-					
+				
 				//Unschedule any old updates
 				ShutdownHandler.unScheduleUpdate();
 			}
@@ -135,6 +128,10 @@ namespace FOG{
 		
 		//Run each service
 		private void serviceLooper() {
+			EncryptionHandler.generateRSA();
+			CommunicationHandler.authenticate();
+			LogHandler.newLine();
+			CommunicationHandler.testRSA();
 			//Only run the service if there wasn't a stop or shutdown request
 			while (status.Equals(Status.Running) && !ShutdownHandler.isShutdownPending() && !ShutdownHandler.isUpdatePending()) {
 				foreach(AbstractModule module in modules) {
@@ -142,7 +139,6 @@ namespace FOG{
 						break;
 					
 					//Log file formatting
-					LogHandler.newLine();
 					LogHandler.newLine();
 					LogHandler.divider();
 					

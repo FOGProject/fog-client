@@ -95,6 +95,10 @@
       <Project>{952FBDDC-89B2-476C-88A3-A39E6748B612}</Project>
       <Name>DisplayManager</Name>
     </ProjectReference>
+    <ProjectReference Include="..\EncryptionHandler\EncryptionHandler.csproj">
+      <Project>{052A6197-798E-428B-99F9-7ABF12280798}</Project>
+      <Name>EncryptionHandler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GreenFOG\GreenFOG.csproj">
       <Project>{337FF5F5-EEE2-443E-8D22-9CA76A09275C}</Project>
       <Name>GreenFOG</Name>

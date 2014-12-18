@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
-using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Xml.Linq;
+using System.IO;
+using System.Text;
 using System.Net.NetworkInformation;
+using System.Security;
+
 
 namespace FOG {
 	/// <summary>
@@ -17,7 +22,7 @@ namespace FOG {
 		private const String successCode = "#!ok";
 		private const String LOG_NAME = "CommunicationHandler";
 
-		private const String PASSKEY = "7NFJUuQTYLZIoea32DsP9V6f0tbWnzMy";
+		private const String PASSKEY = "Kzubphr21kqeFywGBdZMj90C4nvm38VP";
 		//Change this to match your passkey for all traffic
 		//////////////////////////////////////////////////////////////
 		//	     .           .           .           .	           	 //
@@ -43,7 +48,8 @@ namespace FOG {
 			messages.Add(successCode, "Success");
 			messages.Add("#!db", "Database error");
 			messages.Add("#!im", "Invalid MAC address format");
-			messages.Add("#!ih", "Invalid host");		
+			messages.Add("#!ihc", "Invalid host certificate");			
+			messages.Add("#!ih", "Invalid host");
 			messages.Add("#!il", "Invalid login");					
 			messages.Add("#!it", "Invalid task");				
 			messages.Add("#!ng", "Module is disabled globally on the FOG server");
@@ -101,7 +107,7 @@ namespace FOG {
 			WebClient webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(getServerAddress() + postfix);
-				response = decrypt(response);
+				response = decryptRSA(response);
 				//See if the return code is known
 				Boolean messageFound = false;
 				foreach(String returnMessage in returnMessages.Keys) {
@@ -145,17 +151,90 @@ namespace FOG {
 			
 		}
 		
-		private static String decrypt(String response) {
-			String encryptedFlag = "#!en=";
+		public static Boolean authenticate() {
+			
+			try {
+				String encryptedPubKey = getRawResponse("/management/index.php?mac=" + getMacAddresses() + "&sub=authorize&get_srv_key=1");
+				String decryptedPubKey = decryptAES(encryptedPubKey, PASSKEY);
+				decryptedPubKey = decryptedPubKey.Replace("-----BEGIN PUBLIC KEY-----", "");
+				decryptedPubKey = decryptedPubKey.Replace("-----END PUBLIC KEY-----", "");
+				decryptedPubKey = decryptedPubKey.Replace("\n", "");
+				LogHandler.log(LOG_NAME, decryptedPubKey);
+				
+				EncryptionHandler.setServerRSA(decryptedPubKey);
+				String clientRSAPubKey = EncryptionHandler.encodeRSA(EncryptionHandler.getServerRSA(), EncryptionHandler.getRSAPublicKey());
+				
+				Response authenticationResponse = getResponse("/management/index.php?mac=" + getMacAddresses() + "&sub=authorize&pub_key=" + clientRSAPubKey);
+				
+				if(!authenticationResponse.wasError()) {
+					return true;
+				}
+			} catch (Exception ex) {
+				LogHandler.log(LOG_NAME, "Error authenticating");			
+				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);					
+			}
+			
+			return false;
+		}
+		
+		public static void testRSA() {
+			LogHandler.log(LOG_NAME, "Testing authentication sequences");
+			LogHandler.newLine();
+			ASCIIEncoding byteConverter = new ASCIIEncoding();
+			try {
+			
+				String testPhrase = "Do a barrel roll";
+				LogHandler.log(LOG_NAME, "Encrypting phrase \"" + testPhrase + "\"");
+				
+				String encryptedPhrase = EncryptionHandler.encodeRSA(EncryptionHandler.getClientRSA(), testPhrase);
+				LogHandler.log(LOG_NAME, "Encrypted Version: " + encryptedPhrase);
+				
+				LogHandler.log(LOG_NAME, "Decrypting...");
+				String decryptedPhrase = EncryptionHandler.decodeRSA(EncryptionHandler.getClientRSA(), encryptedPhrase);
+				LogHandler.log(LOG_NAME, "Decrypted Version: " + decryptedPhrase);
+				
+				LogHandler.log(LOG_NAME, "Spewing out client rsa info");
+				LogHandler.log(LOG_NAME, "Modulus:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).Modulus));
+				LogHandler.log(LOG_NAME, "Exponent:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).Exponent));
+				LogHandler.log(LOG_NAME, "DP:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).DP));
+				LogHandler.log(LOG_NAME, "DQ:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).DQ));
+				LogHandler.log(LOG_NAME, "P:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).P));
+				LogHandler.log(LOG_NAME, "Q:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).Q));
+				LogHandler.log(LOG_NAME, "InverseQ:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).InverseQ));
+				LogHandler.log(LOG_NAME, "D:" + byteConverter.GetString(EncryptionHandler.getClientRSA().ExportParameters(true).D));
+				
+				
+				
+			} catch (Exception ex) {
+				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+			}
+			
+		}
+		
+		private static String decryptAES(String response, String passKey) {
+			const String encryptedFlag = "#!en=";
 			
 			if(response.StartsWith(encryptedFlag)) {
 				String decryptedResponse = response.Substring(encryptedFlag.Length);
-				return EncryptionHandler.decodeAESResponse(decryptedResponse, PASSKEY);
+				return EncryptionHandler.decodeAES(decryptedResponse, passKey);
 				
 			} else {
 				LogHandler.log(LOG_NAME, "Data is not encrypted");
 			}
 			return response;
+		}		
+		
+		private static String decryptRSA(String response) {
+			const String encryptedFlag = "#!enkey=";
+			
+			if(response.StartsWith(encryptedFlag)) {
+				String decryptedResponse = response.Substring(encryptedFlag.Length);
+				return EncryptionHandler.decodeRSA(EncryptionHandler.getClientRSA(), decryptedResponse);
+				
+			} else {
+				LogHandler.log(LOG_NAME, "Data is not encrypted");
+			}
+			return response;			
 		}
 
 		//Contact FOG at a url, used for submitting data
