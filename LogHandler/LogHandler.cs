@@ -15,12 +15,14 @@ namespace FOG
 		private static long maxLogSizeDefault = 502400;
 		private static long maxLogSize = maxLogSizeDefault;
 		private const String LOG_NAME = "LogHandler";
+		private static Boolean console = false;
 
 		public static void setFilePath(String fPath) { filePath = fPath; }		
 		public static String getFilePath() { return filePath; }
 		public static void setMaxLogSize(long mLogSize) { maxLogSize = mLogSize; }	
 		public static long getMaxLogSize() { return maxLogSize; }
 		public static void defaultMaxLogSize() { maxLogSize = maxLogSizeDefault; }
+		public static void setConsoleMode(Boolean con) {  console = con; }
 		
 		//Log a message
 		public static void log(String moduleName, String message) {
@@ -40,21 +42,25 @@ namespace FOG
 		
 		//Write a string to a line, other classes should not call this function directly for formatting purposes
 		private static void writeLine(String line) {
-			StreamWriter logWriter;
-			FileInfo logFile = new FileInfo(getFilePath());
-
-			//Delete the log file if it excedes the max log size
-			if (logFile.Exists && logFile.Length > maxLogSize)
-				cleanLog(logFile);
-			
-			try {
-				//Write message to log file
-				logWriter = new StreamWriter(getFilePath(), true);
-				logWriter.WriteLine(line);
-				logWriter.Close();
-			} catch {
-				//If logging fails then nothing can really be done to silently notify the user
-			} 					
+			if(console) {
+				Console.WriteLine(line);
+			} else {
+				StreamWriter logWriter;
+				FileInfo logFile = new FileInfo(getFilePath());
+	
+				//Delete the log file if it excedes the max log size
+				if (logFile.Exists && logFile.Length > maxLogSize)
+					cleanLog(logFile);
+				
+				try {
+					//Write message to log file
+					logWriter = new StreamWriter(getFilePath(), true);
+					logWriter.WriteLine(line);
+					logWriter.Close();
+				} catch {
+					//If logging fails then nothing can really be done to silently notify the user
+				} 		
+			}
 		}
 		
 		//Delete the log file and create a new one

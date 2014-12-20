@@ -3,9 +3,8 @@ using System;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
-using System.Security;
 using System.Linq;
-using System.Xml.Linq;
+using OpenSSL.Core;
 
 namespace FOG {
 	/// <summary>
@@ -14,8 +13,6 @@ namespace FOG {
 	public static class EncryptionHandler {
 		
 		private const String LOG_NAME = "EncryptionHandler";
-		private static RSACryptoServiceProvider rsa;
-		private static RSACryptoServiceProvider serverRSA = new RSACryptoServiceProvider();
 		
 		//Encode a string to base64
 		public static String encodeBase64(String toEncode) {
@@ -24,7 +21,7 @@ namespace FOG {
 				return System.Convert.ToBase64String(bytes);
 			} catch (Exception ex) {
 				LogHandler.log(LOG_NAME, "Error encoding base64");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return "";
 		}
@@ -42,24 +39,65 @@ namespace FOG {
 			return "";
 		}
 		
+        public static String encodeAES(String plainText, String passKey, String ivString) {
+ 		    
+			//Convert the initialization vector and key into a byte array
+			byte[] key = Encoding.UTF8.GetBytes(passKey);
+		    byte[] iv  = Encoding.UTF8.GetBytes(ivString);   
+		    
+		    try {
+				byte[] encrypted;
+	            // Create an RijndaelManaged object 
+	            // with the specified key and IV. 
+	            using (RijndaelManaged rijndaelManaged = new RijndaelManaged()) {
+	                rijndaelManaged.Key = key;
+	                rijndaelManaged.IV = iv;
+					rijndaelManaged.Mode = CipherMode.CBC;
+					rijndaelManaged.Padding = PaddingMode.Zeros;
+	                // Create a decrytor to perform the stream transform.
+	                using (ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV)) {
+		                // Create the streams used for encryption. 
+		                using (MemoryStream msEncrypt = new MemoryStream()) {
+		                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)) {
+		                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt)) {
+		                            //Write all data to the stream.
+		                            swEncrypt.Write(plainText);
+		                        }
+		                        encrypted = msEncrypt.ToArray();
+		                    }
+		                }
+	                }
+	            }
+	
+	            // Return the encrypted bytes from the memory stream. 
+	            return Convert.ToBase64String(encrypted);
+		    } catch (Exception ex) {
+		        LogHandler.log(LOG_NAME, "Error encoding AES");
+		        LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);		    	
+		    }
+			return "";	            
+        }
+		
 		//Decode AES256
-		private static String decodeAES(String toDecode, String passKey, String ivString) {
+		public static String decodeAES(String toDecode, String passKey, String ivString) {
 		    //Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
 		    byte[] iv  = Encoding.UTF8.GetBytes(ivString);
-		
 		    try {
 		    	
-		        RijndaelManaged rijndaelManaged = new RijndaelManaged();
-		        rijndaelManaged.Key = key;
-		        rijndaelManaged.IV = iv;
-		        rijndaelManaged.Mode = CipherMode.CBC;
-		        rijndaelManaged.Padding = PaddingMode.Zeros;
-		        MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(toDecode));
-		        CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read);
-		        
-		        //Return the  stream, but trim null bytes due to reading too far
-		        return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", String.Empty).Trim();
+		    	using(RijndaelManaged rijndaelManaged = new RijndaelManaged()) {
+			        rijndaelManaged.Key = key;
+			        rijndaelManaged.IV = iv;
+			        rijndaelManaged.Mode = CipherMode.CBC;
+			        rijndaelManaged.Padding = PaddingMode.Zeros;
+			        using(MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(toDecode))) {
+			        	using(CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
+					        //Return the  stream, but trim null bytes due to reading too far
+					        return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", String.Empty).Trim();		        		
+			        	}
+				       
+			        }
+		    	}
 		        
 		        
 		    } catch (Exception ex) {
@@ -69,59 +107,83 @@ namespace FOG {
 			return "";
 		}
 		
-		public static String decodeRSA(RSACryptoServiceProvider rsa, String data) {
-			ASCIIEncoding byteConverter = new ASCIIEncoding();
+		public static int getRandom(RNGCryptoServiceProvider rngProvider, int min, int max) {
+		    byte[] b = new byte[sizeof(UInt32)];
+		    rngProvider.GetBytes(b);
+		    double d = BitConverter.ToUInt32(b, 0) / (double)UInt32.MaxValue;
+		    return min + (int)((max - min) * d);
+		}
+
+		public static String generatePassword(int length) {
+			var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+			var stringChars = new char[length];
+			var random = new RNGCryptoServiceProvider();
 			
-			byte[] decryptedData = rsa.Decrypt(Convert.FromBase64String(data), false);
+			for (int i = 0; i < stringChars.Length; i++) {
+				stringChars[i] = chars[getRandom(random, 1, chars.Length)];
+			}
 			
-			return byteConverter.GetString(decryptedData);
+			return new String(stringChars);
 		}
 		
-		public static String encodeRSA(RSACryptoServiceProvider rsa, String toEncode) {
-			ASCIIEncoding byteConverter = new ASCIIEncoding();
+		public static String generateAESKey() {
+			String key;
+			AesCryptoServiceProvider crypto = new AesCryptoServiceProvider();
 			
-			byte[] dataToEncrypt = byteConverter.GetBytes(toEncode);
-			byte[] encryptedData = rsa.Encrypt(dataToEncrypt, false);
+			crypto.KeySize = 256;
+			crypto.GenerateKey();
+			byte[] rawKey = crypto.Key;
+			key = Encoding.ASCII.GetString(rawKey);
 			
-			String encryptedDataString = Convert.ToBase64String(encryptedData);
+			return key;
 			
-			return encryptedDataString;
 		}
 		
-		public static void generateRSA() {
-			rsa = new RSACryptoServiceProvider(2048);
-		}
-		
-		public static String getRSAPublicKey() {
-			RSAParameters rsaParams = rsa.ExportParameters(false);
-			ASCIIEncoding byteConverter = new ASCIIEncoding();
+		public static String generateAESIV() {
+			String iv;
 			
-			String modulus = byteConverter.GetString(rsaParams.Modulus);
-			String exponent = byteConverter.GetString(rsaParams.Exponent);
+			AesCryptoServiceProvider crypto = new AesCryptoServiceProvider();
+			
+			crypto.KeySize = 256;
+			crypto.Mode = CipherMode.CBC;
+			crypto.Padding = PaddingMode.None;
+			crypto.GenerateKey();
+			crypto.GenerateIV();
+			byte[] rawIV = crypto.IV;
+			iv = Encoding.UTF32.GetString(rawIV);
+			
+			return iv;
+			
+		}			
+		
+		public static String encryptRSA(String data, String pemFile) {
+			
+			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
 				
-			return modulus + exponent;
+				UTF8Encoding byteConverter = new UTF8Encoding();
+	
+				byte[] message = byteConverter.GetBytes(data);
+				byte[] encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
+	
+				return byteArrayToString(encryptedData);
+			}
+			
+		}	
+
+		public static String byteArrayToString(byte[] ba) {
+			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			foreach (byte b in ba)
+				hex.AppendFormat("{0:x2}", b);
+			return hex.ToString();			
 		}
 		
-		public static void setServerRSA(String publicKey) {
-			RSAParameters rsaParams = new RSAParameters();
-			ASCIIEncoding byteConverter = new ASCIIEncoding();
-		
-			rsaParams.Modulus = byteConverter.GetBytes(publicKey.Substring(0, publicKey.Length-4));
-			LogHandler.log(LOG_NAME, "Modulus= " + byteConverter.GetString(rsaParams.Modulus));
-			rsaParams.Exponent = byteConverter.GetBytes(publicKey.Substring(publicKey.Length-4, 4));
-			LogHandler.log(LOG_NAME, "Exponent= " + byteConverter.GetString(rsaParams.Exponent));
-			serverRSA.ImportParameters(rsaParams);
-		}
-		
-		public static RSACryptoServiceProvider getServerRSA() {
-			return serverRSA;
-		}
-		
-		public static RSACryptoServiceProvider getClientRSA() {
-			return rsa;
-		}
-		
-		
+		public static byte[] stringToByteArray(String hex) {
+		  int NumberChars = hex.Length;
+		  byte[] bytes = new byte[NumberChars / 2];
+		  for (int i = 0; i < NumberChars; i += 2)
+		    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+		  return bytes;
+		}		
 		
 
 		//Decode an AES256 encrypted response

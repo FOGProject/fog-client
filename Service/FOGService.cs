@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading;
 
-
 using FOG;
 
 namespace FOG{
@@ -128,10 +127,8 @@ namespace FOG{
 		
 		//Run each service
 		private void serviceLooper() {
-			EncryptionHandler.generateRSA();
 			CommunicationHandler.authenticate();
 			LogHandler.newLine();
-			CommunicationHandler.testRSA();
 			//Only run the service if there wasn't a stop or shutdown request
 			while (status.Equals(Status.Running) && !ShutdownHandler.isShutdownPending() && !ShutdownHandler.isUpdatePending()) {
 				foreach(AbstractModule module in modules) {
