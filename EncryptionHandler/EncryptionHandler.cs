@@ -158,15 +158,17 @@ namespace FOG {
 		
 		public static String encryptRSA(String data, String pemFile) {
 			
+			byte[] encryptedData;
 			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
 				
 				UTF8Encoding byteConverter = new UTF8Encoding();
 	
 				byte[] message = byteConverter.GetBytes(data);
-				byte[] encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
+				encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
 	
-				return byteArrayToString(encryptedData);
+				
 			}
+			return byteArrayToString(encryptedData);
 			
 		}	
 

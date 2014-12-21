@@ -11,9 +11,7 @@ namespace FOG {
 			Console.WriteLine();
 			LogHandler.divider();
 			
-			for(int i = 0; i<= 0; i++) {
-				CommunicationHandler.authenticate();
-			}
+			CommunicationHandler.authenticate();
 			
 			Console.WriteLine();
 			LogHandler.divider();

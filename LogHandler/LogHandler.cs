@@ -43,7 +43,10 @@ namespace FOG
 		//Write a string to a line, other classes should not call this function directly for formatting purposes
 		private static void writeLine(String line) {
 			if(console) {
+				if(line.ToUpper().Contains("ERROR"))
+					Console.BackgroundColor = ConsoleColor.Red;
 				Console.WriteLine(line);
+				Console.BackgroundColor = ConsoleColor.Black;
 			} else {
 				StreamWriter logWriter;
 				FileInfo logFile = new FileInfo(getFilePath());

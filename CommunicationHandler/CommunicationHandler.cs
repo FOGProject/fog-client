@@ -144,6 +144,7 @@ namespace FOG {
 					getResponse("/management/index.php?mac=" +  getMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
 				
 				LogHandler.log(LOG_NAME, authenticationResponse.getReturnCode());
+
 				File.Delete(keyPath);
 				if(!authenticationResponse.wasError()) {
 					LogHandler.log(LOG_NAME, "Authenticated");			
