@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationGUI", "Notifica
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeCLI", "PipeCLI\PipeCLI.csproj", "{901E8D28-1AF4-494B-B389-4467FAAE040A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AESTest", "AESTest\AESTest.csproj", "{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugger.csproj", "{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
