@@ -135,8 +135,6 @@ namespace FOG {
 				downloadFile("/management/other/ssl/srvpublic.key", keyPath);
 				
 				passkey = EncryptionHandler.generatePassword(32).Trim();
-				Console.WriteLine("Key:" + passkey);
-				Console.WriteLine("Key Len:" + passkey.Length.ToString());
 				String encryptedKey = EncryptionHandler.encryptRSA(passkey, keyPath);
 				
 				
