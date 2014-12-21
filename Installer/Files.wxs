@@ -31,6 +31,9 @@
 						<File Id="UserHandler" Name="UserHandler.dll" Source="..\bin\UserHandler.dll"/>
 						<File Id="UserCleanup" Name="UserCleanup.dll" Source="..\bin\UserCleanup.dll"/>
 						<File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe"/>
+						<File Id="libeay32" Name="libeay32.dll" Source="..\bin\libeay32.dll"/>
+						<File Id="ssleay32" Name="ssleay32.dll" Source="..\bin\ssleay32.dll"/>
+						<File Id="ManagedOpenSsl" Name="ManagedOpenSsl.dll" Source="..\bin\ManagedOpenSsl.dll"/>
 						<File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe"/>
 						<File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe"/>
 						<File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll"/>
