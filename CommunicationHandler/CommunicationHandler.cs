@@ -180,7 +180,7 @@ namespace FOG {
 				String decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
 				toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}
-			if(response.StartsWith(encryptedFlag)) {
+			if(toDecode.StartsWith(encryptedFlag)) {
 				String decryptedResponse = toDecode.Substring(encryptedFlag.Length);
 				toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}			
