@@ -76,7 +76,9 @@ namespace FOG
 					if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile))
 						File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile);
 					
-					File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile, EncryptionHandler.StringToByteArray(updateFileResponse.getField("#updatefile")));
+					File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile, EncryptionHandler.HexStringToByteArray(
+						updateFileResponse.getField("#updatefile")));
+					
 					LogHandler.Log(getName(), "Verifying MD5 hash");
 					
 					if(EncryptionHandler.GetMD5Hash(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile).Equals(md5)) {

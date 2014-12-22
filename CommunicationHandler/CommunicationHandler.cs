@@ -134,7 +134,7 @@ namespace FOG {
 				DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
 				
 				passkey = EncryptionHandler.GeneratePassword(32).Trim();
-				String encryptedKey = EncryptionHandler.EncodeRSA(passkey, keyPath);
+				String encryptedKey = EncryptionHandler.RSAEncrypt(passkey, keyPath);
 				
 				Response authenticationResponse = 
 					GetResponse("/management/index.php?mac=" +  GetMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
@@ -157,11 +157,11 @@ namespace FOG {
 			
 			if(response.StartsWith(encryptedFlag2)) {
 				String decryptedResponse = response.Substring(encryptedFlag2.Length);
-				response = EncryptionHandler.DecodeAES(decryptedResponse, passKey);
+				response = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}
 			if(response.StartsWith(encryptedFlag)) {
 				String decryptedResponse = response.Substring(encryptedFlag.Length);
-				response = EncryptionHandler.DecodeAES(decryptedResponse, passKey);
+				response = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}			
 			
 			

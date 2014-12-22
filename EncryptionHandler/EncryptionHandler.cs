@@ -14,7 +14,11 @@ namespace FOG {
 		
 		private const String LOG_NAME = "EncryptionHandler";
 		
-		//Encode a string to base64
+		/// <summary>
+		/// Base64 encode a string
+		/// <param name="toEncode">The string that will be encoded</param>
+		/// <returns>A base64 encoded string</returns>
+		/// </summary>
 		public static String EncodeBase64(String toEncode) {
 			try {
 				Byte[] bytes = ASCIIEncoding.ASCII.GetBytes(toEncode);
@@ -25,9 +29,12 @@ namespace FOG {
 			}
 			return "";
 		}
-
 		
-		//Decode a string from base64
+		/// <summary>
+		/// Decodes a base64 encoded string
+		/// <param name="toDecode">A base64 encoded string</param>
+		/// <returns>Returns the base64 decoded string</returns>
+		/// </summary>
 		public static String DecodeBase64(String toDecode) {
 			try {
 				Byte[] bytes = Convert.FromBase64String(toDecode);
@@ -39,11 +46,18 @@ namespace FOG {
 			return "";
 		}
 		
-        public static String EncodeAES(String plainText, String passKey, String ivString) {
+		/// <summary>
+		/// AES encrypts a string
+		/// <param name="toEncode">The string to be encrypted</param>
+		/// <param name="passKey">The AES pass key</param>
+		/// <param name="initializationVector">The AES initialization vector</param>
+		/// <returns>An encrypted string of toEncode</returns>
+		/// </summary>
+        public static String AESEncrypt(String toEncode, String passKey, String initializationVector) {
  		    
 			//Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
-		    byte[] iv  = Encoding.UTF8.GetBytes(ivString);   
+		    byte[] iv  = Encoding.UTF8.GetBytes(initializationVector);   
 		    
 		    try {
 				byte[] encrypted;
@@ -61,7 +75,7 @@ namespace FOG {
 		                    using (CryptoStream csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write)) {
 		                        using (StreamWriter swEncrypt = new StreamWriter(csEncrypt)) {
 		                            //Write all data to the stream.
-		                            swEncrypt.Write(plainText);
+		                            swEncrypt.Write(toEncode);
 		                        }
 		                        encrypted = msEncrypt.ToArray();
 		                    }
@@ -78,11 +92,18 @@ namespace FOG {
 			return "";	            
         }
 		
-		//Decode AES256
-		public static String DecodeAES(String toDecode, String passKey, String ivString) {
+		/// <summary>
+		/// AES decrypts a string
+		/// <param name="toDecode">The string to be decrypted</param>
+		/// <param name="passKey">The AES pass key</param>
+		/// <param name="initializationVector">The AES initialization vector</param>
+		/// <returns>A decrypted string of toDecode</returns>
+		/// </summary>
+		public static String AESDecrypt(String toDecode, String passKey, String initializationVector) {
+
 		    //Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
-		    byte[] iv  = Encoding.UTF8.GetBytes(ivString);
+		    byte[] iv  = Encoding.UTF8.GetBytes(initializationVector);
 		    try {
 		    	
 		    	using(RijndaelManaged rijndaelManaged = new RijndaelManaged()) {
@@ -107,6 +128,13 @@ namespace FOG {
 			return "";
 		}
 		
+		/// <summary>
+		/// Securley generates a random number
+		/// <param name="rngProvider">The RNG crypto provider used</param>
+		/// <param name="min">The minimum value of the random number</param>
+		/// <param name="max">The maximum value of the random number</param>
+		/// <returns>A random number between min and max</returns>
+		/// </summary>		
 		public static int GetRandom(RNGCryptoServiceProvider rngProvider, int min, int max) {
 		    byte[] b = new byte[sizeof(UInt32)];
 		    rngProvider.GetBytes(b);
@@ -114,6 +142,11 @@ namespace FOG {
 		    return min + (int)((max - min) * d);
 		}
 
+		/// <summary>
+		/// Securely generates an alpha-numerical password
+		/// <param name="length">The number of characters the password should contain</param>
+		/// <returns>A randomly generated password</returns>
+		/// </summary>
 		public static String GeneratePassword(int length) {
 			var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			var stringChars = new char[length];
@@ -125,31 +158,47 @@ namespace FOG {
 			
 			return new String(stringChars);
 		}
-				
-		public static String EncodeRSA(String data, String pemFile) {
+		
+		/// <summary>
+		/// Encrypts a string using RSA
+		/// <param name="toEncode">The string to be encrypted</param>
+		/// <param name="pemFile">The path to a PEM file</param>
+		/// <returns>The encrypted version of toEncode</returns>
+		/// </summary>		
+		public static String RSAEncrypt(String toEncode, String pemFile) {
 			
 			byte[] encryptedData;
 			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
 				
 				UTF8Encoding byteConverter = new UTF8Encoding();
 	
-				byte[] message = byteConverter.GetBytes(data);
+				byte[] message = byteConverter.GetBytes(toEncode);
 				encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
 	
 				
 			}
-			return ByteArrayToString(encryptedData);
+			return ByteArrayToHexString(encryptedData);
 			
 		}	
-
-		public static String ByteArrayToString(byte[] ba) {
+		
+		/// <summary>
+		/// Converts a byte array to a hex string
+		/// <param name="ba">The byte array to be converted</param>
+		/// <returns>A hex string representation of the byte array</returns>
+		/// </summary>	
+		public static String ByteArrayToHexString(byte[] ba) {
 			StringBuilder hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)
 				hex.AppendFormat("{0:x2}", b);
 			return hex.ToString();			
 		}
 		
-		public static byte[] stringToByteArray(String hex) {
+		/// <summary>
+		/// Converts a hex string to a byte array
+		/// <param name="hex">The hex string to be converted</param>
+		/// <returns>A byte array representation of the hex string</returns>
+		/// </summary>			
+		public static byte[] HexStringToByteArray(String hex) {
 		  int NumberChars = hex.Length;
 		  byte[] bytes = new byte[NumberChars / 2];
 		  for (int i = 0; i < NumberChars; i += 2)
@@ -158,11 +207,18 @@ namespace FOG {
 		}		
 		
 
-		//Decode an AES256 encrypted response
-		public static String DecodeAES(String response, String passKey) {
+		/// <summary>
+		/// Decrypts a string using AES, and automatically extracts the initialization vector
+		/// <param name="toDecode">The string to be decrypted</param>
+		/// <param name="passKey">The AES pass key to use</param>
+		/// <returns>A decrypted version of toDecode</returns>
+		/// </summary>	
+		public static String AESDecrypt(String toDecode, String passKey) {
 			//The first set of 15 characters is the initialization vector, the rest is the encrypted message
-			if(response.Length > 16) {
-				return EncryptionHandler.DecodeAES(response.Substring(16), passKey, response.Substring(0,16)).Trim();
+			if(toDecode.Length > 16) {
+				String iv = toDecode.Substring(16);
+				toDecode = toDecode.Substring(0,16).Trim();
+				return EncryptionHandler.AESDecrypt(iv, passKey, toDecode);
 			} else {
 				LogHandler.Log(LOG_NAME, "Unable to decrypt response");
 				LogHandler.Log(LOG_NAME, "ERROR: Encrypted data is corrupt");
@@ -170,12 +226,16 @@ namespace FOG {
 			return "";
 		}
 		
-		//Generate the md5 hash of a file
-		public static  String GetMD5Hash(String file) {
-			if (File.Exists(file)) {
+		/// <summary>
+		/// Creates an md5 hash of a file
+		/// <param name="filePath">The path to the file</param>
+		/// <returns>The md5 hash of the given file</returns>
+		/// </summary>	
+		public static  String GetMD5Hash(String filePath) {
+			if (File.Exists(filePath)) {
 				StringBuilder sBuilder = new StringBuilder();
 				MD5 md5 = new MD5CryptoServiceProvider();
-				byte[] bytes = File.ReadAllBytes(file);
+				byte[] bytes = File.ReadAllBytes(filePath);
 				byte[] result = md5.ComputeHash(bytes);
 				foreach(int hashInt in result) {
 					sBuilder.Append(hashInt.ToString("x2"));
@@ -183,13 +243,6 @@ namespace FOG {
 				return sBuilder.ToString();
 			}
 			return "";
-		}	
-
-		public static byte[] StringToByteArray(string hex) {
-		    return Enumerable.Range(0, hex.Length)
-		                     .Where(x => x % 2 == 0)
-		                     .Select(x => Convert.ToByte(hex.Substring(x, 2), 16))
-		                     .ToArray();
 		}		
 		
 	}
