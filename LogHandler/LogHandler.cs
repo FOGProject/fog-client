@@ -16,6 +16,7 @@ namespace FOG
 		private static long maxLogSize = maxLogSizeDefault;
 		private const String LOG_NAME = "LogHandler";
 		private static Boolean console = false;
+		private const int HEADER_LENGTH=64;
 
 		public static void setFilePath(String fPath) { filePath = fPath; }		
 		public static String getFilePath() { return filePath; }
@@ -37,15 +38,35 @@ namespace FOG
 		
 		//Make a divider in the log file
 		public static void divider() {
-			writeLine("---------------------------------------------------------------");		
+			header("");
 		}
 		
-		//Write a string to a line, other classes should not call this function directly for formatting purposes
-		private static void writeLine(String line) {
+		public static void header(String text) {
+			double headerSize = (HEADER_LENGTH-text.Length)/2;
+			
+			for(int i=0; i<(int)Math.Ceiling(headerSize); i++) {
+				write("-");
+			}
+			write(text);
+			for(int i=0; i<((int)Math.Floor(headerSize)); i++) {
+				write("-");
+			}	
+			newLine();
+			
+		}
+		
+		public static void paddedHeader(String text) {
+			divider();
+			header(text);
+			divider();
+		}
+		
+		//Write a string on the current line, it is prefered that log is used instead for formatting purposes
+		public static void write(String text) {
 			if(console) {
-				if(line.ToUpper().Contains("ERROR"))
+				if(text.ToUpper().Contains("ERROR"))
 					Console.BackgroundColor = ConsoleColor.Red;
-				Console.WriteLine(line);
+				Console.Write(text);
 				Console.BackgroundColor = ConsoleColor.Black;
 			} else {
 				StreamWriter logWriter;
@@ -58,12 +79,17 @@ namespace FOG
 				try {
 					//Write message to log file
 					logWriter = new StreamWriter(getFilePath(), true);
-					logWriter.WriteLine(line);
+					logWriter.Write(text);
 					logWriter.Close();
 				} catch {
 					//If logging fails then nothing can really be done to silently notify the user
 				} 		
-			}
+			}			
+		}
+		
+		//Write a string to a line, other classes should not call this function directly for formatting purposes
+		public static void writeLine(String line) {
+			write(line + "\n");
 		}
 		
 		//Delete the log file and create a new one

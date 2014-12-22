@@ -128,31 +128,26 @@ namespace FOG {
 		}
 		
 		public static Boolean authenticate() {
-			
 			try {
-
+	
 				String keyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
 				downloadFile("/management/other/ssl/srvpublic.key", keyPath);
 				
 				passkey = EncryptionHandler.generatePassword(32).Trim();
 				String encryptedKey = EncryptionHandler.encryptRSA(passkey, keyPath);
 				
-				
 				Response authenticationResponse = 
 					getResponse("/management/index.php?mac=" +  getMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
 				
-				LogHandler.log(LOG_NAME, authenticationResponse.getReturnCode());
-
-				File.Delete(keyPath);
 				if(!authenticationResponse.wasError()) {
-					LogHandler.log(LOG_NAME, "Authenticated");			
+					LogHandler.log(LOG_NAME, "Authenticated");	
 					return true;
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error authenticating");			
 				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);					
 			}
 			
+			LogHandler.log(LOG_NAME, "Failed to authenticate");	
 			return false;
 		}
 		

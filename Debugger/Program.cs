@@ -7,16 +7,17 @@ namespace FOG {
 			LogHandler.setConsoleMode(true);
 			CommunicationHandler.getAndSetServerAddress();
 			
-			Console.WriteLine("Beginning auth test");
-			Console.WriteLine();
-			LogHandler.divider();
+			LogHandler.newLine();
+			LogHandler.paddedHeader("Authentication");
 			
-			CommunicationHandler.authenticate();
+			Boolean auth = CommunicationHandler.authenticate();
 			
-			Console.WriteLine();
 			LogHandler.divider();
+			LogHandler.newLine();
+			
 			Console.Write("Press any key exit...");
-			Console.ReadKey(true);			
+			Console.ReadKey(true);		
+			
 		}
 	}
 }
