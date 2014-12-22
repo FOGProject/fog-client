@@ -48,6 +48,7 @@ namespace FOG {
 		//Getters and setters
 		public static void SetServerAddress(String address) { serverAddress = address; }
 		public static String GetPassKey() { return passkey; }
+		public static String GetServerAddress() { return serverAddress; }		
 		
 		public static void SetServerAddress(String HTTPS, String address, String webRoot) { 
 			if(HTTPS.Equals("1")) {
@@ -58,6 +59,10 @@ namespace FOG {
 			serverAddress = serverAddress  + address + webRoot;
 		}
 		
+		/// <summary>
+		/// Load the server information from the registry and apply it
+		/// <returns>True if settings were updated</returns>
+		/// </summary>		
 		public static Boolean GetAndSetServerAddress() {
 			if(RegistryHandler.GetSystemSetting("Server") != null && RegistryHandler.GetSystemSetting("WebRoot") != null && 
 			   RegistryHandler.GetSystemSetting("Tray") != null && RegistryHandler.GetSystemSetting("HTTPS") != null) {
@@ -70,12 +75,13 @@ namespace FOG {
 			LogHandler.Log(LOG_NAME, "Regisitry keys are not set");
 			return false;
 		}
-		
-		
-		public static String GetServerAddress() { return serverAddress; }		
 
 		
-		//Return the response form an address
+		/// <summary>
+		/// Get the parsed response of a server url
+		/// <param name="postfix">The postfix to attach to the server address</param>
+		/// <returns>A parsed response</returns>
+		/// </summary>
 		public static Response GetResponse(String postfix) {
 
 			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
@@ -83,7 +89,7 @@ namespace FOG {
 			var webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(GetServerAddress() + postfix);
-				response = decryptAES(response, GetPassKey());
+				response = AESDecrypt(response, GetPassKey());
 				//See if the return code is known
 				Boolean messageFound = false;
 				foreach(String returnMessage in returnMessages.Keys) {
@@ -104,8 +110,13 @@ namespace FOG {
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return new Response();
-		}		
+		}	
 		
+		/// <summary>
+		/// Get the raw response of a server url
+		/// <param name="postfix">The postfix to attach to the server address</param>
+		/// <returns>The unparsed response</returns>
+		/// </summary>		
 		public static String GetRawResponse(String postfix) {
 			//ID the service as the new one
 			if(postfix.Contains(".php?")) {
@@ -127,6 +138,10 @@ namespace FOG {
 			
 		}
 		
+		/// <summary>
+		/// Generate a random AES pass key and securely send it to the server
+		/// <returns>True if successfully authenticated</returns>
+		/// </summary>			
 		public static Boolean Authenticate() {
 			try {
 	
@@ -151,24 +166,34 @@ namespace FOG {
 			return false;
 		}
 		
-		private static String decryptAES(String response, String passKey) {
+		/// <summary>
+		/// Decrypts a response using AES, filtering out encryption flags
+		/// <param name="toDecode">The string to decrypt</param>
+		/// <param name="passKey">The AES pass key to use</param>
+		/// <returns>True if the server was contacted successfully</returns>
+		/// </summary>		
+		private static String AESDecrypt(String toDecode, String passKey) {
 			const String encryptedFlag = "#!en=";
 			const String encryptedFlag2 = "#!enkey=";
 			
-			if(response.StartsWith(encryptedFlag2)) {
-				String decryptedResponse = response.Substring(encryptedFlag2.Length);
-				response = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
+			if(toDecode.StartsWith(encryptedFlag2)) {
+				String decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
+				toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}
 			if(response.StartsWith(encryptedFlag)) {
-				String decryptedResponse = response.Substring(encryptedFlag.Length);
-				response = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
+				String decryptedResponse = toDecode.Substring(encryptedFlag.Length);
+				toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
 			}			
 			
 			
-			return response;
+			return toDecode;
 		}		
 
-		//Contact FOG at a url, used for submitting data
+		/// <summary>
+		/// Notify the server of something but don't check for a response
+		/// <param name="postfix">The postfix to attach to the server address</param>
+		/// <returns>True if the server was contacted successfully</returns>
+		/// </summary>
 		public static Boolean Contact(String postfix) {
 			//ID the service as the new one
 			if(postfix.Contains(".php?")) {
@@ -191,7 +216,11 @@ namespace FOG {
 			return false;
 		}
 
-		//Parse the recieved data
+		/// <summary>
+		/// Parse a raw response for all objects
+		/// <param name="rawResponse">The unparsed response</param>
+		/// <returns>A response object containing all of the parsed information</returns>
+		/// </summary>
 		private static Response parseResponse(String rawResponse) {
 			String[] data = rawResponse.Split('\n'); //Split the response at every new line
 			var parsedData = new Dictionary<String, String>();
@@ -219,7 +248,13 @@ namespace FOG {
 			return response;
 		}
 		
-		//Get an array from a response
+		/// <summary>
+		/// Parse a Response for an array of objects
+		/// <param name="response">The response to parse</param>
+		/// <param name="identifier">The string identifier infront of the elements</param>
+		/// <param name="base64Decode">Whether the elements should be base64 decoded</param>
+		/// <returns>A List of the elements matching the identifier</returns>
+		/// </summary>	
 		public static List<String> ParseDataArray(Response response, String identifier, Boolean base64Decode) {
 			var dataArray = new List<String>();
 
@@ -237,18 +272,23 @@ namespace FOG {
 		}
 		
 
-		//Download a file
-		public static Boolean DownloadFile(String postfix, String fileName) {
+		/// <summary>
+		/// Downloads a file and creates necessary directories
+		/// <param name="postfix">The postfix to attach to the server address</param>
+		/// <param name="filePath">The location to save the file</param>
+		/// <returns>True if the download was successful</returns>
+		/// </summary>	
+		public static Boolean DownloadFile(String postfix, String filePath) {
 			LogHandler.Log(LOG_NAME, "URL: " + serverAddress + postfix);	
 			var webClient = new WebClient();
 			try {
 				//Create the directory that the file will go in if it doesn't already exist
-				if(!Directory.Exists(Path.GetDirectoryName(fileName))) {
-					Directory.CreateDirectory(Path.GetDirectoryName(fileName));
+				if(!Directory.Exists(Path.GetDirectoryName(filePath))) {
+					Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 				}
-				webClient.DownloadFile(GetServerAddress() + postfix, fileName);
+				webClient.DownloadFile(GetServerAddress() + postfix, filePath);
 
-				if(File.Exists(fileName))
+				if(File.Exists(filePath))
 					return true;
 			} catch (Exception ex) {
 				LogHandler.Log(LOG_NAME, "Error downloading file");
@@ -258,11 +298,14 @@ namespace FOG {
 		}
 
 
-		//Get the IP address of the host
+		/// <summary>
+		/// Get the IP address of the host
+		/// <returns>The first IP address of the host</returns>
+		/// </summary>	
 		public static String GetIPAddress() {
-			String hostName = System.Net.Dns.GetHostName();
+			String hostName = Dns.GetHostName();
 			
-			IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(hostName);
+			IPHostEntry ipEntry = Dns.GetHostEntry(hostName);
 			
 			IPAddress[] address = ipEntry.AddressList;
 			if(address.Length > 0) //Return the first address listed
@@ -271,7 +314,10 @@ namespace FOG {
 			return "";
 		}
 
-		//Get a string of all mac addresses
+		/// <summary>
+		/// Get a string of all the host's valid MAC addresses
+		/// <returns>A string of all the host's valid MAC addresses, split by |</returns>
+		/// </summary>	
 		public static String GetMacAddresses() {
             String macs = "";
 			try {
