@@ -12,17 +12,17 @@ namespace FOG
 	{
 		//Define variables
 		private static String filePath = @"\fog.log";
-		private static long maxLogSizeDefault = 502400;
-		private static long maxLogSize = maxLogSizeDefault;
+		private static long maxLogSize = DEFAULT_MAX_LOG_SIZE;
+		private static Boolean console = false;		
+		private const long DEFAULT_MAX_LOG_SIZE = 502400;
+		private const int HEADER_LENGTH= 64;
 		private const String LOG_NAME = "LogHandler";
-		private static Boolean console = false;
-		private const int HEADER_LENGTH=64;
 
 		public static void setFilePath(String fPath) { filePath = fPath; }		
 		public static String getFilePath() { return filePath; }
 		public static void setMaxLogSize(long mLogSize) { maxLogSize = mLogSize; }	
 		public static long getMaxLogSize() { return maxLogSize; }
-		public static void defaultMaxLogSize() { maxLogSize = maxLogSizeDefault; }
+		public static void defaultMaxLogSize() { maxLogSize = DEFAULT_MAX_LOG_SIZE; }
 		public static void setConsoleMode(Boolean con) {  console = con; }
 		
 		//Log a message
@@ -47,7 +47,9 @@ namespace FOG
 			for(int i=0; i<(int)Math.Ceiling(headerSize); i++) {
 				write("-");
 			}
+			
 			write(text);
+			
 			for(int i=0; i<((int)Math.Floor(headerSize)); i++) {
 				write("-");
 			}	

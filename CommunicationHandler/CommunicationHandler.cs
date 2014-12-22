@@ -24,7 +24,7 @@ namespace FOG {
 		//Define all return codes
 		private static Dictionary<String, String> loadReturnMessages() {
 
-			Dictionary<String, String> messages = new Dictionary<String, String>();
+			var messages = new Dictionary<String, String>();
 			messages.Add(successCode, "Success");
 			messages.Add("#!db", "Database error");
 			messages.Add("#!im", "Invalid MAC address format");
@@ -80,7 +80,7 @@ namespace FOG {
 
 			LogHandler.log(LOG_NAME, "URL: " + getServerAddress() + postfix );
 
-			WebClient webClient = new WebClient();
+			var webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(getServerAddress() + postfix);
 				response = decryptAES(response, getPassKey());
@@ -115,7 +115,7 @@ namespace FOG {
 			}
 			LogHandler.log(LOG_NAME, "URL: " + getServerAddress() + postfix );
 			
-			WebClient webClient = new WebClient();
+			var webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(getServerAddress() + postfix);
 				return response;
@@ -178,7 +178,7 @@ namespace FOG {
 			}			
 			LogHandler.log(LOG_NAME,
 			               "URL: " + getServerAddress() + postfix);
-			WebClient webClient = new WebClient();			
+			var webClient = new WebClient();			
 
 			try {
 				webClient.DownloadString(getServerAddress() + postfix);
@@ -194,8 +194,8 @@ namespace FOG {
 		//Parse the recieved data
 		private static Response parseResponse(String rawResponse) {
 			String[] data = rawResponse.Split('\n'); //Split the response at every new line
-			Dictionary<String, String> parsedData = new Dictionary<String, String>();
-			Response response = new Response();
+			var parsedData = new Dictionary<String, String>();
+			var response = new Response();
 
 			try {
 				//Get and set the error boolean
@@ -221,7 +221,7 @@ namespace FOG {
 		
 		//Get an array from a response
 		public static List<String> parseDataArray(Response response, String identifier, Boolean base64Decode) {
-			List<String> dataArray = new List<String>();
+			var dataArray = new List<String>();
 
 			
 			foreach(String key in response.getData().Keys) {
@@ -240,8 +240,8 @@ namespace FOG {
 
 		//Download a file
 		public static Boolean downloadFile(String postfix, String fileName) {
-			LogHandler.log(LOG_NAME, "URL: " + serverAddress + postfix);				
-			WebClient webClient = new WebClient();
+			LogHandler.log(LOG_NAME, "URL: " + serverAddress + postfix);	
+			var webClient = new WebClient();
 			try {
 				//Create the directory that the file will go in if it doesn't already exist
 				if(!Directory.Exists(Path.GetDirectoryName(fileName))) {
