@@ -60,17 +60,17 @@ namespace FOG {
 		private const String LOG_NAME = "UserHandler";
 
 		//Check if a user is loggin in, do this by getting a list of all users, and check if the list has any elements
-		public static Boolean isUserLoggedIn() {
-			return getUsersLoggedIn().Count > 0;
+		public static Boolean IsUserLoggedIn() {
+			return GetUsersLoggedIn().Count > 0;
 		}
 		
-		public static String getCurrentUser() {
-			return System.Security.Principal.WindowsIdentity.GetCurrent().Name;
+		public static String GetCurrentUser() {
+			return WindowsIdentity.GetCurrent().Name;
 		}
 
 		
 		//Return local users
-		public static List<UserData> getAllUserData() {
+		public static List<UserData> GetAllUserData() {
 			List<UserData> users = new List<UserData>();
 			
 			SelectQuery query = new SelectQuery("Win32_UserAccount");
@@ -85,7 +85,7 @@ namespace FOG {
 		}
 		
 		//Return how long the logged in user is inactive for in seconds
-		public static int getUserInactivityTime() {
+		public static int GetUserInactivityTime() {
 			uint idleTime = 0;
 			LASTINPUTINFO lastInputInfo = new LASTINPUTINFO();
 			lastInputInfo.cbSize = (uint)Marshal.SizeOf( lastInputInfo );
@@ -103,19 +103,19 @@ namespace FOG {
 		}	
 		
 		//Get a list of all users logged in
-		public static List<String> getUsersLoggedIn() {
+		public static List<String> GetUsersLoggedIn() {
 			List<String> users = new List<String>();
-			List<int> sessionIds = getSessionIds();
+			List<int> sessionIds = GetSessionIds();
 			
 			foreach(int sessionId in sessionIds) {
-				users.Add(getUserNameFromSessionId(sessionId, false));
+				users.Add(GetUserNameFromSessionId(sessionId, false));
 			}
 			
 			return users;
 		}	
 		
 		//Get all session Ids from running processes
-		public static List<int> getSessionIds() {
+		public static List<int> GetSessionIds() {
 			List<int> sessionIds = new List<int>();
 			String[] properties = new[] {"SessionId"};
 			
@@ -128,8 +128,8 @@ namespace FOG {
 						sessionIds.Add(int.Parse(envVar["SessionId"].ToString()));
 					}
 				} catch (Exception ex) {
-					LogHandler.log(LOG_NAME, "Unable to parse Session Id");
-					LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+					LogHandler.Log(LOG_NAME, "Unable to parse Session Id");
+					LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 				}
 			}	
 			return sessionIds;			
@@ -137,7 +137,7 @@ namespace FOG {
 		
 		//Convert a session ID to a username
 		//https://stackoverflow.com/questions/19487541/get-windows-user-name-from-sessionid
-		public static String getUserNameFromSessionId(int sessionId, bool prependDomain) {
+		public static String GetUserNameFromSessionId(int sessionId, bool prependDomain) {
 			IntPtr buffer;
 			int strLen;
 			string username = "SYSTEM";
@@ -154,28 +154,28 @@ namespace FOG {
 			return username;
 		}
 		
-		public static String getUserProfilePath(String sid) {
-			return RegistryHandler.getRegisitryValue(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\", "ProfileImagePath");
+		public static String GetUserProfilePath(String sid) {
+			return RegistryHandler.GetRegisitryValue(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\", "ProfileImagePath");
 		}		
 		
 		//Completely purge a user from windows
-		public static Boolean purgeUser(UserData user, Boolean deleteData) {
-			LogHandler.log(LOG_NAME, "Purging " + user.getName() + " from system");
+		public static Boolean PurgeUser(UserData user, Boolean deleteData) {
+			LogHandler.Log(LOG_NAME, "Purging " + user.GetName() + " from system");
 			if(deleteData) {
-				if(unregisterUser(user.getName())) {
-					if(removeUserProfile(user.getSID())) {
-						return cleanUserRegistryEntries(user.getSID());
+				if(UnregisterUser(user.GetName())) {
+					if(RemoveUserProfile(user.GetSID())) {
+						return CleanUserRegistryEntries(user.GetSID());
 					}
 				}
 				return false;
 			} else {
-				return unregisterUser(user.getName());
+				return UnregisterUser(user.GetName());
 			}
 		}
 	
 		
 		//Unregister a user from windows
-		public static Boolean unregisterUser(String user) {
+		public static Boolean UnregisterUser(String user) {
 			try {
 				DirectoryEntry userDir = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
 				DirectoryEntry userToDelete = userDir.Children.Find(user);
@@ -184,38 +184,38 @@ namespace FOG {
 				return true;
 				
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Unable to unregister user");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Unable to unregister user");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return false;			
 		}
 		
 		//Delete user profile
-		public static Boolean removeUserProfile(String sid) {
+		public static Boolean RemoveUserProfile(String sid) {
 			
 			try {
-				String path = getUserProfilePath(sid);
-				LogHandler.log(LOG_NAME, "User path: " + path);
+				String path = GetUserProfilePath(sid);
+				LogHandler.Log(LOG_NAME, "User path: " + path);
 				if(path != null) {
-					takeOwnership(path);
+					TakeOwnership(path);
 					resetRights(path);
-					removeWriteProtection(path);
+					RemoveWriteProtection(path);
 					Directory.Delete(path, true);
 					return true;
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Unable to remove user data");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Unable to remove user data");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return false;
 		}
 		
 		//Clean all registry entries of a user
-		public static Boolean cleanUserRegistryEntries(String sid) {
-			return RegistryHandler.deleteFolder(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\");
+		public static Boolean CleanUserRegistryEntries(String sid) {
+			return RegistryHandler.DeleteFolder(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\");
 		}
 		
-		public static void takeOwnership(String path) {
+		public static void TakeOwnership(String path) {
 
 			using (new ProcessPrivileges.PrivilegeEnabler(Process.GetCurrentProcess(), ProcessPrivileges.Privilege.TakeOwnership)){
 			    DirectoryInfo directoryInfo = new DirectoryInfo(path);
@@ -226,7 +226,7 @@ namespace FOG {
 
 		}
 		
-		private static DirectorySecurity RemoveExplicitSecurity(DirectorySecurity directorySecurity) {
+		private static DirectorySecurity removeExplicitSecurity(DirectorySecurity directorySecurity) {
 			AuthorizationRuleCollection rules = directorySecurity.GetAccessRules(true, false, typeof(System.Security.Principal.NTAccount));
 			foreach (FileSystemAccessRule rule in rules)
 				directorySecurity.RemoveAccessRule(rule);
@@ -236,11 +236,11 @@ namespace FOG {
 		public static void resetRights(String path) {
 			DirectoryInfo directoryInfo = new DirectoryInfo(path);
 			DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
-			directorySecurity = RemoveExplicitSecurity(directorySecurity);
+			directorySecurity = removeExplicitSecurity(directorySecurity);
 			Directory.SetAccessControl(path, directorySecurity);
 		}
 		
-		public static void removeWriteProtection(String path) {
+		public static void RemoveWriteProtection(String path) {
 			 DirectoryInfo directoryInfo = new DirectoryInfo(path);
 			 directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
 		}		

@@ -17,18 +17,18 @@ namespace FOG {
 			
 		protected override void doWork() {
 			//Get directories to delete
-			Response dirResponse = CommunicationHandler.getResponse("/service/dircleanup-dirs.php?mac=" + CommunicationHandler.getMacAddresses());
+			Response dirResponse = CommunicationHandler.GetResponse("/service/dircleanup-dirs.php?mac=" + CommunicationHandler.GetMacAddresses());
 			
 			//Shutdown if a task is avaible and the user is logged out or it is forced
 			if(!dirResponse.wasError()) {
-				foreach(String dir in CommunicationHandler.parseDataArray(dirResponse, "#dir", true)) {
+				foreach(String dir in CommunicationHandler.ParseDataArray(dirResponse, "#dir", true)) {
 					
 					try {
-						LogHandler.log(getName(), "Deleting " + Environment.ExpandEnvironmentVariables(dir));
+						LogHandler.Log(getName(), "Deleting " + Environment.ExpandEnvironmentVariables(dir));
 						Directory.Delete(Environment.ExpandEnvironmentVariables(dir),true);
 						
 					} catch (Exception ex) {
-						LogHandler.log(getName(), "ERROR: " + ex.Message);
+						LogHandler.Log(getName(), "ERROR: " + ex.Message);
 					}
 				}
 			}

@@ -25,7 +25,7 @@ namespace FOG {
 			// Setup the pipe client
 
 			
-			this.userNotificationPipe = new PipeClient("fog_pipe_notification_user_" +  UserHandler.getCurrentUser());
+			this.userNotificationPipe = new PipeClient("fog_pipe_notification_user_" +  UserHandler.GetCurrentUser());
 			this.userNotificationPipe.MessageReceived += new PipeClient.MessageReceivedHandler(pipeNotificationClient_MessageReceived);
 			this.userNotificationPipe.connect();				
 			

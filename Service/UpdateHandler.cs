@@ -38,15 +38,15 @@ namespace FOG {
 				killSubProcesses();
 				
 				//Launch the updater
-				LogHandler.log(LOG_NAME, "Spawning update helper");
+				LogHandler.Log(LOG_NAME, "Spawning update helper");
 				
 				Process process = new Process();
 				process.StartInfo.UseShellExecute = false;
 				process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\FOGUpdateHelper.exe";
 				process.Start();
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Unable to perform update");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Unable to perform update");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 		} 
 	}

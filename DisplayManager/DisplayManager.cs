@@ -22,7 +22,7 @@ namespace FOG {
 			display.updateSettings();
 			if(display.settingsLoaded()) {
 				//Get task info
-				Response taskResponse = CommunicationHandler.getResponse("/service/displaymanager.php?mac=" + CommunicationHandler.getMacAddresses());
+				Response taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php?mac=" + CommunicationHandler.GetMacAddresses());
 	
 				if(!taskResponse.wasError()) {
 	
@@ -35,27 +35,27 @@ namespace FOG {
 						else
 							changeResolution("", x, y, r);
 					} catch (Exception ex) {
-						LogHandler.log(getName(), "ERROR");
-						LogHandler.log(getName(), ex.Message);
+						LogHandler.Log(getName(), "ERROR");
+						LogHandler.Log(getName(), ex.Message);
 					}
 				}
 			} else {
-				LogHandler.log(getName(), "Settings are not populated; will not attempt to change resolution");
+				LogHandler.Log(getName(), "Settings are not populated; will not attempt to change resolution");
 			}
 		}
 		
 		//Change the resolution of the screen
 		private void changeResolution(String device, int width, int height, int refresh) {
 			if(!(width.Equals(display.getSettings().dmPelsWidth) && height.Equals(display.getSettings().dmPelsHeight) && refresh.Equals(display.getSettings().dmDisplayFrequency))) {
-				LogHandler.log(getName(), "Current Resolution: " + display.getSettings().dmPelsWidth.ToString() + " x " + 
+				LogHandler.Log(getName(), "Current Resolution: " + display.getSettings().dmPelsWidth.ToString() + " x " + 
 				               display.getSettings().dmPelsHeight.ToString() + " " + display.getSettings().dmDisplayFrequency + "hz");
-				LogHandler.log(getName(), "Attempting to change resoltution to " + width.ToString() + " x " + height.ToString() + " " + refresh.ToString() + "hz");
-				LogHandler.log(getName(), "Display name: " + device);
+				LogHandler.Log(getName(), "Attempting to change resoltution to " + width.ToString() + " x " + height.ToString() + " " + refresh.ToString() + "hz");
+				LogHandler.Log(getName(), "Display name: " + device);
 				
 				display.changeResolution(device, width, height, refresh);
 				
 			} else {
-				LogHandler.log(getName(), "Current resolution is already set correctly");
+				LogHandler.Log(getName(), "Current resolution is already set correctly");
 			}
 		}
 		

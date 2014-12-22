@@ -29,7 +29,7 @@ namespace FOG
 
 		//Default start method
 		public virtual void start() {
-			LogHandler.log(getName(), "Running...");
+			LogHandler.Log(getName(), "Running...");
 			if(isEnabled()) {
 				doWork();
 			}
@@ -54,8 +54,8 @@ namespace FOG
 		//Check if the module is enabled, also set the sleep duration
 		public Boolean isEnabled() {
 
-			Response moduleActiveResponse = CommunicationHandler.getResponse(getIsActiveURL() + "?mac=" + 
-			                                                                      CommunicationHandler.getMacAddresses() +
+			Response moduleActiveResponse = CommunicationHandler.GetResponse(getIsActiveURL() + "?mac=" + 
+			                                                                      CommunicationHandler.GetMacAddresses() +
 			                                								"&moduleid=" + getName().ToLower());
 			return !moduleActiveResponse.wasError();
 		}

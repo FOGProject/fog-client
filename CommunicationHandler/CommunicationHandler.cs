@@ -46,10 +46,10 @@ namespace FOG {
 		}
 
 		//Getters and setters
-		public static void setServerAddress(String address) { serverAddress = address; }
-		public static String getPassKey() { return passkey; }
+		public static void SetServerAddress(String address) { serverAddress = address; }
+		public static String GetPassKey() { return passkey; }
 		
-		public static void setServerAddress(String HTTPS, String address, String webRoot) { 
+		public static void SetServerAddress(String HTTPS, String address, String webRoot) { 
 			if(HTTPS.Equals("1")) {
 				serverAddress = "https://";
 			} else {
@@ -58,96 +58,96 @@ namespace FOG {
 			serverAddress = serverAddress  + address + webRoot;
 		}
 		
-		public static Boolean getAndSetServerAddress() {
-			if(RegistryHandler.getSystemSetting("Server") != null && RegistryHandler.getSystemSetting("WebRoot") != null && 
-			   RegistryHandler.getSystemSetting("Tray") != null && RegistryHandler.getSystemSetting("HTTPS") != null) {
+		public static Boolean GetAndSetServerAddress() {
+			if(RegistryHandler.GetSystemSetting("Server") != null && RegistryHandler.GetSystemSetting("WebRoot") != null && 
+			   RegistryHandler.GetSystemSetting("Tray") != null && RegistryHandler.GetSystemSetting("HTTPS") != null) {
 				
-				CommunicationHandler.setServerAddress(RegistryHandler.getSystemSetting("HTTPS"), 
-				                                      RegistryHandler.getSystemSetting("Server"), 
-				                                      RegistryHandler.getSystemSetting("WebRoot"));
+				CommunicationHandler.SetServerAddress(RegistryHandler.GetSystemSetting("HTTPS"), 
+				                                      RegistryHandler.GetSystemSetting("Server"), 
+				                                      RegistryHandler.GetSystemSetting("WebRoot"));
 				return true;
 			}
-			LogHandler.log(LOG_NAME, "Regisitry keys are not set");
+			LogHandler.Log(LOG_NAME, "Regisitry keys are not set");
 			return false;
 		}
 		
 		
-		public static String getServerAddress() { return serverAddress; }		
+		public static String GetServerAddress() { return serverAddress; }		
 
 		
 		//Return the response form an address
-		public static Response getResponse(String postfix) {
+		public static Response GetResponse(String postfix) {
 
-			LogHandler.log(LOG_NAME, "URL: " + getServerAddress() + postfix );
+			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 
 			var webClient = new WebClient();
 			try {
-				String response = webClient.DownloadString(getServerAddress() + postfix);
-				response = decryptAES(response, getPassKey());
+				String response = webClient.DownloadString(GetServerAddress() + postfix);
+				response = decryptAES(response, GetPassKey());
 				//See if the return code is known
 				Boolean messageFound = false;
 				foreach(String returnMessage in returnMessages.Keys) {
 					if(response.StartsWith(returnMessage)) {
 						messageFound=true;
-						LogHandler.log(LOG_NAME, "Response: " + returnMessages[returnMessage]);
+						LogHandler.Log(LOG_NAME, "Response: " + returnMessages[returnMessage]);
 						break;
 					}					
 				}
 				
 				if(!messageFound) {
-						LogHandler.log(LOG_NAME, "Unknown Response: " + response.Replace("\n", ""));					
+						LogHandler.Log(LOG_NAME, "Unknown Response: " + response.Replace("\n", ""));					
 				}
            
 				return parseResponse(response);
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error contacting FOG server");			
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Error contacting FOG server");			
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return new Response();
 		}		
 		
-		public static String getRawResponse(String postfix) {
+		public static String GetRawResponse(String postfix) {
 			//ID the service as the new one
 			if(postfix.Contains(".php?")) {
 				postfix = postfix + "&newService=1";
 			} else {
 				postfix = postfix + "?newService=1";
 			}
-			LogHandler.log(LOG_NAME, "URL: " + getServerAddress() + postfix );
+			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 			
 			var webClient = new WebClient();
 			try {
-				String response = webClient.DownloadString(getServerAddress() + postfix);
+				String response = webClient.DownloadString(GetServerAddress() + postfix);
 				return response;
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error contacting FOG");			
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Error contacting FOG");			
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return "";
 			
 		}
 		
-		public static Boolean authenticate() {
+		public static Boolean Authenticate() {
 			try {
 	
 				String keyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
-				downloadFile("/management/other/ssl/srvpublic.key", keyPath);
+				DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
 				
-				passkey = EncryptionHandler.generatePassword(32).Trim();
-				String encryptedKey = EncryptionHandler.encryptRSA(passkey, keyPath);
+				passkey = EncryptionHandler.GeneratePassword(32).Trim();
+				String encryptedKey = EncryptionHandler.EncodeRSA(passkey, keyPath);
 				
 				Response authenticationResponse = 
-					getResponse("/management/index.php?mac=" +  getMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
+					GetResponse("/management/index.php?mac=" +  GetMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
 				
 				if(!authenticationResponse.wasError()) {
-					LogHandler.log(LOG_NAME, "Authenticated");	
+					LogHandler.Log(LOG_NAME, "Authenticated");	
 					return true;
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);					
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);					
 			}
 			
-			LogHandler.log(LOG_NAME, "Failed to authenticate");	
+			LogHandler.Log(LOG_NAME, "Failed to authenticate");	
 			return false;
 		}
 		
@@ -157,11 +157,11 @@ namespace FOG {
 			
 			if(response.StartsWith(encryptedFlag2)) {
 				String decryptedResponse = response.Substring(encryptedFlag2.Length);
-				response = EncryptionHandler.decodeAES(decryptedResponse, passKey);
+				response = EncryptionHandler.DecodeAES(decryptedResponse, passKey);
 			}
 			if(response.StartsWith(encryptedFlag)) {
 				String decryptedResponse = response.Substring(encryptedFlag.Length);
-				response = EncryptionHandler.decodeAES(decryptedResponse, passKey);
+				response = EncryptionHandler.DecodeAES(decryptedResponse, passKey);
 			}			
 			
 			
@@ -169,24 +169,24 @@ namespace FOG {
 		}		
 
 		//Contact FOG at a url, used for submitting data
-		public static Boolean contact(String postfix) {
+		public static Boolean Contact(String postfix) {
 			//ID the service as the new one
 			if(postfix.Contains(".php?")) {
 				postfix = postfix + "&newService=1";
 			} else {
 				postfix = postfix + "?newService=1";
 			}			
-			LogHandler.log(LOG_NAME,
-			               "URL: " + getServerAddress() + postfix);
+			LogHandler.Log(LOG_NAME,
+			               "URL: " + GetServerAddress() + postfix);
 			var webClient = new WebClient();			
 
 			try {
-				webClient.DownloadString(getServerAddress() + postfix);
+				webClient.DownloadString(GetServerAddress() + postfix);
 				return true;
 				
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error contacting FOG");		
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error contacting FOG");		
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return false;
 		}
@@ -213,21 +213,20 @@ namespace FOG {
 
 				response.setData(parsedData);
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error parsing response");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Error parsing response");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return response;
 		}
 		
 		//Get an array from a response
-		public static List<String> parseDataArray(Response response, String identifier, Boolean base64Decode) {
+		public static List<String> ParseDataArray(Response response, String identifier, Boolean base64Decode) {
 			var dataArray = new List<String>();
 
-			
 			foreach(String key in response.getData().Keys) {
 				if(key.Contains(identifier)) {
 					if(base64Decode) {
-						dataArray.Add(EncryptionHandler.decodeBase64(response.getField(key)));
+						dataArray.Add(EncryptionHandler.DecodeBase64(response.getField(key)));
 					} else {
 						dataArray.Add(response.getField(key));	
 					}
@@ -239,28 +238,28 @@ namespace FOG {
 		
 
 		//Download a file
-		public static Boolean downloadFile(String postfix, String fileName) {
-			LogHandler.log(LOG_NAME, "URL: " + serverAddress + postfix);	
+		public static Boolean DownloadFile(String postfix, String fileName) {
+			LogHandler.Log(LOG_NAME, "URL: " + serverAddress + postfix);	
 			var webClient = new WebClient();
 			try {
 				//Create the directory that the file will go in if it doesn't already exist
 				if(!Directory.Exists(Path.GetDirectoryName(fileName))) {
 					Directory.CreateDirectory(Path.GetDirectoryName(fileName));
 				}
-				webClient.DownloadFile(getServerAddress() + postfix, fileName);
+				webClient.DownloadFile(GetServerAddress() + postfix, fileName);
 
 				if(File.Exists(fileName))
 					return true;
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error downloading file");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Error downloading file");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return false;
 		}
 
 
 		//Get the IP address of the host
-		public static String getIPAddress() {
+		public static String GetIPAddress() {
 			String hostName = System.Net.Dns.GetHostName();
 			
 			IPHostEntry ipEntry = System.Net.Dns.GetHostEntry(hostName);
@@ -273,7 +272,7 @@ namespace FOG {
 		}
 
 		//Get a string of all mac addresses
-		public static String getMacAddresses() {
+		public static String GetMacAddresses() {
             String macs = "";
 			try {
 				NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
@@ -290,8 +289,8 @@ namespace FOG {
 					macs = macs.Substring(1);
 				
 			} catch (Exception ex) {
-            	LogHandler.log(LOG_NAME, "Error getting MAC addresses");
-            	LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+            	LogHandler.Log(LOG_NAME, "Error getting MAC addresses");
+            	LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 
 			return macs;

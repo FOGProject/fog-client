@@ -34,8 +34,8 @@ namespace FOG {
 			AppDomain.CurrentDomain.ProcessExit += new EventHandler (OnProcessExit);
 			
 			LogHandler.setFilePath(Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
-			LogHandler.log(LOG_NAME, "Initializing");
-			if(CommunicationHandler.getAndSetServerAddress()) {
+			LogHandler.Log(LOG_NAME, "Initializing");
+			if(CommunicationHandler.GetAndSetServerAddress()) {
 	
 				initializeModules();
 				threadManager = new Thread(new ThreadStart(serviceLooper));
@@ -43,7 +43,7 @@ namespace FOG {
 				
 				//Setup the notification pipe server
 				notificationPipeThread = new Thread(new ThreadStart(notificationPipeHandler));
-				notificationPipe = new PipeServer("fog_pipe_notification_user_" +  UserHandler.getCurrentUser());
+				notificationPipe = new PipeServer("fog_pipe_notification_user_" +  UserHandler.GetCurrentUser());
 				notificationPipe.MessageReceived += new PipeServer.MessageReceivedHandler(pipeServer_MessageReceived);			
 				notificationPipe.start();
 				
@@ -59,8 +59,8 @@ namespace FOG {
 
 				
 				if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info")) {
-					LogHandler.log(LOG_NAME, "Update.info found, exiting program");
-					ShutdownHandler.spawnUpdateWaiter(System.Reflection.Assembly.GetExecutingAssembly().Location);
+					LogHandler.Log(LOG_NAME, "Update.info found, exiting program");
+					ShutdownHandler.SpawnUpdateWaiter(System.Reflection.Assembly.GetExecutingAssembly().Location);
 					Environment.Exit(0);
 				}
 				
@@ -70,7 +70,7 @@ namespace FOG {
 				threadManager.IsBackground = false;
 				threadManager.Start();
 
-				if(RegistryHandler.getSystemSetting("Tray").Trim().Equals("1")) {
+				if(RegistryHandler.GetSystemSetting("Tray").Trim().Equals("1")) {
 					startTray();
 				}
 			}
@@ -89,14 +89,14 @@ namespace FOG {
 					notificationPipe.start();			
 				
 				
-				if(NotificationHandler.getNotifications().Count > 0) {
+				if(NotificationHandler.GetNotifications().Count > 0) {
 					//Split up the notification into 3 messages: Title, Message, and Duration
-					notificationPipe.sendMessage("TLE:" + NotificationHandler.getNotifications()[0].getTitle());
+					notificationPipe.sendMessage("TLE:" + NotificationHandler.GetNotifications()[0].getTitle());
 					Thread.Sleep(750);
-					notificationPipe.sendMessage("MSG:" + NotificationHandler.getNotifications()[0].getMessage());
+					notificationPipe.sendMessage("MSG:" + NotificationHandler.GetNotifications()[0].getMessage());
 					Thread.Sleep(750);
-					notificationPipe.sendMessage("DUR:" + NotificationHandler.getNotifications()[0].getDuration().ToString());
-					NotificationHandler.removeNotification(0);
+					notificationPipe.sendMessage("DUR:" + NotificationHandler.GetNotifications()[0].getDuration().ToString());
+					NotificationHandler.RemoveNotification(0);
 				} 
 				
 				Thread.Sleep(3000);
@@ -106,18 +106,18 @@ namespace FOG {
 		
 		//Handle recieving a message
 		private static void pipeServer_MessageReceived(Client client, String message) {
-			LogHandler.log(LOG_NAME, "Message recieved from tray");
-			LogHandler.log(LOG_NAME, "MSG:" + message);
+			LogHandler.Log(LOG_NAME, "Message recieved from tray");
+			LogHandler.Log(LOG_NAME, "MSG:" + message);
 		}	
 		
 		//Handle recieving a message
 		private static void pipeClient_MessageReceived(String message) {
-			LogHandler.log(LOG_NAME, "Message recieved from service");
-			LogHandler.log(LOG_NAME, "MSG: " + message);
+			LogHandler.Log(LOG_NAME, "Message recieved from service");
+			LogHandler.Log(LOG_NAME, "MSG: " + message);
 			
 			if(message.Equals("UPD")) {
-				ShutdownHandler.spawnUpdateWaiter(System.Reflection.Assembly.GetExecutingAssembly().Location);
-				ShutdownHandler.scheduleUpdate();
+				ShutdownHandler.SpawnUpdateWaiter(System.Reflection.Assembly.GetExecutingAssembly().Location);
+				ShutdownHandler.ScheduleUpdate();
 			}
 		}			
 		
@@ -133,33 +133,33 @@ namespace FOG {
 		//Run each service
 		private static void serviceLooper() {
 			//Only run the service if there wasn't a stop or shutdown request
-			while (status.Equals(Status.Running) && !ShutdownHandler.isShutdownPending() && !ShutdownHandler.isUpdatePending()) {
+			while (status.Equals(Status.Running) && !ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending()) {
 				foreach(AbstractModule module in modules) {
-					if(ShutdownHandler.isShutdownPending() || ShutdownHandler.isUpdatePending())
+					if(ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
 						break;
 					
 					//Log file formatting
-					LogHandler.newLine();
-					LogHandler.newLine();
-					LogHandler.divider();
+					LogHandler.NewLine();
+					LogHandler.NewLine();
+					LogHandler.Divider();
 					
 					try {
 						module.start();
 					} catch (Exception ex) {
-						LogHandler.log(LOG_NAME, "Failed to start " + module.getName());
-						LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+						LogHandler.Log(LOG_NAME, "Failed to start " + module.getName());
+						LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 					}
 					
 					//Log file formatting
-					LogHandler.divider();
-					LogHandler.newLine();
+					LogHandler.Divider();
+					LogHandler.NewLine();
 				}
 					
-				if(ShutdownHandler.isShutdownPending() || ShutdownHandler.isUpdatePending())
+				if(ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
 					break;				
 				//Once all modules have been run, sleep for the set time
 				int sleepTime = getSleepTime();
-				LogHandler.log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
+				LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
 				Thread.Sleep(sleepTime * 1000);
 			}
 		}
@@ -167,9 +167,9 @@ namespace FOG {
 		
 		//Get the time to sleep from the FOG server, if it cannot it will use the default time
 		private static int getSleepTime() {
-			LogHandler.log(LOG_NAME, "Getting sleep duration...");
+			LogHandler.Log(LOG_NAME, "Getting sleep duration...");
 			
-			Response sleepResponse = CommunicationHandler.getResponse("/service/servicemodule-active.php");
+			Response sleepResponse = CommunicationHandler.GetResponse("/service/servicemodule-active.php");
 			
 			try {
 				if(!sleepResponse.wasError() && !sleepResponse.getField("#sleep").Equals("")) {
@@ -177,15 +177,15 @@ namespace FOG {
 					if(sleepTime >= sleepDefaultTime) {
 						return sleepTime;
 					} else {
-						LogHandler.log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime.ToString());
+						LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime.ToString());
 					}
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME,"Failed to parse sleep time");
-				LogHandler.log(LOG_NAME,"ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME,"Failed to parse sleep time");
+				LogHandler.Log(LOG_NAME,"ERROR: " + ex.Message);				
 			}
 			
-			LogHandler.log(LOG_NAME,"Using default sleep time");	
+			LogHandler.Log(LOG_NAME,"Using default sleep time");	
 			
 			return sleepDefaultTime;			
 		}

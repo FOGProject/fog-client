@@ -15,31 +15,31 @@ namespace FOG {
 		private const String LOG_NAME = "EncryptionHandler";
 		
 		//Encode a string to base64
-		public static String encodeBase64(String toEncode) {
+		public static String EncodeBase64(String toEncode) {
 			try {
 				Byte[] bytes = ASCIIEncoding.ASCII.GetBytes(toEncode);
 				return System.Convert.ToBase64String(bytes);
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error encoding base64");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error encoding base64");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return "";
 		}
 
 		
 		//Decode a string from base64
-		public static String decodeBase64(String toDecode) {
+		public static String DecodeBase64(String toDecode) {
 			try {
 				Byte[] bytes = Convert.FromBase64String(toDecode);
 				return Encoding.ASCII.GetString(bytes);
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error decoding base64");
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME, "Error decoding base64");
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
 			return "";
 		}
 		
-        public static String encodeAES(String plainText, String passKey, String ivString) {
+        public static String EncodeAES(String plainText, String passKey, String ivString) {
  		    
 			//Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
@@ -72,14 +72,14 @@ namespace FOG {
 	            // Return the encrypted bytes from the memory stream. 
 	            return Convert.ToBase64String(encrypted);
 		    } catch (Exception ex) {
-		        LogHandler.log(LOG_NAME, "Error encoding AES");
-		        LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);		    	
+		        LogHandler.Log(LOG_NAME, "Error encoding AES");
+		        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);		    	
 		    }
 			return "";	            
         }
 		
 		//Decode AES256
-		public static String decodeAES(String toDecode, String passKey, String ivString) {
+		public static String DecodeAES(String toDecode, String passKey, String ivString) {
 		    //Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
 		    byte[] iv  = Encoding.UTF8.GetBytes(ivString);
@@ -101,62 +101,32 @@ namespace FOG {
 		        
 		        
 		    } catch (Exception ex) {
-		        LogHandler.log(LOG_NAME, "Error decoding from AES");
-		        LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);		    	
+		        LogHandler.Log(LOG_NAME, "Error decoding from AES");
+		        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);		    	
 		    }
 			return "";
 		}
 		
-		public static int getRandom(RNGCryptoServiceProvider rngProvider, int min, int max) {
+		public static int GetRandom(RNGCryptoServiceProvider rngProvider, int min, int max) {
 		    byte[] b = new byte[sizeof(UInt32)];
 		    rngProvider.GetBytes(b);
 		    double d = BitConverter.ToUInt32(b, 0) / (double)UInt32.MaxValue;
 		    return min + (int)((max - min) * d);
 		}
 
-		public static String generatePassword(int length) {
+		public static String GeneratePassword(int length) {
 			var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 			var stringChars = new char[length];
 			var random = new RNGCryptoServiceProvider();
 			
 			for (int i = 0; i < stringChars.Length; i++) {
-				stringChars[i] = chars[getRandom(random, 1, chars.Length)];
+				stringChars[i] = chars[GetRandom(random, 1, chars.Length)];
 			}
 			
 			return new String(stringChars);
 		}
-		
-		public static String generateAESKey() {
-			String key;
-			AesCryptoServiceProvider crypto = new AesCryptoServiceProvider();
-			
-			crypto.KeySize = 256;
-			crypto.GenerateKey();
-			byte[] rawKey = crypto.Key;
-			key = Encoding.ASCII.GetString(rawKey);
-			
-			return key;
-			
-		}
-		
-		public static String generateAESIV() {
-			String iv;
-			
-			AesCryptoServiceProvider crypto = new AesCryptoServiceProvider();
-			
-			crypto.KeySize = 256;
-			crypto.Mode = CipherMode.CBC;
-			crypto.Padding = PaddingMode.None;
-			crypto.GenerateKey();
-			crypto.GenerateIV();
-			byte[] rawIV = crypto.IV;
-			iv = Encoding.UTF32.GetString(rawIV);
-			
-			return iv;
-			
-		}			
-		
-		public static String encryptRSA(String data, String pemFile) {
+				
+		public static String EncodeRSA(String data, String pemFile) {
 			
 			byte[] encryptedData;
 			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
@@ -168,11 +138,11 @@ namespace FOG {
 	
 				
 			}
-			return byteArrayToString(encryptedData);
+			return ByteArrayToString(encryptedData);
 			
 		}	
 
-		public static String byteArrayToString(byte[] ba) {
+		public static String ByteArrayToString(byte[] ba) {
 			StringBuilder hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)
 				hex.AppendFormat("{0:x2}", b);
@@ -189,19 +159,19 @@ namespace FOG {
 		
 
 		//Decode an AES256 encrypted response
-		public static String decodeAES(String response, String passKey) {
+		public static String DecodeAES(String response, String passKey) {
 			//The first set of 15 characters is the initialization vector, the rest is the encrypted message
 			if(response.Length > 16) {
-				return EncryptionHandler.decodeAES(response.Substring(16), passKey, response.Substring(0,16)).Trim();
+				return EncryptionHandler.DecodeAES(response.Substring(16), passKey, response.Substring(0,16)).Trim();
 			} else {
-				LogHandler.log(LOG_NAME, "Unable to decrypt response");
-				LogHandler.log(LOG_NAME, "ERROR: Encrypted data is corrupt");
+				LogHandler.Log(LOG_NAME, "Unable to decrypt response");
+				LogHandler.Log(LOG_NAME, "ERROR: Encrypted data is corrupt");
 			}
 			return "";
 		}
 		
 		//Generate the md5 hash of a file
-		public static  String generateMD5Hash(String file) {
+		public static  String GetMD5Hash(String file) {
 			if (File.Exists(file)) {
 				StringBuilder sBuilder = new StringBuilder();
 				MD5 md5 = new MD5CryptoServiceProvider();

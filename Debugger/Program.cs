@@ -5,15 +5,15 @@ namespace FOG {
 		public static void Main(string[] args) {
 			
 			LogHandler.setConsoleMode(true);
-			CommunicationHandler.getAndSetServerAddress();
+			CommunicationHandler.GetAndSetServerAddress();
 			
-			LogHandler.newLine();
-			LogHandler.paddedHeader("Authentication");
+			LogHandler.NewLine();
+			LogHandler.PaddedHeader("Authentication");
 			
-			Boolean auth = CommunicationHandler.authenticate();
+			Boolean auth = CommunicationHandler.Authenticate();
 			
-			LogHandler.divider();
-			LogHandler.newLine();
+			LogHandler.Divider();
+			LogHandler.NewLine();
 			
 			Console.Write("Press any key exit...");
 			Console.ReadKey(true);		

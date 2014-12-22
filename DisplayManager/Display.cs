@@ -26,7 +26,7 @@ namespace FOG {
 			if(User_32.EnumDisplaySettings(null, User_32.ENUM_CURRENT_SETTINGS, ref this.devMode) !=0) {
 				return true;
 			}			
-			LogHandler.log(LOG_NAME, "Unable to load display settings");
+			LogHandler.Log(LOG_NAME, "Unable to load display settings");
 			return false;
 		}
 		
@@ -46,21 +46,21 @@ namespace FOG {
 				this.devMode.dmDeviceName = device;
 				
 				//Test changing the resolution first
-				LogHandler.log(LOG_NAME, "Testing resolution to ensure it is compatible");
+				LogHandler.Log(LOG_NAME, "Testing resolution to ensure it is compatible");
 				int changeStatus = User_32.ChangeDisplaySettings(ref this.devMode, User_32.CDS_TEST);
 				
 				if(changeStatus.Equals(User_32.DISP_CHANGE_FAILED)) {
-					LogHandler.log(LOG_NAME, "Failed");
+					LogHandler.Log(LOG_NAME, "Failed");
 				} else {
-					LogHandler.log(LOG_NAME, "Changing resolution");
+					LogHandler.Log(LOG_NAME, "Changing resolution");
 					changeStatus = User_32.ChangeDisplaySettings(ref this.devMode, User_32.CDS_UPDATEREGISTRY);
 					
 					if(changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL)) {
-						LogHandler.log(LOG_NAME, "Success");
+						LogHandler.Log(LOG_NAME, "Success");
 					} else if(changeStatus.Equals(User_32.DISP_CHANGE_RESTART)) {
-						LogHandler.log(LOG_NAME, "Success, requires reboot");
+						LogHandler.Log(LOG_NAME, "Success, requires reboot");
 					} else if(changeStatus.Equals(User_32.DISP_CHANGE_FAILED)) {
-						LogHandler.log(LOG_NAME, "Failed");
+						LogHandler.Log(LOG_NAME, "Failed");
 					}
 				}
 				

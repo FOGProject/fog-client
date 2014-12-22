@@ -13,16 +13,16 @@ namespace FOG {
 		private static String root = "";
 		
 		private static void updateRoot() {
-			if(getRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null) {
+			if(GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null) {
 				root = @"Software\Wow6432Node\FOG\";
-				LogHandler.log(LOG_NAME, "64 bit registry detected");				
+				LogHandler.Log(LOG_NAME, "64 bit registry detected");				
 			} else {
 				root = @"Software\FOG\";
-				LogHandler.log(LOG_NAME, "32 bit registry detected");
+				LogHandler.Log(LOG_NAME, "32 bit registry detected");
 			}
 		}
 		
-		public static String getRegisitryValue(String keyPath, String keyName) {
+		public static String GetRegisitryValue(String keyPath, String keyName) {
 			try {
 				RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath);
 	            if (key != null) {
@@ -32,38 +32,38 @@ namespace FOG {
 	                }
 	            }	
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error retrieving " + keyPath + keyName);
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error retrieving " + keyPath + keyName);
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			return null;
 		}
 		
-		public static String getSystemSetting(String name) {
-			return getRegisitryValue(getRoot(), name);
+		public static String GetSystemSetting(String name) {
+			return GetRegisitryValue(GetRoot(), name);
 		}
 		
-		public static Boolean setSystemSetting(String keyName, String value) {
-			return setRegistryValue(getRoot(), keyName, value);
+		public static Boolean SetSystemSetting(String keyName, String value) {
+			return SetRegistryValue(GetRoot(), keyName, value);
 		}
 		
-		public static String getModuleSetting(String module, String keyName) {
-			return getRegisitryValue(getRoot() + @"\" + module, keyName);
+		public static String GetModuleSetting(String module, String keyName) {
+			return GetRegisitryValue(GetRoot() + @"\" + module, keyName);
 		}
 		
-		public static Boolean setModuleSetting(String module, String keyName, String value) {
-			return setRegistryValue(getRoot() + @"\" + module, keyName, value);
+		public static Boolean SetModuleSetting(String module, String keyName, String value) {
+			return SetRegistryValue(GetRoot() + @"\" + module, keyName, value);
 		}
 		
-		public static Boolean deleteModuleSetting(String module, String keyName) {
-			return deleteKey(getRoot() + @"\" + module, keyName);
+		public static Boolean DeleteModuleSetting(String module, String keyName) {
+			return DeleteKey(GetRoot() + @"\" + module, keyName);
 		}
 		
-		public static Boolean deleteModule(String module) {
-			return deleteFolder(getRoot() + @"\" + module);
+		public static Boolean DeleteModule(String module) {
+			return DeleteFolder(GetRoot() + @"\" + module);
 		}
 		
 		
-		public static Boolean setRegistryValue(String keyPath, String keyName, String value) {
+		public static Boolean SetRegistryValue(String keyPath, String keyName, String value) {
 			
 			try {
 				RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath);
@@ -72,15 +72,15 @@ namespace FOG {
 				key.SetValue(keyName, value);
 				
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error setting " + keyPath + keyName);
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error setting " + keyPath + keyName);
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}			
 			
 			return false;
 		}
 		
 		
-		public static Boolean deleteFolder(String path) {
+		public static Boolean DeleteFolder(String path) {
 			try {
 				RegistryKey key = Registry.LocalMachine.OpenSubKey(path, true);
 				if (key != null) {
@@ -88,14 +88,14 @@ namespace FOG {
 					return true;
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error while trying to remove " + path);
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error while trying to remove " + path);
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			
 			return false;
 		}
 		
-		public static Boolean deleteKey(String keyPath, String keyName) {
+		public static Boolean DeleteKey(String keyPath, String keyName) {
 			try {
 				RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath, true);
 				if (key != null) {
@@ -103,14 +103,14 @@ namespace FOG {
 					return true;
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME, "Error while trying to remove " + keyPath);
-				LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+				LogHandler.Log(LOG_NAME, "Error while trying to remove " + keyPath);
+				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 			}
 			
 			return false;			
 		}
 
-		public static String getRoot() { 
+		public static String GetRoot() { 
 			if(root.Equals("")) {
 				updateRoot();
 			}

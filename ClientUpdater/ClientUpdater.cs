@@ -24,45 +24,45 @@ namespace FOG
 		protected override void doWork() {
 			this.updatePending = false;
 			//Get task info
-			Response updateResponse = CommunicationHandler.getResponse("/service/updates.php?action=list");	
+			Response updateResponse = CommunicationHandler.GetResponse("/service/updates.php?action=list");	
 			if(!updateResponse.wasError()) {
-				List<String> updates = CommunicationHandler.parseDataArray(updateResponse, "#update", true);
+				List<String> updates = CommunicationHandler.ParseDataArray(updateResponse, "#update", true);
 				
 				//Loop through each update file and compare its hash to the local copy
 				foreach(String updateFile in updates) {
-					LogHandler.log(getName(), "Possible update for " + updateFile + " found");
-					Response askResponse = CommunicationHandler.getResponse("/service/updates.php?action=ask&file=" + 
-					                                                         EncryptionHandler.encodeBase64(updateFile));
+					LogHandler.Log(getName(), "Possible update for " + updateFile + " found");
+					Response askResponse = CommunicationHandler.GetResponse("/service/updates.php?action=ask&file=" + 
+					                                                         EncryptionHandler.EncodeBase64(updateFile));
 					
 					//Check if the response is correct
 					if(!askResponse.wasError() && !askResponse.getField("#md5").Equals("")) {
 						String updateFileHash = askResponse.getField("#md5");;
 						
 						//Check if the MD5 hashes are note equal
-						if(!EncryptionHandler.generateMD5Hash(AppDomain.CurrentDomain.BaseDirectory 
+						if(!EncryptionHandler.GetMD5Hash(AppDomain.CurrentDomain.BaseDirectory 
 						                                      + @"\" + updateFile).Equals(updateFileHash)) {
 							
-							LogHandler.log(getName(), "Remote file is newer, attempting to update");
+							LogHandler.Log(getName(), "Remote file is newer, attempting to update");
 							
 							if(generateUpdateFile(askResponse.getField("#md5"), updateFile))
 								prepareUpdaste(updateFile);
 						} else {
-							LogHandler.log(getName(), "Remote file is the same as this local copy");
+							LogHandler.Log(getName(), "Remote file is the same as this local copy");
 						}
 					}
 				}
 				if(updatePending) {
-					ShutdownHandler.scheduleUpdate();
+					ShutdownHandler.ScheduleUpdate();
 				}
 			}
 		}
 		
 		//Generate the update file from the parsed response
 		private Boolean generateUpdateFile(String md5, String updateFile) {
-			LogHandler.log(getName(), "Downloading update file");
+			LogHandler.Log(getName(), "Downloading update file");
 			//Download the new file
-			Response updateFileResponse = CommunicationHandler.getResponse("/service/updates.php?action=get&file=" + 
-			                                                               EncryptionHandler.encodeBase64(updateFile));
+			Response updateFileResponse = CommunicationHandler.GetResponse("/service/updates.php?action=get&file=" + 
+			                                                               EncryptionHandler.EncodeBase64(updateFile));
 					                                                         
 			if(!updateFileResponse.getField("#updatefile").Equals("")) {
 				
@@ -77,19 +77,19 @@ namespace FOG
 						File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile);
 					
 					File.WriteAllBytes(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile, EncryptionHandler.StringToByteArray(updateFileResponse.getField("#updatefile")));
-					LogHandler.log(getName(), "Verifying MD5 hash");
+					LogHandler.Log(getName(), "Verifying MD5 hash");
 					
-					if(EncryptionHandler.generateMD5Hash(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile).Equals(md5)) {
+					if(EncryptionHandler.GetMD5Hash(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile).Equals(md5)) {
 						return true;
 					} else {
-						LogHandler.log(getName(), "Failure");
-						LogHandler.log(getName(), "SVR: " + md5);
-						LogHandler.log(getName(), "DWD: " + EncryptionHandler.generateMD5Hash(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile));
+						LogHandler.Log(getName(), "Failure");
+						LogHandler.Log(getName(), "SVR: " + md5);
+						LogHandler.Log(getName(), "DWD: " + EncryptionHandler.GetMD5Hash(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile));
 						File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile);
 					}
 				} catch (Exception ex) {
-					LogHandler.log(getName(), "Unable to generate update file");
-					LogHandler.log(getName(), "ERROR: " + ex.Message);
+					LogHandler.Log(getName(), "Unable to generate update file");
+					LogHandler.Log(getName(), "ERROR: " + ex.Message);
 				}
 
 			}
@@ -106,22 +106,22 @@ namespace FOG
 							File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\" + updateFile);
 						
 						File.Move(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile, AppDomain.CurrentDomain.BaseDirectory + @"\" + updateFile);
-						LogHandler.log(getName(), "Successfully applied " + updateFile + ", no service restart needed for this update");   
+						LogHandler.Log(getName(), "Successfully applied " + updateFile + ", no service restart needed for this update");   
 					} catch (Exception) {
 						if(File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\" + updateFile + ".update"))
 							File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\" + updateFile + ".update");
 							
 						File.Move(AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + updateFile, AppDomain.CurrentDomain.BaseDirectory + @"\" + updateFile + ".update");
 						this.updatePending = true;
-						LogHandler.log(getName(), "Successfully prepared " + updateFile + " for updating, a service restart is required for this update");		
+						LogHandler.Log(getName(), "Successfully prepared " + updateFile + " for updating, a service restart is required for this update");		
 					}
 						
 				} catch (Exception ex) {
-					LogHandler.log(getName(), "Unable to prepare " + updateFile);
-					LogHandler.log(getName(), "ERROR: " + ex.Message);
+					LogHandler.Log(getName(), "Unable to prepare " + updateFile);
+					LogHandler.Log(getName(), "ERROR: " + ex.Message);
 				}
 			} else {
-				LogHandler.log(getName(), "Unable to locate downloaded update file");
+				LogHandler.Log(getName(), "Unable to locate downloaded update file");
 			}
 		}
 	}

@@ -26,45 +26,45 @@ namespace FOG
 		public static void setConsoleMode(Boolean con) {  console = con; }
 		
 		//Log a message
-		public static void log(String moduleName, String message) {
-			writeLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + 
+		public static void Log(String moduleName, String message) {
+			WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + 
 			          " " + moduleName + " " + message);
 		}
 		
 		//Make a new line in the log file
-		public static void newLine() {
-			writeLine("");
+		public static void NewLine() {
+			WriteLine("");
 		}
 		
 		//Make a divider in the log file
-		public static void divider() {
-			header("");
+		public static void Divider() {
+			Header("");
 		}
 		
-		public static void header(String text) {
+		public static void Header(String text) {
 			double headerSize = (HEADER_LENGTH-text.Length)/2;
 			
 			for(int i=0; i<(int)Math.Ceiling(headerSize); i++) {
-				write("-");
+				Write("-");
 			}
 			
-			write(text);
+			Write(text);
 			
 			for(int i=0; i<((int)Math.Floor(headerSize)); i++) {
-				write("-");
+				Write("-");
 			}	
-			newLine();
+			NewLine();
 			
 		}
 		
-		public static void paddedHeader(String text) {
-			divider();
-			header(text);
-			divider();
+		public static void PaddedHeader(String text) {
+			Divider();
+			Header(text);
+			Divider();
 		}
 		
 		//Write a string on the current line, it is prefered that log is used instead for formatting purposes
-		public static void write(String text) {
+		public static void Write(String text) {
 			if(console) {
 				if(text.ToUpper().Contains("ERROR"))
 					Console.BackgroundColor = ConsoleColor.Red;
@@ -90,8 +90,8 @@ namespace FOG
 		}
 		
 		//Write a string to a line, other classes should not call this function directly for formatting purposes
-		public static void writeLine(String line) {
-			write(line + "\n");
+		public static void WriteLine(String line) {
+			Write(line + "\n");
 		}
 		
 		//Delete the log file and create a new one
@@ -99,7 +99,7 @@ namespace FOG
 			try {
 				logFile.Delete();
 			} catch(Exception ex) {
-				log(LOG_NAME, "Failed to delete log file: " + ex.Message);
+				Log(LOG_NAME, "Failed to delete log file: " + ex.Message);
 			}
 		}
 	}

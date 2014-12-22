@@ -17,28 +17,28 @@ namespace FOG {
 		}
 		
 		protected override void doWork() {
-			if(UserHandler.isUserLoggedIn()) {
+			if(UserHandler.IsUserLoggedIn()) {
 				//Get task info
-				Response taskResponse = CommunicationHandler.getResponse("/service/autologout.php?mac=" + CommunicationHandler.getMacAddresses());
+				Response taskResponse = CommunicationHandler.GetResponse("/service/autologout.php?mac=" + CommunicationHandler.GetMacAddresses());
 
 				if(!taskResponse.wasError()) {
 					int timeOut = getTimeOut(taskResponse);
 					if(timeOut > 0) {
-						LogHandler.log(getName(), "Time set to " + timeOut.ToString() + " seconds");
-						LogHandler.log(getName(), "Inactive for " +  UserHandler.getUserInactivityTime().ToString() + " seconds");
-						if(UserHandler.getUserInactivityTime() >= timeOut) {
-							NotificationHandler.createNotification(new Notification("You are about to be logged off",
+						LogHandler.Log(getName(), "Time set to " + timeOut.ToString() + " seconds");
+						LogHandler.Log(getName(), "Inactive for " +  UserHandler.GetUserInactivityTime().ToString() + " seconds");
+						if(UserHandler.GetUserInactivityTime() >= timeOut) {
+							NotificationHandler.CreateNotification(new Notification("You are about to be logged off",
 							                                                        "Due to inactivity you will be logged off if you remain inactive", 20));
 							//Wait 20 seconds and check if the user is no longer inactive
 							Thread.Sleep(20000);
-							if(UserHandler.getUserInactivityTime() >= timeOut)
-								ShutdownHandler.logOffUser();
+							if(UserHandler.GetUserInactivityTime() >= timeOut)
+								ShutdownHandler.LogOffUser();
 						}
 					}
 					
 				}
 			} else {
-				LogHandler.log(getName(), "No user logged in");
+				LogHandler.Log(getName(), "No user logged in");
 			}
 			
 		}
@@ -50,12 +50,12 @@ namespace FOG {
 				if(timeOut >= this.minimumTime) {
 					return timeOut;
 				} else {
-					LogHandler.log(getName(), "Time set is less than 1 minute");
+					LogHandler.Log(getName(), "Time set is less than 1 minute");
 				}
 				
 			} catch (Exception ex) {
-				LogHandler.log(getName(), "Unable to parsing time set");
-				LogHandler.log(getName(), "ERROR: " + ex.Message);
+				LogHandler.Log(getName(), "Unable to parsing time set");
+				LogHandler.Log(getName(), "ERROR: " + ex.Message);
 			}
 
 			return 0;

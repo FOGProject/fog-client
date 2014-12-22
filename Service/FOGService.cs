@@ -31,7 +31,7 @@ namespace FOG{
 		
 		public FOGService() {
 			//Initialize everything
-			if(CommunicationHandler.getAndSetServerAddress()) {
+			if(CommunicationHandler.GetAndSetServerAddress()) {
 
 				initializeModules();
 				this.threadManager = new Thread(new ThreadStart(serviceLooper));
@@ -47,7 +47,7 @@ namespace FOG{
 				this.servicePipe.MessageReceived += new PipeServer.MessageReceivedHandler(servicePipeService_MessageReceived);
 				
 				//Unschedule any old updates
-				ShutdownHandler.unScheduleUpdate();
+				ShutdownHandler.UnScheduleUpdate();
 			}
 		}
 		
@@ -57,14 +57,14 @@ namespace FOG{
 				if(!this.notificationPipe.isRunning()) 
 					this.notificationPipe.start();			
 				
-				if(NotificationHandler.getNotifications().Count > 0) {
+				if(NotificationHandler.GetNotifications().Count > 0) {
 					//Split up the notification into 3 messages: Title, Message, and Duration
-					this.notificationPipe.sendMessage("TLE:" + NotificationHandler.getNotifications()[0].getTitle());
+					this.notificationPipe.sendMessage("TLE:" + NotificationHandler.GetNotifications()[0].getTitle());
 					Thread.Sleep(750);
-					this.notificationPipe.sendMessage("MSG:" + NotificationHandler.getNotifications()[0].getMessage());
+					this.notificationPipe.sendMessage("MSG:" + NotificationHandler.GetNotifications()[0].getMessage());
 					Thread.Sleep(750);
-					this.notificationPipe.sendMessage("DUR:" + NotificationHandler.getNotifications()[0].getDuration().ToString());
-					NotificationHandler.removeNotification(0);
+					this.notificationPipe.sendMessage("DUR:" + NotificationHandler.GetNotifications()[0].getDuration().ToString());
+					NotificationHandler.RemoveNotification(0);
 				} 
 				
 				Thread.Sleep(3000);
@@ -73,14 +73,14 @@ namespace FOG{
 		
 		//Handle recieving a message
 		private void notificationPipeServer_MessageReceived(Client client, String message) {
-			LogHandler.log("PipeServer", "Notification message recieved");
-			LogHandler.log("PipeServer",message);
+			LogHandler.Log("PipeServer", "Notification message recieved");
+			LogHandler.Log("PipeServer",message);
 		}
 
 		//Handle recieving a message
 		private void servicePipeService_MessageReceived(Client client, String message) {
-			LogHandler.log("PipeServer", "Server-Pipe message recieved");
-			LogHandler.log("PipeServer",message);
+			LogHandler.Log("PipeServer", "Server-Pipe message recieved");
+			LogHandler.Log("PipeServer",message);
 		}		
 
 		//Called when the service starts
@@ -101,7 +101,7 @@ namespace FOG{
 				this.threadManager.Start();
 				
 				//Unschedule any old updates
-				ShutdownHandler.unScheduleUpdate();
+				ShutdownHandler.UnScheduleUpdate();
 			}
         }
 		
@@ -127,49 +127,49 @@ namespace FOG{
 		
 		//Run each service
 		private void serviceLooper() {
-			CommunicationHandler.authenticate();
-			LogHandler.newLine();
+			CommunicationHandler.Authenticate();
+			LogHandler.NewLine();
 			//Only run the service if there wasn't a stop or shutdown request
-			while (status.Equals(Status.Running) && !ShutdownHandler.isShutdownPending() && !ShutdownHandler.isUpdatePending()) {
+			while (status.Equals(Status.Running) && !ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending()) {
 				foreach(AbstractModule module in modules) {
-					if(ShutdownHandler.isShutdownPending() || ShutdownHandler.isUpdatePending())
+					if(ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
 						break;
 					
 					//Log file formatting
-					LogHandler.newLine();
-					LogHandler.divider();
+					LogHandler.NewLine();
+					LogHandler.Divider();
 					
 					try {
 						module.start();
 					} catch (Exception ex) {
-						LogHandler.log(LOG_NAME, "Failed to start " + module.getName());
-						LogHandler.log(LOG_NAME, "ERROR: " + ex.Message);
+						LogHandler.Log(LOG_NAME, "Failed to start " + module.getName());
+						LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
 					}
 					
 					//Log file formatting
-					LogHandler.divider();
-					LogHandler.newLine();
+					LogHandler.Divider();
+					LogHandler.NewLine();
 				}
 				
 				
-				if(!ShutdownHandler.isShutdownPending() && !ShutdownHandler.isUpdatePending()) {
+				if(!ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending()) {
 					//Once all modules have been run, sleep for the set time
 					int sleepTime = getSleepTime();
-					LogHandler.log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
+					LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
 					Thread.Sleep(sleepTime * 1000);
 				}
 			}
 			
-			if(ShutdownHandler.isUpdatePending()) {
+			if(ShutdownHandler.IsUpdatePending()) {
 				UpdateHandler.beginUpdate(servicePipe);
 			}
 		}
 
 		//Get the time to sleep from the FOG server, if it cannot it will use the default time
 		private int getSleepTime() {
-			LogHandler.log(LOG_NAME, "Getting sleep duration...");
+			LogHandler.Log(LOG_NAME, "Getting sleep duration...");
 			
-			Response sleepResponse = CommunicationHandler.getResponse("/service/servicemodule-active.php");
+			Response sleepResponse = CommunicationHandler.GetResponse("/service/servicemodule-active.php");
 			
 			try {
 				if(!sleepResponse.wasError() && !sleepResponse.getField("#sleep").Equals("")) {
@@ -177,15 +177,15 @@ namespace FOG{
 					if(sleepTime >= this.sleepDefaultTime) {
 						return sleepTime;
 					} else {
-						LogHandler.log(LOG_NAME, "Sleep time set on the server is below the minimum of " + this.sleepDefaultTime.ToString());
+						LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + this.sleepDefaultTime.ToString());
 					}
 				}
 			} catch (Exception ex) {
-				LogHandler.log(LOG_NAME,"Failed to parse sleep time");
-				LogHandler.log(LOG_NAME,"ERROR: " + ex.Message);				
+				LogHandler.Log(LOG_NAME,"Failed to parse sleep time");
+				LogHandler.Log(LOG_NAME,"ERROR: " + ex.Message);				
 			}
 			
-			LogHandler.log(LOG_NAME,"Using default sleep time");	
+			LogHandler.Log(LOG_NAME,"Using default sleep time");	
 			
 			return this.sleepDefaultTime;			
 		} 

@@ -66,7 +66,7 @@ namespace FOG {
 		}
 		
 		private void setGracePeriod() {
-			String regValue = RegistryHandler.getSystemSetting("NotificationPromptTime");
+			String regValue = RegistryHandler.GetSystemSetting("NotificationPromptTime");
 			this.gracePeriod = 60;
 			if(regValue != null) {
 				try {

@@ -21,7 +21,7 @@ namespace FOG {
 		
 		//Load the ability to lock the computer from the native user32 dll
 		[DllImport("user32")]
-		private static extern void LockWorkStation();
+		private static extern void lockWorkStation();
 		
 		//List all possible shutdown types
 		public enum ShutDownType {
@@ -49,38 +49,38 @@ namespace FOG {
 		}
 		
 		//Check if a shutdown was requested
-		public static Boolean isShutdownPending() { return shutdownPending; }
+		public static Boolean IsShutdownPending() { return shutdownPending; }
 		
 		private static void createShutdownCommand(String parameters) {
-			LogHandler.log(LOG_NAME, "Creating shutdown request");
-			LogHandler.log(LOG_NAME, "Parameters: " + parameters);
+			LogHandler.Log(LOG_NAME, "Creating shutdown request");
+			LogHandler.Log(LOG_NAME, "Parameters: " + parameters);
 
 			Process.Start("shutdown", parameters);
 		}
 		
-		public static void shutdown(String comment, int seconds) {
+		public static void Shutdown(String comment, int seconds) {
 			setShutdownPending(true);
 			createShutdownCommand("/s /c \"" + comment + "\" /t " + seconds);
 		}
 		
-		public static void restart(String comment, int seconds) {
+		public static void Restart(String comment, int seconds) {
 			setShutdownPending(true);
 			createShutdownCommand("/r /c \"" + comment + "\" /t " + seconds);
 		}		
 		
-		public static void logOffUser() {
+		public static void LogOffUser() {
 			createShutdownCommand("/l");
 		}
 		
-		public static void hibernate(String comment, int seconds) {
+		public static void Hibernate(String comment, int seconds) {
 			createShutdownCommand("/h" );
 		}
 		
-		public static void lockWorkStation() {			
-			LockWorkStation();
+		public static void LockWorkStation() {			
+			lockWorkStation();
 		}
 		
-		public static void abortShutdown() {		
+		public static void AbortShutdown() {		
 			setShutdownPending(false);
 			createShutdownCommand("/a");
 		}
@@ -90,8 +90,8 @@ namespace FOG {
 		}
 		
 		//Treat this like a shutdown request because it should halt the service
-		public static void restartService() {
-			LogHandler.log(LOG_NAME, "Restarting service");
+		public static void RestartService() {
+			LogHandler.Log(LOG_NAME, "Restarting service");
 			setShutdownPending(true);
 			Process process = new Process();
 			process.StartInfo.UseShellExecute = false;
@@ -99,29 +99,29 @@ namespace FOG {
 			process.Start();
 		}
 		
-		public static void scheduleUpdate() {
+		public static void ScheduleUpdate() {
 			updatePending = true;
 		}
 
-		public static Boolean isUpdatePending() {
+		public static Boolean IsUpdatePending() {
 			return updatePending;
 		}
 		
-		public static void unScheduleUpdate() {
+		public static void UnScheduleUpdate() {
 			updatePending = false;
 		}
 		
 		//Spawn an UpdateWaiter with the fileName parameter
-		public static void spawnUpdateWaiter(String fileName) {
-			LogHandler.log(LOG_NAME, "Spawning update waiter");
+		public static void SpawnUpdateWaiter(String fileName) {
+			LogHandler.Log(LOG_NAME, "Spawning update waiter");
 			
 			Process process = new Process();
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\FOGUpdateWaiter.exe";
 			process.StartInfo.Arguments = "\"" + fileName + "\"";
 			
-			LogHandler.log(LOG_NAME, "Update Waiter args");
-			LogHandler.log(LOG_NAME, process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+			LogHandler.Log(LOG_NAME, "Update Waiter args");
+			LogHandler.Log(LOG_NAME, process.StartInfo.FileName + " " + process.StartInfo.Arguments);
 			process.Start();			
 		}
 	}

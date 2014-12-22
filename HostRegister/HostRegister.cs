@@ -13,8 +13,8 @@ namespace FOG {
 		}
 	
 		protected override void doWork() {
-			LogHandler.log(getName(), "Sending host information to FOG");
-			CommunicationHandler.contact("/service/register.php?mac=" + CommunicationHandler.getMacAddresses() + "&hostname=" + Dns.GetHostName());
+			LogHandler.Log(getName(), "Sending host information to FOG");
+			CommunicationHandler.Contact("/service/register.php?mac=" + CommunicationHandler.GetMacAddresses() + "&hostname=" + Dns.GetHostName());
 			
 		}
 		

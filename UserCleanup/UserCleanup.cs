@@ -17,17 +17,17 @@ namespace FOG {
 		
 		protected override void doWork() {
 			//Get task info
-			Response usersResponse = CommunicationHandler.getResponse("/service/usercleanup-users.php?mac=" + CommunicationHandler.getMacAddresses());
+			Response usersResponse = CommunicationHandler.GetResponse("/service/usercleanup-users.php?mac=" + CommunicationHandler.GetMacAddresses());
 
 			if(!usersResponse.wasError()) {
-				List<String> protectedUsers = CommunicationHandler.parseDataArray(usersResponse, "#user", false);
+				List<String> protectedUsers = CommunicationHandler.ParseDataArray(usersResponse, "#user", false);
 				
 				if(protectedUsers.Count > 0) {
-					foreach(UserData user in UserHandler.getAllUserData()) {
-						if(!protectedUsers.Contains(user.getName(), StringComparer.OrdinalIgnoreCase) && !UserHandler.getUsersLoggedIn().Contains(user.getName(), StringComparer.OrdinalIgnoreCase)) {
-							UserHandler.purgeUser(user, true);
+					foreach(UserData user in UserHandler.GetAllUserData()) {
+						if(!protectedUsers.Contains(user.GetName(), StringComparer.OrdinalIgnoreCase) && !UserHandler.GetUsersLoggedIn().Contains(user.GetName(), StringComparer.OrdinalIgnoreCase)) {
+							UserHandler.PurgeUser(user, true);
 						} else {
-							LogHandler.log(getName(), user.getName() + " is either logged in or protected, skipping");
+							LogHandler.Log(getName(), user.GetName() + " is either logged in or protected, skipping");
 						}
 					}
 				}

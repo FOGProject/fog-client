@@ -15,7 +15,7 @@ namespace FOG
 			this.sid = sid;
 		}
 		
-		public String getName() { return this.name; }
-		public String getSID() { return this.sid; }
+		public String GetName() { return this.name; }
+		public String GetSID() { return this.sid; }
 	}
 }

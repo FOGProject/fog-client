@@ -17,11 +17,11 @@ namespace FOG {
 		
 		protected override void doWork() {
 			//Get actions
-			Response tasksResponse = CommunicationHandler.getResponse("/service/greenfog.php?mac=" + CommunicationHandler.getMacAddresses());
+			Response tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php?mac=" + CommunicationHandler.GetMacAddresses());
 
 			//Shutdown if a task is avaible and the user is logged out or it is forced
 			if(!tasksResponse.wasError()) {
-				List<String> tasks = CommunicationHandler.parseDataArray(tasksResponse, "#task", false);
+				List<String> tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
 				
 				//Filter existing tasks
 				tasks = filterTasks(tasks);
@@ -37,10 +37,10 @@ namespace FOG {
 			
 			foreach(Task task in existingTasks) {
 				if(!newTasks.Contains(task.Name)) {
-					LogHandler.log(getName(), "Delete task " + task.Name);
+					LogHandler.Log(getName(), "Delete task " + task.Name);
 					taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
 				} else {
-					LogHandler.log(getName(), "Removing " + task.Name + " from queue");
+					LogHandler.Log(getName(), "Removing " + task.Name + " from queue");
 					newTasks.Remove(task.Name); //Remove the existing task from the queue
 				}
 			}
@@ -78,10 +78,10 @@ namespace FOG {
 				//Register the task
 				try {
 					taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
-					LogHandler.log(getName(), "Registered task: " + task);
+					LogHandler.Log(getName(), "Registered task: " + task);
 				} catch (Exception ex) {
-					LogHandler.log(getName(), "Error registering task: " + task);
-					LogHandler.log(getName(), "ERROR: " + ex.Message);
+					LogHandler.Log(getName(), "Error registering task: " + task);
+					LogHandler.Log(getName(), "ERROR: " + ex.Message);
 				}
 				
 				index++;
