@@ -15,7 +15,7 @@ namespace FOG
 		private static long maxLogSize = DEFAULT_MAX_LOG_SIZE;
 		private static Boolean console = false;		
 		private const long DEFAULT_MAX_LOG_SIZE = 502400;
-		private const int HEADER_LENGTH= 64;
+		private const int HEADER_LENGTH= 78;
 		private const String LOG_NAME = "LogHandler";
 
 		public static void setFilePath(String fPath) { filePath = fPath; }		

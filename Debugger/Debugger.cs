@@ -8,15 +8,13 @@ namespace FOG {
 			CommunicationHandler.GetAndSetServerAddress();
 			
 			LogHandler.NewLine();
-			LogHandler.PaddedHeader("Authentication");
-			
-			Boolean auth = CommunicationHandler.Authenticate();
-			
-			LogHandler.Divider();
+			LogHandler.PaddedHeader("SocketIO");
 			LogHandler.NewLine();
 			
-			Console.Write("Press any key exit...");
-			Console.ReadKey(true);		
+			CommunicationHandler.OpenSocketIO("http://fog.jbob.io:8080");
+
+			Console.ReadLine();
+			CommunicationHandler.CloseSocketIO();
 			
 		}
 	}

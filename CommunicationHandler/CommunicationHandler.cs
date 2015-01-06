@@ -4,7 +4,8 @@ using System.Net;
 using System.Linq;
 using System.IO;
 using System.Net.NetworkInformation;
-
+using Quobject.SocketIoClientDotNet.Client;
+using Newtonsoft.Json;
 
 namespace FOG {
 	/// <summary>
@@ -17,6 +18,7 @@ namespace FOG {
 
 		private const String successCode = "#!ok";
 		private const String LOG_NAME = "CommunicationHandler";
+		private static Socket ioSocket;
 
 		private static string passkey = "";
 
@@ -341,5 +343,31 @@ namespace FOG {
 
 			return macs;
 		}
+		
+		public static void OpenSocketIO(String address) {
+			ioSocket = IO.Socket(address);
+			ioSocket.On(Socket.EVENT_CONNECT, () =>
+			{
+			    ioSocket.Emit("hi");
+			    ioSocket.On("hi", (data) =>
+			    {
+			        LogHandler.WriteLine(data.ToString());
+			    });
+			    
+			    ioSocket.Emit("ack2");
+			    ioSocket.On("ack2", (data) =>
+			    {
+			        LogHandler.WriteLine(data.ToString());
+
+			    });			    
+			    
+
+			});
+			ioSocket.Connect();
+		}
+		
+		public static void CloseSocketIO() {
+			ioSocket.Close();
+		}	
 	}
 }
