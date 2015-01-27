@@ -346,20 +346,16 @@ namespace FOG {
 		
 		public static void OpenSocketIO(String address) {
 			ioSocket = IO.Socket(address);
-			ioSocket.On(Socket.EVENT_CONNECT, () =>
-			{
-			    ioSocket.Emit("hi");
-			    ioSocket.On("hi", (data) =>
-			    {
-			        LogHandler.WriteLine(data.ToString());
-			    });
-			    
-			    ioSocket.Emit("ack2");
-			    ioSocket.On("ack2", (data) =>
-			    {
-			        LogHandler.WriteLine(data.ToString());
-
-			    });			    
+			ioSocket.On(Socket.EVENT_CONNECT, () => {
+			    ioSocket.On("auth", (data) => {
+					LogHandler.WriteLine(data.ToString());
+			    });		 
+				
+				
+			    ioSocket.Emit("auth","test");
+			    ioSocket.Emit("auth-1","test2");
+			    ioSocket.Emit("auth-2","test3");
+			    ioSocket.Emit("auth-3","test4");
 			    
 
 			});
