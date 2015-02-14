@@ -349,13 +349,22 @@ namespace FOG {
 			ioSocket.On(Socket.EVENT_CONNECT, () => {
 			    ioSocket.On("auth", (data) => {
 					LogHandler.WriteLine(data.ToString());
-			    });		 
-				
-				
-			    ioSocket.Emit("auth","test");
-			    ioSocket.Emit("auth-1","test2");
-			    ioSocket.Emit("auth-2","test3");
-			    ioSocket.Emit("auth-3","test4");
+			    });	
+			            	
+			    ioSocket.On("name", (data) => {
+					LogHandler.WriteLine(data.ToString());
+					ioSocket.Emit("name", CommunicationHandler.GetMacAddresses());
+					ioSocket.Emit("auth","rsa-pub");
+			    	ioSocket.Emit("auth-1","rsa-aes");
+			    	ioSocket.Emit("auth-2","rsa-ser");
+			    	ioSocket.Emit("auth-3","aes");
+
+			    });	
+
+			    ioSocket.On(Socket.EVENT_DISCONNECT, () => {
+					LogHandler.WriteLine("Kicked off server");
+					ioSocket.Close();
+			    });	
 			    
 
 			});
@@ -363,6 +372,7 @@ namespace FOG {
 		}
 		
 		public static void CloseSocketIO() {
+			ioSocket.Disconnect();
 			ioSocket.Close();
 		}	
 	}

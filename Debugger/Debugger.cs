@@ -14,7 +14,7 @@ namespace FOG {
 			CommunicationHandler.OpenSocketIO("http://fog.jbob.io:8080");
 
 			Console.ReadLine();
-			CommunicationHandler.CloseSocketIO();
+			//CommunicationHandler.CloseSocketIO();
 			
 		}
 	}
