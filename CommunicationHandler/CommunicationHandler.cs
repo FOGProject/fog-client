@@ -5,6 +5,7 @@ using System.Linq;
 using System.IO;
 using System.Net.NetworkInformation;
 using Quobject.SocketIoClientDotNet.Client;
+using System.Security.Cryptography;
 using OpenSSL.Core;
 using OpenSSL.Crypto;
 using Newtonsoft.Json;
@@ -351,7 +352,7 @@ namespace FOG {
 		}
 		
 		public static void OpenSocketIO(String address) {
-			var rsa = new RSA();
+			var rsa = new OpenSSL.Crypto.RSA();
 			rsa.GenerateKeys(4096, 65537, null, null);
 
 		    String pubKeyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
@@ -394,14 +395,17 @@ namespace FOG {
 			        var msg = data.ToString();
 					var aesKeyHex = EncryptionHandler.RSADecrypt(msg, rsa);
 					var aesKey    = EncryptionHandler.HexStringToByteArray(aesKeyHex);
-					var iv = System.Text.Encoding.UTF8.GetBytes(EncryptionHandler.GeneratePassword(16));
+					
+					var aes = new AesManaged();
+					aes.GenerateIV();
+					var iv = aes.IV;
 					var aesEncrypted = EncryptionHandler.AESEncrypt(aesKeyHex, aesKey, iv);
 					
 					var ivHex = EncryptionHandler.ByteArrayToHexString(iv);
 					var transportMSG = ivHex + "|" + aesEncrypted;
 					ioSocket.Emit("auth-3", transportMSG);
 					
-					
+
 			    });	
 			            	
 			    ioSocket.On("name", (data) => {
