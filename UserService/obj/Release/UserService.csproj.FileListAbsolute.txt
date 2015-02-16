@@ -1,0 +1,3 @@
+C:\Users\jbob\Desktop\fog-client\bin\FOGUserService.exe
+C:\Users\jbob\Desktop\fog-client\UserService\obj\Release\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\UserService\obj\Release\FOGUserService.exe

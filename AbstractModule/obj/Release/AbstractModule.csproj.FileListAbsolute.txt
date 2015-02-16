@@ -1,0 +1,3 @@
+C:\Users\jbob\Desktop\fog-client\bin\AbstractModule.dll
+C:\Users\jbob\Desktop\fog-client\AbstractModule\obj\Release\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\AbstractModule\obj\Release\AbstractModule.dll

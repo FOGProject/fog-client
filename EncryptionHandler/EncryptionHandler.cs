@@ -58,6 +58,12 @@ namespace FOG {
 			//Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
 		    byte[] iv  = Encoding.UTF8.GetBytes(initializationVector);   
+
+		    return AESEncrypt(toEncode, key, iv);
+		    	            
+        }
+		
+		public static String AESEncrypt(String toEncode, byte[] key, byte[] iv) {
 		    
 		    try {
 				byte[] encrypted;
@@ -84,13 +90,13 @@ namespace FOG {
 	            }
 	
 	            // Return the encrypted bytes from the memory stream. 
-	            return Convert.ToBase64String(encrypted);
+	            return ByteArrayToHexString(encrypted);
 		    } catch (Exception ex) {
 		        LogHandler.Log(LOG_NAME, "Error encoding AES");
 		        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);		    	
 		    }
 			return "";	            
-        }
+        }		
 		
 		/// <summary>
 		/// AES decrypts a string
@@ -104,6 +110,11 @@ namespace FOG {
 		    //Convert the initialization vector and key into a byte array
 			byte[] key = Encoding.UTF8.GetBytes(passKey);
 		    byte[] iv  = Encoding.UTF8.GetBytes(initializationVector);
+		    byte[] msg = HexStringToByteArray(toDecode);
+		    return AESDecrypt(msg, key, iv);
+		}
+		
+		public static String AESDecrypt(byte[] toDecode, byte[] key, byte[] iv) {
 		    try {
 		    	
 		    	using(RijndaelManaged rijndaelManaged = new RijndaelManaged()) {
@@ -111,7 +122,7 @@ namespace FOG {
 			        rijndaelManaged.IV = iv;
 			        rijndaelManaged.Mode = CipherMode.CBC;
 			        rijndaelManaged.Padding = PaddingMode.Zeros;
-			        using(MemoryStream memoryStream = new MemoryStream(Convert.FromBase64String(toDecode))) {
+			        using(MemoryStream memoryStream = new MemoryStream(toDecode)) {
 			        	using(CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
 					        //Return the  stream, but trim null bytes due to reading too far
 					        return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", String.Empty).Trim();		        		
@@ -126,7 +137,7 @@ namespace FOG {
 		        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);		    	
 		    }
 			return "";
-		}
+		}		
 		
 		/// <summary>
 		/// Securley generates a random number
@@ -157,7 +168,7 @@ namespace FOG {
 			}
 			
 			return new String(stringChars);
-		}
+		}		
 		
 		/// <summary>
 		/// Encrypts a string using RSA
@@ -166,6 +177,10 @@ namespace FOG {
 		/// <returns>The encrypted version of toEncode</returns>
 		/// </summary>		
 		public static String RSAEncrypt(String toEncode, String pemFile) {
+			return ByteArrayToHexString(RawRSAEncrypt(toEncode, pemFile));
+		}
+		
+		public static byte[] RawRSAEncrypt(String toEncode, String pemFile) {
 			
 			byte[] encryptedData;
 			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
@@ -173,13 +188,28 @@ namespace FOG {
 				UTF8Encoding byteConverter = new UTF8Encoding();
 	
 				byte[] message = byteConverter.GetBytes(toEncode);
+
 				encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
-	
 				
 			}
-			return ByteArrayToHexString(encryptedData);
+			return encryptedData;
 			
-		}	
+		}
+				
+		
+		public static String RSADecrypt(String toDecode, OpenSSL.Crypto.RSA rsa) {
+			return Encoding.Default.GetString(RawRSADecrypt(toDecode, rsa));
+		}
+
+		public static byte[] RawRSADecrypt(String toDecode, OpenSSL.Crypto.RSA rsa) {
+	
+			byte[] message = HexStringToByteArray(toDecode);
+			var encryptedData = rsa.PrivateDecrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
+
+			
+			return encryptedData;
+			
+		}		
 		
 		/// <summary>
 		/// Converts a byte array to a hex string

@@ -1,0 +1,3 @@
+C:\Users\jbob\Desktop\fog-client\bin\SnapinClient.dll
+C:\Users\jbob\Desktop\fog-client\SnapinClient\obj\Release\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\SnapinClient\obj\Release\SnapinClient.dll

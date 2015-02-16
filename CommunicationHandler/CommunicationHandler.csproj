@@ -52,6 +52,9 @@
     <Reference Include="EngineIoClientDotNet">
       <HintPath>..\packages\EngineIoClientDotNet.0.9.14\lib\net35\EngineIoClientDotNet.dll</HintPath>
     </Reference>
+    <Reference Include="ManagedOpenSsl">
+      <HintPath>..\libs\ManagedOpenSsl.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\packages\Newtonsoft.Json.6.0.6\lib\net35\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -96,4 +99,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "..\libs\libeay32.dll" "..\bin\"
+copy /y "..\libs\ssleay32.dll" "..\bin\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -1,0 +1,3 @@
+C:\Users\jbob\Desktop\fog-client\bin\RegistryHandler.dll
+C:\Users\jbob\Desktop\fog-client\RegistryHandler\obj\Release\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\RegistryHandler\obj\Release\RegistryHandler.dll

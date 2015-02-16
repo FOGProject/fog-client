@@ -5,6 +5,8 @@ using System.Linq;
 using System.IO;
 using System.Net.NetworkInformation;
 using Quobject.SocketIoClientDotNet.Client;
+using OpenSSL.Core;
+using OpenSSL.Crypto;
 using Newtonsoft.Json;
 
 namespace FOG {
@@ -281,14 +283,18 @@ namespace FOG {
 		/// <returns>True if the download was successful</returns>
 		/// </summary>	
 		public static Boolean DownloadFile(String postfix, String filePath) {
-			LogHandler.Log(LOG_NAME, "URL: " + serverAddress + postfix);	
+			return DownloadExternalFile(GetServerAddress() + postfix, filePath);
+		}
+		
+		public static Boolean DownloadExternalFile(String url, String filePath) {
+			LogHandler.Log(LOG_NAME, "URL: " +  url);	
 			var webClient = new WebClient();
 			try {
 				//Create the directory that the file will go in if it doesn't already exist
 				if(!Directory.Exists(Path.GetDirectoryName(filePath))) {
 					Directory.CreateDirectory(Path.GetDirectoryName(filePath));
 				}
-				webClient.DownloadFile(GetServerAddress() + postfix, filePath);
+				webClient.DownloadFile(url, filePath);
 
 				if(File.Exists(filePath))
 					return true;
@@ -296,7 +302,7 @@ namespace FOG {
 				LogHandler.Log(LOG_NAME, "Error downloading file");
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
-			return false;
+			return false;			
 		}
 
 
@@ -345,24 +351,71 @@ namespace FOG {
 		}
 		
 		public static void OpenSocketIO(String address) {
+			var rsa = new RSA();
+			rsa.GenerateKeys(4096, 65537, null, null);
+
+		    String pubKeyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
+			//DownloadFile("/management/other/ssl/srvpublic.key", pubKeyPath);			
+			DownloadExternalFile("https://fog.jbob.io/node/public.key", pubKeyPath);	
+			var auth1 = false;
+			var auth2 = false;
+			var auth3 = false;
+			
+			var auth1MSG = EncryptionHandler.GeneratePassword(256);
+			
 			ioSocket = IO.Socket(address);
 			ioSocket.On(Socket.EVENT_CONNECT, () => {
 			    ioSocket.On("auth", (data) => {
-					LogHandler.WriteLine(data.ToString());
+			        var msg = data.ToString();
+					LogHandler.WriteLine(msg);
+					
+					if(msg.Contains("Phase 1 complete")) {
+					   	auth1 = true;
+					   	var encryptedMSG = EncryptionHandler.RSAEncrypt(auth1MSG, pubKeyPath);
+					   	ioSocket.Emit("auth-2", encryptedMSG);
+					} else if(msg.Contains("Phase 3 complete")) {
+					   	auth3 = true;
+					   	rsa.Dispose();
+					}
+			    });	
+			            	
+			    ioSocket.On("auth-trust-server", (data) => {
+			        var msg = data.ToString();
+					var decryptedMSG = EncryptionHandler.RSADecrypt(msg, rsa);
+					if(decryptedMSG.Equals(auth1MSG)) {
+						auth2 = true;
+					} else {
+						LogHandler.WriteLine("Server is invalid");
+						LogHandler.WriteLine("MSG: " + decryptedMSG);
+					}
+			    });				            	
+			          
+			    ioSocket.On("auth-trust-client", (data) => {
+			        var msg = data.ToString();
+					var aesKeyHex = EncryptionHandler.RSADecrypt(msg, rsa);
+					var aesKey    = EncryptionHandler.HexStringToByteArray(aesKeyHex);
+					var iv = System.Text.Encoding.UTF8.GetBytes(EncryptionHandler.GeneratePassword(16));
+					var aesEncrypted = EncryptionHandler.AESEncrypt(aesKeyHex, aesKey, iv);
+					
+					var ivHex = EncryptionHandler.ByteArrayToHexString(iv);
+					var transportMSG = ivHex + "|" + aesEncrypted;
+					ioSocket.Emit("auth-3", transportMSG);
+					
+					
 			    });	
 			            	
 			    ioSocket.On("name", (data) => {
-					LogHandler.WriteLine(data.ToString());
 					ioSocket.Emit("name", CommunicationHandler.GetMacAddresses());
-					ioSocket.Emit("auth","rsa-pub");
-			    	ioSocket.Emit("auth-1","rsa-aes");
-			    	ioSocket.Emit("auth-2","rsa-ser");
-			    	ioSocket.Emit("auth-3","aes");
-
+					ioSocket.Emit("auth-1", rsa.PublicKeyAsPEM);
 			    });	
+			            	
+			    ioSocket.On("auth-1", (data) => {
+			    	
+			    });
 
 			    ioSocket.On(Socket.EVENT_DISCONNECT, () => {
 					LogHandler.WriteLine("Kicked off server");
+					ioSocket.Disconnect();
 					ioSocket.Close();
 			    });	
 			    
