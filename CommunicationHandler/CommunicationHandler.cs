@@ -356,8 +356,7 @@ namespace FOG {
 			rsa.GenerateKeys(4096, 65537, null, null);
 
 		    String pubKeyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
-			//DownloadFile("/management/other/ssl/srvpublic.key", pubKeyPath);			
-			DownloadExternalFile("https://fog.jbob.io/node/public.key", pubKeyPath);	
+			DownloadFile("/management/other/ssl/srvpublic.key", pubKeyPath);			
 			var auth1 = false;
 			var auth2 = false;
 			var auth3 = false;
