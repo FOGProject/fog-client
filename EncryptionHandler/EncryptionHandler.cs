@@ -73,7 +73,7 @@ namespace FOG {
 	                rijndaelManaged.Key = key;
 	                rijndaelManaged.IV = iv;
 					rijndaelManaged.Mode = CipherMode.CBC;
-					rijndaelManaged.Padding = PaddingMode.Zeros;
+					rijndaelManaged.Padding = PaddingMode.PKCS7;
 	                // Create a decrytor to perform the stream transform.
 	                using (ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV)) {
 		                // Create the streams used for encryption. 
@@ -121,7 +121,7 @@ namespace FOG {
 			        rijndaelManaged.Key = key;
 			        rijndaelManaged.IV = iv;
 			        rijndaelManaged.Mode = CipherMode.CBC;
-			        rijndaelManaged.Padding = PaddingMode.Zeros;
+			        rijndaelManaged.Padding = PaddingMode.None;
 			        using(MemoryStream memoryStream = new MemoryStream(toDecode)) {
 			        	using(CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
 					        //Return the  stream, but trim null bytes due to reading too far
