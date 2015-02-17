@@ -401,7 +401,7 @@ namespace FOG {
 					var ivString = EncryptionHandler.GeneratePassword(16);
 					var iv = System.Text.Encoding.UTF8.GetBytes(ivString);
 					var aesEncrypted = EncryptionHandler.AESEncrypt(aesKeyHex, aesKey, iv);
-					LogHandler.WriteLine(aesKeyHex);
+
 					var ivHex = EncryptionHandler.ByteArrayToHexString(iv);
 					var transportMSG = ivHex + "|" + aesEncrypted;
 					ioSocket.Emit("auth-3", transportMSG);
