@@ -121,7 +121,7 @@ namespace FOG {
 			        rijndaelManaged.Key = key;
 			        rijndaelManaged.IV = iv;
 			        rijndaelManaged.Mode = CipherMode.CBC;
-			        rijndaelManaged.Padding = PaddingMode.None;
+			        rijndaelManaged.Padding = PaddingMode.PKCS7;
 			        using(MemoryStream memoryStream = new MemoryStream(toDecode)) {
 			        	using(CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
 					        //Return the  stream, but trim null bytes due to reading too far
