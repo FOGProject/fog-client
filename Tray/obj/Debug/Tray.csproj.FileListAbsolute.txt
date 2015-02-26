@@ -5,3 +5,10 @@ D:\fog\FOGService\bin\FOGTray.exe
 D:\fog\FOGService\bin\FOGTray.pdb
 D:\fog\FOGService\Tray\obj\Debug\FOGTray.exe
 D:\fog\FOGService\Tray\obj\Debug\FOGTray.pdb
+C:\Users\jbob\Desktop\fog-client\bin\FOGTray.exe
+C:\Users\jbob\Desktop\fog-client\bin\FOGTray.pdb
+C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOG.NotificationIcon.resources
+C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\Tray.csproj.GenerateResource.Cache
+C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.exe
+C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.pdb

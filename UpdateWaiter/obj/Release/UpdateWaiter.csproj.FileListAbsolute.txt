@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateWaiter.exe
-C:\Users\jbob\Desktop\fog-client\UpdateWaiter\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\UpdateWaiter\obj\Release\FOGUpdateWaiter.exe

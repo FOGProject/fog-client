@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\ClientUpdater.dll
-C:\Users\jbob\Desktop\fog-client\ClientUpdater\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\ClientUpdater\obj\Release\ClientUpdater.dll

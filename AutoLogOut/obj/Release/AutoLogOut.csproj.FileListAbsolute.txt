@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\AutoLogOut.dll
-C:\Users\jbob\Desktop\fog-client\AutoLogOut\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\AutoLogOut\obj\Release\AutoLogOut.dll

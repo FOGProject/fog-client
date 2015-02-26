@@ -8,3 +8,8 @@ C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\bin\Communication
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\CommunicationHandler\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\CommunicationHandler\obj\Debug\CommunicationHandler.dll
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\CommunicationHandler\obj\Debug\CommunicationHandler.pdb
+C:\Users\jbob\Desktop\fog-client\bin\CommunicationHandler.dll
+C:\Users\jbob\Desktop\fog-client\bin\CommunicationHandler.pdb
+C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\CommunicationHandler.dll
+C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\CommunicationHandler.pdb

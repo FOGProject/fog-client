@@ -1,0 +1,7 @@
+C:\Users\jbob\Desktop\fog-client\bin\FOGNotificationGUI.exe
+C:\Users\jbob\Desktop\fog-client\bin\FOGNotificationGUI.pdb
+C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOG.MainForm.resources
+C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\NotificationGUI.csproj.GenerateResource.Cache
+C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.exe
+C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb

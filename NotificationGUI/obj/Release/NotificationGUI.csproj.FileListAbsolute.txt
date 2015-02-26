@@ -1,5 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\FOGNotificationGUI.exe
-C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Release\FOG.MainForm.resources
-C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Release\NotificationGUI.csproj.GenerateResource.Cache
-C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Release\FOGNotificationGUI.exe

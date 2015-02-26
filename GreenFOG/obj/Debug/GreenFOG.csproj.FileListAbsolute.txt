@@ -1,0 +1,5 @@
+C:\Users\jbob\Desktop\fog-client\bin\GreenFOG.dll
+C:\Users\jbob\Desktop\fog-client\bin\GreenFOG.pdb
+C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\GreenFOG.dll
+C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\GreenFOG.pdb

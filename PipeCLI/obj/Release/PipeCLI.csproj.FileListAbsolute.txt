@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\FOGPipeCLI.exe
-C:\Users\jbob\Desktop\fog-client\PipeCLI\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\PipeCLI\obj\Release\FOGPipeCLI.exe

@@ -1,0 +1,5 @@
+C:\Users\jbob\Desktop\fog-client\bin\FOGPipeCLI.exe
+C:\Users\jbob\Desktop\fog-client\bin\FOGPipeCLI.pdb
+C:\Users\jbob\Desktop\fog-client\PipeCLI\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\PipeCLI\obj\Debug\FOGPipeCLI.exe
+C:\Users\jbob\Desktop\fog-client\PipeCLI\obj\Debug\FOGPipeCLI.pdb

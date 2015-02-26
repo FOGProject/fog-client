@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\HostRegister.dll
-C:\Users\jbob\Desktop\fog-client\HostRegister\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\HostRegister\obj\Release\HostRegister.dll

@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\UserCleanup.dll
-C:\Users\jbob\Desktop\fog-client\UserCleanup\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\UserCleanup\obj\Release\UserCleanup.dll

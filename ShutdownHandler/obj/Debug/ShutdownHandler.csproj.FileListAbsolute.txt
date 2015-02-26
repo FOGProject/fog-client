@@ -3,3 +3,8 @@ D:\fog\FOGService\ShutdownHandler\obj\Debug\ShutdownHandler.dll
 D:\fog\FOGService\ShutdownHandler\obj\Debug\ShutdownHandler.pdb
 D:\fog\FOGService\bin\ShutdownHandler.dll
 D:\fog\FOGService\bin\ShutdownHandler.pdb
+C:\Users\jbob\Desktop\fog-client\bin\ShutdownHandler.dll
+C:\Users\jbob\Desktop\fog-client\bin\ShutdownHandler.pdb
+C:\Users\jbob\Desktop\fog-client\ShutdownHandler\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\ShutdownHandler\obj\Debug\ShutdownHandler.dll
+C:\Users\jbob\Desktop\fog-client\ShutdownHandler\obj\Debug\ShutdownHandler.pdb

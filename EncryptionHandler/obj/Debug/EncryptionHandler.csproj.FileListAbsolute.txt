@@ -8,3 +8,8 @@ C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\bin\EncryptionHan
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\EncryptionHandler\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\EncryptionHandler\obj\Debug\EncryptionHandler.dll
 C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\EncryptionHandler\obj\Debug\EncryptionHandler.pdb
+C:\Users\jbob\Desktop\fog-client\bin\EncryptionHandler.dll
+C:\Users\jbob\Desktop\fog-client\bin\EncryptionHandler.pdb
+C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\EncryptionHandler.dll
+C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\EncryptionHandler.pdb

@@ -3,3 +3,8 @@ D:\fog\FOGService\bin\FOGUpdateWaiter.pdb
 D:\fog\FOGService\UpdateWaiter\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\FOGService\UpdateWaiter\obj\Debug\FOGUpdateWaiter.exe
 D:\fog\FOGService\UpdateWaiter\obj\Debug\FOGUpdateWaiter.pdb
+C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateWaiter.exe
+C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateWaiter.pdb
+C:\Users\jbob\Desktop\fog-client\UpdateWaiter\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\UpdateWaiter\obj\Debug\FOGUpdateWaiter.exe
+C:\Users\jbob\Desktop\fog-client\UpdateWaiter\obj\Debug\FOGUpdateWaiter.pdb

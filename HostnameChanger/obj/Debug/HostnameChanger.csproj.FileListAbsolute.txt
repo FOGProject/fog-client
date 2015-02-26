@@ -3,3 +3,8 @@ D:\fog\FOGService\bin\HostnameChanger.pdb
 D:\fog\FOGService\HostnameChanger\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\FOGService\HostnameChanger\obj\Debug\HostnameChanger.dll
 D:\fog\FOGService\HostnameChanger\obj\Debug\HostnameChanger.pdb
+C:\Users\jbob\Desktop\fog-client\bin\HostnameChanger.dll
+C:\Users\jbob\Desktop\fog-client\bin\HostnameChanger.pdb
+C:\Users\jbob\Desktop\fog-client\HostnameChanger\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\HostnameChanger\obj\Debug\HostnameChanger.dll
+C:\Users\jbob\Desktop\fog-client\HostnameChanger\obj\Debug\HostnameChanger.pdb

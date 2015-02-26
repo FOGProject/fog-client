@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\LogHandler.dll
-C:\Users\jbob\Desktop\fog-client\LogHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\LogHandler\obj\Release\LogHandler.dll

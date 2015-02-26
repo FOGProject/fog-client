@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\NotificationHandler.dll
-C:\Users\jbob\Desktop\fog-client\NotificationHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\NotificationHandler\obj\Release\NotificationHandler.dll

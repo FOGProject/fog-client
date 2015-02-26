@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\UserHandler.dll
-C:\Users\jbob\Desktop\fog-client\UserHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\UserHandler\obj\Release\UserHandler.dll

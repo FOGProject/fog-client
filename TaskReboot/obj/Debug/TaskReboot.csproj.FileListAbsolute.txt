@@ -3,3 +3,8 @@ D:\fog\FOGService\TaskReboot\obj\Debug\TaskReboot.dll
 D:\fog\FOGService\TaskReboot\obj\Debug\TaskReboot.pdb
 D:\fog\FOGService\bin\TaskReboot.dll
 D:\fog\FOGService\bin\TaskReboot.pdb
+C:\Users\jbob\Desktop\fog-client\bin\TaskReboot.dll
+C:\Users\jbob\Desktop\fog-client\bin\TaskReboot.pdb
+C:\Users\jbob\Desktop\fog-client\TaskReboot\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\TaskReboot\obj\Debug\TaskReboot.dll
+C:\Users\jbob\Desktop\fog-client\TaskReboot\obj\Debug\TaskReboot.pdb

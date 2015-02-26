@@ -3,3 +3,8 @@ D:\fog\FOGService\bin\FOGUserService.pdb
 D:\fog\FOGService\UserService\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\FOGService\UserService\obj\Debug\FOGUserService.exe
 D:\fog\FOGService\UserService\obj\Debug\FOGUserService.pdb
+C:\Users\jbob\Desktop\fog-client\bin\FOGUserService.exe
+C:\Users\jbob\Desktop\fog-client\bin\FOGUserService.pdb
+C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\FOGUserService.exe
+C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\FOGUserService.pdb

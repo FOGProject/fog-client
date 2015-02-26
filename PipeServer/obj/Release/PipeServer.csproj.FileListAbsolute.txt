@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\PipeServer.dll
-C:\Users\jbob\Desktop\fog-client\PipeServer\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\PipeServer\obj\Release\PipeServer.dll

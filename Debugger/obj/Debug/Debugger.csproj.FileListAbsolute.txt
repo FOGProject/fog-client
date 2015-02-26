@@ -1,0 +1,6 @@
+C:\Users\jbob\Desktop\fog-client\bin\Debugger.exe.config
+C:\Users\jbob\Desktop\fog-client\bin\Debugger.exe
+C:\Users\jbob\Desktop\fog-client\bin\Debugger.pdb
+C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\Debugger.exe
+C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\Debugger.pdb

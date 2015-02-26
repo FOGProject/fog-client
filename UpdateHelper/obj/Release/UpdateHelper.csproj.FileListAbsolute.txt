@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateHelper.exe
-C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe

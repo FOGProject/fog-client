@@ -3,3 +3,8 @@ D:\fog\FOGService\bin\RegistryHandler.pdb
 D:\fog\FOGService\RegistryHandler\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\FOGService\RegistryHandler\obj\Debug\RegistryHandler.dll
 D:\fog\FOGService\RegistryHandler\obj\Debug\RegistryHandler.pdb
+C:\Users\jbob\Desktop\fog-client\bin\RegistryHandler.dll
+C:\Users\jbob\Desktop\fog-client\bin\RegistryHandler.pdb
+C:\Users\jbob\Desktop\fog-client\RegistryHandler\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\RegistryHandler\obj\Debug\RegistryHandler.dll
+C:\Users\jbob\Desktop\fog-client\RegistryHandler\obj\Debug\RegistryHandler.pdb

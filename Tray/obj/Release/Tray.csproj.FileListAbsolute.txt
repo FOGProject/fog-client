@@ -1,5 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\FOGTray.exe
-C:\Users\jbob\Desktop\fog-client\Tray\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
-C:\Users\jbob\Desktop\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
-C:\Users\jbob\Desktop\fog-client\Tray\obj\Release\FOGTray.exe

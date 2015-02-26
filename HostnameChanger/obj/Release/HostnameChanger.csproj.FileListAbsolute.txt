@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\HostnameChanger.dll
-C:\Users\jbob\Desktop\fog-client\HostnameChanger\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\HostnameChanger\obj\Release\HostnameChanger.dll

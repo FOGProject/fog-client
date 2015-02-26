@@ -3,3 +3,8 @@ D:\fog\bin\DisplayManager.pdb
 D:\fog\FOGService\DisplayManager\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\FOGService\DisplayManager\obj\Debug\DisplayManager.dll
 D:\fog\FOGService\DisplayManager\obj\Debug\DisplayManager.pdb
+C:\Users\jbob\Desktop\fog-client\bin\DisplayManager.dll
+C:\Users\jbob\Desktop\fog-client\bin\DisplayManager.pdb
+C:\Users\jbob\Desktop\fog-client\DisplayManager\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\jbob\Desktop\fog-client\DisplayManager\obj\Debug\DisplayManager.dll
+C:\Users\jbob\Desktop\fog-client\DisplayManager\obj\Debug\DisplayManager.pdb

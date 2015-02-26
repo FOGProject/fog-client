@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\ShutdownHandler.dll
-C:\Users\jbob\Desktop\fog-client\ShutdownHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\ShutdownHandler\obj\Release\ShutdownHandler.dll
