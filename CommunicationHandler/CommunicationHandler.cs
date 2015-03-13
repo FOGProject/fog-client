@@ -88,13 +88,19 @@ namespace FOG {
 		/// <returns>A parsed response</returns>
 		/// </summary>
 		public static Response GetResponse(String postfix) {
-
+			//ID the service as the new one
+			if(postfix.Contains(".php?")) {
+				postfix = postfix + "&newService=1";
+			} else {
+				postfix = postfix + "?newService=1";
+			}
+			
 			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 
 			var webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(GetServerAddress() + postfix);
-				response = AESDecrypt(response, GetPassKey());
+				//response = AESDecrypt(response, GetPassKey());
 				//See if the return code is known
 				Boolean messageFound = false;
 				foreach(String returnMessage in returnMessages.Keys) {

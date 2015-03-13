@@ -169,7 +169,7 @@ namespace FOG{
 		private int getSleepTime() {
 			LogHandler.Log(LOG_NAME, "Getting sleep duration...");
 			
-			Response sleepResponse = CommunicationHandler.GetResponse("/service/servicemodule-active.php");
+			Response sleepResponse = CommunicationHandler.GetResponse("/management/index.php?node=client&sub=configure");
 			
 			try {
 				if(!sleepResponse.wasError() && !sleepResponse.getField("#sleep").Equals("")) {

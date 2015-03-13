@@ -93,12 +93,13 @@ namespace FOG {
 		
 		//Rename the computer and remove it from active directory
 		private void renameComputer(Response taskResponse) {
+			LogHandler.Log(getName(), taskResponse.getField("#hostname") + ":" + System.Environment.MachineName);
 			if(!taskResponse.getField("#hostname").Equals("")) {
 				if(!System.Environment.MachineName.ToLower().Equals(taskResponse.getField("#hostname").ToLower())) {
 				
 					LogHandler.Log(getName(), "Renaming host to " + taskResponse.getField("#hostname"));
 					if(!UserHandler.IsUserLoggedIn() || taskResponse.getField("#force").Equals("1")) {
-					
+						LogHandler.Log(getName(), "Unregistering computer");
 						//First unjoin it from active directory
 			      		unRegisterComputer(taskResponse);		
 		

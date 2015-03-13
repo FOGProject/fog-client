@@ -61,6 +61,7 @@ namespace FOG {
 
 		//Check if a user is loggin in, do this by getting a list of all users, and check if the list has any elements
 		public static Boolean IsUserLoggedIn() {
+
 			return GetUsersLoggedIn().Count > 0;
 		}
 		
@@ -108,7 +109,8 @@ namespace FOG {
 			List<int> sessionIds = GetSessionIds();
 			
 			foreach(int sessionId in sessionIds) {
-				users.Add(GetUserNameFromSessionId(sessionId, false));
+				if(!GetUserNameFromSessionId(sessionId, false).Equals("SYSTEM"))
+					users.Add(GetUserNameFromSessionId(sessionId, false));
 			}
 			
 			return users;
