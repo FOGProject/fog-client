@@ -1,0 +1,4 @@
+D:\fog-client\bin\Debugger.exe.config
+D:\fog-client\bin\Debugger.exe
+D:\fog-client\Debugger\obj\Release\ResolveAssemblyReference.cache
+D:\fog-client\Debugger\obj\Release\Debugger.exe

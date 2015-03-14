@@ -73,7 +73,7 @@ namespace FOG {
 	                rijndaelManaged.Key = key;
 	                rijndaelManaged.IV = iv;
 					rijndaelManaged.Mode = CipherMode.CBC;
-					rijndaelManaged.Padding = PaddingMode.PKCS7;
+					rijndaelManaged.Padding = PaddingMode.Zeros;
 	                // Create a decrytor to perform the stream transform.
 	                using (ICryptoTransform encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV)) {
 		                // Create the streams used for encryption. 
@@ -98,32 +98,17 @@ namespace FOG {
 			return "";	            
         }		
 		
-		/// <summary>
-		/// AES decrypts a string
-		/// <param name="toDecode">The string to be decrypted</param>
-		/// <param name="passKey">The AES pass key</param>
-		/// <param name="initializationVector">The AES initialization vector</param>
-		/// <returns>A decrypted string of toDecode</returns>
-		/// </summary>
-		public static String AESDecrypt(String toDecode, String passKey, String initializationVector) {
-
-		    //Convert the initialization vector and key into a byte array
-			byte[] key = Encoding.UTF8.GetBytes(passKey);
-		    byte[] iv  = Encoding.UTF8.GetBytes(initializationVector);
-		    byte[] msg = HexStringToByteArray(toDecode);
-		    return AESDecrypt(msg, key, iv);
-		}
-		
 		public static String AESDecrypt(byte[] toDecode, byte[] key, byte[] iv) {
-		    try {
+
+			try {
 		    	
-		    	using(RijndaelManaged rijndaelManaged = new RijndaelManaged()) {
+		    	using(var rijndaelManaged = new RijndaelManaged()) {
 			        rijndaelManaged.Key = key;
 			        rijndaelManaged.IV = iv;
 			        rijndaelManaged.Mode = CipherMode.CBC;
-			        rijndaelManaged.Padding = PaddingMode.PKCS7;
-			        using(MemoryStream memoryStream = new MemoryStream(toDecode)) {
-			        	using(CryptoStream cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
+			        rijndaelManaged.Padding = PaddingMode.Zeros;
+			        using(var memoryStream = new MemoryStream(toDecode)) {
+			        	using(var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read)) {
 					        //Return the  stream, but trim null bytes due to reading too far
 					        return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", String.Empty).Trim();		        		
 			        	}
@@ -137,7 +122,7 @@ namespace FOG {
 		        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);		    	
 		    }
 			return "";
-		}		
+		}	
 		
 		/// <summary>
 		/// Securley generates a random number
@@ -147,7 +132,7 @@ namespace FOG {
 		/// <returns>A random number between min and max</returns>
 		/// </summary>		
 		public static int GetRandom(RNGCryptoServiceProvider rngProvider, int min, int max) {
-		    byte[] b = new byte[sizeof(UInt32)];
+			var b = new byte[sizeof(UInt32)];
 		    rngProvider.GetBytes(b);
 		    double d = BitConverter.ToUInt32(b, 0) / (double)UInt32.MaxValue;
 		    return min + (int)((max - min) * d);
@@ -177,20 +162,21 @@ namespace FOG {
 		/// <returns>The encrypted version of toEncode</returns>
 		/// </summary>		
 		public static String RSAEncrypt(String toEncode, String pemFile) {
+			var byteConverter = new UTF8Encoding();
+			byte[] message = byteConverter.GetBytes(toEncode);
+			
+			return ByteArrayToHexString(RawRSAEncrypt(message, pemFile));
+		}
+		
+		public static String RSAEncrypt(byte[] toEncode, String pemFile) {
 			return ByteArrayToHexString(RawRSAEncrypt(toEncode, pemFile));
 		}
 		
-		public static byte[] RawRSAEncrypt(String toEncode, String pemFile) {
+		public static byte[] RawRSAEncrypt(byte[] message, String pemFile) {
 			
 			byte[] encryptedData;
 			using(OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r"))) {
-				
-				UTF8Encoding byteConverter = new UTF8Encoding();
-	
-				byte[] message = byteConverter.GetBytes(toEncode);
-
 				encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
-				
 			}
 			return encryptedData;
 			
@@ -202,13 +188,10 @@ namespace FOG {
 		}
 
 		public static byte[] RawRSADecrypt(String toDecode, OpenSSL.Crypto.RSA rsa) {
-	
 			byte[] message = HexStringToByteArray(toDecode);
 			var encryptedData = rsa.PrivateDecrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
 
-			
 			return encryptedData;
-			
 		}		
 		
 		/// <summary>
@@ -217,7 +200,7 @@ namespace FOG {
 		/// <returns>A hex string representation of the byte array</returns>
 		/// </summary>	
 		public static String ByteArrayToHexString(byte[] ba) {
-			StringBuilder hex = new StringBuilder(ba.Length * 2);
+			var hex = new StringBuilder(ba.Length * 2);
 			foreach (byte b in ba)
 				hex.AppendFormat("{0:x2}", b);
 			return hex.ToString();			
@@ -230,7 +213,7 @@ namespace FOG {
 		/// </summary>			
 		public static byte[] HexStringToByteArray(String hex) {
 		  int NumberChars = hex.Length;
-		  byte[] bytes = new byte[NumberChars / 2];
+		  var bytes = new byte[NumberChars / 2];
 		  for (int i = 0; i < NumberChars; i += 2)
 		    bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
 		  return bytes;
@@ -240,20 +223,16 @@ namespace FOG {
 		/// <summary>
 		/// Decrypts a string using AES, and automatically extracts the initialization vector
 		/// <param name="toDecode">The string to be decrypted</param>
-		/// <param name="passKey">The AES pass key to use</param>
+		/// <param name="key">The AES pass key to use</param>
 		/// <returns>A decrypted version of toDecode</returns>
 		/// </summary>	
-		public static String AESDecrypt(String toDecode, String passKey) {
-			//The first set of 15 characters is the initialization vector, the rest is the encrypted message
-			if(toDecode.Length > 16) {
-				String iv = toDecode.Substring(16);
-				toDecode = toDecode.Substring(0,16).Trim();
-				return EncryptionHandler.AESDecrypt(iv, passKey, toDecode);
-			} else {
-				LogHandler.Log(LOG_NAME, "Unable to decrypt response");
-				LogHandler.Log(LOG_NAME, "ERROR: Encrypted data is corrupt");
-			}
-			return "";
+		public static String AESDecrypt(String toDecode, byte[] key) {
+			
+			byte[] iv = EncryptionHandler.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
+			byte[] data = EncryptionHandler.HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|")+1));
+			
+			return EncryptionHandler.AESDecrypt(data, key, iv);
+
 		}
 		
 		/// <summary>
@@ -263,7 +242,7 @@ namespace FOG {
 		/// </summary>	
 		public static  String GetMD5Hash(String filePath) {
 			if (File.Exists(filePath)) {
-				StringBuilder sBuilder = new StringBuilder();
+				var sBuilder = new StringBuilder();
 				MD5 md5 = new MD5CryptoServiceProvider();
 				byte[] bytes = File.ReadAllBytes(filePath);
 				byte[] result = md5.ComputeHash(bytes);

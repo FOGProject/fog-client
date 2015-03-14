@@ -137,7 +137,7 @@ namespace FOG {
 				if(!taskResponse.getField("#ADDom").Equals("") && !taskResponse.getField("#ADUser").Equals("") && 
 				   !taskResponse.getField("#ADPass").Equals("")) {
 				
-					String userPassword = EncryptionHandler.AESDecrypt(taskResponse.getField("#ADPass"), PASSKEY);
+					String userPassword = taskResponse.getField("#ADPass");
 
 					int returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"), 
 					                               taskResponse.getField("#ADUser"), userPassword, 
@@ -171,7 +171,7 @@ namespace FOG {
 			LogHandler.Log(getName(), "Removing host from active directory");
 			if(!taskResponse.getField("#ADUser").Equals("") && !taskResponse.getField("#ADPass").Equals("")) {
 				
-				String userPassword = EncryptionHandler.AESDecrypt(taskResponse.getField("#ADPass"), PASSKEY);
+				String userPassword = taskResponse.getField("#ADPass");
 				int returnCode = NetUnjoinDomain(null, taskResponse.getField("#ADUser"), userPassword, UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
 				
 				//Log the response

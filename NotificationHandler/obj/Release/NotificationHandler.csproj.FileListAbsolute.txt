@@ -1,0 +1,3 @@
+D:\fog-client\bin\NotificationHandler.dll
+D:\fog-client\NotificationHandler\obj\Release\ResolveAssemblyReference.cache
+D:\fog-client\NotificationHandler\obj\Release\NotificationHandler.dll

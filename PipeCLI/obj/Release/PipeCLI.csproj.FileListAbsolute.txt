@@ -1,0 +1,3 @@
+D:\fog-client\bin\FOGPipeCLI.exe
+D:\fog-client\PipeCLI\obj\Release\ResolveAssemblyReference.cache
+D:\fog-client\PipeCLI\obj\Release\FOGPipeCLI.exe

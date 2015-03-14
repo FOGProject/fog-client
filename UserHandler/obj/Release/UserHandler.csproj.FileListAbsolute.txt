@@ -1,0 +1,3 @@
+D:\fog-client\bin\UserHandler.dll
+D:\fog-client\UserHandler\obj\Release\ResolveAssemblyReference.cache
+D:\fog-client\UserHandler\obj\Release\UserHandler.dll

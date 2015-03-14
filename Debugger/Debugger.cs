@@ -3,18 +3,18 @@
 namespace FOG {
 	class Program {
 		public static void Main(string[] args) {
+			var snapin = new SnapinClient();
 			
 			LogHandler.setConsoleMode(true);
 			CommunicationHandler.GetAndSetServerAddress();
 			
 			LogHandler.NewLine();
-			LogHandler.PaddedHeader("SocketIO");
+			const string authentication = "Authentication-Snapin";
+			LogHandler.PaddedHeader(authentication);
 			LogHandler.NewLine();
-			
-			CommunicationHandler.OpenSocketIO("http://fog.jbob.io:8080");
-
+			CommunicationHandler.Authenticate();
+			snapin.start();
 			Console.ReadLine();
-			//CommunicationHandler.CloseSocketIO();
 			
 		}
 	}

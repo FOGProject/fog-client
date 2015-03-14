@@ -4,11 +4,7 @@ using System.Net;
 using System.Linq;
 using System.IO;
 using System.Net.NetworkInformation;
-using Quobject.SocketIoClientDotNet.Client;
 using System.Security.Cryptography;
-using OpenSSL.Core;
-using OpenSSL.Crypto;
-using Newtonsoft.Json;
 
 namespace FOG {
 	/// <summary>
@@ -21,9 +17,8 @@ namespace FOG {
 
 		private const String successCode = "#!ok";
 		private const String LOG_NAME = "CommunicationHandler";
-		private static Socket ioSocket;
 
-		private static string passkey = "";
+		private static byte[] passkey;
 
 
 		//Define all return codes
@@ -52,7 +47,7 @@ namespace FOG {
 
 		//Getters and setters
 		public static void SetServerAddress(String address) { serverAddress = address; }
-		public static String GetPassKey() { return passkey; }
+		public static byte[] GetPassKey() { return passkey; }
 		public static String GetServerAddress() { return serverAddress; }		
 		
 		public static void SetServerAddress(String HTTPS, String address, String webRoot) { 
@@ -100,7 +95,7 @@ namespace FOG {
 			var webClient = new WebClient();
 			try {
 				String response = webClient.DownloadString(GetServerAddress() + postfix);
-				//response = AESDecrypt(response, GetPassKey());
+				response = CommunicationHandler.AESDecrypt(response, CommunicationHandler.GetPassKey());
 				//See if the return code is known
 				Boolean messageFound = false;
 				foreach(String returnMessage in returnMessages.Keys) {
@@ -158,10 +153,12 @@ namespace FOG {
 	
 				String keyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
 				DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
+				var aes = new AesCryptoServiceProvider();
+				aes.GenerateKey();
 				
-				passkey = EncryptionHandler.GeneratePassword(32).Trim();
+				passkey = aes.Key;
+
 				String encryptedKey = EncryptionHandler.RSAEncrypt(passkey, keyPath);
-				
 				Response authenticationResponse = 
 					GetResponse("/management/index.php?mac=" +  GetMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
 				
@@ -183,7 +180,7 @@ namespace FOG {
 		/// <param name="passKey">The AES pass key to use</param>
 		/// <returns>True if the server was contacted successfully</returns>
 		/// </summary>		
-		private static String AESDecrypt(String toDecode, String passKey) {
+		private static String AESDecrypt(String toDecode, byte[] passKey) {
 			const String encryptedFlag = "#!en=";
 			const String encryptedFlag2 = "#!enkey=";
 			
@@ -356,88 +353,6 @@ namespace FOG {
 
 			return macs;
 		}
-		
-		public static void OpenSocketIO(String address) {
-			var rsa = new OpenSSL.Crypto.RSA();
-			rsa.GenerateKeys(4096, 65537, null, null);
 
-		    String pubKeyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
-			DownloadFile("/management/other/ssl/srvpublic.key", pubKeyPath);			
-			var auth1 = false;
-			var auth2 = false;
-			var auth3 = false;
-			
-			var auth1MSG = EncryptionHandler.GeneratePassword(256);
-			
-			ioSocket = IO.Socket(address);
-			ioSocket.On(Socket.EVENT_CONNECT, () => {
-			    ioSocket.On("auth", (data) => {
-			        var msg = data.ToString();
-					LogHandler.WriteLine(msg);
-					
-					if(msg.Contains("Phase 1 complete")) {
-					   	auth1 = true;
-					   	var encryptedMSG = EncryptionHandler.RSAEncrypt(auth1MSG, pubKeyPath);
-					   	ioSocket.Emit("auth-2", encryptedMSG);
-					} else if(msg.Contains("Phase 3 complete")) {
-					   	auth3 = true;
-					   	rsa.Dispose();
-					}
-			    });	
-			            	
-			    ioSocket.On("auth-trust-server", (data) => {
-			        var msg = data.ToString();
-					var decryptedMSG = EncryptionHandler.RSADecrypt(msg, rsa);
-					if(decryptedMSG.Equals(auth1MSG)) {
-						auth2 = true;
-					} else {
-						LogHandler.WriteLine("Server is invalid");
-						LogHandler.WriteLine("MSG: " + decryptedMSG);
-					}
-			    });				            	
-			          
-			    ioSocket.On("auth-trust-client", (data) => {
-			        var msg = data.ToString();
-					var aesKeyHex = EncryptionHandler.RSADecrypt(msg, rsa);
-					var aesKey    = EncryptionHandler.HexStringToByteArray(aesKeyHex);
-					
-					var aes = new AesManaged();
-					//aes.GenerateIV();
-					//var iv = aes.IV;
-					var ivString = EncryptionHandler.GeneratePassword(16);
-					var iv = System.Text.Encoding.UTF8.GetBytes(ivString);
-					var aesEncrypted = EncryptionHandler.AESEncrypt(aesKeyHex, aesKey, iv);
-
-					var ivHex = EncryptionHandler.ByteArrayToHexString(iv);
-					var transportMSG = ivHex + "|" + aesEncrypted;
-					ioSocket.Emit("auth-3", transportMSG);
-					
-
-			    });	
-			            	
-			    ioSocket.On("name", (data) => {
-					ioSocket.Emit("name", CommunicationHandler.GetMacAddresses());
-					ioSocket.Emit("auth-1", rsa.PublicKeyAsPEM);
-			    });	
-			            	
-			    ioSocket.On("auth-1", (data) => {
-			    	
-			    });
-
-			    ioSocket.On(Socket.EVENT_DISCONNECT, () => {
-					LogHandler.WriteLine("Kicked off server");
-					ioSocket.Disconnect();
-					ioSocket.Close();
-			    });	
-			    
-
-			});
-			ioSocket.Connect();
-		}
-		
-		public static void CloseSocketIO() {
-			ioSocket.Disconnect();
-			ioSocket.Close();
-		}	
 	}
 }

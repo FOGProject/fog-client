@@ -1,0 +1,3 @@
+D:\fog-client\bin\FOGUpdateWaiter.exe
+D:\fog-client\UpdateWaiter\obj\Release\ResolveAssemblyReference.cache
+D:\fog-client\UpdateWaiter\obj\Release\FOGUpdateWaiter.exe
