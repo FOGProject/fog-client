@@ -87,7 +87,7 @@ namespace FOG {
 
 			var webClient = new WebClient();
 			try {
-				String response = webClient.DownloadString(GetServerAddress() + postfix);
+				var response = webClient.DownloadString(GetServerAddress() + postfix);
 				response = CommunicationHandler.AESDecrypt(response, CommunicationHandler.GetPassKey());
 				//See if the return code is known
 				Boolean messageFound = false;
@@ -99,11 +99,11 @@ namespace FOG {
 					}					
 				}
 				
-				if(!messageFound) {
-						LogHandler.Log(LOG_NAME, "Unknown Response: " + response.Replace("\n", ""));					
-				}
+				if(!messageFound)
+					LogHandler.Log(LOG_NAME, "Unknown Response: " + response.Replace("\n", ""));					
            
 				return parseResponse(response);
+				
 			} catch (Exception ex) {
 				LogHandler.Log(LOG_NAME, "Error contacting FOG server");			
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
@@ -123,6 +123,7 @@ namespace FOG {
 			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 			
 			var webClient = new WebClient();
+			
 			try {
 				String response = webClient.DownloadString(GetServerAddress() + postfix);
 				return response;
@@ -130,8 +131,8 @@ namespace FOG {
 				LogHandler.Log(LOG_NAME, "Error contacting FOG");			
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
-			return "";
 			
+			return "";
 		}
 		
 		/// <summary>
@@ -156,8 +157,10 @@ namespace FOG {
 					LogHandler.Log(LOG_NAME, "Authenticated");	
 					return true;
 				}
+				
 				if(authenticationResponse.getReturnCode().Equals("#!ih"))
 					CommunicationHandler.Contact("/service/register.php?mac=" + CommunicationHandler.GetMacAddresses() + "&hostname=" + Dns.GetHostName());
+				
 			} catch (Exception ex) {
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);					
 			}
@@ -196,11 +199,8 @@ namespace FOG {
 		/// </summary>
 		public static Boolean Contact(String postfix) {
 			//ID the service as the new one
-			if(postfix.Contains(".php?")) {
-				postfix = postfix + "&newService=1";
-			} else {
-				postfix = postfix + "?newService=1";
-			}			
+			postfix += ( (postfix.Contains(".php?") ? "&" : "?") + "newService=1");
+			
 			LogHandler.Log(LOG_NAME,
 			               "URL: " + GetServerAddress() + postfix);
 			var webClient = new WebClient();			
@@ -222,7 +222,7 @@ namespace FOG {
 		/// <returns>A response object containing all of the parsed information</returns>
 		/// </summary>
 		private static Response parseResponse(String rawResponse) {
-			String[] data = rawResponse.Split('\n'); //Split the response at every new line
+			var data = rawResponse.Split('\n'); //Split the response at every new line
 			var parsedData = new Dictionary<String, String>();
 			var response = new Response();
 
@@ -312,6 +312,7 @@ namespace FOG {
 			IPHostEntry ipEntry = Dns.GetHostEntry(hostName);
 			
 			IPAddress[] address = ipEntry.AddressList;
+			
 			if(address.Length > 0) //Return the first address listed
 				return address[0].ToString();
 

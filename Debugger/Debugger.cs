@@ -13,7 +13,12 @@ namespace FOG {
 			LogHandler.PaddedHeader(authentication);
 			LogHandler.NewLine();
 			CommunicationHandler.Authenticate();
+			LogHandler.NewLine();
+			LogHandler.PaddedHeader(snapin.getName());
 			snapin.start();
+			LogHandler.Divider();
+			
+			LogHandler.WriteLine(EncryptionHandler.ByteArrayToHexString(CommunicationHandler.GetPassKey()));
 			Console.ReadLine();
 			
 		}

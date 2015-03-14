@@ -134,7 +134,7 @@ namespace FOG{
 					
 					//Log file formatting
 					LogHandler.NewLine();
-					LogHandler.Divider();
+					LogHandler.PaddedHeader(module.getName());
 					
 					try {
 						module.start();
