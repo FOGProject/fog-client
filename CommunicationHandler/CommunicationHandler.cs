@@ -13,6 +13,7 @@ namespace FOG {
 	public static class CommunicationHandler {
 		//Define variables
 		private static String serverAddress = "fog-server";
+		private static Boolean isAddressSet = GetAndSetServerAddress();
 		private static Dictionary<String, String> returnMessages = loadReturnMessages();
 
 		private const String successCode = "#!ok";
@@ -26,21 +27,21 @@ namespace FOG {
 
 			var messages = new Dictionary<String, String>();
 			messages.Add(successCode, "Success");
-			messages.Add("#!db", "Database error");
-			messages.Add("#!im", "Invalid MAC address format");
-			messages.Add("#!ihc", "Invalid host certificate");			
-			messages.Add("#!ih", "Invalid host");
-			messages.Add("#!il", "Invalid login");					
-			messages.Add("#!it", "Invalid task");				
-			messages.Add("#!ng", "Module is disabled globally on the FOG server");
-			messages.Add("#!nh", "Module is disabled on the host");
-			messages.Add("#!um", "Unknown module ID");
-			messages.Add("#!ns", "No snapins");		
-			messages.Add("#!nj", "No jobs");	
-			messages.Add("#!na", "No actions");				
-			messages.Add("#!nf", "No updates");				
+			messages.Add("#!db",   "Database error");
+			messages.Add("#!im",   "Invalid MAC address format");
+			messages.Add("#!ihc",  "Invalid host certificate");			
+			messages.Add("#!ih",   "Invalid host");
+			messages.Add("#!il",   "Invalid login");					
+			messages.Add("#!it",   "Invalid task");				
+			messages.Add("#!ng",   "Module is disabled globally on the FOG server");
+			messages.Add("#!nh",   "Module is disabled on the host");
+			messages.Add("#!um",   "Unknown module ID");
+			messages.Add("#!ns",   "No snapins");		
+			messages.Add("#!nj",   "No jobs");	
+			messages.Add("#!na",   "No actions");				
+			messages.Add("#!nf",   "No updates");				
 			messages.Add("#!time", "Invalid time");	
-			messages.Add("#!er", "General error");
+			messages.Add("#!er",   "General error");
 
 			return messages;
 		}
@@ -51,11 +52,7 @@ namespace FOG {
 		public static String GetServerAddress() { return serverAddress; }		
 		
 		public static void SetServerAddress(String HTTPS, String address, String webRoot) { 
-			if(HTTPS.Equals("1")) {
-				serverAddress = "https://";
-			} else {
-				serverAddress = "http://";
-			}
+			serverAddress = (HTTPS.Equals("1") ? "https://" : "http://");
 			serverAddress = serverAddress  + address + webRoot;
 		}
 		
@@ -84,11 +81,7 @@ namespace FOG {
 		/// </summary>
 		public static Response GetResponse(String postfix) {
 			//ID the service as the new one
-			if(postfix.Contains(".php?")) {
-				postfix = postfix + "&newService=1";
-			} else {
-				postfix = postfix + "?newService=1";
-			}
+			postfix += ( (postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 			
 			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 
@@ -125,11 +118,8 @@ namespace FOG {
 		/// </summary>		
 		public static String GetRawResponse(String postfix) {
 			//ID the service as the new one
-			if(postfix.Contains(".php?")) {
-				postfix = postfix + "&newService=1";
-			} else {
-				postfix = postfix + "?newService=1";
-			}
+			postfix += ( (postfix.Contains(".php?") ? "&" : "?") + "newService=1");
+			
 			LogHandler.Log(LOG_NAME, "URL: " + GetServerAddress() + postfix );
 			
 			var webClient = new WebClient();
@@ -166,6 +156,8 @@ namespace FOG {
 					LogHandler.Log(LOG_NAME, "Authenticated");	
 					return true;
 				}
+				if(authenticationResponse.getReturnCode().Equals("#!ih"))
+					CommunicationHandler.Contact("/service/register.php?mac=" + CommunicationHandler.GetMacAddresses() + "&hostname=" + Dns.GetHostName());
 			} catch (Exception ex) {
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);					
 			}

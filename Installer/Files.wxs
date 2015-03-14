@@ -11,11 +11,9 @@
 						<File Id="AutoLogOut" Name="AutoLogOut.dll" Source="..\bin\AutoLogOut.dll"/>
 						<File Id="ClientUpdater" Name="ClientUpdater.dll" Source="..\bin\ClientUpdater.dll"/>						
 						<File Id="CommunicationHandler" Name="CommunicationHandler.dll" Source="..\bin\CommunicationHandler.dll"/>
-						<File Id="DirCleaner" Name="DirCleaner.dll" Source="..\bin\DirCleaner.dll"/>
 						<File Id="DisplayManager" Name="DisplayManager.dll" Source="..\bin\DisplayManager.dll"/>
 						<File Id="GreenFOG" Name="GreenFOG.dll" Source="..\bin\GreenFOG.dll"/>
 						<File Id="HostnameChanger" Name="HostnameChanger.dll" Source="..\bin\HostnameChanger.dll"/>		
-						<File Id="HostRegister" Name="HostRegister.dll" Source="..\bin\HostRegister.dll"/>		
 						<File Id="EncryptionHandler" Name="EncryptionHandler.dll" Source="..\bin\EncryptionHandler.dll"/>
 						<File Id="LogHandler" Name="LogHandler.dll" Source="..\bin\LogHandler.dll"/>
 						<File Id="NotificationHandler" Name="NotificationHandler.dll" Source="..\bin\NotificationHandler.dll"/>
@@ -29,12 +27,7 @@
 						<File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe"/>
 						<File Id="TaskReboot" Name="TaskReboot.dll" Source="..\bin\TaskReboot.dll"/>
 						<File Id="UserHandler" Name="UserHandler.dll" Source="..\bin\UserHandler.dll"/>
-						<File Id="UserCleanup" Name="UserCleanup.dll" Source="..\bin\UserCleanup.dll"/>
 						<File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe"/>
-						<File Id="Json" Name="Newtonsoft.Json.dll" Source="..\bin\Newtonsoft.Json.dll"/>
-						<File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll"/>
-						<File Id="WebSocket" Name="WebSocket4Net.dll" Source="..\bin\WebSocket4Net.dll"/>
-						<File Id="SocketIoClientDotNet" Name="SocketIoClientDotNet.dll" Source="..\bin\SocketIoClientDotNet.dll"/>
 						<File Id="System.Threading.Tasks.NET35" Name="System.Threading.Tasks.NET35.dll" Source="..\bin\System.Threading.Tasks.NET35.dll"/>
 						<File Id="libeay32" Name="libeay32.dll" Source="..\bin\libeay32.dll"/>
 						<File Id="ssleay32" Name="ssleay32.dll" Source="..\bin\ssleay32.dll"/>

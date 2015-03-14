@@ -61,7 +61,6 @@ namespace FOG {
 
 		//Check if a user is loggin in, do this by getting a list of all users, and check if the list has any elements
 		public static Boolean IsUserLoggedIn() {
-
 			return GetUsersLoggedIn().Count > 0;
 		}
 		
@@ -72,13 +71,13 @@ namespace FOG {
 		
 		//Return local users
 		public static List<UserData> GetAllUserData() {
-			List<UserData> users = new List<UserData>();
+			var users = new List<UserData>();
 			
-			SelectQuery query = new SelectQuery("Win32_UserAccount");
-			ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+			var query = new SelectQuery("Win32_UserAccount");
+			var searcher = new ManagementObjectSearcher(query);
             
 			foreach (ManagementObject envVar in searcher.Get()) {
-				UserData userData = new UserData(envVar["Name"].ToString(), envVar["SID"].ToString());
+				var userData = new UserData(envVar["Name"].ToString(), envVar["SID"].ToString());
 				users.Add(userData);
 			}
 			
@@ -88,7 +87,7 @@ namespace FOG {
 		//Return how long the logged in user is inactive for in seconds
 		public static int GetUserInactivityTime() {
 			uint idleTime = 0;
-			LASTINPUTINFO lastInputInfo = new LASTINPUTINFO();
+			var lastInputInfo = new LASTINPUTINFO();
 			lastInputInfo.cbSize = (uint)Marshal.SizeOf( lastInputInfo );
 			lastInputInfo.dwTime = 0;
 	
@@ -105,8 +104,8 @@ namespace FOG {
 		
 		//Get a list of all users logged in
 		public static List<String> GetUsersLoggedIn() {
-			List<String> users = new List<String>();
-			List<int> sessionIds = GetSessionIds();
+			var users = new List<String>();
+			var sessionIds = GetSessionIds();
 			
 			foreach(int sessionId in sessionIds) {
 				if(!GetUserNameFromSessionId(sessionId, false).Equals("SYSTEM"))
@@ -118,11 +117,11 @@ namespace FOG {
 		
 		//Get all session Ids from running processes
 		public static List<int> GetSessionIds() {
-			List<int> sessionIds = new List<int>();
-			String[] properties = new[] {"SessionId"};
+			var sessionIds = new List<int>();
+			var properties = new[] {"SessionId"};
 			
-			SelectQuery query = new SelectQuery("Win32_Process", "", properties); //SessionId
-			ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+			var query = new SelectQuery("Win32_Process", "", properties); //SessionId
+			var searcher = new ManagementObjectSearcher(query);
             
 			foreach (ManagementObject envVar in searcher.Get()) {
 				try {
@@ -179,8 +178,8 @@ namespace FOG {
 		//Unregister a user from windows
 		public static Boolean UnregisterUser(String user) {
 			try {
-				DirectoryEntry userDir = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
-				DirectoryEntry userToDelete = userDir.Children.Find(user);
+				var userDir = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+				var userToDelete = userDir.Children.Find(user);
 				
 				userDir.Children.Remove(userToDelete);
 				return true;
@@ -220,7 +219,7 @@ namespace FOG {
 		public static void TakeOwnership(String path) {
 
 			using (new ProcessPrivileges.PrivilegeEnabler(Process.GetCurrentProcess(), ProcessPrivileges.Privilege.TakeOwnership)){
-			    DirectoryInfo directoryInfo = new DirectoryInfo(path);
+			    var directoryInfo = new DirectoryInfo(path);
 			    DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
 			    directorySecurity.SetOwner(WindowsIdentity.GetCurrent().User);
 			    Directory.SetAccessControl(path, directorySecurity);    
@@ -229,21 +228,21 @@ namespace FOG {
 		}
 		
 		private static DirectorySecurity removeExplicitSecurity(DirectorySecurity directorySecurity) {
-			AuthorizationRuleCollection rules = directorySecurity.GetAccessRules(true, false, typeof(System.Security.Principal.NTAccount));
+			var rules = directorySecurity.GetAccessRules(true, false, typeof(System.Security.Principal.NTAccount));
 			foreach (FileSystemAccessRule rule in rules)
 				directorySecurity.RemoveAccessRule(rule);
 			return directorySecurity;
 		}
 		
 		public static void resetRights(String path) {
-			DirectoryInfo directoryInfo = new DirectoryInfo(path);
-			DirectorySecurity directorySecurity = directoryInfo.GetAccessControl();
+			var directoryInfo = new DirectoryInfo(path);
+			var directorySecurity = directoryInfo.GetAccessControl();
 			directorySecurity = removeExplicitSecurity(directorySecurity);
 			Directory.SetAccessControl(path, directorySecurity);
 		}
 		
 		public static void RemoveWriteProtection(String path) {
-			 DirectoryInfo directoryInfo = new DirectoryInfo(path);
+			 var directoryInfo = new DirectoryInfo(path);
 			 directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
 		}		
 		
