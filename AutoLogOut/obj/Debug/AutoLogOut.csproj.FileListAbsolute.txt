@@ -8,3 +8,8 @@ C:\Users\jbob\Desktop\fog-client\bin\AutoLogOut.pdb
 C:\Users\jbob\Desktop\fog-client\AutoLogOut\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\AutoLogOut\obj\Debug\AutoLogOut.dll
 C:\Users\jbob\Desktop\fog-client\AutoLogOut\obj\Debug\AutoLogOut.pdb
+D:\fog\client\bin\AutoLogOut.dll
+D:\fog\client\bin\AutoLogOut.pdb
+D:\fog\client\AutoLogOut\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\AutoLogOut\obj\Debug\AutoLogOut.dll
+D:\fog\client\AutoLogOut\obj\Debug\AutoLogOut.pdb

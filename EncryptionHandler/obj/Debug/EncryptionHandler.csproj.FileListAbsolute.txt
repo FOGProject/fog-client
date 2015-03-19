@@ -13,3 +13,8 @@ C:\Users\jbob\Desktop\fog-client\bin\EncryptionHandler.pdb
 C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\EncryptionHandler.dll
 C:\Users\jbob\Desktop\fog-client\EncryptionHandler\obj\Debug\EncryptionHandler.pdb
+D:\fog\client\bin\EncryptionHandler.dll
+D:\fog\client\bin\EncryptionHandler.pdb
+D:\fog\client\EncryptionHandler\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\EncryptionHandler\obj\Debug\EncryptionHandler.dll
+D:\fog\client\EncryptionHandler\obj\Debug\EncryptionHandler.pdb

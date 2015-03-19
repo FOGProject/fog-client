@@ -8,3 +8,8 @@ C:\Users\jbob\Desktop\fog-client\bin\NotificationHandler.pdb
 C:\Users\jbob\Desktop\fog-client\NotificationHandler\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\NotificationHandler\obj\Debug\NotificationHandler.dll
 C:\Users\jbob\Desktop\fog-client\NotificationHandler\obj\Debug\NotificationHandler.pdb
+D:\fog\client\bin\NotificationHandler.dll
+D:\fog\client\bin\NotificationHandler.pdb
+D:\fog\client\NotificationHandler\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\NotificationHandler\obj\Debug\NotificationHandler.dll
+D:\fog\client\NotificationHandler\obj\Debug\NotificationHandler.pdb

@@ -43,18 +43,17 @@ namespace FOG
 		
 		public static void Header(String text) {
 			double headerSize = (HEADER_LENGTH-text.Length)/2;
-			
+			String output = "";
 			for(int i=0; i<(int)Math.Ceiling(headerSize); i++) {
-				Write("-");
+				output += "-";
 			}
 			
-			Write(text);
+			output += text;
 			
 			for(int i=0; i<((int)Math.Floor(headerSize)); i++) {
-				Write("-");
-			}	
-			NewLine();
-			
+				output += "-";
+			}
+			WriteLine(output);
 		}
 		
 		public static void PaddedHeader(String text) {
@@ -72,7 +71,7 @@ namespace FOG
 				Console.BackgroundColor = ConsoleColor.Black;
 			} else {
 				StreamWriter logWriter;
-				FileInfo logFile = new FileInfo(getFilePath());
+				var logFile = new FileInfo(getFilePath());
 	
 				//Delete the log file if it excedes the max log size
 				if (logFile.Exists && logFile.Length > maxLogSize)

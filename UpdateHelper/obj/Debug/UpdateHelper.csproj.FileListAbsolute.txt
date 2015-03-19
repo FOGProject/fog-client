@@ -8,3 +8,8 @@ C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateHelper.pdb
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.exe
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.pdb
+D:\fog\client\bin\FOGUpdateHelper.exe
+D:\fog\client\bin\FOGUpdateHelper.pdb
+D:\fog\client\UpdateHelper\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\UpdateHelper\obj\Debug\FOGUpdateHelper.exe
+D:\fog\client\UpdateHelper\obj\Debug\FOGUpdateHelper.pdb

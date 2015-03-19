@@ -10,3 +10,9 @@ C:\Users\jbob\Desktop\fog-client\bin\FOGService.pdb
 C:\Users\jbob\Desktop\fog-client\Service\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\Service\obj\Debug\FOGService.exe
 C:\Users\jbob\Desktop\fog-client\Service\obj\Debug\FOGService.pdb
+D:\fog\client\bin\FOGService.exe.config
+D:\fog\client\bin\FOGService.exe
+D:\fog\client\bin\FOGService.pdb
+D:\fog\client\Service\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\Service\obj\Debug\FOGService.exe
+D:\fog\client\Service\obj\Debug\FOGService.pdb

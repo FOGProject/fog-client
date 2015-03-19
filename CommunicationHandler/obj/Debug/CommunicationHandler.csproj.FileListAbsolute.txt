@@ -13,3 +13,8 @@ C:\Users\jbob\Desktop\fog-client\bin\CommunicationHandler.pdb
 C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\CommunicationHandler.dll
 C:\Users\jbob\Desktop\fog-client\CommunicationHandler\obj\Debug\CommunicationHandler.pdb
+D:\fog\client\bin\CommunicationHandler.dll
+D:\fog\client\bin\CommunicationHandler.pdb
+D:\fog\client\CommunicationHandler\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\CommunicationHandler\obj\Debug\CommunicationHandler.dll
+D:\fog\client\CommunicationHandler\obj\Debug\CommunicationHandler.pdb

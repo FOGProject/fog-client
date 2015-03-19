@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading;
+using System.IO;
 
 using FOG;
 
@@ -102,6 +103,11 @@ namespace FOG{
 				
 				//Unschedule any old updates
 				ShutdownHandler.UnScheduleUpdate();
+				
+				//Delete old temp files
+				if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp")) {
+					Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
+				}
 			}
         }
 		

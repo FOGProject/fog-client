@@ -26,7 +26,7 @@ namespace FOG {
 		public static void beginUpdate(PipeServer servicePipe) {
 			try {
 				//Create updating.info which will warn any sub-processes currently initializing that they should halt
-				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info", "");
+				File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\tmp\updating.info", "");
 				
 				//Give time for any sub-processes that may be in the middle of initializing and missed the updating.info file so they can recieve the update pipe notice
 				Thread.Sleep(1000);

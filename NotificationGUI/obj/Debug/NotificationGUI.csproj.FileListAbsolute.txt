@@ -5,3 +5,10 @@ C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOG.MainForm.resource
 C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\NotificationGUI.csproj.GenerateResource.Cache
 C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.exe
 C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb
+D:\fog\client\bin\FOGNotificationGUI.exe
+D:\fog\client\bin\FOGNotificationGUI.pdb
+D:\fog\client\NotificationGUI\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\NotificationGUI\obj\Debug\FOG.MainForm.resources
+D:\fog\client\NotificationGUI\obj\Debug\NotificationGUI.csproj.GenerateResource.Cache
+D:\fog\client\NotificationGUI\obj\Debug\FOGNotificationGUI.exe
+D:\fog\client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb

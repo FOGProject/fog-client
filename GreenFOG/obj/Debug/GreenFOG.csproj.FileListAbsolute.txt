@@ -3,3 +3,8 @@ C:\Users\jbob\Desktop\fog-client\bin\GreenFOG.pdb
 C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\GreenFOG.dll
 C:\Users\jbob\Desktop\fog-client\GreenFOG\obj\Debug\GreenFOG.pdb
+D:\fog\client\bin\GreenFOG.dll
+D:\fog\client\bin\GreenFOG.pdb
+D:\fog\client\GreenFOG\obj\Debug\ResolveAssemblyReference.cache
+D:\fog\client\GreenFOG\obj\Debug\GreenFOG.dll
+D:\fog\client\GreenFOG\obj\Debug\GreenFOG.pdb
