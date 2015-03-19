@@ -93,7 +93,7 @@ namespace FOG {
 		public static void RestartService() {
 			LogHandler.Log(LOG_NAME, "Restarting service");
 			setShutdownPending(true);
-			Process process = new Process();
+			var process = new Process();
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\RestartFOGService.exe";
 			process.Start();
@@ -115,9 +115,9 @@ namespace FOG {
 		public static void SpawnUpdateWaiter(String fileName) {
 			LogHandler.Log(LOG_NAME, "Spawning update waiter");
 			
-			Process process = new Process();
+			var process = new Process();
 			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\FOGUpdateWaiter.exe";
+			process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\tmp\FOGUpdateWaiter.exe";
 			process.StartInfo.Arguments = "\"" + fileName + "\"";
 			
 			LogHandler.Log(LOG_NAME, "Update Waiter args");

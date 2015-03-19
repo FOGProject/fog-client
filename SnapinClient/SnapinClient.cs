@@ -95,7 +95,7 @@ namespace FOG {
 		
 		//Create a proccess to run the snapin with
 		private Process generateProcess(Response taskResponse, String snapinPath) {
-			Process process = new Process();
+			var process = new Process();
 			process.StartInfo.CreateNoWindow = true;
 			process.StartInfo.UseShellExecute = false;
 			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;

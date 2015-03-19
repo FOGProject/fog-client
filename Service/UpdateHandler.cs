@@ -40,9 +40,9 @@ namespace FOG {
 				//Launch the updater
 				LogHandler.Log(LOG_NAME, "Spawning update helper");
 				
-				Process process = new Process();
+				var process = new Process();
 				process.StartInfo.UseShellExecute = false;
-				process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\FOGUpdateHelper.exe";
+				process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\tmp\FOGUpdateHelper.exe";
 				process.Start();
 			} catch (Exception ex) {
 				LogHandler.Log(LOG_NAME, "Unable to perform update");

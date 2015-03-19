@@ -1,7 +1,6 @@
 ﻿
 using System;
 using System.IO;
-using System.Threading;
 using System.ServiceProcess;
 using System.Diagnostics;
 
@@ -9,7 +8,7 @@ namespace FOG {
 	class Program {
 		
 		public static void Main(string[] args) {
-			ServiceController service = new ServiceController("fogservice");
+			var service = new ServiceController("fogservice");
 			//Update Line
 			//Stop the service
 			service.Stop();
@@ -21,11 +20,7 @@ namespace FOG {
 				}
 			}
 			
-			for(int i=0; i <5; i++) {
-				if(applyUpdates())
-					break;
-				Thread.Sleep(5000);
-			}
+			applyUpdates();
 			
 			//Start the service
 
@@ -37,23 +32,16 @@ namespace FOG {
 			
 		}
 		
-		private static Boolean applyUpdates() {
-			Boolean success = false;
+		private static void applyUpdates() {
+			var process = new Process();
+			process.StartInfo.CreateNoWindow = true;
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 			
-			foreach(String updateFile in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)) {
-				if(updateFile.EndsWith(".update")) {
-					String postUpdateFile = updateFile.Substring(0, updateFile.Length-(".update").Length);
-					
-					try {
-						File.Delete(postUpdateFile);
-						File.Move(updateFile, postUpdateFile);
-					} catch (Exception) {
-						success = false;
-					}
-				}
-			}
-			return success;
-			
+			process.StartInfo.FileName = "msiexec"; ;
+			process.StartInfo.Arguments = "/i" + (AppDomain.CurrentDomain.BaseDirectory + @"\FOGService.msi") + "/quiet /L*V \"C:\fog.install.log\"";
+			process.Start();
+			process.WaitForExit();
 		}
 	}
 }

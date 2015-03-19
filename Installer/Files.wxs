@@ -23,7 +23,6 @@
 						<File Id="ShutdownHandler" Name="ShutdownHandler.dll" Source="..\bin\ShutdownHandler.dll"/>
 						<File Id="SnapinClient" Name="SnapinClient.dll" Source="..\bin\SnapinClient.dll"/>
 						<File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe"/>
-						<File Id="FOGPipeCLI" Name="FOGPipeCLI.exe" Source="..\bin\FOGPipeCLI.exe"/>
 						<File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe"/>
 						<File Id="TaskReboot" Name="TaskReboot.dll" Source="..\bin\TaskReboot.dll"/>
 						<File Id="UserHandler" Name="UserHandler.dll" Source="..\bin\UserHandler.dll"/>
@@ -48,26 +47,32 @@
 						</ServiceInstall>
       					<ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
 					</Component>
-		            <Component Id="ServerRegistry" Guid="5914aedb-e02d-4a6a-8622-b0ba561041e1">
+		            <Component Id="ServerRegistry" Guid="5914aedb-e02d-4a6a-8622-b0ba561041e1" NeverOverwrite="yes">
 		                <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
 		                    <RegistryValue Name="Server" Type="string" Value="[WEBADDRESS]" />
 		                </RegistryKey>
 		            </Component>
-		            <Component Id="TrayRegistry" Guid="d5b010c4-d72a-410d-a865-901afdcc97ba">
+		            <Component Id="TrayRegistry" Guid="d5b010c4-d72a-410d-a865-901afdcc97ba" NeverOverwrite="yes">
 		                <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
 		                    <RegistryValue Name="Tray" Type="string" Value="[USETRAY]" />
 		                </RegistryKey>
 		            </Component>	
-		            <Component Id="WebRootRegistry" Guid="4d726fa5-f228-4efa-b006-872efa673881">
+		            <Component Id="WebRootRegistry" Guid="4d726fa5-f228-4efa-b006-872efa673881" NeverOverwrite="yes">
 		                <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
 		                    <RegistryValue Name="WebRoot" Type="string" Value="[WEBROOT]" />
 		                </RegistryKey>
 		            </Component>
-		            <Component Id="HttpsRegistry" Guid="ca9bbfbd-4c14-49ad-9a6e-ecb329197561">
+		            <Component Id="HttpsRegistry" Guid="ca9bbfbd-4c14-49ad-9a6e-ecb329197561" NeverOverwrite="yes">
 		                <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
 		                    <RegistryValue Name="HTTPS" Type="string" Value="[HTTPS]" />
 		                </RegistryKey>
-		            </Component>				
+		            </Component>	
+		            <Component Id="VersionRegistry" Guid="32919e48-2937-4624-b991-c81fa438f327">
+		                <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+		                    <RegistryValue Name="Version" Type="string" Value="[ProductVersion]" />
+		                </RegistryKey>
+		            </Component>	
+								
 				</Directory>
 			</Directory>
 			<Directory Id="StartupFolder" Name="Startup">
