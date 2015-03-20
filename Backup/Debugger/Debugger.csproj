@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
-    <ProjectGuid>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</ProjectGuid>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}</ProjectGuid>
+    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <RootNamespace>FOG</RootNamespace>
-    <AssemblyName>LogHandler</AssemblyName>
+    <AssemblyName>Debugger</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
@@ -20,13 +20,11 @@
     <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
     <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
     <WarningLevel>4</WarningLevel>
-    <ProductVersion>9.0.21022</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <RunCodeAnalysis>False</RunCodeAnalysis>
     <SourceAnalysisOverrideSettingsFile>C:\Users\Joseph\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+    <PlatformTarget>x86</PlatformTarget>
     <BaseAddress>4194304</BaseAddress>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
@@ -56,14 +54,47 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogHandler.cs" />
+    <Compile Include="Debugger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractModule\AbstractModule.csproj">
+      <Project>{DA390DC8-3502-42B2-8220-D52B2A64E4B7}</Project>
+      <Name>AbstractModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommunicationHandler\CommunicationHandler.csproj">
+      <Project>{5888C3CC-7B30-4A80-BDF4-3C269DC9DD40}</Project>
+      <Name>CommunicationHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EncryptionHandler\EncryptionHandler.csproj">
+      <Project>{052A6197-798E-428B-99F9-7ABF12280798}</Project>
+      <Name>EncryptionHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogHandler\LogHandler.csproj">
+      <Project>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</Project>
+      <Name>LogHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RegistryHandler\RegistryHandler.csproj">
+      <Project>{7BA48875-2930-4A9B-9216-255FCA1E86BE}</Project>
+      <Name>RegistryHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SnapinClient\SnapinClient.csproj">
+      <Project>{3532F76F-7A3B-474E-8CB1-58867E584510}</Project>
+      <Name>SnapinClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

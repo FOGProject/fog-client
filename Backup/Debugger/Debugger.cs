@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Net;
 
 namespace FOG {
 	class Program {
 		public static void Main(string[] args) {
+			var snapin = new SnapinClient();
 			
 			LogHandler.setConsoleMode(true);
 			CommunicationHandler.GetAndSetServerAddress();
@@ -16,6 +16,11 @@ namespace FOG {
 			CommunicationHandler.Authenticate();
 			LogHandler.NewLine();
 			
+			LogHandler.PaddedHeader(snapin.getName());
+			snapin.start();
+			LogHandler.Divider();
+			
+			LogHandler.WriteLine(EncryptionHandler.ByteArrayToHexString(CommunicationHandler.GetPassKey()));
 			Console.ReadLine();
 			
 		}

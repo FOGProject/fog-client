@@ -19,6 +19,8 @@
 		<Property Id="WEBROOT" Value="/fog" />
 		<Property Id="WEBADDRESS" Value="fog-server" />
 		<Property Id="HTTPS" Value="0" />
+		<Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable"/>
+
 		<UIRef Id="DialogStructure" />
 		<!-- Configure what to install -->
 		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high" />

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ServiceProcess;
 using System.Threading;
 using System.IO;
-using System.Diagnostics;
 
 using FOG;
 
@@ -106,13 +105,8 @@ namespace FOG{
 				ShutdownHandler.UnScheduleUpdate();
 				
 				//Delete old temp files
-				try {
-					if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp")) {
-						Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
-					}
-				} catch (Exception ex) {
-					LogHandler.Log(LOG_NAME, "Could not delete tmp dir");
-					LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+				if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp")) {
+					Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
 				}
 			}
         }
@@ -132,15 +126,7 @@ namespace FOG{
 		protected override void OnStop() {
 			if(!this.status.Equals(Status.Broken))
 				this.status = Status.Stopped;
-			
-			foreach(Process process in Process.GetProcessesByName("FOGUserService")) {
-				process.Kill();
-			}
-			foreach(Process process in Process.GetProcessesByName("FOGTray")) {
-				process.Kill();
-			}		
 		}
-
 		
 		//Run each service
 		private void serviceLooper() {

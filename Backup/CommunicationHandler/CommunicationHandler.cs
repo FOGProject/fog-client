@@ -131,6 +131,7 @@ namespace FOG {
 				LogHandler.Log(LOG_NAME, "Error contacting FOG");			
 				LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
 			}
+			
 			return "";
 		}
 		

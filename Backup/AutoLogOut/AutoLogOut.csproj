@@ -1,19 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
-    <ProjectGuid>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</ProjectGuid>
+    <ProjectGuid>{B39DF5F9-A914-45AC-9F01-37B12A5591DC}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>FOG</RootNamespace>
-    <AssemblyName>LogHandler</AssemblyName>
+    <AssemblyName>AutoLogOut</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <NoWin32Manifest>False</NoWin32Manifest>
-    <SignAssembly>False</SignAssembly>
-    <DelaySign>False</DelaySign>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <NoStdLib>False</NoStdLib>
@@ -22,8 +20,6 @@
     <WarningLevel>4</WarningLevel>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\Joseph\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,7 +45,6 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-    <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,8 +57,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogHandler.cs" />
+    <Compile Include="AutoLogOut.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AbstractModule\AbstractModule.csproj">
+      <Project>{DA390DC8-3502-42B2-8220-D52B2A64E4B7}</Project>
+      <Name>AbstractModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\CommunicationHandler\CommunicationHandler.csproj">
+      <Project>{5888C3CC-7B30-4A80-BDF4-3C269DC9DD40}</Project>
+      <Name>CommunicationHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogHandler\LogHandler.csproj">
+      <Project>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</Project>
+      <Name>LogHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NotificationHandler\NotificationHandler.csproj">
+      <Project>{717A8C0E-32F9-498C-BC51-FC03D0009248}</Project>
+      <Name>NotificationHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
+      <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
+      <Name>PipeServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShutdownHandler\ShutdownHandler.csproj">
+      <Project>{D0C42FA3-B494-4FA7-92CB-50D7C2E05383}</Project>
+      <Name>ShutdownHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UserHandler\UserHandler.csproj">
+      <Project>{1759DEAE-2585-4324-9F85-338BE0F755BF}</Project>
+      <Name>UserHandler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

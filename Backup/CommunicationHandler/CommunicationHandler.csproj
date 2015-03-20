@@ -1,12 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
   <PropertyGroup>
-    <ProjectGuid>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</ProjectGuid>
+    <ProjectGuid>{5888C3CC-7B30-4A80-BDF4-3C269DC9DD40}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <OutputType>Library</OutputType>
     <RootNamespace>FOG</RootNamespace>
-    <AssemblyName>LogHandler</AssemblyName>
+    <AssemblyName>CommunicationHandler</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
@@ -22,8 +22,6 @@
     <WarningLevel>4</WarningLevel>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RunCodeAnalysis>False</RunCodeAnalysis>
-    <SourceAnalysisOverrideSettingsFile>C:\Users\Joseph\AppData\Roaming\ICSharpCode\SharpDevelop5\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,12 +47,17 @@
     <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
     <DefineConstants>TRACE</DefineConstants>
     <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
-    <StartAction>Project</StartAction>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ManagedOpenSsl">
+      <HintPath>..\libs\ManagedOpenSsl.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.NET35">
+      <HintPath>..\packages\System.Threading.Tasks.Unofficial.3.1\lib\net35\System.Threading.Tasks.NET35.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
@@ -62,8 +65,30 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogHandler.cs" />
+    <Compile Include="CommunicationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Response.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EncryptionHandler\EncryptionHandler.csproj">
+      <Project>{052A6197-798E-428B-99F9-7ABF12280798}</Project>
+      <Name>EncryptionHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LogHandler\LogHandler.csproj">
+      <Project>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</Project>
+      <Name>LogHandler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RegistryHandler\RegistryHandler.csproj">
+      <Project>{7BA48875-2930-4A9B-9216-255FCA1E86BE}</Project>
+      <Name>RegistryHandler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy /y "..\libs\libeay32.dll" "..\bin\"
+copy /y "..\libs\ssleay32.dll" "..\bin\"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
