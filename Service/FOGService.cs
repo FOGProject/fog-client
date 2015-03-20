@@ -130,8 +130,13 @@ namespace FOG{
 		
 		//Run each service
 		private void serviceLooper() {
+			
+			LogHandler.NewLine();
+			LogHandler.PaddedHeader("Authentication");
+			LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
 			CommunicationHandler.Authenticate();
 			LogHandler.NewLine();
+			
 			//Only run the service if there wasn't a stop or shutdown request
 			while (status.Equals(Status.Running) && !ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending()) {
 				foreach(AbstractModule module in modules) {
@@ -141,6 +146,7 @@ namespace FOG{
 					//Log file formatting
 					LogHandler.NewLine();
 					LogHandler.PaddedHeader(module.getName());
+					LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
 					
 					try {
 						module.start();

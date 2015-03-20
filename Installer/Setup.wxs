@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
 	<Product Id="*" Name="FOG Service" Language="1033" Version="0.6.1" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA" Manufacturer="FOG">
-		<Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+		<Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="300" Compressed="yes" InstallScope="perMachine" />
 		<!-- Remove old versions -->
 		<Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">
 			<UpgradeVersion OnlyDetect="yes" Minimum="0.0.0" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
@@ -24,6 +24,9 @@
 		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high" />
 		<Directory Id="TARGETDIR" Name="SourceDir">
 		</Directory>
+		<Feature Id="VCRedist" Title="Visual C++Runtime" AllowAdvertise="no" Display="hidden" Level="1">
+		    <MergeRef Id="VCRedist"/>
+		</Feature>		
 		<Feature Id="Base" Title="FOG Service" Description="A client for the FOG server" Level="1">
 			<ComponentRef Id="StandardComponent" />
 			<ComponentRef Id="ServerRegistry" />
