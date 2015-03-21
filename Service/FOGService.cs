@@ -139,6 +139,12 @@ namespace FOG{
 			foreach(Process process in Process.GetProcessesByName("FOGTray")) {
 				process.Kill();
 			}		
+							//Delete old temp files
+			try {
+				if(Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp")) {
+					Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
+				}
+			} catch (Exception ex) { }
 		}
 
 		
