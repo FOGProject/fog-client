@@ -1,15 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.Win32;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.Threading;
-using System.Configuration;
 using System.IO;
-using System.Collections;
-using System.Reflection;
-using System.Net;
 
 namespace FOG
 {

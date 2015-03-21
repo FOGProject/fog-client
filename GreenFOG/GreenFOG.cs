@@ -21,7 +21,7 @@ namespace FOG
         protected override void doWork()
         {
             //Get actions
-            var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php?mac=" + CommunicationHandler.GetMacAddresses());
+            var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (!tasksResponse.wasError())

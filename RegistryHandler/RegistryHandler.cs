@@ -1,7 +1,6 @@
 ﻿
 using System;
 using Microsoft.Win32;
-using System.Collections.Generic;
 
 namespace FOG
 {

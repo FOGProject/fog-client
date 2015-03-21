@@ -27,7 +27,7 @@ namespace FOG
             if (display.settingsLoaded())
             {
                 //Get task info
-                Response taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php?mac=" + CommunicationHandler.GetMacAddresses());
+                var taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php", true);
 	
                 if (!taskResponse.wasError())
                 {
@@ -76,10 +76,10 @@ namespace FOG
 		
         private List<String> getDisplays()
         {
-            List<String> displays = new List<String>();			
-            ManagementObjectSearcher monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
+            var displays = new List<String>();			
+            var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
 			
-            foreach (ManagementObject monitor in monitorSearcher.Get())
+            foreach (var monitor in monitorSearcher.Get())
             {
                 displays.Add(monitor["Name"].ToString());
             }

@@ -20,8 +20,7 @@ namespace FOG
         protected override void doWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php?mac=" +
-                               CommunicationHandler.GetMacAddresses());
+            var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php", true);
 			
 			
             //Download the snapin file if there was a response and run it

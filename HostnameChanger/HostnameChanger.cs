@@ -69,8 +69,7 @@ namespace FOG
         protected override void doWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?mac=" + CommunicationHandler.GetMacAddresses() +
-                                   "&moduleid=" + getName().ToLower());
+            var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + getName().ToLower(), true);
 			
             if (!taskResponse.wasError())
             {

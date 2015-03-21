@@ -76,7 +76,7 @@ namespace FOG
         public static Boolean GetAndSetServerAddress()
         {
             if (RegistryHandler.GetSystemSetting("Server") != null && RegistryHandler.GetSystemSetting("WebRoot") != null &&
-            RegistryHandler.GetSystemSetting("Tray") != null && RegistryHandler.GetSystemSetting("HTTPS") != null) {
+                RegistryHandler.GetSystemSetting("Tray") != null && RegistryHandler.GetSystemSetting("HTTPS") != null) {
 				
                 CommunicationHandler.SetServerAddress(RegistryHandler.GetSystemSetting("HTTPS"), 
                     RegistryHandler.GetSystemSetting("Server"), 
@@ -125,6 +125,13 @@ namespace FOG
             }
             return new Response();
         }
+        
+        public static Response GetResponse(String postfix, Boolean appendMAC)
+        {
+            if (appendMAC)
+                postfix += ((postfix.Contains(".php?") ? "&" : "?") + "mac=" + CommunicationHandler.GetMacAddresses());
+            return GetResponse(postfix);
+        }
 		
         /// <summary>
         /// Get the raw response of a server url
@@ -165,9 +172,8 @@ namespace FOG
 				
                 passkey = aes.Key;
 
-                String encryptedKey = EncryptionHandler.RSAEncrypt(passkey, keyPath);
-                Response authenticationResponse = 
-                    GetResponse("/management/index.php?mac=" + GetMacAddresses() + "&sub=authorize&sym_key=" + encryptedKey);
+                var encryptedKey = EncryptionHandler.RSAEncrypt(passkey, keyPath);
+                var authenticationResponse = GetResponse("/management/index.php?sub=authorize&sym_key=" + encryptedKey);
 				
                 if (!authenticationResponse.wasError()) {
                     LogHandler.Log(LOG_NAME, "Authenticated");	
@@ -175,7 +181,7 @@ namespace FOG
                 }
 				
                 if (authenticationResponse.getReturnCode().Equals("#!ih"))
-                    CommunicationHandler.Contact("/service/register.php?mac=" + CommunicationHandler.GetMacAddresses() + "&hostname=" + Dns.GetHostName());
+                    CommunicationHandler.Contact("/service/register.php?hostname=" + Dns.GetHostName(), true);
 				
             } catch (Exception ex) {
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);					
@@ -232,6 +238,13 @@ namespace FOG
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
             return false;
+        }
+        
+        public static Boolean Contact(String postfix, Boolean appendMAC)
+        {
+            if (appendMAC)
+                postfix += ((postfix.Contains(".php?") ? "&" : "?") + "mac=" + CommunicationHandler.GetMacAddresses());
+            return Contact(postfix);
         }
 
         /// <summary>
@@ -357,7 +370,7 @@ namespace FOG
                     IPInterfaceProperties properties = adapter.GetIPProperties();
 
                     macs = macs + "|" + string.Join(":", (from z in adapter.GetPhysicalAddress().GetAddressBytes()
-                                                          select z.ToString("X2")).ToArray());
+                                                                         select z.ToString("X2")).ToArray());
                 }
 				
                 // Remove the first |

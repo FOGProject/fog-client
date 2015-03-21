@@ -22,7 +22,7 @@ namespace FOG
         protected override void doWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/jobs.php?mac=" + CommunicationHandler.GetMacAddresses());
+            var taskResponse = CommunicationHandler.GetResponse("/service/jobs.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (!taskResponse.wasError())
