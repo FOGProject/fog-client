@@ -11,6 +11,7 @@
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <TargetFrameworkProfile />
     <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -144,4 +145,30 @@
     <WixExtension Include="C:\Program Files %28x86%29\WiX Toolset v3.8\bin\WixUIExtension.dll" />
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
+  <PropertyGroup>
+    <PreBuildEvent>..\SignCode.cmd ..\bin\FOGService.exe
+..\SignCode.cmd ..\bin\AbstractModule.dll
+..\SignCode.cmd ..\bin\AutoLogOut.dll
+..\SignCode.cmd ..\bin\ClientUpdater.dll
+..\SignCode.cmd ..\bin\CommunicationHandler.dll
+..\SignCode.cmd ..\bin\DisplayManager.dll
+..\SignCode.cmd ..\bin\GreenFOG.dll
+..\SignCode.cmd ..\bin\HostnameChanger.dll
+..\bin\SignCode.cmd ..\bin\EncryptionHandler.dll
+..\bin\SignCode.cmd ..\bin\LogHandler.dll
+..\SignCode.cmd ..\bin\NotificationHandler.dll
+..\SignCode.cmd ..\bin\PipeClient.dll
+..\bin\SignCode.cmd ..\bin\PipeServer.dll
+..\SignCode.cmd ..\bin\RegistryHandler.dll
+..\SignCode.cmd ..\bin\ShutdownHandler.dll
+..\SignCode.cmd ..\bin\SnapinClient.dll
+..\SignCode.cmd ..\bin\FOGTray.exe
+..\SignCode.cmd ..\bin\TaskReboot.dll
+..\SignCode.cmd ..\bin\UserHandler.dll
+..\SignCode.cmd ..\bin\FOGUpdateHelper.exe
+..\SignCode.cmd ..\bin\FOGUpdateWaiter.exe
+..\SignCode.cmd ..\bin\FOGUserService.exe
+</PreBuildEvent>
+    <PostBuildEvent>..\SignCode.cmd ..\bin\FOGService.msi</PostBuildEvent>
+  </PropertyGroup>
 </Project>
