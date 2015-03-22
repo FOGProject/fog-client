@@ -30,7 +30,7 @@ namespace FOG
     {
         List<String> usernames;
         
-        public UserTracker() 
+        public UserTracker()
         {
             Name = "UserTracker";
             Description = "Tracker user logins and logouts";
@@ -41,21 +41,24 @@ namespace FOG
         {
             var newUsernames = UserHandler.GetUsersLoggedIn();
             
-            foreach(String username in newUsernames)
+            foreach (String username in newUsernames) 
             {
-                if(usernames.Contains(username))
+                if (usernames.Contains(username)) 
                 {
+                    // Remove users that are have remained logged in
                     usernames.Remove(username);
-                } else {
+                } 
+                else 
+                {
+                    // Contact FOG about new users
                     CommunicationHandler.Contact("/service/usertracking.report.php?action=login&user=" + Dns.GetHostName() + "\\" + username, true);
                 }
             }
             
-            foreach(String username in usernames)
-            {
-                 CommunicationHandler.Contact("/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
+            // Any users left in the usernames list have logged out
+            foreach (String username in usernames) {
+                CommunicationHandler.Contact("/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
             }
-            
             
             usernames = newUsernames;
         }
