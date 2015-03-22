@@ -18,29 +18,31 @@
  */
 
 using System;
-using FOG.Handlers;
-using FOG.Modules;
 
-namespace FOG
+namespace FOG.Handlers
 {
-    class Program
+    /// <summary>
+    /// Store neccesary notification information
+    /// </summary>
+    public class Notification
     {
-        public static void Main(string[] args)
+        //Define variables
+        public String Title { get; set; }
+        public String Message { get; set; }
+        public int Duration { get; set; }
+		
+        public Notification()
         {
-
-            LogHandler.Mode = LogHandler.LogMode.Console;
-            CommunicationHandler.GetAndSetServerAddress();
-
-            LogHandler.NewLine();
-            const string authentication = "Authentication-Snapin";
-
-            LogHandler.PaddedHeader(authentication);
-            LogHandler.NewLine();
-            CommunicationHandler.Authenticate();
-            LogHandler.NewLine();
-
-            Console.ReadLine();
-
+            Title = "";
+            Message = "";
+            Duration = 10;
+        }
+		
+        public Notification(String title, String message, int duration)
+        {
+            Title = title;
+            Message = message;
+            Duration = duration;
         }
     }
 }

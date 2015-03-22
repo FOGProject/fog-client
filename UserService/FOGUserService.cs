@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.IO;
+using FOG.Handlers;
+using FOG.Modules;
 
 namespace FOG
 {

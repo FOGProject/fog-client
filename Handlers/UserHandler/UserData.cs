@@ -18,29 +18,21 @@
  */
 
 using System;
-using FOG.Handlers;
-using FOG.Modules;
 
-namespace FOG
+namespace FOG.Handlers
 {
-    class Program
+    /// <summary>
+    /// Hold information about a specific user account
+    /// </summary>
+    public class UserData
     {
-        public static void Main(string[] args)
+        public String Name { get; private set; }
+        public String SID  { get; private set; }
+
+        public UserData(String name, String sid)
         {
-
-            LogHandler.Mode = LogHandler.LogMode.Console;
-            CommunicationHandler.GetAndSetServerAddress();
-
-            LogHandler.NewLine();
-            const string authentication = "Authentication-Snapin";
-
-            LogHandler.PaddedHeader(authentication);
-            LogHandler.NewLine();
-            CommunicationHandler.Authenticate();
-            LogHandler.NewLine();
-
-            Console.ReadLine();
-
+            Name = name;
+            SID = sid;
         }
     }
 }

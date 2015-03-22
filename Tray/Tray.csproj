@@ -72,17 +72,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NotificationHandler\NotificationHandler.csproj">
-      <Project>{717A8C0E-32F9-498C-BC51-FC03D0009248}</Project>
-      <Name>NotificationHandler</Name>
+    <ProjectReference Include="..\Handlers\Handlers.csproj">
+      <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
+      <Name>Handlers</Name>
     </ProjectReference>
     <ProjectReference Include="..\PipeClient\PipeClient.csproj">
       <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
       <Name>PipeClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UserHandler\UserHandler.csproj">
-      <Project>{1759DEAE-2585-4324-9F85-338BE0F755BF}</Project>
-      <Name>UserHandler</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

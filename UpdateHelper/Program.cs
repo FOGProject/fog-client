@@ -21,6 +21,7 @@ using System;
 using System.IO;
 using System.ServiceProcess;
 using System.Diagnostics;
+using FOG.Handlers;
 
 namespace FOG
 {

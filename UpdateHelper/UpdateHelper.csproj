@@ -68,9 +68,9 @@
     <None Include="app.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\LogHandler\LogHandler.csproj">
-      <Project>{513D6FE3-D7A2-4DEE-9462-CEB2C781EE52}</Project>
-      <Name>LogHandler</Name>
+    <ProjectReference Include="..\Handlers\Handlers.csproj">
+      <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
+      <Name>Handlers</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -18,29 +18,26 @@
  */
 
 using System;
-using FOG.Handlers;
-using FOG.Modules;
+using System.Collections.Generic;
 
-namespace FOG
+namespace FOG.Handlers
 {
-    class Program
+    /// <summary>
+    /// Handle all notifications
+    /// </summary>
+    public static class NotificationHandler
     {
-        public static void Main(string[] args)
-        {
+        //Define variable
+        public static List<Notification> Notifications { get; set; }
+        public static String Company { get; private set; }
+        private static Boolean initialized = initialize();
+	
 
-            LogHandler.Mode = LogHandler.LogMode.Console;
-            CommunicationHandler.GetAndSetServerAddress();
-
-            LogHandler.NewLine();
-            const string authentication = "Authentication-Snapin";
-
-            LogHandler.PaddedHeader(authentication);
-            LogHandler.NewLine();
-            CommunicationHandler.Authenticate();
-            LogHandler.NewLine();
-
-            Console.ReadLine();
-
+        private static Boolean initialize() {
+            Notifications = new List<Notification>();
+            Company = "FOG";
+            
+            return true;
         }
     }
 }

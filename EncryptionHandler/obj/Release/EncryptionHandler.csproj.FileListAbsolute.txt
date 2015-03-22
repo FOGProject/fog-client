@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\bin\EncryptionHandler.dll
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\EncryptionHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\EncryptionHandler\obj\Release\EncryptionHandler.dll

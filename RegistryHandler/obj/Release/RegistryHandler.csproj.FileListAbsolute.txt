@@ -1,3 +1,0 @@
-D:\fog-client\bin\RegistryHandler.dll
-D:\fog-client\RegistryHandler\obj\Release\ResolveAssemblyReference.cache
-D:\fog-client\RegistryHandler\obj\Release\RegistryHandler.dll

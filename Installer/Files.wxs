@@ -28,25 +28,11 @@
 					<Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
 						<File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe"/>
 						<File Id="LicenseFile" Name="license.rtf" Source="license.rtf"/>
-						<File Id="AbstractModule" Name="AbstractModule.dll" Source="..\bin\AbstractModule.dll"/>
-						<File Id="AutoLogOut" Name="AutoLogOut.dll" Source="..\bin\AutoLogOut.dll"/>
-						<File Id="ClientUpdater" Name="ClientUpdater.dll" Source="..\bin\ClientUpdater.dll"/>						
-						<File Id="CommunicationHandler" Name="CommunicationHandler.dll" Source="..\bin\CommunicationHandler.dll"/>
-						<File Id="DisplayManager" Name="DisplayManager.dll" Source="..\bin\DisplayManager.dll"/>
-						<File Id="GreenFOG" Name="GreenFOG.dll" Source="..\bin\GreenFOG.dll"/>
-						<File Id="HostnameChanger" Name="HostnameChanger.dll" Source="..\bin\HostnameChanger.dll"/>		
-						<File Id="EncryptionHandler" Name="EncryptionHandler.dll" Source="..\bin\EncryptionHandler.dll"/>
-						<File Id="LogHandler" Name="LogHandler.dll" Source="..\bin\LogHandler.dll"/>
-						<File Id="NotificationHandler" Name="NotificationHandler.dll" Source="..\bin\NotificationHandler.dll"/>
+						<File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll"/>
+						<File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll"/>
 						<File Id="PipeClient" Name="PipeClient.dll" Source="..\bin\PipeClient.dll"/>
 						<File Id="PipeServer" Name="PipeServer.dll" Source="..\bin\PipeServer.dll"/>
-						<File Id="RegistryHandler" Name="RegistryHandler.dll" Source="..\bin\RegistryHandler.dll"/>
-						<File Id="ShutdownHandler" Name="ShutdownHandler.dll" Source="..\bin\ShutdownHandler.dll"/>
-						<File Id="SnapinClient" Name="SnapinClient.dll" Source="..\bin\SnapinClient.dll"/>
 						<File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe"/>
-						<File Id="TaskReboot" Name="TaskReboot.dll" Source="..\bin\TaskReboot.dll"/>
-						<File Id="UserHandler" Name="UserHandler.dll" Source="..\bin\UserHandler.dll"/>
-					    <File Id="UserTracker" Name="UserTracker.dll" Source="..\bin\UserTracker.dll"/>
 						<File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe"/>
 						<File Id="System.Threading.Tasks.NET35" Name="System.Threading.Tasks.NET35.dll" Source="..\bin\System.Threading.Tasks.NET35.dll"/>
 						<File Id="libeay32" Name="libeay32.dll" Source="..\bin\libeay32.dll"/>

@@ -1,3 +1,0 @@
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\bin\CommunicationHandler.dll
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\CommunicationHandler\obj\Release\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fogproject-fogservice-rewrite\FOGService\CommunicationHandler\obj\Release\CommunicationHandler.dll
