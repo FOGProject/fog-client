@@ -62,7 +62,7 @@ namespace FOG.Modules
                 try {
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe", AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe");
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe", AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
-                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\LogHandler.dll", AppDomain.CurrentDomain.BaseDirectory + @"tmp\LogHandler.dll");
+                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll", AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll");
                 } catch (Exception ex) {
                     LogHandler.Log(Name, "Unable to prepare update helpers");
                     LogHandler.Log(Name, "ERROR: " + ex.Message);
