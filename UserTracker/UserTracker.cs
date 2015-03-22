@@ -39,9 +39,9 @@ namespace FOG
         
         protected override void doWork()
         {
-            var currentUsers = UserHandler.GetUsersLoggedIn();
+            var newUsernames = UserHandler.GetUsersLoggedIn();
             
-            foreach(String username in currentUsers)
+            foreach(String username in newUsernames)
             {
                 if(usernames.Contains(username))
                 {
@@ -57,7 +57,7 @@ namespace FOG
             }
             
             
-            usernames = currentUsers;
+            usernames = newUsernames;
         }
         
     }
