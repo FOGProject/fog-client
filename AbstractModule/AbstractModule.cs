@@ -43,7 +43,7 @@ namespace FOG
         /// <returns>True if the module is enabled</returns>
         public Boolean isEnabled()
         {
-            var moduleActiveResponse = CommunicationHandler.GetResponse(EnabledURL + "?moduleid=" + Name.ToLower());
+            var moduleActiveResponse = CommunicationHandler.GetResponse(EnabledURL + "?moduleid=" + Name.ToLower(), true);
             return !moduleActiveResponse.Error;
         }
 

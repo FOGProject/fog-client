@@ -1,0 +1,2 @@
+D:\fog\client\Installer\bin\Public Release\FOGService.msi
+D:\fog\client\Installer\bin\Public Release\FOGService.wixpdb

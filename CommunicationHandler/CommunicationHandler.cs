@@ -169,7 +169,7 @@ namespace FOG
                 passkey = aes.Key;
 
                 var encryptedKey = EncryptionHandler.RSAEncrypt(passkey, keyPath);
-                var authenticationResponse = GetResponse("/management/index.php?sub=authorize&sym_key=" + encryptedKey);
+                var authenticationResponse = GetResponse("/management/index.php?sub=authorize&sym_key=" + encryptedKey, true);
 				
                 if (!authenticationResponse.Error)
                 {
