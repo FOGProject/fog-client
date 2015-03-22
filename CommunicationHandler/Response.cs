@@ -7,38 +7,29 @@ namespace FOG {
 	/// </summary>
 	public class Response {
 
-		private Boolean error;
-		private Dictionary<String, String> data;
-		private String returnCode;
+        public Boolean Error { get; set; }
+        public Dictionary<String, String> Data { get; set; }
+        public String ReturnCode { get; set; }
 		
 		public Response(Boolean error, Dictionary<String, String> data, String returnCode) {
-			this.error = error;
-			this.data = data;
-			this.returnCode = returnCode;
+			Error = error;
+			Data = data;
+			ReturnCode = returnCode;
 		}
 
 		public Response() {
-			this.error = true;
-			this.data = new Dictionary<String, String>();
-			this.returnCode = "";
+			Error = true;
+			Data = new Dictionary<String, String>();
+			ReturnCode = "";
 		}
-
-		public void setError(Boolean error) { this.error = error; }
-		public Boolean wasError() { return this.error; }
-
-		public void setData(Dictionary<String, String> data) { this.data = data; }
-		public Dictionary<String, String> getData() { return this.data; }
-		public String getReturnCode() { return this.returnCode; }
-		public void setReturnCode(String returnCode) { this.returnCode = returnCode; }
-
+        
+        /// <summary>
+        /// Return the value stored at a specified key
+        /// </summary>
+        /// <param name="id">The ID to return</param>
+        /// <returns>The value stored at key ID, if the ID is not present, return an empty string</returns>
 		public String getField(String id) {
-			//Check if the field exists
-			if(data.ContainsKey(id)) {
-				return data[id];
-			}
-
-			//Return a blank string if the field does not exist
-			return "";
+            return Data.ContainsKey(id) ? Data[id] : "";
 		}
 	}
 }

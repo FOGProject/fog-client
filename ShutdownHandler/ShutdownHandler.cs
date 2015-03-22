@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -16,8 +15,8 @@ namespace FOG
     {
 
         //Define variables
-        private static Boolean shutdownPending = false;
-        private static Boolean updatePending = false;
+        public static Boolean ShutdownPending { get; private set; }
+        public static Boolean UpdatePending { get; set; }
         private const String LOG_NAME = "ShutdownHandler";
 		
         //Load the ability to lock the computer from the native user32 dll
@@ -50,12 +49,10 @@ namespace FOG
             ForceIfHung = 0x10,
         }
 		
-        //Check if a shutdown was requested
-        public static Boolean IsShutdownPending()
-        {
-            return shutdownPending;
-        }
-		
+        /// <summary>
+        /// Create a shutdown command
+        /// </summary>
+        /// <param name="parameters">The parameters to use</param>
         private static void createShutdownCommand(String parameters)
         {
             LogHandler.Log(LOG_NAME, "Creating shutdown request");
@@ -63,72 +60,79 @@ namespace FOG
 
             Process.Start("shutdown", parameters);
         }
-		
+        
+        /// <summary>
+        /// Shutdown the computer
+        /// </summary>
+        /// <param name="comment">The message to append to the request</param>
+        /// <param name="seconds">How long to wait before processing the request</param>		
         public static void Shutdown(String comment, int seconds)
         {
-            setShutdownPending(true);
+            ShutdownPending = true;
             createShutdownCommand("/s /c \"" + comment + "\" /t " + seconds);
         }
 		
+        /// <summary>
+        /// Restart the computer
+        /// </summary>
+        /// <param name="comment">The message to append to the request</param>
+        /// <param name="seconds">How long to wait before processing the request</param>
         public static void Restart(String comment, int seconds)
         {
-            setShutdownPending(true);
+            ShutdownPending = true;
             createShutdownCommand("/r /c \"" + comment + "\" /t " + seconds);
         }
 		
+        /// <summary>
+        /// Log off the current user
+        /// </summary>
         public static void LogOffUser()
         {
             createShutdownCommand("/l");
         }
 		
-        public static void Hibernate(String comment, int seconds)
+        /// <summary>
+        /// Hibernate the computer
+        /// </summary>
+        public static void Hibernate()
         {
             createShutdownCommand("/h");
         }
 		
+        /// <summary>
+        /// Lock the workstation
+        /// </summary>
         public static void LockWorkStation()
         {			
             lockWorkStation();
         }
 		
+        /// <summary>
+        /// Abort a shutdown if it is not to late
+        /// </summary>
         public static void AbortShutdown()
         {		
-            setShutdownPending(false);
+            ShutdownPending = false;
             createShutdownCommand("/a");
         }
 		
-        private static void setShutdownPending(Boolean sPending)
-        {
-            shutdownPending = sPending;
-        }
-		
-        //Treat this like a shutdown request because it should halt the service
+        /// <summary>
+        /// Restart the service
+        /// </summary>
         public static void RestartService()
         {
             LogHandler.Log(LOG_NAME, "Restarting service");
-            setShutdownPending(true);
+            ShutdownPending = true;
             var process = new Process();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\RestartFOGService.exe";
             process.Start();
         }
 		
-        public static void ScheduleUpdate()
-        {
-            updatePending = true;
-        }
-
-        public static Boolean IsUpdatePending()
-        {
-            return updatePending;
-        }
-		
-        public static void UnScheduleUpdate()
-        {
-            updatePending = false;
-        }
-		
-        //Spawn an UpdateWaiter with the fileName parameter
+        /// <summary>
+        /// Spawn an update waiter
+        /// </summary>
+        /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(String fileName)
         {
             LogHandler.Log(LOG_NAME, "Spawning update waiter");

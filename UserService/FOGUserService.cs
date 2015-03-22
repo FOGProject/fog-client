@@ -29,7 +29,7 @@ namespace FOG
             //Initialize everything
             AppDomain.CurrentDomain.ProcessExit += new EventHandler(OnProcessExit);
 			
-            LogHandler.setFilePath(Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
+            LogHandler.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
             LogHandler.Log(LOG_NAME, "Initializing");
             if (CommunicationHandler.GetAndSetServerAddress())
             {
@@ -91,15 +91,15 @@ namespace FOG
                     notificationPipe.start();			
 				
 				
-                if (NotificationHandler.GetNotifications().Count > 0)
+                if (NotificationHandler.Notifications.Count > 0)
                 {
                     //Split up the notification into 3 messages: Title, Message, and Duration
-                    notificationPipe.sendMessage("TLE:" + NotificationHandler.GetNotifications()[0].getTitle());
+                    notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("MSG:" + NotificationHandler.GetNotifications()[0].getMessage());
+                    notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("DUR:" + NotificationHandler.GetNotifications()[0].getDuration().ToString());
-                    NotificationHandler.RemoveNotification(0);
+                    notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration.ToString());
+                    NotificationHandler.Notifications.RemoveAt(0);
                 } 
 				
                 Thread.Sleep(3000);
@@ -123,7 +123,7 @@ namespace FOG
             if (message.Equals("UPD"))
             {
                 ShutdownHandler.SpawnUpdateWaiter(System.Reflection.Assembly.GetExecutingAssembly().Location);
-                ShutdownHandler.ScheduleUpdate();
+                ShutdownHandler.UpdatePending = true;
             }
         }
 		
@@ -141,11 +141,11 @@ namespace FOG
         private static void serviceLooper()
         {
             //Only run the service if there wasn't a stop or shutdown request
-            while (status.Equals(Status.Running) && !ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending())
+            while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 foreach (AbstractModule module in modules)
                 {
-                    if (ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
+                    if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
                         break;
 					
                     //Log file formatting
@@ -159,7 +159,7 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to start " + module.getName());
+                        LogHandler.Log(LOG_NAME, "Failed to start " + module.Name);
                         LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                     }
 					
@@ -168,11 +168,11 @@ namespace FOG
                     LogHandler.NewLine();
                 }
 					
-                if (ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
+                if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
                     break;				
                 //Once all modules have been run, sleep for the set time
                 int sleepTime = getSleepTime();
-                LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
+                LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
                 Thread.Sleep(sleepTime * 1000);
             }
         }
@@ -187,7 +187,7 @@ namespace FOG
 			
             try
             {
-                if (!sleepResponse.wasError() && !sleepResponse.getField("#sleep").Equals(""))
+                if (!sleepResponse.Error && !sleepResponse.getField("#sleep").Equals(""))
                 {
                     int sleepTime = int.Parse(sleepResponse.getField("#sleep"));
                     if (sleepTime >= sleepDefaultTime)

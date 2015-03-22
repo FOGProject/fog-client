@@ -64,19 +64,29 @@ namespace FOG
 		
         private const String LOG_NAME = "UserHandler";
 
-        //Check if a user is loggin in, do this by getting a list of all users, and check if the list has any elements
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>True if a user is logged in</returns>
         public static Boolean IsUserLoggedIn()
         {
             return GetUsersLoggedIn().Count > 0;
         }
 		
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>The current username</returns>
         public static String GetCurrentUser()
         {
             return WindowsIdentity.GetCurrent().Name;
         }
 
 		
-        //Return local users
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>A list of all users and their security IDs</returns>
         public static List<UserData> GetAllUserData()
         {
             var users = new List<UserData>();
@@ -93,7 +103,10 @@ namespace FOG
             return users;
         }
 		
-        //Return how long the logged in user is inactive for in seconds
+        /// <summary>
+        ///  
+        /// </summary>
+        /// <returns>The inactivity time of the current user in seconds</returns>
         public static int GetUserInactivityTime()
         {
             uint idleTime = 0;
@@ -113,7 +126,10 @@ namespace FOG
             return (int)idleTime / 1000;
         }
 		
-        //Get a list of all users logged in
+        /// <summary>
+        /// Get a list of usernames logged in
+        /// </summary>
+        /// <returns>A list of usernames</returns>
         public static List<String> GetUsersLoggedIn()
         {
             var users = new List<String>();
@@ -128,7 +144,10 @@ namespace FOG
             return users;
         }
 		
-        //Get all session Ids from running processes
+        /// <summary>
+        /// Get all active session IDs
+        /// </summary>
+        /// <returns>A list of session IDs</returns>
         public static List<int> GetSessionIds()
         {
             var sessionIds = new List<int>();
@@ -155,7 +174,12 @@ namespace FOG
             return sessionIds;			
         }
 		
-        //Convert a session ID to a username
+        /// <summary>
+        /// Convert a session ID to its correlating username
+        /// </summary>
+        /// <param name="sessionId">The session ID to use</param>
+        /// <param name="prependDomain">If the user's domain should be prepended</param>
+        /// <returns>The username</returns>
         //https://stackoverflow.com/questions/19487541/get-windows-user-name-from-sessionid
         public static String GetUserNameFromSessionId(int sessionId, bool prependDomain)
         {
@@ -178,34 +202,47 @@ namespace FOG
             return username;
         }
 		
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="sid">The user's security ID</param>
+        /// <returns>The user's profile path</returns>
         public static String GetUserProfilePath(String sid)
         {
             return RegistryHandler.GetRegisitryValue(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\", "ProfileImagePath");
         }
 		
-        //Completely purge a user from windows
+        /// <summary>
+        /// Completely remove a user from the registry and the filesystem
+        /// </summary>
+        /// <param name="user">The user to purge</param>
+        /// <param name="deleteData">If the user profile should be deleted</param>
+        /// <returns>True if sucessfull</returns>
         public static Boolean PurgeUser(UserData user, Boolean deleteData)
         {
-            LogHandler.Log(LOG_NAME, "Purging " + user.GetName() + " from system");
+            LogHandler.Log(LOG_NAME, "Purging " + user.Name + " from system");
             if (deleteData)
             {
-                if (UnregisterUser(user.GetName()))
+                if (UnregisterUser(user.Name))
                 {
-                    if (RemoveUserProfile(user.GetSID()))
+                    if (RemoveUserProfile(user.SID))
                     {
-                        return CleanUserRegistryEntries(user.GetSID());
+                        return CleanUserRegistryEntries(user.SID);
                     }
                 }
                 return false;
             }
             else
             {
-                return UnregisterUser(user.GetName());
+                return UnregisterUser(user.Name);
             }
         }
 	
-		
-        //Unregister a user from windows
+        /// <summary>
+        /// Unregister a user from windows
+        /// </summary>
+        /// <param name="user">The username to unregister</param>
+        /// <returns>True is sucessfull</returns>
         public static Boolean UnregisterUser(String user)
         {
             try
@@ -225,13 +262,16 @@ namespace FOG
             return false;			
         }
 		
-        //Delete user profile
+        /// <summary>
+        /// Attempt to delete the user profile, current not working
+        /// </summary>
+        /// <param name="sid">The user's security ID</param>
+        /// <returns>True if sucessfull</returns>
         public static Boolean RemoveUserProfile(String sid)
         {
-			
             try
             {
-                String path = GetUserProfilePath(sid);
+                var path = GetUserProfilePath(sid);
                 LogHandler.Log(LOG_NAME, "User path: " + path);
                 if (path != null)
                 {
@@ -250,12 +290,20 @@ namespace FOG
             return false;
         }
 		
-        //Clean all registry entries of a user
+        /// <summary>
+        /// Remove a user from the registry
+        /// </summary>
+        /// <param name="sid">The user's security ID</param>
+        /// <returns>True if sucessfull</returns>
         public static Boolean CleanUserRegistryEntries(String sid)
         {
             return RegistryHandler.DeleteFolder(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\");
         }
 		
+        /// <summary>
+        /// Take ownership of a directory
+        /// </summary>
+        /// <param name="path">The directory path</param>
         public static void TakeOwnership(String path)
         {
 
@@ -271,12 +319,16 @@ namespace FOG
 		
         private static DirectorySecurity removeExplicitSecurity(DirectorySecurity directorySecurity)
         {
-            var rules = directorySecurity.GetAccessRules(true, false, typeof(System.Security.Principal.NTAccount));
+            var rules = directorySecurity.GetAccessRules(true, false, typeof(NTAccount));
             foreach (FileSystemAccessRule rule in rules)
                 directorySecurity.RemoveAccessRule(rule);
             return directorySecurity;
         }
 		
+        /// <summary>
+        /// Reset the rights of a directory
+        /// </summary>
+        /// <param name="path">The directory path</param>
         public static void resetRights(String path)
         {
             var directoryInfo = new DirectoryInfo(path);
@@ -285,6 +337,10 @@ namespace FOG
             Directory.SetAccessControl(path, directorySecurity);
         }
 		
+        /// <summary>
+        /// Remove write protection on a directory
+        /// </summary>
+        /// <param name="path">The directory path</param>
         public static void RemoveWriteProtection(String path)
         {
             var directoryInfo = new DirectoryInfo(path);

@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 
 namespace FOG
@@ -10,61 +9,62 @@ namespace FOG
     public static class LogHandler
     {
         //Define variables
-        private static String filePath = @"\fog.log";
-        private const long DEFAULT_MAX_LOG_SIZE = 502400;
-        private static long maxLogSize = DEFAULT_MAX_LOG_SIZE;
-        private static Boolean console = false;
+        public static String FilePath { get; set; }
+        public static long MaxSize { get; set; }
+        public static LogMode Mode { get; set; }
+        
+        private const long DEFAULT_MAX_LOG_SIZE = 502400;       
         private const int HEADER_LENGTH = 78;
         private const String LOG_NAME = "LogHandler";
-
-        public static void setFilePath(String fPath)
-        {
-            filePath = fPath;
+        private static Boolean initialized = initialize();
+        
+        public enum LogMode {
+            File,
+            Console
         }
-        public static String getFilePath()
-        {
-            return filePath;
-        }
-        public static void setMaxLogSize(long mLogSize)
-        {
-            maxLogSize = mLogSize;
-        }
-        public static long getMaxLogSize()
-        {
-            return maxLogSize;
-        }
-        public static void defaultMaxLogSize()
-        {
-            maxLogSize = DEFAULT_MAX_LOG_SIZE;
-        }
-        public static void setConsoleMode(Boolean con)
-        {
-            console = con;
+        
+        private static Boolean initialize() {
+            FilePath = @"\fog.log";
+            MaxSize = DEFAULT_MAX_LOG_SIZE;
+            Mode = LogMode.File;
+            
+            return true;
         }
 		
-        //Log a message
-        public static void Log(String moduleName, String message)
+        /// <summary>
+        /// Log a message
+        /// </summary>
+        /// <param name="caller">The name of the calling method or class</param>
+        /// <param name="message">The message to log</param>
+        public static void Log(String caller, String message)
         {
-            WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() +
-                " " + moduleName + " " + message);
+            WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + caller + " " + message);
         }
 		
-        //Make a new line in the log file
+        /// <summary>
+        /// Write a new line to the log
+        /// </summary>
         public static void NewLine()
         {
             WriteLine("");
         }
 		
-        //Make a divider in the log file
+        /// <summary>
+        /// Write a divider to the log
+        /// </summary>
         public static void Divider()
         {
             Header("");
         }
 		
+        /// <summary>
+        /// Write a header to the log
+        /// </summary>
+        /// <param name="text">The text to put in the center of the header</param>
         public static void Header(String text)
         {
             double headerSize = (HEADER_LENGTH - text.Length) / 2;
-            String output = "";
+            var output = "";
             for (int i = 0; i < (int)Math.Ceiling(headerSize); i++)
             {
                 output += "-";
@@ -79,6 +79,10 @@ namespace FOG
             WriteLine(output);
         }
 		
+        /// <summary>
+        /// Create one header with a divider above and below it
+        /// </summary>
+        /// <param name="text">The text to put in the center of the header</param>
         public static void PaddedHeader(String text)
         {
             Divider();
@@ -86,10 +90,13 @@ namespace FOG
             Divider();
         }
 		
-        //Write a string on the current line, it is prefered that log is used instead for formatting purposes
+        /// <summary>
+        /// Write text to the log
+        /// </summary>
+        /// <param name="text">The text to write</param>
         public static void Write(String text)
         {
-            if (console)
+            if (Mode == LogMode.Console)
             {
                 if (text.ToUpper().Contains("ERROR"))
                     Console.BackgroundColor = ConsoleColor.Red;
@@ -99,16 +106,16 @@ namespace FOG
             else
             {
                 StreamWriter logWriter;
-                var logFile = new FileInfo(getFilePath());
+                var logFile = new FileInfo(FilePath);
 	
                 //Delete the log file if it excedes the max log size
-                if (logFile.Exists && logFile.Length > maxLogSize)
+                if (logFile.Exists && logFile.Length > MaxSize)
                     cleanLog(logFile);
 				
                 try
                 {
                     //Write message to log file
-                    logWriter = new StreamWriter(getFilePath(), true);
+                    logWriter = new StreamWriter(FilePath, true);
                     logWriter.Write(text);
                     logWriter.Close();
                 }
@@ -119,13 +126,19 @@ namespace FOG
             }			
         }
 		
-        //Write a string to a line, other classes should not call this function directly for formatting purposes
+        /// <summary>
+        /// Write a line to the log
+        /// </summary>
+        /// <param name="line">The line to write</param>
         public static void WriteLine(String line)
         {
             Write(line + "\n");
         }
 		
-        //Delete the log file and create a new one
+        /// <summary>
+        /// Wipe the log
+        /// </summary>
+        /// <param name="logFile"></param>
         private static void cleanLog(FileInfo logFile)
         {
             try

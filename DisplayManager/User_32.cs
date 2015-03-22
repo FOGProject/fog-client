@@ -53,11 +53,24 @@ namespace FOG
             public int dmPanningHeight;
         };
 
+        /// <summary>
+        /// Populate a given display's configuration
+        /// </summary>
+        /// <param name="deviceName">The name of the display</param>
+        /// <param name="modeNum"></param>
+        /// <param name="settings">The variable to populate the configuration to</param>
+        /// <returns></returns>
         [DllImport("user32.dll")]
-        public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE1 devMode);
+        public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE1 settings);
 	    
+        /// <summary>
+        /// Adjust a given display's configuration
+        /// </summary>
+        /// <param name="settings">The settings to resize to</param>
+        /// <param name="flags"></param>
+        /// <returns></returns>
         [DllImport("user32.dll")]
-        public static extern int ChangeDisplaySettings(ref DEVMODE1 devMode, int flags);
+        public static extern int ChangeDisplaySettings(ref DEVMODE1 settings, int flags);
 
         public const int ENUM_CURRENT_SETTINGS = -1;
         public const int CDS_UPDATEREGISTRY = 0x01;

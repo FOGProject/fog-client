@@ -7,7 +7,7 @@ namespace FOG
         public static void Main(string[] args)
         {
 
-            LogHandler.setConsoleMode(true);
+            LogHandler.Mode = LogHandler.LogMode.Console;
             CommunicationHandler.GetAndSetServerAddress();
 
             LogHandler.NewLine();

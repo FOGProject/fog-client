@@ -25,8 +25,8 @@ namespace FOG
         {
             try
             {
-                Byte[] bytes = ASCIIEncoding.ASCII.GetBytes(toEncode);
-                return System.Convert.ToBase64String(bytes);
+                var bytes = ASCIIEncoding.ASCII.GetBytes(toEncode);
+                return Convert.ToBase64String(bytes);
             }
             catch (Exception ex)
             {
@@ -45,7 +45,7 @@ namespace FOG
         {
             try
             {
-                Byte[] bytes = Convert.FromBase64String(toDecode);
+                var bytes = Convert.FromBase64String(toDecode);
                 return Encoding.ASCII.GetString(bytes);
             }
             catch (Exception ex)
@@ -65,18 +65,22 @@ namespace FOG
         /// </summary>
         public static String AESEncrypt(String toEncode, String passKey, String initializationVector)
         {
- 		    
             //Convert the initialization vector and key into a byte array
-            byte[] key = Encoding.UTF8.GetBytes(passKey);
-            byte[] iv = Encoding.UTF8.GetBytes(initializationVector);   
+            var key = Encoding.UTF8.GetBytes(passKey);
+            var iv = Encoding.UTF8.GetBytes(initializationVector);   
 
-            return AESEncrypt(toEncode, key, iv);
-		    	            
+            return AESEncrypt(toEncode, key, iv);        
         }
 		
+        /// <summary>
+        /// AES encrypts a string
+        /// </summary>
+        /// <param name="toEncode">The string to be encrypted</param>
+        /// <param name="key">The AES pass key</param>
+        /// <param name="iv">The AES initialization vector</param>
+        /// <returns>An encrypted string of toEncode</returns>
         public static String AESEncrypt(String toEncode, byte[] key, byte[] iv)
         {
-		    
             try
             {
                 byte[] encrypted;
@@ -117,13 +121,18 @@ namespace FOG
             }
             return "";	            
         }
-		
+        
+        /// <summary>
+        /// AES decrypts a string
+        /// </summary>
+        /// <param name="toDecode">The string to be decrypted</param>
+        /// <param name="key">The AES pass key</param>
+        /// <param name="iv">The AES initialization vector</param>
+        /// <returns>A decrypted version of the data</returns>		
         public static String AESDecrypt(byte[] toDecode, byte[] key, byte[] iv)
         {
-
             try
             {
-		    	
                 using (var rijndaelManaged = new RijndaelManaged())
                 {
                     rijndaelManaged.Key = key;
@@ -162,7 +171,7 @@ namespace FOG
         {
             var b = new byte[sizeof(UInt32)];
             rngProvider.GetBytes(b);
-            double d = BitConverter.ToUInt32(b, 0) / (double)UInt32.MaxValue;
+            var d = BitConverter.ToUInt32(b, 0) / (double)UInt32.MaxValue;
             return min + (int)((max - min) * d);
         }
 
@@ -173,7 +182,7 @@ namespace FOG
         /// </summary>
         public static String GeneratePassword(int length)
         {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            const String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[length];
             var random = new RNGCryptoServiceProvider();
 			
@@ -194,37 +203,58 @@ namespace FOG
         public static String RSAEncrypt(String toEncode, String pemFile)
         {
             var byteConverter = new UTF8Encoding();
-            byte[] message = byteConverter.GetBytes(toEncode);
+            var message = byteConverter.GetBytes(toEncode);
 			
             return ByteArrayToHexString(RawRSAEncrypt(message, pemFile));
         }
 		
+        /// <summary>
+        /// RSA encrypts a message
+        /// </summary>
+        /// <param name="toEncode">The message to encrypt</param>
+        /// <param name="pemFile">The filepath of the key</param>
+        /// <returns>An encrypted hex encoded string of the message</returns>
         public static String RSAEncrypt(byte[] toEncode, String pemFile)
         {
             return ByteArrayToHexString(RawRSAEncrypt(toEncode, pemFile));
         }
-		
-        public static byte[] RawRSAEncrypt(byte[] message, String pemFile)
+        
+        /// <summary>
+        /// RSA encrypts a message
+        /// </summary>
+        /// <param name="toEncode">The message to encrypt</param>
+        /// <param name="pemFile">The filepath of the key</param>
+        /// <returns>A encrypted byte array of the message</returns>		
+        public static byte[] RawRSAEncrypt(byte[] toEncode, String pemFile)
         {
-			
             byte[] encryptedData;
             using (OpenSSL.Crypto.RSA openSLLRSA = OpenSSL.Crypto.RSA.FromPublicKey(BIO.File(pemFile, "r")))
             {
-                encryptedData = openSLLRSA.PublicEncrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
+                encryptedData = openSLLRSA.PublicEncrypt(toEncode, OpenSSL.Crypto.RSA.Padding.PKCS1);
             }
             return encryptedData;
-			
         }
 				
-		
+        /// <summary>
+        /// RSA decrypts a message
+        /// </summary>
+        /// <param name="toDecode">The message to decrypt</param>
+        /// <param name="rsa">The rsa object storing the key info</param>
+        /// <returns>A decrypted string of the message</returns>			
         public static String RSADecrypt(String toDecode, OpenSSL.Crypto.RSA rsa)
         {
             return Encoding.Default.GetString(RawRSADecrypt(toDecode, rsa));
         }
-
+        
+        /// <summary>
+        /// RSA decrypts a message
+        /// </summary>
+        /// <param name="toDecode">The message to decrypt</param>
+        /// <param name="rsa">The rsa object storing the key info</param>
+        /// <returns>A decrypted byte array of the message</returns>		
         public static byte[] RawRSADecrypt(String toDecode, OpenSSL.Crypto.RSA rsa)
         {
-            byte[] message = HexStringToByteArray(toDecode);
+            var message = HexStringToByteArray(toDecode);
             var encryptedData = rsa.PrivateDecrypt(message, OpenSSL.Crypto.RSA.Padding.PKCS1);
 
             return encryptedData;
@@ -234,7 +264,7 @@ namespace FOG
         /// Converts a byte array to a hex string
         /// <param name="ba">The byte array to be converted</param>
         /// <returns>A hex string representation of the byte array</returns>
-        /// </summary>	
+        /// </summary>
         public static String ByteArrayToHexString(byte[] ba)
         {
             var hex = new StringBuilder(ba.Length * 2);
@@ -250,7 +280,7 @@ namespace FOG
         /// </summary>			
         public static byte[] HexStringToByteArray(String hex)
         {
-            int NumberChars = hex.Length;
+            var NumberChars = hex.Length;
             var bytes = new byte[NumberChars / 2];
             for (int i = 0; i < NumberChars; i += 2)
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
@@ -266,12 +296,10 @@ namespace FOG
         /// </summary>	
         public static String AESDecrypt(String toDecode, byte[] key)
         {
-			
-            byte[] iv = EncryptionHandler.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
-            byte[] data = EncryptionHandler.HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
+            var iv = EncryptionHandler.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
+            var data = EncryptionHandler.HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
 			
             return EncryptionHandler.AESDecrypt(data, key, iv);
-
         }
 		
         /// <summary>
@@ -279,14 +307,14 @@ namespace FOG
         /// <param name="filePath">The path to the file</param>
         /// <returns>The md5 hash of the given file</returns>
         /// </summary>	
-        public static  String GetMD5Hash(String filePath)
+        public static String GetMD5Hash(String filePath)
         {
             if (File.Exists(filePath))
             {
                 var sBuilder = new StringBuilder();
-                MD5 md5 = new MD5CryptoServiceProvider();
-                byte[] bytes = File.ReadAllBytes(filePath);
-                byte[] result = md5.ComputeHash(bytes);
+                var md5 = new MD5CryptoServiceProvider();
+                var bytes = File.ReadAllBytes(filePath);
+                var result = md5.ComputeHash(bytes);
                 foreach (int hashInt in result)
                 {
                     sBuilder.Append(hashInt.ToString("x2"));

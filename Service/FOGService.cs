@@ -54,7 +54,7 @@ namespace FOG
                 this.servicePipe.MessageReceived += new PipeServer.MessageReceivedHandler(servicePipeService_MessageReceived);
 				
                 //Unschedule any old updates
-                ShutdownHandler.UnScheduleUpdate();
+                ShutdownHandler.UpdatePending = false;
             }
         }
 		
@@ -66,15 +66,15 @@ namespace FOG
                 if (!this.notificationPipe.isRunning())
                     this.notificationPipe.start();			
 				
-                if (NotificationHandler.GetNotifications().Count > 0)
+                if (NotificationHandler.Notifications.Count > 0)
                 {
                     //Split up the notification into 3 messages: Title, Message, and Duration
-                    this.notificationPipe.sendMessage("TLE:" + NotificationHandler.GetNotifications()[0].getTitle());
+                    this.notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
                     Thread.Sleep(750);
-                    this.notificationPipe.sendMessage("MSG:" + NotificationHandler.GetNotifications()[0].getMessage());
+                    this.notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
                     Thread.Sleep(750);
-                    this.notificationPipe.sendMessage("DUR:" + NotificationHandler.GetNotifications()[0].getDuration().ToString());
-                    NotificationHandler.RemoveNotification(0);
+                    this.notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration);
+                    NotificationHandler.Notifications.RemoveAt(0);
                 } 
 				
                 Thread.Sleep(3000);
@@ -115,7 +115,7 @@ namespace FOG
                 this.threadManager.Start();
 				
                 //Unschedule any old updates
-                ShutdownHandler.UnScheduleUpdate();
+                ShutdownHandler.UpdatePending = false;
 				
                 //Delete old temp files
                 try
@@ -184,16 +184,16 @@ namespace FOG
             LogHandler.NewLine();
 			
             //Only run the service if there wasn't a stop or shutdown request
-            while (status.Equals(Status.Running) && !ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending())
+            while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 foreach (AbstractModule module in modules)
                 {
-                    if (ShutdownHandler.IsShutdownPending() || ShutdownHandler.IsUpdatePending())
+                    if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
                         break;
 					
                     //Log file formatting
                     LogHandler.NewLine();
-                    LogHandler.PaddedHeader(module.getName());
+                    LogHandler.PaddedHeader(module.Name);
                     LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
 					
                     try
@@ -202,7 +202,7 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to start " + module.getName());
+                        LogHandler.Log(LOG_NAME, "Failed to start " + module.Name);
                         LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                     }
 					
@@ -212,16 +212,16 @@ namespace FOG
                 }
 				
 				
-                if (!ShutdownHandler.IsShutdownPending() && !ShutdownHandler.IsUpdatePending())
+                if (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
                 {
                     //Once all modules have been run, sleep for the set time
                     int sleepTime = getSleepTime();
-                    LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime.ToString() + " seconds");
+                    LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
                     Thread.Sleep(sleepTime * 1000);
                 }
             }
 			
-            if (ShutdownHandler.IsUpdatePending())
+            if (ShutdownHandler.UpdatePending)
             {
                 UpdateHandler.beginUpdate(servicePipe);
             }
@@ -236,7 +236,7 @@ namespace FOG
 			
             try
             {
-                if (!sleepResponse.wasError() && !sleepResponse.getField("#sleep").Equals(""))
+                if (!sleepResponse.Error && !sleepResponse.getField("#sleep").Equals(""))
                 {
                     int sleepTime = int.Parse(sleepResponse.getField("#sleep"));
                     if (sleepTime >= this.sleepDefaultTime)

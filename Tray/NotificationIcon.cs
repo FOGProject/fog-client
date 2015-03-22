@@ -59,19 +59,19 @@ namespace FOG
             if (message.StartsWith("TLE:"))
             {
                 message = message.Substring(4);
-                this.notification.setTitle(message);
+                this.notification.Title = message;
             }
             else if (message.StartsWith("MSG:"))
             {
                 message = message.Substring(4);
-                this.notification.setMessage(message);
+                this.notification.Message = message;
             }
             else if (message.StartsWith("DUR:"))
             {
                 message = message.Substring(4);
                 try
                 {
-                    this.notification.setDuration(int.Parse(message));
+                    this.notification.Duration = int.Parse(message);
                 }
                 catch
                 {
@@ -85,9 +85,9 @@ namespace FOG
 			
             if (this.isNotificationReady)
             {
-                this.notifyIcon.BalloonTipTitle = this.notification.getTitle();
-                this.notifyIcon.BalloonTipText = this.notification.getMessage();
-                this.notifyIcon.ShowBalloonTip(this.notification.getDuration());
+                this.notifyIcon.BalloonTipTitle = this.notification.Title;
+                this.notifyIcon.BalloonTipText = this.notification.Message;
+                this.notifyIcon.ShowBalloonTip(this.notification.Duration);
                 this.isNotificationReady = false;
                 this.notification = new Notification();
             }

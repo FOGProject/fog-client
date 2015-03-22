@@ -8,22 +8,13 @@ namespace FOG
     /// </summary>
     public class UserData
     {
-        private String name;
-        private String sid;
+        public String Name { get; private set; }
+        public String SID  { get; private set; }
 
         public UserData(String name, String sid)
         {
-            this.name = name;
-            this.sid = sid;
-        }
-		
-        public String GetName()
-        {
-            return this.name;
-        }
-        public String GetSID()
-        {
-            return this.sid;
+            Name = name;
+            SID = sid;
         }
     }
 }

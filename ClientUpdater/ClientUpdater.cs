@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 
-
 namespace FOG
 {
     /// <summary>
@@ -10,17 +9,16 @@ namespace FOG
     public class ClientUpdater: AbstractModule
     {
 
-        public ClientUpdater() : base()
+        public ClientUpdater()
         {
-            setName("ClientUpdater");
-            setDescription("Update the FOG Service");
-
+            Name = "ClientUpdater";
+            Description = "Update the FOG Service";
         }
 
         protected override void doWork()
         {
-            String serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?clientver");
-            String localVersion = RegistryHandler.GetSystemSetting("Version");
+            var serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?clientver");
+            var localVersion = RegistryHandler.GetSystemSetting("Version");
             try {
                 int server = Int32.Parse(serverVersion.Replace(".", ""));
                 int local = Int32.Parse(localVersion.Replace(".", ""));
@@ -28,11 +26,11 @@ namespace FOG
                 if (server > local) {
                     CommunicationHandler.DownloadFile("/client/FOGService.msi", AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
                     prepareUpdateHelpers();
-                    ShutdownHandler.ScheduleUpdate();
+                    ShutdownHandler.UpdatePending = true;
                 }
             } catch (Exception ex) {
-                LogHandler.Log(getName(), "Unable to parse versions");
-                LogHandler.Log(getName(), "ERROR: " + ex.Message);
+                LogHandler.Log(Name, "Unable to parse versions");
+                LogHandler.Log(Name, "ERROR: " + ex.Message);
             }
         }
 
@@ -46,11 +44,11 @@ namespace FOG
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe", AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
                     File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\LogHandler.dll", AppDomain.CurrentDomain.BaseDirectory + @"tmp\LogHandler.dll");
                 } catch (Exception ex) {
-                    LogHandler.Log(getName(), "Unable to prepare update helpers");
-                    LogHandler.Log(getName(), "ERROR: " + ex.Message);
+                    LogHandler.Log(Name, "Unable to prepare update helpers");
+                    LogHandler.Log(Name, "ERROR: " + ex.Message);
                 }
             } else {
-                LogHandler.Log(getName(), "Unable to locate helper files");
+                LogHandler.Log(Name, "Unable to locate helper files");
             }
         }
     }

@@ -1,8 +1,6 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Management;
-
 
 namespace FOG
 {
@@ -13,27 +11,23 @@ namespace FOG
     {
         private Display display;
 		
-			
-        public DisplayManager() : base()
+        public DisplayManager()
         {
-            setName("DisplayManager");
-            setDescription("hange the resolution of the display");	
+            Name = "DisplayManager";
+            Description = "Change the resolution of the display";	
             this.display = new Display();
         }
 		
         protected override void doWork()
         {
-            display.updateSettings();
-            if (display.settingsLoaded())
-            {
+            display.LoadDisplaySettings();
+            if (display.PopulatedSettings) {
                 //Get task info
                 var taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php", true);
 	
-                if (!taskResponse.wasError())
-                {
+                if (!taskResponse.Error) {
 	
-                    try
-                    {
+                    try {
                         int x = int.Parse(taskResponse.getField("#x"));
                         int y = int.Parse(taskResponse.getField("#y"));
                         int r = int.Parse(taskResponse.getField("#r"));
@@ -41,36 +35,29 @@ namespace FOG
                             changeResolution(getDisplays()[0], x, y, r);
                         else
                             changeResolution("", x, y, r);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogHandler.Log(getName(), "ERROR");
-                        LogHandler.Log(getName(), ex.Message);
+                    } catch (Exception ex) {
+                        LogHandler.Log(Name, "ERROR");
+                        LogHandler.Log(Name, ex.Message);
                     }
                 }
-            }
-            else
-            {
-                LogHandler.Log(getName(), "Settings are not populated; will not attempt to change resolution");
+            } else {
+                LogHandler.Log(Name, "Settings are not populated; will not attempt to change resolution");
             }
         }
 		
         //Change the resolution of the screen
         private void changeResolution(String device, int width, int height, int refresh)
         {
-            if (!(width.Equals(display.getSettings().dmPelsWidth) && height.Equals(display.getSettings().dmPelsHeight) && refresh.Equals(display.getSettings().dmDisplayFrequency)))
-            {
-                LogHandler.Log(getName(), "Current Resolution: " + display.getSettings().dmPelsWidth.ToString() + " x " +
-                    display.getSettings().dmPelsHeight.ToString() + " " + display.getSettings().dmDisplayFrequency + "hz");
-                LogHandler.Log(getName(), "Attempting to change resoltution to " + width.ToString() + " x " + height.ToString() + " " + refresh.ToString() + "hz");
-                LogHandler.Log(getName(), "Display name: " + device);
+            if (!(width.Equals(display.Configuration.dmPelsWidth) && height.Equals(display.Configuration.dmPelsHeight) && refresh.Equals(display.Configuration.dmDisplayFrequency))) {
+                LogHandler.Log(Name, "Current Resolution: " + display.Configuration.dmPelsWidth + " x " +
+                display.Configuration.dmPelsHeight + " " + display.Configuration.dmDisplayFrequency + "hz");
+                LogHandler.Log(Name, "Attempting to change resoltution to " + width + " x " + height + " " + refresh + "hz");
+                LogHandler.Log(Name, "Display name: " + device);
 				
-                display.changeResolution(device, width, height, refresh);
+                display.ChangeResolution(device, width, height, refresh);
 				
-            }
-            else
-            {
-                LogHandler.Log(getName(), "Current resolution is already set correctly");
+            } else {
+                LogHandler.Log(Name, "Current resolution is already set correctly");
             }
         }
 		
@@ -79,8 +66,7 @@ namespace FOG
             var displays = new List<String>();			
             var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
 			
-            foreach (var monitor in monitorSearcher.Get())
-            {
+            foreach (var monitor in monitorSearcher.Get()) {
                 displays.Add(monitor["Name"].ToString());
             }
             return displays;

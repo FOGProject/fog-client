@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Linq;
 using System.Collections.Generic;
 using Microsoft.Win32.TaskScheduler;
@@ -12,10 +11,10 @@ namespace FOG
     public class GreenFOG : AbstractModule
     {
 		
-        public GreenFOG() : base()
+        public GreenFOG()
         {
-            setName("GreenFOG");
-            setDescription("Perform cron style power tasks");
+            Name = "GreenFOG";
+            Description = "Perform cron style power tasks";
         }
 		
         protected override void doWork()
@@ -24,7 +23,7 @@ namespace FOG
             var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (!tasksResponse.wasError())
+            if (!tasksResponse.Error)
             {
                 var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
 				
@@ -45,12 +44,12 @@ namespace FOG
             {
                 if (!newTasks.Contains(task.Name))
                 {
-                    LogHandler.Log(getName(), "Delete task " + task.Name);
+                    LogHandler.Log(Name, "Delete task " + task.Name);
                     taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
                 }
                 else
                 {
-                    LogHandler.Log(getName(), "Removing " + task.Name + " from queue");
+                    LogHandler.Log(Name, "Removing " + task.Name + " from queue");
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
             }
@@ -61,8 +60,7 @@ namespace FOG
         private void createTasks(List<String> tasks)
         {
             var taskService = new TaskService();
-			
-            int index = 0;
+            var index = 0;
 
             foreach (String task in tasks)
             {
@@ -94,12 +92,12 @@ namespace FOG
                 try
                 {
                     taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
-                    LogHandler.Log(getName(), "Registered task: " + task);
+                    LogHandler.Log(Name, "Registered task: " + task);
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(getName(), "Error registering task: " + task);
-                    LogHandler.Log(getName(), "ERROR: " + ex.Message);
+                    LogHandler.Log(Name, "Error registering task: " + task);
+                    LogHandler.Log(Name, "ERROR: " + ex.Message);
                 }
 				
                 index++;

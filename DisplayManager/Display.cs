@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 
 namespace FOG
@@ -10,24 +9,28 @@ namespace FOG
     public class Display
     {
 
-        private User_32.DEVMODE1 devMode;
         private const String LOG_NAME = "DisplayManager:Display";
-        private Boolean settingsPopulated;
+        public Boolean PopulatedSettings { get; private set; }
+        
+        // Cannot use auto-populated getters and setters as it would turn this property into a method
+        public User_32.DEVMODE1 Configuration;
 		
         public Display()
         {
-			
-            this.devMode = new User_32.DEVMODE1();
-            this.devMode.dmDeviceName = new String(new char[32]);
-            this.devMode.dmFormName = new String(new char[32]);
-            this.devMode.dmSize = (short)Marshal.SizeOf(this.devMode);
-            this.settingsPopulated = updateSettings();
-
+            Configuration = new User_32.DEVMODE1();
+            Configuration.dmDeviceName = new String(new char[32]);
+            Configuration.dmFormName = new String(new char[32]);
+            Configuration.dmSize = (short)Marshal.SizeOf(Configuration);
+            PopulatedSettings = LoadDisplaySettings();
         }
 		
-        public Boolean updateSettings()
+        /// <summary>
+        /// Load the current display settings
+        /// </summary>
+        /// <returns>True if the settings were successfully loaded</returns>
+        public Boolean LoadDisplaySettings()
         {
-            if (User_32.EnumDisplaySettings(null, User_32.ENUM_CURRENT_SETTINGS, ref this.devMode) != 0)
+            if (User_32.EnumDisplaySettings(null, User_32.ENUM_CURRENT_SETTINGS, ref Configuration) != 0)
             {
                 return true;
             }			
@@ -35,28 +38,25 @@ namespace FOG
             return false;
         }
 		
-        public Boolean settingsLoaded()
+        /// <summary>
+        /// Resize a given display
+        /// </summary>
+        /// <param name="device">The display to resize</param>
+        /// <param name="width">The new width in pixels</param>
+        /// <param name="height">The new height in pixels</param>
+        /// <param name="refresh">The new refresh rate</param>
+        public void ChangeResolution(String device, int width, int height, int refresh)
         {
-            return this.settingsPopulated;
-        }
-		
-        public User_32.DEVMODE1 getSettings()
-        {
-            return this.devMode;
-        }
-		
-        public void changeResolution(String device, int width, int height, int refresh)
-        {
-            if (settingsLoaded())
+            if (PopulatedSettings)
             {
-                this.devMode.dmPelsWidth = width;
-                this.devMode.dmPelsHeight = height;
-                this.devMode.dmDisplayFrequency = refresh;
-                this.devMode.dmDeviceName = device;
+                Configuration.dmPelsWidth = width;
+                Configuration.dmPelsHeight = height;
+                Configuration.dmDisplayFrequency = refresh;
+                Configuration.dmDeviceName = device;
 				
                 //Test changing the resolution first
                 LogHandler.Log(LOG_NAME, "Testing resolution to ensure it is compatible");
-                int changeStatus = User_32.ChangeDisplaySettings(ref this.devMode, User_32.CDS_TEST);
+                int changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_TEST);
 				
                 if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
                 {
@@ -65,7 +65,7 @@ namespace FOG
                 else
                 {
                     LogHandler.Log(LOG_NAME, "Changing resolution");
-                    changeStatus = User_32.ChangeDisplaySettings(ref this.devMode, User_32.CDS_UPDATEREGISTRY);
+                    changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_UPDATEREGISTRY);
 					
                     if (changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL))
                     {
@@ -80,10 +80,6 @@ namespace FOG
                         LogHandler.Log(LOG_NAME, "Failed");
                     }
                 }
-				
-            }
-            else
-            {
 				
             }
         }

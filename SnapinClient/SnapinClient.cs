@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Diagnostics;
 
@@ -11,10 +10,10 @@ namespace FOG
     public class SnapinClient : AbstractModule
     {
 		
-        public SnapinClient() : base()
+        public SnapinClient()
         {
-            setName("SnapinClient");
-            setDescription("Installs snapins on client computers");
+            Name = "SnapinClient";
+            Description = "Installs snapins on client computers";
         }
 		
         protected override void doWork()
@@ -24,16 +23,16 @@ namespace FOG
 			
 			
             //Download the snapin file if there was a response and run it
-            if (!taskResponse.wasError()) {
-                LogHandler.Log(getName(), "Snapin Found:");
-                LogHandler.Log(getName(), "    ID: " + taskResponse.getField("JOBTASKID"));
-                LogHandler.Log(getName(), "    RunWith: " + taskResponse.getField("SNAPINRUNWITH"));
-                LogHandler.Log(getName(), "    RunWithArgs: " + taskResponse.getField("SNAPINRUNWITHARGS"));
-                LogHandler.Log(getName(), "    Name: " + taskResponse.getField("SNAPINNAME"));
-                LogHandler.Log(getName(), "    File: " + taskResponse.getField("SNAPINFILENAME"));					
-                LogHandler.Log(getName(), "    Created: " + taskResponse.getField("JOBCREATION"));
-                LogHandler.Log(getName(), "    Args: " + taskResponse.getField("SNAPINARGS"));
-                LogHandler.Log(getName(), "    Reboot: " + taskResponse.getField("SNAPINBOUNCE"));
+            if (!taskResponse.Error) {
+                LogHandler.Log(Name, "Snapin Found:");
+                LogHandler.Log(Name, "    ID: " + taskResponse.getField("JOBTASKID"));
+                LogHandler.Log(Name, "    RunWith: " + taskResponse.getField("SNAPINRUNWITH"));
+                LogHandler.Log(Name, "    RunWithArgs: " + taskResponse.getField("SNAPINRUNWITHARGS"));
+                LogHandler.Log(Name, "    Name: " + taskResponse.getField("SNAPINNAME"));
+                LogHandler.Log(Name, "    File: " + taskResponse.getField("SNAPINFILENAME"));					
+                LogHandler.Log(Name, "    Created: " + taskResponse.getField("JOBCREATION"));
+                LogHandler.Log(Name, "    Args: " + taskResponse.getField("SNAPINARGS"));
+                LogHandler.Log(Name, "    Reboot: " + taskResponse.getField("SNAPINBOUNCE"));
 				
                 var snapinFilePath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + taskResponse.getField("SNAPINFILENAME");
 				
@@ -56,7 +55,7 @@ namespace FOG
 					
                     if (taskResponse.getField("SNAPINBOUNCE").Equals("1")) {
                         ShutdownHandler.Restart("Snapin requested shutdown", 30);
-                    } else if (!ShutdownHandler.IsShutdownPending()) {
+                    } else if (!ShutdownHandler.ShutdownPending) {
                         //Rerun this method to check for the next snapin
                         doWork();
                     }
@@ -75,23 +74,23 @@ namespace FOG
         //Execute the snapin once it has been downloaded
         private String startSnapin(Response taskResponse, String snapinPath)
         {
-            NotificationHandler.CreateNotification(new Notification(taskResponse.getField("SNAPINNAME"), "FOG is installing " +
+            NotificationHandler.Notifications.Add(new Notification(taskResponse.getField("SNAPINNAME"), "FOG is installing " +
             taskResponse.getField("SNAPINNAME"), 10));
 			
             var process = generateProcess(taskResponse, snapinPath);
 			
             try {
-                LogHandler.Log(getName(), "Starting snapin...");
+                LogHandler.Log(Name, "Starting snapin...");
                 process.Start();
                 process.WaitForExit();
-                LogHandler.Log(getName(), "Snapin finished");
-                LogHandler.Log(getName(), "Return Code: " + process.ExitCode.ToString());
-                NotificationHandler.CreateNotification(new Notification("Finished " + taskResponse.getField("SNAPINNAME"), 
+                LogHandler.Log(Name, "Snapin finished");
+                LogHandler.Log(Name, "Return Code: " + process.ExitCode.ToString());
+                NotificationHandler.Notifications.Add(new Notification("Finished " + taskResponse.getField("SNAPINNAME"), 
                     taskResponse.getField("SNAPINNAME") + " finished installing", 10));
                 return process.ExitCode.ToString();
             } catch (Exception ex) {
-                LogHandler.Log(getName(), "Error starting snapin");
-                LogHandler.Log(getName(), "ERROR: " + ex.Message);
+                LogHandler.Log(Name, "Error starting snapin");
+                LogHandler.Log(Name, "ERROR: " + ex.Message);
             }
 			
             return "-1";

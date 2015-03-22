@@ -9,82 +9,42 @@ namespace FOG
     {
 
         //Basic variables every module needs
-        private String moduleName;
-        private String moduleDescription;
-        private String isActiveURL;
-        private Scope scope;
-
-        public enum Scope
-        {
-            User,
-            System
-        }
+        public String Name { get; protected set; }
+        public String Description { get; protected set; }
+        public String EnabledURL { get; protected set; }
 
         protected AbstractModule()
         {
-            //Define variables
-            setName("Generic Module");
-            setDescription("Generic Description");
-            setIsActiveURL("/service/servicemodule-active.php");
-            setScope(Scope.System);
+            Name = "Generic Module";
+            Description = "Generic Description";
+            EnabledURL = "/service/servicemodule-active.php";
         }
 
-        //Default start method
+        /// <summary>
+        /// Called to start the module. Filters out modules that are disabled on the server
+        /// </summary>
         public virtual void start()
         {
-            LogHandler.Log(getName(), "Running...");
-            if (isEnabled()) {
+            LogHandler.Log(Name, "Running...");
+            if (isEnabled())
+            {
                 doWork();
             }
         }
 
-        //Perform the module's task
+        /// <summary>
+        /// Called after start() filters out disabled modules. Contains the module's functionality
+        /// </summary>
         protected abstract void doWork();
 
-        //Getters and setters
-        public String getName()
-        {
-            return this.moduleName;
-        }
-        protected void setName(String name)
-        {
-            this.moduleName = name;
-        }
-
-        public String getDescription()
-        {
-            return this.moduleDescription;
-        }
-        protected void setDescription(String description)
-        {
-            this.moduleDescription = description;
-        }
-
-        public String getIsActiveURL()
-        {
-            return this.isActiveURL;
-        }
-        protected void setIsActiveURL(String isActiveURL)
-        {
-            this.isActiveURL = isActiveURL;
-        }
-
-        public Scope getScope()
-        {
-            return this.scope;
-        }
-        public void setScope(Scope scope)
-        {
-            this.scope = scope;
-        }
-
-        //Check if the module is enabled, also set the sleep duration
+        /// <summary>
+        /// Check if the module is enabled
+        /// </summary>
+        /// <returns>True if the module is enabled</returns>
         public Boolean isEnabled()
         {
-
-            var moduleActiveResponse = CommunicationHandler.GetResponse(getIsActiveURL() + "?mac=" + CommunicationHandler.GetMacAddresses() +
-                                       "&moduleid=" + getName().ToLower());
-            return !moduleActiveResponse.wasError();
+            var moduleActiveResponse = CommunicationHandler.GetResponse(EnabledURL + "?moduleid=" + Name.ToLower());
+            return !moduleActiveResponse.Error;
         }
 
     }

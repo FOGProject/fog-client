@@ -46,10 +46,10 @@ namespace FOG
         private Boolean notifiedUser;
 		
     
-        public HostnameChanger() : base()
+        public HostnameChanger()
         {
-            setName("HostnameChanger");
-            setDescription("Rename a host, register with AD, and activate the windows key");		
+            Name = "HostnameChanger";
+            Description = "Rename a host, register with AD, and activate the windows key";		
 			
             setADErrors();
             this.notifiedUser = false;
@@ -63,20 +63,19 @@ namespace FOG
 	      	
             this.adErrors.Add(this.successIndex, "Success");
             this.adErrors.Add(5, "Access Denied");
-	      	
         }
 		
         protected override void doWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + getName().ToLower(), true);
+            var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 			
-            if (!taskResponse.wasError())
+            if (!taskResponse.Error)
             {
                 renameComputer(taskResponse);
-                if (!ShutdownHandler.IsShutdownPending())
+                if (!ShutdownHandler.ShutdownPending)
                     registerComputer(taskResponse);
-                if (!ShutdownHandler.IsShutdownPending())
+                if (!ShutdownHandler.ShutdownPending)
                     activateComputer(taskResponse);
             }
         }
@@ -84,20 +83,20 @@ namespace FOG
         //Rename the computer and remove it from active directory
         private void renameComputer(Response taskResponse)
         {
-            LogHandler.Log(getName(), taskResponse.getField("#hostname") + ":" + System.Environment.MachineName);
+            LogHandler.Log(Name, taskResponse.getField("#hostname") + ":" + System.Environment.MachineName);
             if (!taskResponse.getField("#hostname").Equals(""))
             {
                 if (!Environment.MachineName.ToLower().Equals(taskResponse.getField("#hostname").ToLower()))
                 {
 				
-                    LogHandler.Log(getName(), "Renaming host to " + taskResponse.getField("#hostname"));
+                    LogHandler.Log(Name, "Renaming host to " + taskResponse.getField("#hostname"));
                     if (!UserHandler.IsUserLoggedIn() || taskResponse.getField("#force").Equals("1"))
                     {
-                        LogHandler.Log(getName(), "Unregistering computer");
+                        LogHandler.Log(Name, "Unregistering computer");
                         //First unjoin it from active directory
                         unRegisterComputer(taskResponse);		
 		
-                        LogHandler.Log(getName(), "Updating registry");
+                        LogHandler.Log(Name, "Updating registry");
                         RegistryKey regKey;
 			
                         regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", true);
@@ -107,13 +106,13 @@ namespace FOG
                         regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", true);
                         regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));	
 						
-                        ShutdownHandler.Restart(NotificationHandler.GetCompanyName() + " needs to rename your computer", 10);
+                        ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
                     }
                     else if (!this.notifiedUser)
                     {
-                        LogHandler.Log(getName(), "User is currently logged in, will try again later");
+                        LogHandler.Log(Name, "User is currently logged in, will try again later");
                         //Notify the user they should log off if it is not forced
-                        NotificationHandler.CreateNotification(new Notification("Please log off", NotificationHandler.GetCompanyName() +
+                        NotificationHandler.Notifications.Add(new Notification("Please log off", NotificationHandler.Company +
                                 " is attemping to service your computer, please log off at the soonest available time",
                                 120));
 						
@@ -122,7 +121,7 @@ namespace FOG
                 }
                 else
                 {
-                    LogHandler.Log(getName(), "Hostname is correct");
+                    LogHandler.Log(Name, "Hostname is correct");
                 }
             } 
 	      	
@@ -133,7 +132,7 @@ namespace FOG
         {
             if (taskResponse.getField("#AD").Equals("1"))
             { 
-                LogHandler.Log(getName(), "Adding host to active directory");
+                LogHandler.Log(Name, "Adding host to active directory");
                 if (!taskResponse.getField("#ADDom").Equals("") && !taskResponse.getField("#ADUser").Equals("") &&
                     !taskResponse.getField("#ADPass").Equals(""))
                 {
@@ -152,11 +151,11 @@ namespace FOG
                     //Log the response
                     if (this.adErrors.ContainsKey(returnCode))
                     {
-                        LogHandler.Log(getName(), this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
+                        LogHandler.Log(Name, this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
                     }
                     else
                     {
-                        LogHandler.Log(getName(), "Unknown return code: " + returnCode.ToString());
+                        LogHandler.Log(Name, "Unknown return code: " + returnCode.ToString());
                     }	
 					
                     if (returnCode.Equals(this.successIndex))
@@ -165,20 +164,20 @@ namespace FOG
                 }
                 else
                 {
-                    LogHandler.Log(getName(), "Unable to remove host from active directory");
-                    LogHandler.Log(getName(), "ERROR: Not all active directory fields are set");
+                    LogHandler.Log(Name, "Unable to remove host from active directory");
+                    LogHandler.Log(Name, "ERROR: Not all active directory fields are set");
                 }
             }
             else
             {
-                LogHandler.Log(getName(), "Active directory is disabled");
+                LogHandler.Log(Name, "Active directory is disabled");
             }
         }
 		
         //Remove the host from active directory
         private void unRegisterComputer(Response taskResponse)
         {
-            LogHandler.Log(getName(), "Removing host from active directory");
+            LogHandler.Log(Name, "Removing host from active directory");
             if (!taskResponse.getField("#ADUser").Equals("") && !taskResponse.getField("#ADPass").Equals(""))
             {
 				
@@ -188,11 +187,11 @@ namespace FOG
                 //Log the response
                 if (this.adErrors.ContainsKey(returnCode))
                 {
-                    LogHandler.Log(getName(), this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
+                    LogHandler.Log(Name, this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
                 }
                 else
                 {
-                    LogHandler.Log(getName(), "Unknown return code: " + returnCode.ToString());
+                    LogHandler.Log(Name, "Unknown return code: " + returnCode);
                 }
 				
                 if (returnCode.Equals(this.successIndex))
@@ -200,16 +199,16 @@ namespace FOG
             }
             else
             {
-                LogHandler.Log(getName(), "Unable to remove host from active directory, some settings are empty");
+                LogHandler.Log(Name, "Unable to remove host from active directory, some settings are empty");
             }
         }
 		
         //Active a computer with a product key
         private void activateComputer(Response taskResponse)
         {
-            if (taskResponse.getData().ContainsKey("#Key"))
+            if (taskResponse.Data.ContainsKey("#Key"))
             {
-                LogHandler.Log(getName(), "Activing host with product key");
+                LogHandler.Log(Name, "Activing host with product key");
 				
                 //The standard windows key is 29 characters long -- 5 sections of 5 characters with 4 dashes (5*5+4)
                 if (taskResponse.getField("#Key").Length == 29)
@@ -232,13 +231,13 @@ namespace FOG
                 }
                 else
                 {
-                    LogHandler.Log(getName(), "Unable to activate windows");
-                    LogHandler.Log(getName(), "ERROR: Invalid product key");
+                    LogHandler.Log(Name, "Unable to activate windows");
+                    LogHandler.Log(Name, "ERROR: Invalid product key");
                 }
             }
             else
             {
-                LogHandler.Log(getName(), "Windows activation disabled");				
+                LogHandler.Log(Name, "Windows activation disabled");				
             }
         }
 		
