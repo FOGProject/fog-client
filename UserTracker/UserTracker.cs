@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2015 FOG Project
+ * Copyright (C) 2014-2015 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -56,7 +56,8 @@ namespace FOG
             }
             
             // Any users left in the usernames list have logged out
-            foreach (String username in usernames) {
+            foreach (String username in usernames) 
+            {
                 CommunicationHandler.Contact("/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
             }
             

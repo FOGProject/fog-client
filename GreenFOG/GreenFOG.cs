@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2015 FOG Project
+ * Copyright (C) 2014-2015 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License

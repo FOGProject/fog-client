@@ -101,9 +101,9 @@ namespace FOG
         public void readFromPipe()
         {
             this.stream = new FileStream(handle, FileAccess.ReadWrite, BUFFER_SIZE, true);
-            byte[] readBuffer = new byte[BUFFER_SIZE];
+            var readBuffer = new byte[BUFFER_SIZE];
 	
-            ASCIIEncoding encoder = new ASCIIEncoding();
+            var encoder = new ASCIIEncoding();
             while (true)
             {
                 int bytesRead = 0;
@@ -132,8 +132,8 @@ namespace FOG
         {
             try
             {
-                ASCIIEncoding encoder = new ASCIIEncoding();
-                byte[] messageBuffer = encoder.GetBytes(message);
+                var encoder = new ASCIIEncoding();
+                var messageBuffer = encoder.GetBytes(message);
 	
                 this.stream.Write(messageBuffer, 0, messageBuffer.Length);
                 this.stream.Flush();

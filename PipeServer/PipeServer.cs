@@ -105,13 +105,13 @@ namespace FOG
                 if (success == 0)
                     return;
 	
-                Client client = new Client();
+                var client = new Client();
                 client.setFileHandle(clientHandle);
 	
                 lock (this.clients)
                     this.clients.Add(client);
 	
-                Thread readThread = new Thread(new ParameterizedThreadStart(read));
+                var readThread = new Thread(new ParameterizedThreadStart(read));
                 readThread.IsBackground = true;
                 readThread.Start(client);
             }
@@ -122,7 +122,7 @@ namespace FOG
         {
 			
             IntPtr ptrSec = IntPtr.Zero;
-            SECURITY_ATTRIBUTES securityAttribute = new SECURITY_ATTRIBUTES();
+            var securityAttribute = new SECURITY_ATTRIBUTES();
             SECURITY_DESCRIPTOR securityDescription;
 	
             if (InitializeSecurityDescriptor(out securityDescription, 1))
@@ -143,11 +143,11 @@ namespace FOG
         //Read a message sent over the pipe
         private void read(object objClient)
         {
-            Client client = (Client)objClient;
+            var client = (Client)objClient;
             client.setFileStream(new FileStream(client.getSafeFileHandle(), FileAccess.ReadWrite, BUFFER_SIZE, true));
 	
-            byte[] buffer = new byte[BUFFER_SIZE];
-            ASCIIEncoding encoder = new ASCIIEncoding();
+            var buffer = new byte[BUFFER_SIZE];
+            var encoder = new ASCIIEncoding();
 	
             while (true)
             {
@@ -179,7 +179,7 @@ namespace FOG
         {
             lock (this.clients)
             {
-                ASCIIEncoding encoder = new ASCIIEncoding();
+                var encoder = new ASCIIEncoding();
                 byte[] mBuf = encoder.GetBytes(msg);
 				
                 foreach (Client client in this.clients)
