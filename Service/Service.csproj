@@ -151,6 +151,10 @@
       <Project>{9BC2248C-9A29-4936-859D-CF263E53A00F}</Project>
       <Name>UserCleanup</Name>
     </ProjectReference>
+    <ProjectReference Include="..\UserTracker\UserTracker.csproj">
+      <Project>{90B7FB78-B402-4044-BC3D-D28E92898130}</Project>
+      <Name>UserTracker</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

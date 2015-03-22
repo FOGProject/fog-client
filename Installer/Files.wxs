@@ -46,6 +46,7 @@
 						<File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe"/>
 						<File Id="TaskReboot" Name="TaskReboot.dll" Source="..\bin\TaskReboot.dll"/>
 						<File Id="UserHandler" Name="UserHandler.dll" Source="..\bin\UserHandler.dll"/>
+					    <File Id="UserTracker" Name="UserTracker.dll" Source="..\bin\UserTracker.dll"/>
 						<File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe"/>
 						<File Id="System.Threading.Tasks.NET35" Name="System.Threading.Tasks.NET35.dll" Source="..\bin\System.Threading.Tasks.NET35.dll"/>
 						<File Id="libeay32" Name="libeay32.dll" Source="..\bin\libeay32.dll"/>

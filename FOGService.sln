@@ -50,6 +50,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugg
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeServer", "PipeServer\PipeServer.csproj", "{DF7C1145-E90C-486B-ACEC-543B42CF083F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserTracker", "UserTracker\UserTracker.csproj", "{90B7FB78-B402-4044-BC3D-D28E92898130}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,6 +154,10 @@ Global
 		{DF7C1145-E90C-486B-ACEC-543B42CF083F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DF7C1145-E90C-486B-ACEC-543B42CF083F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DF7C1145-E90C-486B-ACEC-543B42CF083F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{90B7FB78-B402-4044-BC3D-D28E92898130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90B7FB78-B402-4044-BC3D-D28E92898130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90B7FB78-B402-4044-BC3D-D28E92898130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90B7FB78-B402-4044-BC3D-D28E92898130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Service\Service.csproj

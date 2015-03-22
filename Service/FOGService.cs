@@ -162,6 +162,7 @@ namespace FOG
             this.modules.Add(new SnapinClient());
             this.modules.Add(new DisplayManager());			
             this.modules.Add(new GreenFOG());
+            this.modules.Add(new UserTracker());
         }
 		
         //Called when the service stops
