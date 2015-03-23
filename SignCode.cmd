@@ -3,7 +3,7 @@ REM create an array of timestamp servers...
 REM IMPORTANT NOTE - The SET statement and the four servers should be all on one line.
 set SERVERLIST=(http://timestamp.comodoca.com/authenticode http://timestamp.verisign.com/scripts/timstamp.dll http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
 REM sign the file...
-signtool.exe sign /n "FOG Software" %1
+signtool.exe sign /n "Open Source Developer, Joseph Schmitt" %1
 set timestampErrors=0
 for /L %%a in (1,1,300) do (
     for %%s in %SERVERLIST% do (

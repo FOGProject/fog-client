@@ -237,6 +237,7 @@ namespace FOG
                 {
                     //Once all modules have been run, sleep for the set time
                     int sleepTime = getSleepTime();
+                    RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
                     LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
                     Thread.Sleep(sleepTime * 1000);
                 }

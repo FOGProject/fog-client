@@ -82,4 +82,8 @@
     <Optimize>True</Optimize>
     <StartAction>Project</StartAction>
   </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>..\SignBinaries.cmd</PreBuildEvent>
+    <PostBuildEvent>..\SignCode.cmd ..\bin\FOGService.msi</PostBuildEvent>
+  </PropertyGroup>
 </Project>

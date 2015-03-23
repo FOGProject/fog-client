@@ -169,10 +169,9 @@ namespace FOG
                     if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
                         break;
 					
-                    //Log file formatting
                     LogHandler.NewLine();
-                    LogHandler.NewLine();
-                    LogHandler.Divider();
+                    LogHandler.PaddedHeader(module.Name);
+                    LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
 					
                     try
                     {
@@ -203,23 +202,15 @@ namespace FOG
         private static int getSleepTime()
         {
             LogHandler.Log(LOG_NAME, "Getting sleep duration...");
-			
-            var sleepResponse = CommunicationHandler.GetResponse("/service/servicemodule-active.php");
-			
             try
             {
-                if (!sleepResponse.Error && !sleepResponse.getField("#sleep").Equals(""))
+                var sleepTimeStr = RegistryHandler.GetSystemSetting("Sleep");
+                int sleepTime = int.Parse(sleepTimeStr);
+                if (sleepTime >= sleepDefaultTime)
                 {
-                    int sleepTime = int.Parse(sleepResponse.getField("#sleep"));
-                    if (sleepTime >= sleepDefaultTime)
-                    {
-                        return sleepTime;
-                    }
-                    else
-                    {
-                        LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime.ToString());
-                    }
+                    return sleepTime;
                 }
+                LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime.ToString());
             }
             catch (Exception ex)
             {

@@ -1,23 +1,16 @@
 @ECHO OFF
-SignCode.cmd bin\FOGService.exe
-SignCode.cmd bin\AbstractModule.dll
-SignCode.cmd bin\AutoLogOut.dll
-SignCode.cmd bin\ClientUpdater.dll
-SignCode.cmd bin\CommunicationHandler.dll
-SignCode.cmd bin\DisplayManager.dll
-SignCode.cmd bin\GreenFOG.dll
-SignCode.cmd bin\HostnameChanger.dll
-SignCode.cmd bin\EncryptionHandler.dll
-SignCode.cmd bin\LogHandler.dll
-SignCode.cmd bin\NotificationHandler.dll
-SignCode.cmd bin\PipeClient.dll
-SignCode.cmd bin\PipeServer.dll
-SignCode.cmd bin\RegistryHandler.dll
-SignCode.cmd bin\ShutdownHandler.dll
-SignCode.cmd bin\SnapinClient.dll
-SignCode.cmd bin\FOGTray.exe
-SignCode.cmd bin\TaskReboot.dll
-SignCode.cmd bin\UserHandler.dll
-SignCode.cmd bin\FOGUpdateHelper.exe
-SignCode.cmd bin\FOGUpdateWaiter.exe
-SignCode.cmd bin\FOGUserService.exe
+START /wait cmd /c %~dp0SignCode.cmd %~dp0bin\Handlers.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\Modules.dll
+START /wait cmd /c %~dp0SignCode.cmd %~dp0bin\PipeClient.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\PipeServer.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\FOGService.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\FOGUpdateHelper.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\FOGUpdateWaiter.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\FOGUserService.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\FOGTray.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\Debugger.exe
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\libeay32.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\ManagedOpenSsl.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\Microsoft.Win32.TaskScheduler.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\ssleay32.dll
+START /wait  cmd /c %~dp0SignCode.cmd %~dp0bin\System.Threading.Tasks.NET35.dll
