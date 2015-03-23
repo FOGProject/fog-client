@@ -53,6 +53,7 @@ namespace FOG.Handlers
                 if (key != null)
                 {
                     String keyValue = key.GetValue(keyName).ToString();
+                    key.Close();
                     if (keyValue != null)
                     {
                         return keyValue.Trim();
@@ -103,10 +104,10 @@ namespace FOG.Handlers
 			
             try
             {
-                var key = Registry.LocalMachine.OpenSubKey(keyPath);
-				
+                var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
                 key.CreateSubKey(keyName);
                 key.SetValue(keyName, value);
+                key.Close();
 				
             }
             catch (Exception ex)
@@ -127,6 +128,7 @@ namespace FOG.Handlers
                 if (key != null)
                 {
                     key.DeleteSubKeyTree(path);
+                    key.Close();
                     return true;
                 }
             }
@@ -147,6 +149,7 @@ namespace FOG.Handlers
                 if (key != null)
                 {
                     key.DeleteValue(keyName);
+                    key.Close();
                     return true;
                 }
             }

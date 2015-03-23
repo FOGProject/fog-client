@@ -32,11 +32,10 @@ namespace FOG
             CommunicationHandler.GetAndSetServerAddress();
 
             LogHandler.NewLine();
-            const string authentication = "Authentication-Snapin";
-
-            LogHandler.PaddedHeader(authentication);
+            LogHandler.PaddedHeader("Registry test");
             LogHandler.NewLine();
-            CommunicationHandler.Authenticate();
+            
+            RegistryHandler.SetSystemSetting("Sleep", "5");
             LogHandler.NewLine();
 
             Console.ReadLine();
