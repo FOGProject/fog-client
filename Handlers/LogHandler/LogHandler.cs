@@ -151,7 +151,7 @@ namespace FOG.Handlers
         /// <param name="line">The line to write</param>
         public static void WriteLine(String line)
         {
-            Write(line + "\n");
+            Write(line + "\r\n");
         }
 		
         /// <summary>
