@@ -28,9 +28,8 @@ namespace FOG
         public static void Main(string[] args)
         {
 
-            LogHandler.Mode = LogHandler.LogMode.Console;
             CommunicationHandler.GetAndSetServerAddress();
-
+            
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Registry test");
             LogHandler.NewLine();
