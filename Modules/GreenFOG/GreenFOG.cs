@@ -65,7 +65,7 @@ namespace FOG.Modules
                 if (!newTasks.Contains(task.Name))
                 {
                     LogHandler.Log(Name, "Delete task " + task.Name);
-                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
+                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name); //If the existing task is not in the new list delete it
                 }
                 else
                 {
