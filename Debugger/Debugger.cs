@@ -19,26 +19,23 @@
 
 using System;
 using FOG.Handlers;
-using FOG.Modules;
 
 namespace FOG
 {
-    class Program
+    internal class Program
     {
         public static void Main(string[] args)
         {
-
             CommunicationHandler.GetAndSetServerAddress();
-            
+
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Registry test");
             LogHandler.NewLine();
-            
+
             RegistryHandler.SetSystemSetting("Sleep", "5");
             LogHandler.NewLine();
 
             Console.ReadLine();
-
         }
     }
 }

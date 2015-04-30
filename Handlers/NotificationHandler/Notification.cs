@@ -17,32 +17,30 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Store neccesary notification information
+    ///     Store neccesary notification information
     /// </summary>
     public class Notification
     {
-        //Define variables
-        public String Title { get; set; }
-        public String Message { get; set; }
-        public int Duration { get; set; }
-		
         public Notification()
         {
             Title = "";
             Message = "";
             Duration = 10;
         }
-		
-        public Notification(String title, String message, int duration)
+
+        public Notification(string title, string message, int duration)
         {
             Title = title;
             Message = message;
             Duration = duration;
         }
+
+        //Define variables
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public int Duration { get; set; }
     }
 }

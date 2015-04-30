@@ -17,22 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Hold information about a specific user account
+    ///     Hold information about a specific user account
     /// </summary>
     public class UserData
     {
-        public String Name { get; private set; }
-        public String SID  { get; private set; }
-
-        public UserData(String name, String sid)
+        public UserData(string name, string sid)
         {
             Name = name;
             SID = sid;
         }
+
+        public string Name { get; private set; }
+        public string SID { get; private set; }
     }
 }

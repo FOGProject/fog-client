@@ -23,97 +23,99 @@ using System.IO;
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Handle all interaction with the log file
+    ///     Handle all interaction with the log file
     /// </summary>
     public static class LogHandler
     {
-        //Define variables
-        public static String FilePath { get; set; }
-        public static long MaxSize { get; set; }
-        public static LogMode Mode { get; set; }
-        
-        private const long DEFAULT_MAX_LOG_SIZE = 502400;       
-        private const int HEADER_LENGTH = 78;
-        private const String LOG_NAME = "LogHandler";
-        private static Boolean initialized = initialize();
-        
-        public enum LogMode {
+        public enum LogMode
+        {
             File,
             Console
         }
-        
-        private static Boolean initialize() {
+
+        private const long DEFAULT_MAX_LOG_SIZE = 502400;
+        private const int HEADER_LENGTH = 78;
+        private const string LOG_NAME = "LogHandler";
+        private static bool initialized = initialize();
+        //Define variables
+        public static string FilePath { get; set; }
+        public static long MaxSize { get; set; }
+        public static LogMode Mode { get; set; }
+
+        private static bool initialize()
+        {
             FilePath = @"\fog.log";
             MaxSize = DEFAULT_MAX_LOG_SIZE;
             Mode = LogMode.File;
-            
+
             return true;
         }
-		
+
         /// <summary>
-        /// Log a message
+        ///     Log a message
         /// </summary>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
-        public static void Log(String caller, String message)
+        public static void Log(string caller, string message)
         {
-            WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + caller + " " + message);
+            WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + caller +
+                      " " + message);
         }
-		
+
         /// <summary>
-        /// Write a new line to the log
+        ///     Write a new line to the log
         /// </summary>
         public static void NewLine()
         {
             WriteLine("");
         }
-		
+
         /// <summary>
-        /// Write a divider to the log
+        ///     Write a divider to the log
         /// </summary>
         public static void Divider()
         {
             Header("");
         }
-		
+
         /// <summary>
-        /// Write a header to the log
+        ///     Write a header to the log
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
-        public static void Header(String text)
+        public static void Header(string text)
         {
-            double headerSize = (HEADER_LENGTH - text.Length) / 2;
+            double headerSize = (HEADER_LENGTH - text.Length)/2;
             var output = "";
-            for (int i = 0; i < (int)Math.Ceiling(headerSize); i++)
+            for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
             {
                 output += "-";
             }
-			
+
             output += text;
-			
-            for (int i = 0; i < ((int)Math.Floor(headerSize)); i++)
+
+            for (var i = 0; i < ((int) Math.Floor(headerSize)); i++)
             {
                 output += "-";
             }
             WriteLine(output);
         }
-		
+
         /// <summary>
-        /// Create one header with a divider above and below it
+        ///     Create one header with a divider above and below it
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
-        public static void PaddedHeader(String text)
+        public static void PaddedHeader(string text)
         {
             Divider();
             Header(text);
             Divider();
         }
-		
+
         /// <summary>
-        /// Write text to the log
+        ///     Write text to the log
         /// </summary>
         /// <param name="text">The text to write</param>
-        public static void Write(String text)
+        public static void Write(string text)
         {
             if (Mode == LogMode.Console)
             {
@@ -126,11 +128,11 @@ namespace FOG.Handlers
             {
                 StreamWriter logWriter;
                 var logFile = new FileInfo(FilePath);
-	
+
                 //Delete the log file if it excedes the max log size
                 if (logFile.Exists && logFile.Length > MaxSize)
                     cleanLog(logFile);
-				
+
                 try
                 {
                     //Write message to log file
@@ -141,21 +143,21 @@ namespace FOG.Handlers
                 catch
                 {
                     //If logging fails then nothing can really be done to silently notify the user
-                } 		
-            }			
+                }
+            }
         }
-		
+
         /// <summary>
-        /// Write a line to the log
+        ///     Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
-        public static void WriteLine(String line)
+        public static void WriteLine(string line)
         {
             Write(line + "\r\n");
         }
-		
+
         /// <summary>
-        /// Wipe the log
+        ///     Wipe the log
         /// </summary>
         /// <param name="logFile"></param>
         private static void cleanLog(FileInfo logFile)

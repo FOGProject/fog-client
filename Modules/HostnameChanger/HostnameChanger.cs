@@ -18,77 +18,55 @@
  */
 
 using System;
-using Microsoft.Win32;
-using System.Runtime.InteropServices;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
 using FOG.Handlers;
+using Microsoft.Win32;
 
 namespace FOG.Modules
 {
     /// <summary>
-    /// Rename a host, register with AD, and activate the windows key
+    ///     Rename a host, register with AD, and activate the windows key
     /// </summary>
-    public class HostnameChanger:AbstractModule
+    public class HostnameChanger : AbstractModule
     {
-		
-        //Import dll methods
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)] 
-        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU, 
-            string lpAccount, string lpPassword, JoinOptions NameType);
-		
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword, UnJoinOptions fUnjoinOptions);
-
-        [Flags]
-        private enum UnJoinOptions
-        {
-            NONE = 0x00000000,
-            NETSETUP_ACCOUNT_DELETE = 0x00000004
-        }
-		
-        [Flags]
-        private enum JoinOptions
-        {
-            NETSETUP_JOIN_DOMAIN = 0x00000001,
-            NETSETUP_ACCT_CREATE = 0x00000002,
-            NETSETUP_ACCT_DELETE = 0x00000004,
-            NETSETUP_WIN9X_UPGRADE = 0x00000010,
-            NETSETUP_DOMAIN_JOIN_IF_JOINED = 0x00000020,
-            NETSETUP_JOIN_UNSECURE = 0x00000040,
-            NETSETUP_MACHINE_PWD_PASSED = 0x00000080,
-            NETSETUP_DEFER_SPN_SET = 0x10000000
-        }
-		
-        private Dictionary<int, String> adErrors;
+        private Dictionary<int, string> adErrors;
+        private bool notifiedUser;
         private int successIndex;
-        private Boolean notifiedUser;
-		
-    
+
         public HostnameChanger()
         {
             Name = "HostnameChanger";
-            Description = "Rename a host, register with AD, and activate the windows key";		
-			
+            Description = "Rename a host, register with AD, and activate the windows key";
+
             setADErrors();
-            this.notifiedUser = false;
+            notifiedUser = false;
         }
-	 
-	    
+
+        //Import dll methods
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
+            string lpAccount, string lpPassword, JoinOptions NameType);
+
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
+            UnJoinOptions fUnjoinOptions);
+
         private void setADErrors()
         {
-            this.adErrors = new Dictionary<int, String>();
-            this.successIndex = 0;
-	      	
-            this.adErrors.Add(this.successIndex, "Success");
-            this.adErrors.Add(5, "Access Denied");
+            adErrors = new Dictionary<int, string>();
+            successIndex = 0;
+
+            adErrors.Add(successIndex, "Success");
+            adErrors.Add(5, "Access Denied");
         }
-		
+
         protected override void doWork()
         {
             //Get task info
             var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
-			
+
             if (!taskResponse.Error)
             {
                 renameComputer(taskResponse);
@@ -98,88 +76,90 @@ namespace FOG.Modules
                     activateComputer(taskResponse);
             }
         }
-		
+
         //Rename the computer and remove it from active directory
         private void renameComputer(Response taskResponse)
         {
-            LogHandler.Log(Name, taskResponse.getField("#hostname") + ":" + System.Environment.MachineName);
+            LogHandler.Log(Name, taskResponse.getField("#hostname") + ":" + Environment.MachineName);
             if (!taskResponse.getField("#hostname").Equals(""))
             {
                 if (!Environment.MachineName.ToLower().Equals(taskResponse.getField("#hostname").ToLower()))
                 {
-				
                     LogHandler.Log(Name, "Renaming host to " + taskResponse.getField("#hostname"));
                     if (!UserHandler.IsUserLoggedIn() || taskResponse.getField("#force").Equals("1"))
                     {
                         LogHandler.Log(Name, "Unregistering computer");
                         //First unjoin it from active directory
-                        unRegisterComputer(taskResponse);		
-		
+                        unRegisterComputer(taskResponse);
+
                         LogHandler.Log(Name, "Updating registry");
                         RegistryKey regKey;
-			
-                        regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", true);
+
+                        regKey = Registry.LocalMachine.OpenSubKey(
+                            @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", true);
                         regKey.SetValue("NV Hostname", taskResponse.getField("#hostname"));
-                        regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", true);
+                        regKey =
+                            Registry.LocalMachine.OpenSubKey(
+                                @"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", true);
                         regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));
-                        regKey = Registry.LocalMachine.OpenSubKey(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", true);
-                        regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));	
-						
+                        regKey =
+                            Registry.LocalMachine.OpenSubKey(
+                                @"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", true);
+                        regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));
+
                         ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
                     }
-                    else if (!this.notifiedUser)
+                    else if (!notifiedUser)
                     {
                         LogHandler.Log(Name, "User is currently logged in, will try again later");
                         //Notify the user they should log off if it is not forced
-                        NotificationHandler.Notifications.Add(new Notification("Please log off", NotificationHandler.Company +
-                                " is attemping to service your computer, please log off at the soonest available time",
-                                120));
-						
-                        this.notifiedUser = true;
+                        NotificationHandler.Notifications.Add(new Notification("Please log off",
+                            NotificationHandler.Company +
+                            " is attemping to service your computer, please log off at the soonest available time",
+                            120));
+
+                        notifiedUser = true;
                     }
                 }
                 else
                 {
                     LogHandler.Log(Name, "Hostname is correct");
                 }
-            } 
-	      	
+            }
         }
-		
+
         //Add a host to active directory
         private void registerComputer(Response taskResponse)
         {
             if (taskResponse.getField("#AD").Equals("1"))
-            { 
+            {
                 LogHandler.Log(Name, "Adding host to active directory");
                 if (!taskResponse.getField("#ADDom").Equals("") && !taskResponse.getField("#ADUser").Equals("") &&
                     !taskResponse.getField("#ADPass").Equals(""))
                 {
-				
-                    String userPassword = taskResponse.getField("#ADPass");
+                    var userPassword = taskResponse.getField("#ADPass");
 
-                    int returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"), 
-                                         taskResponse.getField("#ADUser"), userPassword, 
-                                         (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
+                    var returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"),
+                        taskResponse.getField("#ADUser"), userPassword,
+                        (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
                     if (returnCode == 2224)
                     {
-                        returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"), 
-                            taskResponse.getField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);				
+                        returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"),
+                            taskResponse.getField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);
                     }
-					
+
                     //Log the response
-                    if (this.adErrors.ContainsKey(returnCode))
+                    if (adErrors.ContainsKey(returnCode))
                     {
-                        LogHandler.Log(Name, this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
+                        LogHandler.Log(Name, adErrors[returnCode] + " Return code: " + returnCode);
                     }
                     else
                     {
-                        LogHandler.Log(Name, "Unknown return code: " + returnCode.ToString());
-                    }	
-					
-                    if (returnCode.Equals(this.successIndex))
+                        LogHandler.Log(Name, "Unknown return code: " + returnCode);
+                    }
+
+                    if (returnCode.Equals(successIndex))
                         ShutdownHandler.Restart("Host joined to active directory, restart needed", 20);
-					
                 }
                 else
                 {
@@ -192,28 +172,28 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "Active directory is disabled");
             }
         }
-		
+
         //Remove the host from active directory
         private void unRegisterComputer(Response taskResponse)
         {
             LogHandler.Log(Name, "Removing host from active directory");
             if (!taskResponse.getField("#ADUser").Equals("") && !taskResponse.getField("#ADPass").Equals(""))
             {
-				
-                String userPassword = taskResponse.getField("#ADPass");
-                int returnCode = NetUnjoinDomain(null, taskResponse.getField("#ADUser"), userPassword, UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
-				
+                var userPassword = taskResponse.getField("#ADPass");
+                var returnCode = NetUnjoinDomain(null, taskResponse.getField("#ADUser"), userPassword,
+                    UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
+
                 //Log the response
-                if (this.adErrors.ContainsKey(returnCode))
+                if (adErrors.ContainsKey(returnCode))
                 {
-                    LogHandler.Log(Name, this.adErrors[returnCode] + " Return code: " + returnCode.ToString());
+                    LogHandler.Log(Name, adErrors[returnCode] + " Return code: " + returnCode);
                 }
                 else
                 {
                     LogHandler.Log(Name, "Unknown return code: " + returnCode);
                 }
-				
-                if (returnCode.Equals(this.successIndex))
+
+                if (returnCode.Equals(successIndex))
                     ShutdownHandler.Restart("Host joined to active directory, restart needed", 20);
             }
             else
@@ -221,27 +201,28 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "Unable to remove host from active directory, some settings are empty");
             }
         }
-		
+
         //Active a computer with a product key
         private void activateComputer(Response taskResponse)
         {
             if (taskResponse.Data.ContainsKey("#Key"))
             {
                 LogHandler.Log(Name, "Activing host with product key");
-				
+
                 //The standard windows key is 29 characters long -- 5 sections of 5 characters with 4 dashes (5*5+4)
                 if (taskResponse.getField("#Key").Length == 29)
                 {
                     var process = new Process();
-					
+
                     //Give windows the new key
                     process.StartInfo.FileName = @"cscript";
-                    process.StartInfo.Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ipk " + taskResponse.getField("#Key");
+                    process.StartInfo.Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ipk " +
+                                                  taskResponse.getField("#Key");
                     process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
                     process.WaitForExit();
                     process.Close();
-					
+
                     //Try and activate the new key
                     process.StartInfo.Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ato";
                     process.Start();
@@ -256,9 +237,28 @@ namespace FOG.Modules
             }
             else
             {
-                LogHandler.Log(Name, "Windows activation disabled");				
+                LogHandler.Log(Name, "Windows activation disabled");
             }
         }
-		
+
+        [Flags]
+        private enum UnJoinOptions
+        {
+            NONE = 0x00000000,
+            NETSETUP_ACCOUNT_DELETE = 0x00000004
+        }
+
+        [Flags]
+        private enum JoinOptions
+        {
+            NETSETUP_JOIN_DOMAIN = 0x00000001,
+            NETSETUP_ACCT_CREATE = 0x00000002,
+            NETSETUP_ACCT_DELETE = 0x00000004,
+            NETSETUP_WIN9X_UPGRADE = 0x00000010,
+            NETSETUP_DOMAIN_JOIN_IF_JOINED = 0x00000020,
+            NETSETUP_JOIN_UNSECURE = 0x00000040,
+            NETSETUP_MACHINE_PWD_PASSED = 0x00000080,
+            NETSETUP_DEFER_SPN_SET = 0x10000000
+        }
     }
 }

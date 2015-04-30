@@ -17,22 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using FOG.Handlers;
 
 namespace FOG.Modules
 {
     /// <summary>
-    /// The base of all FOG Modules
+    ///     The base of all FOG Modules
     /// </summary>
     public abstract class AbstractModule
     {
-
-        //Basic variables every module needs
-        public String Name { get; protected set; }
-        public String Description { get; protected set; }
-        public String EnabledURL { get; protected set; }
-
         protected AbstractModule()
         {
             Name = "Generic Module";
@@ -40,8 +33,13 @@ namespace FOG.Modules
             EnabledURL = "/service/servicemodule-active.php";
         }
 
+        //Basic variables every module needs
+        public string Name { get; protected set; }
+        public string Description { get; protected set; }
+        public string EnabledURL { get; protected set; }
+
         /// <summary>
-        /// Called to start the module. Filters out modules that are disabled on the server
+        ///     Called to start the module. Filters out modules that are disabled on the server
         /// </summary>
         public virtual void start()
         {
@@ -53,19 +51,18 @@ namespace FOG.Modules
         }
 
         /// <summary>
-        /// Called after start() filters out disabled modules. Contains the module's functionality
+        ///     Called after start() filters out disabled modules. Contains the module's functionality
         /// </summary>
         protected abstract void doWork();
 
         /// <summary>
-        /// Check if the module is enabled
+        ///     Check if the module is enabled
         /// </summary>
         /// <returns>True if the module is enabled</returns>
-        public Boolean isEnabled()
+        public bool isEnabled()
         {
             var moduleActiveResponse = CommunicationHandler.GetResponse(EnabledURL + "?moduleid=" + Name.ToLower(), true);
             return !moduleActiveResponse.Error;
         }
-
     }
 }

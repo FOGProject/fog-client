@@ -17,43 +17,41 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace FOG.Handlers
 {
-	/// <summary>
-	/// Contains the information that the FOG Server responds with
-	/// </summary>
-	public class Response 
-	{
+    /// <summary>
+    ///     Contains the information that the FOG Server responds with
+    /// </summary>
+    public class Response
+    {
+        public Response(bool error, Dictionary<string, string> data, string returnCode)
+        {
+            Error = error;
+            Data = data;
+            ReturnCode = returnCode;
+        }
 
-        public Boolean Error { get; set; }
-        public Dictionary<String, String> Data { get; set; }
-        public String ReturnCode { get; set; }
-		
-		public Response(Boolean error, Dictionary<String, String> data, String returnCode) 
-		{
-			Error = error;
-			Data = data;
-			ReturnCode = returnCode;
-		}
+        public Response()
+        {
+            Error = true;
+            Data = new Dictionary<string, string>();
+            ReturnCode = "";
+        }
 
-		public Response() 
-		{
-			Error = true;
-			Data = new Dictionary<String, String>();
-			ReturnCode = "";
-		}
-        
+        public bool Error { get; set; }
+        public Dictionary<string, string> Data { get; set; }
+        public string ReturnCode { get; set; }
+
         /// <summary>
-        /// Return the value stored at a specified key
+        ///     Return the value stored at a specified key
         /// </summary>
         /// <param name="id">The ID to return</param>
         /// <returns>The value stored at key ID, if the ID is not present, return an empty string</returns>
-		public String getField(String id) 
-		{
+        public string getField(string id)
+        {
             return Data.ContainsKey(id) ? Data[id] : "";
-		}
-	}
+        }
+    }
 }

@@ -1,45 +1,44 @@
-﻿
-using System;
-using System.IO;
+﻿using System.IO;
 using Microsoft.Win32.SafeHandles;
 
 namespace FOG
 {
     /// <summary>
-    /// A generic pipe server client
+    ///     A generic pipe server client
     /// </summary>
     public class Client
     {
-        private SafeFileHandle safeFileHandle;
         private FileStream fileStream;
-		
+        private SafeFileHandle safeFileHandle;
+
         public Client(SafeFileHandle safeFileHandle, FileStream fileStream)
         {
             this.safeFileHandle = safeFileHandle;
             this.fileStream = fileStream;
         }
+
         public Client()
         {
         }
-		
+
         public SafeFileHandle getSafeFileHandle()
         {
-            return this.safeFileHandle;
+            return safeFileHandle;
         }
+
         public void setFileHandle(SafeFileHandle safeFilHandle)
         {
-            this.safeFileHandle = safeFilHandle;
+            safeFileHandle = safeFilHandle;
         }
-		
+
         public FileStream getFileStream()
         {
-            return this.fileStream;
+            return fileStream;
         }
+
         public void setFileStream(FileStream fileStream)
         {
             this.fileStream = fileStream;
         }
-		
-		
     }
 }

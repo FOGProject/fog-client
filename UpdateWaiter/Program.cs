@@ -18,15 +18,14 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using System.Diagnostics;
 
 namespace FOG
 {
-    class Program
+    internal class Program
     {
-		
         public static void Main(string[] args)
         {
             //Update Line
@@ -36,34 +35,32 @@ namespace FOG
                 //Wait for all update files to be applied
                 while (updateFilePresent())
                 {
-                }				
+                }
                 //Spawn the process that originally called this program
                 if (File.Exists(args[0]))
                     spawnParentProgram(args[0]);
             }
-			
         }
-		
-        private static Boolean updateFilePresent()
+
+        private static bool updateFilePresent()
         {
-            Boolean fileFound = false;
-            foreach (String fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory))
+            var fileFound = false;
+            foreach (var fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory))
             {
                 if (fileName.EndsWith("updating.info"))
                     fileFound = true;
             }
-            Thread.Sleep(10 * 1000);
-			
+            Thread.Sleep(10*1000);
+
             return fileFound;
         }
-		
-        private static void spawnParentProgram(String fileName)
+
+        private static void spawnParentProgram(string fileName)
         {
-            Process process = new Process();
+            var process = new Process();
             process.StartInfo.UseShellExecute = false;
             process.StartInfo.FileName = fileName;
-            process.Start();				
+            process.Start();
         }
-		
     }
 }

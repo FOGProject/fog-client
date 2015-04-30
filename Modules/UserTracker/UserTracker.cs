@@ -16,8 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
- 
-using System;
+
 using System.Collections.Generic;
 using System.Net;
 using FOG.Handlers;
@@ -25,45 +24,47 @@ using FOG.Handlers;
 namespace FOG.Modules
 {
     /// <summary>
-    /// Report what users log on or off and at what time
+    ///     Report what users log on or off and at what time
     /// </summary>
-    public class UserTracker: AbstractModule
+    public class UserTracker : AbstractModule
     {
-        List<String> usernames;
-        
+        private List<string> usernames;
+
         public UserTracker()
         {
             Name = "UserTracker";
             Description = "Tracker user logins and logouts";
-            usernames = new List<String>();
+            usernames = new List<string>();
         }
-        
+
         protected override void doWork()
         {
             var newUsernames = UserHandler.GetUsersLoggedIn();
-            
-            foreach (String username in newUsernames) 
+
+            foreach (var username in newUsernames)
             {
-                if (usernames.Contains(username)) 
+                if (usernames.Contains(username))
                 {
                     // Remove users that are have remained logged in
                     usernames.Remove(username);
-                } 
-                else 
+                }
+                else
                 {
                     // Contact FOG about new users
-                    CommunicationHandler.Contact("/service/usertracking.report.php?action=login&user=" + Dns.GetHostName() + "\\" + username, true);
+                    CommunicationHandler.Contact(
+                        "/service/usertracking.report.php?action=login&user=" + Dns.GetHostName() + "\\" + username,
+                        true);
                 }
             }
-            
+
             // Any users left in the usernames list have logged out
-            foreach (String username in usernames) 
+            foreach (var username in usernames)
             {
-                CommunicationHandler.Contact("/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
+                CommunicationHandler.Contact(
+                    "/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
             }
-            
+
             usernames = newUsernames;
         }
-        
     }
 }

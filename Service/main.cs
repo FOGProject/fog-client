@@ -17,17 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.ServiceProcess;
 
 namespace FOG
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
-        /// Start the FOG Service
+        ///     Start the FOG Service
         /// </summary>
-        static void Main()
+        private static void Main()
         {
             ServiceBase.Run(new FOGService());
         }

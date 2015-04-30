@@ -1,76 +1,75 @@
-﻿
-using System;
-using System.Text;
-using System.Runtime.InteropServices;
-using Microsoft.Win32.SafeHandles;
-using System.Threading;
+﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Threading;
+using Microsoft.Win32.SafeHandles;
 
 namespace FOG
 {
     /// <summary>
-    ///  Inter-proccess communication client
+    ///     Inter-proccess communication client
     /// </summary>
     public class PipeClient
     {
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern SafeFileHandle CreateFile(String pipeName, uint dwDesiredAccess, uint dwShareMode, IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplate);
-	
+        public delegate void MessageReceivedHandler(string message);
+
         //Define variables
         private const uint GENERIC_READ = (0x80000000);
         private const uint GENERIC_WRITE = (0x40000000);
         private const uint OPEN_EXISTING = 3;
         private const uint FILE_FLAG_OVERLAPPED = (0x40000000);
-	
-        public delegate void MessageReceivedHandler(string message);
-        public event MessageReceivedHandler MessageReceived;
-	
         private const int BUFFER_SIZE = 4096;
-	
-        private Boolean connected;
-        private string pipeName;
-        private FileStream stream;
+        private readonly string pipeName;
+        private bool connected;
         private SafeFileHandle handle;
         private Thread readThread;
-	
-		
-        public PipeClient(String pipeName)
+        private FileStream stream;
+
+        public PipeClient(string pipeName)
         {
-            this.connected = false;
+            connected = false;
             this.pipeName = pipeName;
         }
-	
-        public Boolean isConnected()
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        public static extern SafeFileHandle CreateFile(string pipeName, uint dwDesiredAccess, uint dwShareMode,
+            IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplate);
+
+        public event MessageReceivedHandler MessageReceived;
+
+        public bool isConnected()
         {
-            return this.connected;
+            return connected;
         }
-        public String getPipeName()
+
+        public string getPipeName()
         {
-            return this.pipeName;
+            return pipeName;
         }
-	
+
         //Connect to a server using the same pipe
-        public Boolean connect()
+        public bool connect()
         {
             try
             {
-                this.handle = CreateFile(@"\\.\pipe\" + this.pipeName, GENERIC_READ | GENERIC_WRITE, 0, IntPtr.Zero, 
+                handle = CreateFile(@"\\.\pipe\" + pipeName, GENERIC_READ | GENERIC_WRITE, 0, IntPtr.Zero,
                     OPEN_EXISTING, FILE_FLAG_OVERLAPPED, IntPtr.Zero);
-	
-                if (this.handle == null)
+
+                if (handle == null)
                     return false;
-	
-                if (this.handle.IsInvalid)
+
+                if (handle.IsInvalid)
                 {
-                    this.connected = false;
+                    connected = false;
                     return false;
                 }
-	
-                this.connected = true;
-	
-                this.readThread = new Thread(new ThreadStart(readFromPipe));
-                this.readThread.Start();
-				
+
+                connected = true;
+
+                readThread = new Thread(readFromPipe);
+                readThread.Start();
+
                 return true;
             }
             catch
@@ -78,36 +77,36 @@ namespace FOG
                 return false;
             }
         }
-	
+
         //Stop the pipe client
         public void kill()
         {
             try
             {
-                if (this.stream != null)
-                    this.stream.Close();
-	
-                if (this.handle != null)
-                    this.handle.Close();
-	
-                this.readThread.Abort();
+                if (stream != null)
+                    stream.Close();
+
+                if (handle != null)
+                    handle.Close();
+
+                readThread.Abort();
             }
             catch
             {
             }
         }
-	
+
         //Read a message sent over from the pipe server
         public void readFromPipe()
         {
-            this.stream = new FileStream(handle, FileAccess.ReadWrite, BUFFER_SIZE, true);
+            stream = new FileStream(handle, FileAccess.ReadWrite, BUFFER_SIZE, true);
             var readBuffer = new byte[BUFFER_SIZE];
-	
+
             var encoder = new ASCIIEncoding();
             while (true)
             {
-                int bytesRead = 0;
-	
+                var bytesRead = 0;
+
                 try
                 {
                     bytesRead = stream.Read(readBuffer, 0, BUFFER_SIZE);
@@ -116,32 +115,31 @@ namespace FOG
                 {
                     break;
                 }
-	
+
                 if (bytesRead == 0)
                     break;
-	
+
                 if (MessageReceived != null)
                     MessageReceived(encoder.GetString(readBuffer, 0, bytesRead));
             }
-            this.stream.Close();
-            this.handle.Close();
+            stream.Close();
+            handle.Close();
         }
-	
+
         //Send a message across the pipe
-        public void sendMessage(String message)
+        public void sendMessage(string message)
         {
             try
             {
                 var encoder = new ASCIIEncoding();
                 var messageBuffer = encoder.GetBytes(message);
-	
-                this.stream.Write(messageBuffer, 0, messageBuffer.Length);
-                this.stream.Flush();
+
+                stream.Write(messageBuffer, 0, messageBuffer.Length);
+                stream.Flush();
             }
             catch
             {
             }
         }
-	
     }
 }

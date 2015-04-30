@@ -18,25 +18,24 @@
  */
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
-using Microsoft.Win32.TaskScheduler;
+using System.Linq;
 using FOG.Handlers;
+using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules
 {
     /// <summary>
-    /// Perform cron style power tasks
+    ///     Perform cron style power tasks
     /// </summary>
     public class GreenFOG : AbstractModule
     {
-		
         public GreenFOG()
         {
             Name = "GreenFOG";
             Description = "Perform cron style power tasks";
         }
-		
+
         protected override void doWork()
         {
             //Get actions
@@ -46,26 +45,26 @@ namespace FOG.Modules
             if (!tasksResponse.Error)
             {
                 var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
-				
+
                 //Filter existing tasks
                 tasks = filterTasks(tasks);
                 //Add new tasks
                 createTasks(tasks);
             }
-			
         }
-		
-        private List<String> filterTasks(List<String> newTasks)
+
+        private List<string> filterTasks(List<string> newTasks)
         {
-            var taskService = new TaskService();			
+            var taskService = new TaskService();
             var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
-			
+
             foreach (var task in existingTasks)
             {
                 if (!newTasks.Contains(task.Name))
                 {
                     LogHandler.Log(Name, "Delete task " + task.Name);
-                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name); //If the existing task is not in the new list delete it
+                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
+                        //If the existing task is not in the new list delete it
                 }
                 else
                 {
@@ -73,31 +72,32 @@ namespace FOG.Modules
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
             }
-			
+
             return newTasks;
         }
-		
-        private void createTasks(List<String> tasks)
+
+        private void createTasks(List<string> tasks)
         {
             var taskService = new TaskService();
             var index = 0;
 
-            foreach (String task in tasks)
+            foreach (var task in tasks)
             {
                 //Split up the response
                 var taskData = task.Split('@');
-				
+
                 //Create task definition
                 var taskDefinition = taskService.NewTask();
                 taskDefinition.RegistrationInfo.Description = task;
                 taskDefinition.Principal.UserId = "SYSTEM";
-				
+
                 //Create task trigger
                 var trigger = new DailyTrigger(1);
-                trigger.StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) + TimeSpan.FromMinutes(int.Parse(taskData[1])); //Run at the specified time
-				
+                trigger.StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
+                                        TimeSpan.FromMinutes(int.Parse(taskData[1])); //Run at the specified time
+
                 taskDefinition.Triggers.Add(trigger);
-				
+
                 //Create task action
                 if (taskData[2].Equals("r"))
                 {
@@ -107,7 +107,7 @@ namespace FOG.Modules
                 {
                     taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0", null));
                 }
-				
+
                 //Register the task
                 try
                 {
@@ -119,10 +119,9 @@ namespace FOG.Modules
                     LogHandler.Log(Name, "Error registering task: " + task);
                     LogHandler.Log(Name, "ERROR: " + ex.Message);
                 }
-				
+
                 index++;
             }
-			
         }
     }
 }

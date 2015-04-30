@@ -16,27 +16,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-using System;
+
 using FOG.Handlers;
 
 namespace FOG.Modules
 {
     /// <summary>
-    /// Reboot the computer if a task needs to
+    ///     Reboot the computer if a task needs to
     /// </summary>
     public class TaskReboot : AbstractModule
     {
-		
-        private Boolean notifiedUser;
+        private bool notifiedUser;
         //This variable is used to detect if the user has been told their is a pending shutdown
-		
+
         public TaskReboot()
         {
             Name = "TaskReboot";
             Description = "Reboot if a task is scheduled";
-            this.notifiedUser = false;
+            notifiedUser = false;
         }
-		
+
         protected override void doWork()
         {
             //Get task info
@@ -50,17 +49,16 @@ namespace FOG.Modules
                 {
                     ShutdownHandler.Restart(Name, 30);
                 }
-                else if (!taskResponse.Error && !this.notifiedUser)
+                else if (!taskResponse.Error && !notifiedUser)
                 {
                     LogHandler.Log(Name, "User is currently logged in, will try again later");
-                    NotificationHandler.Notifications.Add(new Notification("Please log off", NotificationHandler.Company +
-                            " is attemping to service your computer, please log off at the soonest available time",
-                            60));
-                    this.notifiedUser = true;
+                    NotificationHandler.Notifications.Add(new Notification("Please log off",
+                        NotificationHandler.Company +
+                        " is attemping to service your computer, please log off at the soonest available time",
+                        60));
+                    notifiedUser = true;
                 }
             }
-			
         }
-		
     }
 }

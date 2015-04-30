@@ -19,33 +19,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.ServiceProcess;
 using System.Threading;
-using System.IO;
-using System.Diagnostics;
-
 using FOG.Handlers;
 using FOG.Modules;
 
 namespace FOG
 {
     /// <summary>
-    /// Coordinate all system wide FOG modules
+    ///     Coordinate all system wide FOG modules
     /// </summary>
-    public partial class FOGService  : ServiceBase
+    public class FOGService : ServiceBase
     {
-        //Define variables
-        private Thread threadManager;
-        private Thread notificationPipeThread;
-		
-        private List<AbstractModule> modules;
-        private Status status;
-        private int sleepDefaultTime = 60;
-        private PipeServer notificationPipe;
-        private PipeServer servicePipe;
-		
-        private const String LOG_NAME = "Service";
-		
         //Module status -- used for stopping/starting
         public enum Status
         {
@@ -53,63 +40,72 @@ namespace FOG
             Running = 1,
             Stopped = 0
         }
-		
+
+        private const string LOG_NAME = "Service";
+        private readonly PipeServer notificationPipe;
+        private readonly Thread notificationPipeThread;
+        private readonly PipeServer servicePipe;
+        private readonly int sleepDefaultTime = 60;
+        //Define variables
+        private readonly Thread threadManager;
+        private List<AbstractModule> modules;
+        private Status status;
+
         public FOGService()
         {
             //Initialize everything
             if (CommunicationHandler.GetAndSetServerAddress())
             {
-
                 initializeModules();
-                this.threadManager = new Thread(new ThreadStart(serviceLooper));
-                this.status = Status.Stopped;
-				
+                threadManager = new Thread(serviceLooper);
+                status = Status.Stopped;
+
                 //Setup the notification pipe server
-                this.notificationPipeThread = new Thread(new ThreadStart(notificationPipeHandler));
-                this.notificationPipe = new PipeServer("fog_pipe_notification");
-                this.notificationPipe.MessageReceived += new PipeServer.MessageReceivedHandler(notificationPipeServer_MessageReceived);
-				
+                notificationPipeThread = new Thread(notificationPipeHandler);
+                notificationPipe = new PipeServer("fog_pipe_notification");
+                notificationPipe.MessageReceived += notificationPipeServer_MessageReceived;
+
                 //Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
-                this.servicePipe = new PipeServer("fog_pipe_service");
-                this.servicePipe.MessageReceived += new PipeServer.MessageReceivedHandler(servicePipeService_MessageReceived);
-				
+                servicePipe = new PipeServer("fog_pipe_service");
+                servicePipe.MessageReceived += servicePipeService_MessageReceived;
+
                 //Unschedule any old updates
                 ShutdownHandler.UpdatePending = false;
             }
         }
-		
+
         //This is run by the pipe thread, it will send out notifications to the tray
         private void notificationPipeHandler()
         {
             while (true)
             {
-                if (!this.notificationPipe.isRunning())
-                    this.notificationPipe.start();			
-				
+                if (!notificationPipe.isRunning())
+                    notificationPipe.start();
+
                 if (NotificationHandler.Notifications.Count > 0)
                 {
                     //Split up the notification into 3 messages: Title, Message, and Duration
-                    this.notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
+                    notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
                     Thread.Sleep(750);
-                    this.notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
+                    notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
                     Thread.Sleep(750);
-                    this.notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration);
+                    notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration);
                     NotificationHandler.Notifications.RemoveAt(0);
-                } 
-				
+                }
+
                 Thread.Sleep(3000);
             }
         }
-		
+
         //Handle recieving a message
-        private void notificationPipeServer_MessageReceived(Client client, String message)
+        private void notificationPipeServer_MessageReceived(Client client, string message)
         {
             LogHandler.Log("PipeServer", "Notification message recieved");
             LogHandler.Log("PipeServer", message);
         }
 
         //Handle recieving a message
-        private void servicePipeService_MessageReceived(Client client, String message)
+        private void servicePipeService_MessageReceived(Client client, string message)
         {
             LogHandler.Log("PipeServer", "Server-Pipe message recieved");
             LogHandler.Log("PipeServer", message);
@@ -118,25 +114,25 @@ namespace FOG
         //Called when the service starts
         protected override void OnStart(string[] args)
         {
-            if (!this.status.Equals(Status.Broken))
+            if (!status.Equals(Status.Broken))
             {
-                this.status = Status.Running;
-				
+                status = Status.Running;
+
                 //Start the pipe server
-                this.notificationPipeThread.Priority = ThreadPriority.Normal;
-                this.notificationPipeThread.Start();
-				
-                this.servicePipe.start();
-			
+                notificationPipeThread.Priority = ThreadPriority.Normal;
+                notificationPipeThread.Start();
+
+                servicePipe.start();
+
                 //Start the main thread that handles all modules
-                this.threadManager.Priority = ThreadPriority.Normal;
-                this.threadManager.IsBackground = true;
-                this.threadManager.Name = "FOGService";
-                this.threadManager.Start();
-				
+                threadManager.Priority = ThreadPriority.Normal;
+                threadManager.IsBackground = true;
+                threadManager.Name = "FOGService";
+                threadManager.Start();
+
                 //Unschedule any old updates
                 ShutdownHandler.UpdatePending = false;
-				
+
                 //Delete old temp files
                 try
                 {
@@ -152,34 +148,34 @@ namespace FOG
                 }
             }
         }
-		
+
         //Load all of the modules
         private void initializeModules()
         {
-            this.modules = new List<AbstractModule>();
-            this.modules.Add(new ClientUpdater());
-            this.modules.Add(new TaskReboot());
-            this.modules.Add(new HostnameChanger());
-            this.modules.Add(new SnapinClient());
-            this.modules.Add(new DisplayManager());			
-            this.modules.Add(new GreenFOG());
-            this.modules.Add(new UserTracker());
+            modules = new List<AbstractModule>();
+            modules.Add(new ClientUpdater());
+            modules.Add(new TaskReboot());
+            modules.Add(new HostnameChanger());
+            modules.Add(new SnapinClient());
+            modules.Add(new DisplayManager());
+            modules.Add(new GreenFOG());
+            modules.Add(new UserTracker());
         }
-		
+
         //Called when the service stops
         protected override void OnStop()
         {
-            if (!this.status.Equals(Status.Broken))
-                this.status = Status.Stopped;
-			
-            foreach (Process process in Process.GetProcessesByName("FOGUserService"))
+            if (!status.Equals(Status.Broken))
+                status = Status.Stopped;
+
+            foreach (var process in Process.GetProcessesByName("FOGUserService"))
             {
                 process.Kill();
             }
-            foreach (Process process in Process.GetProcessesByName("FOGTray"))
+            foreach (var process in Process.GetProcessesByName("FOGTray"))
             {
                 process.Kill();
-            }		
+            }
             //Delete old temp files
             try
             {
@@ -193,30 +189,28 @@ namespace FOG
             }
         }
 
-		
         //Run each service
         private void serviceLooper()
         {
-			
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Authentication");
             LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
-			
+
             //Only run the service if there wasn't a stop or shutdown request
             while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
-                foreach (AbstractModule module in modules)
+                foreach (var module in modules)
                 {
                     if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
                         break;
-					
+
                     //Log file formatting
                     LogHandler.NewLine();
                     LogHandler.PaddedHeader(module.Name);
                     LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
-					
+
                     try
                     {
                         module.start();
@@ -226,23 +220,23 @@ namespace FOG
                         LogHandler.Log(LOG_NAME, "Failed to start " + module.Name);
                         LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                     }
-					
+
                     //Log file formatting
                     LogHandler.Divider();
                     LogHandler.NewLine();
                 }
-				
-				
+
+
                 if (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
                 {
                     //Once all modules have been run, sleep for the set time
-                    int sleepTime = getSleepTime();
+                    var sleepTime = getSleepTime();
                     RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
                     LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
-                    Thread.Sleep(sleepTime * 1000);
+                    Thread.Sleep(sleepTime*1000);
                 }
             }
-			
+
             if (ShutdownHandler.UpdatePending)
             {
                 UpdateHandler.beginUpdate(servicePipe);
@@ -253,34 +247,30 @@ namespace FOG
         private int getSleepTime()
         {
             LogHandler.Log(LOG_NAME, "Getting sleep duration...");
-			
-            Response sleepResponse = CommunicationHandler.GetResponse("/management/index.php?node=client&sub=configure");
-			
+
+            var sleepResponse = CommunicationHandler.GetResponse("/management/index.php?node=client&sub=configure");
+
             try
             {
                 if (!sleepResponse.Error && !sleepResponse.getField("#sleep").Equals(""))
                 {
-                    int sleepTime = int.Parse(sleepResponse.getField("#sleep"));
-                    if (sleepTime >= this.sleepDefaultTime)
+                    var sleepTime = int.Parse(sleepResponse.getField("#sleep"));
+                    if (sleepTime >= sleepDefaultTime)
                     {
                         return sleepTime;
                     }
-                    else
-                    {
-                        LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + this.sleepDefaultTime.ToString());
-                    }
+                    LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime);
                 }
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Failed to parse sleep time");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);				
+                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
-			
-            LogHandler.Log(LOG_NAME, "Using default sleep time");	
-			
-            return this.sleepDefaultTime;			
-        }
 
+            LogHandler.Log(LOG_NAME, "Using default sleep time");
+
+            return sleepDefaultTime;
+        }
     }
 }

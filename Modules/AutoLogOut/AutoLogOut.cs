@@ -24,17 +24,17 @@ using FOG.Handlers;
 namespace FOG.Modules
 {
     /// <summary>
-    /// Automatically log out the user after a given duration of inactivity
+    ///     Automatically log out the user after a given duration of inactivity
     /// </summary>
-    public class AutoLogOut: AbstractModule
+    public class AutoLogOut : AbstractModule
     {
+        private readonly int minimumTime;
 
-        private int minimumTime;
         public AutoLogOut()
         {
             Name = "AutoLogOut";
             Description = "Automatically log out the user if they are inactive";
-            this.minimumTime = 300;
+            minimumTime = 300;
         }
 
         protected override void doWork()
@@ -42,33 +42,33 @@ namespace FOG.Modules
             if (UserHandler.IsUserLoggedIn())
             {
                 //Get task info
-                var taskResponse = CommunicationHandler.GetResponse("/service/autologout.php?mac=" + CommunicationHandler.GetMacAddresses());
+                var taskResponse =
+                    CommunicationHandler.GetResponse("/service/autologout.php?mac=" +
+                                                     CommunicationHandler.GetMacAddresses());
 
                 if (!taskResponse.Error)
                 {
-                    int timeOut = getTimeOut(taskResponse);
+                    var timeOut = getTimeOut(taskResponse);
                     if (timeOut > 0)
                     {
-                        LogHandler.Log(Name, "Time set to " + timeOut.ToString() + " seconds");
-                        LogHandler.Log(Name, "Inactive for " + UserHandler.GetUserInactivityTime().ToString() + " seconds");
+                        LogHandler.Log(Name, "Time set to " + timeOut + " seconds");
+                        LogHandler.Log(Name, "Inactive for " + UserHandler.GetUserInactivityTime() + " seconds");
                         if (UserHandler.GetUserInactivityTime() >= timeOut)
                         {
                             NotificationHandler.Notifications.Add(new Notification("You are about to be logged off",
-                                    "Due to inactivity you will be logged off if you remain inactive", 20));
+                                "Due to inactivity you will be logged off if you remain inactive", 20));
                             //Wait 20 seconds and check if the user is no longer inactive
                             Thread.Sleep(20000);
                             if (UserHandler.GetUserInactivityTime() >= timeOut)
                                 ShutdownHandler.LogOffUser();
                         }
                     }
-
                 }
             }
             else
             {
                 LogHandler.Log(Name, "No user logged in");
             }
-
         }
 
         //Get how long a user must be inactive before logging them out
@@ -76,14 +76,13 @@ namespace FOG.Modules
         {
             try
             {
-                int timeOut = int.Parse(taskResponse.getField("#time"));
-                if (timeOut >= this.minimumTime)
+                var timeOut = int.Parse(taskResponse.getField("#time"));
+                if (timeOut >= minimumTime)
                 {
                     return timeOut;
                 }
-              
-                LogHandler.Log(Name, "Time set is less than 1 minute");
 
+                LogHandler.Log(Name, "Time set is less than 1 minute");
             }
             catch (Exception ex)
             {
@@ -92,8 +91,6 @@ namespace FOG.Modules
             }
 
             return 0;
-
         }
-
     }
 }

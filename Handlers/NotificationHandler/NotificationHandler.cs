@@ -17,26 +17,25 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Handle all notifications
+    ///     Handle all notifications
     /// </summary>
     public static class NotificationHandler
     {
+        private static bool initialized = initialize();
         //Define variable
         public static List<Notification> Notifications { get; set; }
-        public static String Company { get; private set; }
-        private static Boolean initialized = initialize();
-	
+        public static string Company { get; private set; }
 
-        private static Boolean initialize() {
+        private static bool initialize()
+        {
             Notifications = new List<Notification>();
             Company = "FOG";
-            
+
             return true;
         }
     }

@@ -23,20 +23,19 @@ using Microsoft.Win32;
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Handle all interaction with the registry
+    ///     Handle all interaction with the registry
     /// </summary>
     public static class RegistryHandler
     {
+        private const string LOG_NAME = "RegistryHandler";
+        private static string root = "";
 
-        private const String LOG_NAME = "RegistryHandler";
-        private static String root = "";
-		
         private static void updateRoot()
         {
             if (GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null)
             {
                 root = @"Software\Wow6432Node\FOG\";
-                LogHandler.Log(LOG_NAME, "64 bit registry detected");				
+                LogHandler.Log(LOG_NAME, "64 bit registry detected");
             }
             else
             {
@@ -44,21 +43,21 @@ namespace FOG.Handlers
                 LogHandler.Log(LOG_NAME, "32 bit registry detected");
             }
         }
-		
-        public static String GetRegisitryValue(String keyPath, String keyName)
+
+        public static string GetRegisitryValue(string keyPath, string keyName)
         {
             try
             {
-                RegistryKey key = Registry.LocalMachine.OpenSubKey(keyPath);
+                var key = Registry.LocalMachine.OpenSubKey(keyPath);
                 if (key != null)
                 {
-                    String keyValue = key.GetValue(keyName).ToString();
+                    var keyValue = key.GetValue(keyName).ToString();
                     key.Close();
                     if (keyValue != null)
                     {
                         return keyValue.Trim();
                     }
-                }	
+                }
             }
             catch (Exception ex)
             {
@@ -67,60 +66,56 @@ namespace FOG.Handlers
             }
             return null;
         }
-		
-        public static String GetSystemSetting(String name)
+
+        public static string GetSystemSetting(string name)
         {
             return GetRegisitryValue(GetRoot(), name);
         }
-		
-        public static Boolean SetSystemSetting(String keyName, String value)
+
+        public static bool SetSystemSetting(string keyName, string value)
         {
             return SetRegistryValue(GetRoot(), keyName, value);
         }
-		
-        public static String GetModuleSetting(String module, String keyName)
+
+        public static string GetModuleSetting(string module, string keyName)
         {
             return GetRegisitryValue(GetRoot() + @"\" + module, keyName);
         }
-		
-        public static Boolean SetModuleSetting(String module, String keyName, String value)
+
+        public static bool SetModuleSetting(string module, string keyName, string value)
         {
             return SetRegistryValue(GetRoot() + @"\" + module, keyName, value);
         }
-		
-        public static Boolean DeleteModuleSetting(String module, String keyName)
+
+        public static bool DeleteModuleSetting(string module, string keyName)
         {
             return DeleteKey(GetRoot() + @"\" + module, keyName);
         }
-		
-        public static Boolean DeleteModule(String module)
+
+        public static bool DeleteModule(string module)
         {
             return DeleteFolder(GetRoot() + @"\" + module);
         }
-		
-		
-        public static Boolean SetRegistryValue(String keyPath, String keyName, String value)
+
+        public static bool SetRegistryValue(string keyPath, string keyName, string value)
         {
-			
             try
             {
                 var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
                 key.CreateSubKey(keyName);
                 key.SetValue(keyName, value);
                 key.Close();
-				
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error setting " + keyPath + keyName);
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
-            }			
-			
+            }
+
             return false;
         }
-		
-		
-        public static Boolean DeleteFolder(String path)
+
+        public static bool DeleteFolder(string path)
         {
             try
             {
@@ -137,11 +132,11 @@ namespace FOG.Handlers
                 LogHandler.Log(LOG_NAME, "Error while trying to remove " + path);
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
-			
+
             return false;
         }
-		
-        public static Boolean DeleteKey(String keyPath, String keyName)
+
+        public static bool DeleteKey(string keyPath, string keyName)
         {
             try
             {
@@ -158,19 +153,18 @@ namespace FOG.Handlers
                 LogHandler.Log(LOG_NAME, "Error while trying to remove " + keyPath);
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
-			
-            return false;			
+
+            return false;
         }
 
-        public static String GetRoot()
-        { 
+        public static string GetRoot()
+        {
             if (root.Equals(""))
             {
                 updateRoot();
             }
-			
+
             return root;
         }
-		
     }
 }
