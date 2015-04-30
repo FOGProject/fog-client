@@ -1,7 +1,8 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-# SharpDevelop 5.0
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{5C3289AB-B65D-42F8-BFD0-21C61619729A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeClient", "PipeClient\PipeClient.csproj", "{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}"
@@ -14,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateWaiter", "UpdateWaite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateHelper", "UpdateHelper\UpdateHelper.csproj", "{788E1733-937F-415C-A6E9-46A43BB0B019}"
 EndProject
-Project("{CFEE4113-1246-4D54-95CB-156813CB8593}") = "Installer", "Installer\Installer.wixproj", "{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugger.csproj", "{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}"
 EndProject
@@ -54,10 +55,8 @@ Global
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.ActiveCfg = Public Release|Any CPU
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.Build.0 = Public Release|Any CPU
+		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.ActiveCfg = Release|x86
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -74,6 +73,9 @@ Global
 		{D6372438-04EA-439C-8F7C-EE06446D9284}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D6372438-04EA-439C-8F7C-EE06446D9284}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D6372438-04EA-439C-8F7C-EE06446D9284}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Service\Service.csproj
