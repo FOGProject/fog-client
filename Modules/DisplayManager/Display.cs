@@ -65,38 +65,36 @@ namespace FOG.Modules
         /// <param name="refresh">The new refresh rate</param>
         public void ChangeResolution(string device, int width, int height, int refresh)
         {
-            if (PopulatedSettings)
+            if (!PopulatedSettings) return;
+            Configuration.dmPelsWidth = width;
+            Configuration.dmPelsHeight = height;
+            Configuration.dmDisplayFrequency = refresh;
+            Configuration.dmDeviceName = device;
+
+            //Test changing the resolution first
+            LogHandler.Log(LOG_NAME, "Testing resolution to ensure it is compatible");
+            var changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_TEST);
+
+            if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
             {
-                Configuration.dmPelsWidth = width;
-                Configuration.dmPelsHeight = height;
-                Configuration.dmDisplayFrequency = refresh;
-                Configuration.dmDeviceName = device;
+                LogHandler.Log(LOG_NAME, "Failed");
+            }
+            else
+            {
+                LogHandler.Log(LOG_NAME, "Changing resolution");
+                changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_UPDATEREGISTRY);
 
-                //Test changing the resolution first
-                LogHandler.Log(LOG_NAME, "Testing resolution to ensure it is compatible");
-                var changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_TEST);
-
-                if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
+                if (changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL))
+                {
+                    LogHandler.Log(LOG_NAME, "Success");
+                }
+                else if (changeStatus.Equals(User_32.DISP_CHANGE_RESTART))
+                {
+                    LogHandler.Log(LOG_NAME, "Success, requires reboot");
+                }
+                else if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
                 {
                     LogHandler.Log(LOG_NAME, "Failed");
-                }
-                else
-                {
-                    LogHandler.Log(LOG_NAME, "Changing resolution");
-                    changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_UPDATEREGISTRY);
-
-                    if (changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL))
-                    {
-                        LogHandler.Log(LOG_NAME, "Success");
-                    }
-                    else if (changeStatus.Equals(User_32.DISP_CHANGE_RESTART))
-                    {
-                        LogHandler.Log(LOG_NAME, "Success, requires reboot");
-                    }
-                    else if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
-                    {
-                        LogHandler.Log(LOG_NAME, "Failed");
-                    }
                 }
             }
         }

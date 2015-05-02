@@ -37,30 +37,28 @@ namespace FOG.Modules
 
         protected override void doWork()
         {
-            //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php", true);
-
-
-            //Download the snapin file if there was a response and run it
-            if (!taskResponse.Error)
+            while (true)
             {
+                //Get task info
+                var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php", true);
+
+
+                //Download the snapin file if there was a response and run it
+                if (taskResponse.Error) return;
+
                 LogHandler.Log(Name, "Snapin Found:");
-                LogHandler.Log(Name, "    ID: " + taskResponse.getField("JOBTASKID"));
-                LogHandler.Log(Name, "    RunWith: " + taskResponse.getField("SNAPINRUNWITH"));
-                LogHandler.Log(Name, "    RunWithArgs: " + taskResponse.getField("SNAPINRUNWITHARGS"));
-                LogHandler.Log(Name, "    Name: " + taskResponse.getField("SNAPINNAME"));
-                LogHandler.Log(Name, "    File: " + taskResponse.getField("SNAPINFILENAME"));
-                LogHandler.Log(Name, "    Created: " + taskResponse.getField("JOBCREATION"));
-                LogHandler.Log(Name, "    Args: " + taskResponse.getField("SNAPINARGS"));
-                LogHandler.Log(Name, "    Reboot: " + taskResponse.getField("SNAPINBOUNCE"));
+                LogHandler.Log(Name, "    ID: " + taskResponse.GetField("JOBTASKID"));
+                LogHandler.Log(Name, "    RunWith: " + taskResponse.GetField("SNAPINRUNWITH"));
+                LogHandler.Log(Name, "    RunWithArgs: " + taskResponse.GetField("SNAPINRUNWITHARGS"));
+                LogHandler.Log(Name, "    Name: " + taskResponse.GetField("SNAPINNAME"));
+                LogHandler.Log(Name, "    File: " + taskResponse.GetField("SNAPINFILENAME"));
+                LogHandler.Log(Name, "    Created: " + taskResponse.GetField("JOBCREATION"));
+                LogHandler.Log(Name, "    Args: " + taskResponse.GetField("SNAPINARGS"));
+                LogHandler.Log(Name, "    Reboot: " + taskResponse.GetField("SNAPINBOUNCE"));
 
-                var snapinFilePath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" +
-                                     taskResponse.getField("SNAPINFILENAME");
+                var snapinFilePath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + taskResponse.GetField("SNAPINFILENAME");
 
-                var downloaded = CommunicationHandler.DownloadFile("/service/snapins.file.php?mac=" +
-                                                                   CommunicationHandler.GetMacAddresses() +
-                                                                   "&taskid=" + taskResponse.getField("JOBTASKID"),
-                    snapinFilePath);
+                var downloaded = CommunicationHandler.DownloadFile("/service/snapins.file.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID"), snapinFilePath);
                 var exitCode = "-1";
 
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
@@ -70,37 +68,32 @@ namespace FOG.Modules
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" +
-                                                 CommunicationHandler.GetMacAddresses() +
-                                                 "&taskid=" + taskResponse.getField("JOBTASKID") +
-                                                 "&exitcode=" + exitCode);
+                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
 
-                    if (taskResponse.getField("SNAPINBOUNCE").Equals("1"))
+                    if (taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
                         ShutdownHandler.Restart("Snapin requested shutdown", 30);
                     }
                     else if (!ShutdownHandler.ShutdownPending)
                     {
                         //Rerun this method to check for the next snapin
-                        doWork();
+                        continue;
                     }
                 }
                 else
                 {
-                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" +
-                                                 CommunicationHandler.GetMacAddresses() +
-                                                 "&taskid=" + taskResponse.getField("JOBTASKID") +
-                                                 "&exitcode=" + exitCode);
+                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
                 }
+                break;
             }
         }
 
         //Execute the snapin once it has been downloaded
         private string startSnapin(Response taskResponse, string snapinPath)
         {
-            NotificationHandler.Notifications.Add(new Notification(taskResponse.getField("SNAPINNAME"),
+            NotificationHandler.Notifications.Add(new Notification(taskResponse.GetField("SNAPINNAME"),
                 "FOG is installing " +
-                taskResponse.getField("SNAPINNAME"), 10));
+                taskResponse.GetField("SNAPINNAME"), 10));
 
             var process = generateProcess(taskResponse, snapinPath);
 
@@ -112,8 +105,8 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "Snapin finished");
                 LogHandler.Log(Name, "Return Code: " + process.ExitCode);
                 NotificationHandler.Notifications.Add(new Notification(
-                    "Finished " + taskResponse.getField("SNAPINNAME"),
-                    taskResponse.getField("SNAPINNAME") + " finished installing", 10));
+                    "Finished " + taskResponse.GetField("SNAPINNAME"),
+                    taskResponse.GetField("SNAPINNAME") + " finished installing", 10));
                 return process.ExitCode.ToString();
             }
             catch (Exception ex)
@@ -128,30 +121,35 @@ namespace FOG.Modules
         //Create a proccess to run the snapin with
         private Process generateProcess(Response taskResponse, string snapinPath)
         {
-            var process = new Process();
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
 
             //Check if the snapin run with field was specified
-            if (!taskResponse.getField("SNAPINRUNWITH").Equals(""))
+            if (!taskResponse.GetField("SNAPINRUNWITH").Equals(""))
             {
                 process.StartInfo.FileName = Environment.ExpandEnvironmentVariables(
-                    taskResponse.getField("SNAPINRUNWITH"));
+                    taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.getField("SNAPINRUNWITHARGS"));
+                    taskResponse.GetField("SNAPINRUNWITHARGS"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.getField("SNAPINRUNWITHARGS") + " \"" + snapinPath + " \"" +
-                    Environment.ExpandEnvironmentVariables(taskResponse.getField("SNAPINARGS")));
+                    taskResponse.GetField("SNAPINRUNWITHARGS") + " \"" + snapinPath + " \"" +
+                    Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS")));
             }
             else
             {
                 process.StartInfo.FileName = Environment.ExpandEnvironmentVariables(snapinPath);
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.getField("SNAPINARGS"));
+                    taskResponse.GetField("SNAPINARGS"));
             }
 
             return process;

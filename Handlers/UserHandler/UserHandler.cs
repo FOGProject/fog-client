@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.DirectoryServices;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -60,7 +61,11 @@ namespace FOG.Handlers
         /// <returns>The current username</returns>
         public static string GetCurrentUser()
         {
-            return WindowsIdentity.GetCurrent().Name;
+            var windowsIdentity = WindowsIdentity.GetCurrent();
+
+            return (windowsIdentity == null)
+                ? null
+                : windowsIdentity.Name;
         }
 
         /// <summary>
@@ -68,18 +73,10 @@ namespace FOG.Handlers
         /// <returns>A list of all users and their security IDs</returns>
         public static List<UserData> GetAllUserData()
         {
-            var users = new List<UserData>();
-
             var query = new SelectQuery("Win32_UserAccount");
             var searcher = new ManagementObjectSearcher(query);
 
-            foreach (var envVar in searcher.Get())
-            {
-                var userData = new UserData(envVar["Name"].ToString(), envVar["SID"].ToString());
-                users.Add(userData);
-            }
-
-            return users;
+            return (from ManagementBaseObject envVar in searcher.Get() select new UserData(envVar["Name"].ToString(), envVar["SID"].ToString())).ToList();
         }
 
         /// <summary>
@@ -94,12 +91,11 @@ namespace FOG.Handlers
 
             var envTicks = (uint) Environment.TickCount;
 
-            if (GetLastInputInfo(ref lastInputInfo))
-            {
-                var lastInputTick = lastInputInfo.dwTime;
-
-                idleTime = envTicks - lastInputTick;
-            }
+            if (!GetLastInputInfo(ref lastInputInfo))
+                return 0;
+                
+            var lastInputTick = lastInputInfo.dwTime;
+            idleTime = envTicks - lastInputTick;
 
             return (int) idleTime/1000;
         }
@@ -110,16 +106,9 @@ namespace FOG.Handlers
         /// <returns>A list of usernames</returns>
         public static List<string> GetUsersLoggedIn()
         {
-            var users = new List<string>();
             var sessionIds = GetSessionIds();
 
-            foreach (var sessionId in sessionIds)
-            {
-                if (!GetUserNameFromSessionId(sessionId, false).Equals("SYSTEM"))
-                    users.Add(GetUserNameFromSessionId(sessionId, false));
-            }
-
-            return users;
+            return (from sessionId in sessionIds where !GetUserNameFromSessionId(sessionId, false).Equals("SYSTEM") select GetUserNameFromSessionId(sessionId, false)).ToList();
         }
 
         /// <summary>
@@ -139,9 +128,7 @@ namespace FOG.Handlers
                 try
                 {
                     if (!sessionIds.Contains(int.Parse(envVar["SessionId"].ToString())))
-                    {
                         sessionIds.Add(int.Parse(envVar["SessionId"].ToString()));
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -149,6 +136,7 @@ namespace FOG.Handlers
                     LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                 }
             }
+
             return sessionIds;
         }
 
@@ -164,22 +152,20 @@ namespace FOG.Handlers
             IntPtr buffer;
             int strLen;
             var username = "SYSTEM";
-            if (WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSUserName, out buffer, out strLen) &&
-                strLen > 1)
-            {
-                username = Marshal.PtrToStringAnsi(buffer);
-                WTSFreeMemory(buffer);
-                if (prependDomain)
-                {
-                    if (
-                        WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSDomainName, out buffer,
-                            out strLen) && strLen > 1)
-                    {
-                        username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
-                        WTSFreeMemory(buffer);
-                    }
-                }
-            }
+            if (!WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSUserName, out buffer, out strLen) || strLen <= 1)
+                return username;
+
+            username = Marshal.PtrToStringAnsi(buffer);
+            WTSFreeMemory(buffer);
+
+            if (!WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSDomainName, out buffer, out strLen) || strLen <= 1)
+                return username;
+   
+            if(prependDomain)
+                username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
+
+
+            WTSFreeMemory(buffer);
             return username;
         }
 
@@ -202,19 +188,14 @@ namespace FOG.Handlers
         /// <returns>True if sucessfull</returns>
         public static bool PurgeUser(UserData user, bool deleteData)
         {
-            LogHandler.Log(LOG_NAME, "Purging " + user.Name + " from system");
-            if (deleteData)
-            {
-                if (UnregisterUser(user.Name))
-                {
-                    if (RemoveUserProfile(user.SID))
-                    {
-                        return CleanUserRegistryEntries(user.SID);
-                    }
-                }
+            if (user == null)
                 return false;
-            }
-            return UnregisterUser(user.Name);
+
+            LogHandler.Log(LOG_NAME, "Purging " + user.Name + " from system");
+
+            return deleteData
+                ? UnregisterUser(user.Name) && RemoveUserProfile(user.SID) && CleanUserRegistryEntries(user.SID)
+                : UnregisterUser(user.Name);
         }
 
         /// <summary>
@@ -250,15 +231,16 @@ namespace FOG.Handlers
             try
             {
                 var path = GetUserProfilePath(sid);
+                if (path == null)
+                    return false;
+
                 LogHandler.Log(LOG_NAME, "User path: " + path);
-                if (path != null)
-                {
-                    TakeOwnership(path);
-                    resetRights(path);
-                    RemoveWriteProtection(path);
-                    Directory.Delete(path, true);
-                    return true;
-                }
+
+                TakeOwnership(path);
+                ResetRights(path);
+                RemoveWriteProtection(path);
+                Directory.Delete(path, true);
+                return true;
             }
             catch (Exception ex)
             {
@@ -290,8 +272,17 @@ namespace FOG.Handlers
             {
                 var directoryInfo = new DirectoryInfo(path);
                 var directorySecurity = directoryInfo.GetAccessControl();
-                directorySecurity.SetOwner(WindowsIdentity.GetCurrent().User);
+
+                if (directorySecurity == null)
+                    return;
+
                 Directory.SetAccessControl(path, directorySecurity);
+                var windowsIdentity = WindowsIdentity.GetCurrent();
+
+                if (windowsIdentity == null || windowsIdentity.User == null)
+                    return;
+
+                directorySecurity.SetOwner(windowsIdentity.User);
             }
         }
 
@@ -307,7 +298,7 @@ namespace FOG.Handlers
         ///     Reset the rights of a directory
         /// </summary>
         /// <param name="path">The directory path</param>
-        public static void resetRights(string path)
+        public static void ResetRights(string path)
         {
             var directoryInfo = new DirectoryInfo(path);
             var directorySecurity = directoryInfo.GetAccessControl();
@@ -352,8 +343,7 @@ namespace FOG.Handlers
             WTSOutgoingFrames,
             WTSClientInfo,
             WTSSessionInfo
-        }
-            ;
+        };
 
         internal struct LASTINPUTINFO
         {

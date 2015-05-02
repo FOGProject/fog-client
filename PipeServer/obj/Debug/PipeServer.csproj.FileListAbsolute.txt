@@ -8,8 +8,3 @@ C:\Users\jbob\Desktop\fog-client\bin\PipeServer.pdb
 C:\Users\jbob\Desktop\fog-client\PipeServer\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\PipeServer\obj\Debug\PipeServer.dll
 C:\Users\jbob\Desktop\fog-client\PipeServer\obj\Debug\PipeServer.pdb
-D:\fog\client\bin\PipeServer.dll
-D:\fog\client\bin\PipeServer.pdb
-D:\fog\client\PipeServer\obj\Debug\ResolveAssemblyReference.cache
-D:\fog\client\PipeServer\obj\Debug\PipeServer.dll
-D:\fog\client\PipeServer\obj\Debug\PipeServer.pdb

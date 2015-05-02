@@ -126,7 +126,6 @@ namespace FOG.Handlers
             }
             else
             {
-                StreamWriter logWriter;
                 var logFile = new FileInfo(FilePath);
 
                 //Delete the log file if it excedes the max log size
@@ -136,7 +135,7 @@ namespace FOG.Handlers
                 try
                 {
                     //Write message to log file
-                    logWriter = new StreamWriter(FilePath, true);
+                    var logWriter = new StreamWriter(FilePath, true);
                     logWriter.Write(text);
                     logWriter.Close();
                 }

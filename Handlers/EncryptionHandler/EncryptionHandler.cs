@@ -23,6 +23,7 @@ using System.Security.Cryptography;
 using System.Text;
 using OpenSSL.Core;
 using RSA = OpenSSL.Crypto.RSA;
+// ReSharper disable InconsistentNaming
 
 namespace FOG.Handlers
 {
@@ -98,34 +99,28 @@ namespace FOG.Handlers
         /// <returns>An encrypted string of toEncode</returns>
         public static string AESEncrypt(string toEncode, byte[] key, byte[] iv)
         {
+            if (toEncode == null || key.Length == 0 || iv.Length == 0)
+                return "";
+
             try
             {
                 byte[] encrypted;
-                // Create an RijndaelManaged object 
-                // with the specified key and IV. 
+
                 using (var rijndaelManaged = new RijndaelManaged())
+                using (var encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV))
+                using (var msEncrypt = new MemoryStream())
+                using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
+                using (var swEncrypt = new StreamWriter(csEncrypt))
                 {
                     rijndaelManaged.Key = key;
                     rijndaelManaged.IV = iv;
                     rijndaelManaged.Mode = CipherMode.CBC;
                     rijndaelManaged.Padding = PaddingMode.Zeros;
                     // Create a decrytor to perform the stream transform.
-                    using (var encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV))
-                    {
-                        // Create the streams used for encryption. 
-                        using (var msEncrypt = new MemoryStream())
-                        {
-                            using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                            {
-                                using (var swEncrypt = new StreamWriter(csEncrypt))
-                                {
-                                    //Write all data to the stream.
-                                    swEncrypt.Write(toEncode);
-                                }
-                                encrypted = msEncrypt.ToArray();
-                            }
-                        }
-                    }
+                
+                    //Write all data to the stream.
+                    swEncrypt.Write(toEncode);
+                    encrypted = msEncrypt.ToArray();
                 }
 
                 // Return the encrypted bytes from the memory stream. 
@@ -151,21 +146,16 @@ namespace FOG.Handlers
             try
             {
                 using (var rijndaelManaged = new RijndaelManaged())
+                using (var memoryStream = new MemoryStream(toDecode))
+                using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
                 {
                     rijndaelManaged.Key = key;
                     rijndaelManaged.IV = iv;
                     rijndaelManaged.Mode = CipherMode.CBC;
                     rijndaelManaged.Padding = PaddingMode.Zeros;
-                    using (var memoryStream = new MemoryStream(toDecode))
-                    {
-                        using (
-                            var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv),
-                                CryptoStreamMode.Read))
-                        {
-                            //Return the  stream, but trim null bytes due to reading too far
-                            return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", string.Empty).Trim();
-                        }
-                    }
+
+                    //Return the  stream, but trim null bytes due to reading too far
+                    return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", string.Empty).Trim();
                 }
             }
             catch (Exception ex)
@@ -188,6 +178,7 @@ namespace FOG.Handlers
             var b = new byte[sizeof (uint)];
             rngProvider.GetBytes(b);
             var d = BitConverter.ToUInt32(b, 0)/(double) uint.MaxValue;
+            
             return min + (int) ((max - min)*d);
         }
 
@@ -203,9 +194,7 @@ namespace FOG.Handlers
             var random = new RNGCryptoServiceProvider();
 
             for (var i = 0; i < stringChars.Length; i++)
-            {
                 stringChars[i] = chars[GetRandom(random, 1, chars.Length)];
-            }
 
             return new string(stringChars);
         }
@@ -245,9 +234,8 @@ namespace FOG.Handlers
         {
             byte[] encryptedData;
             using (var openSLLRSA = RSA.FromPublicKey(BIO.File(pemFile, "r")))
-            {
                 encryptedData = openSLLRSA.PublicEncrypt(toEncode, RSA.Padding.PKCS1);
-            }
+
             return encryptedData;
         }
 
@@ -286,6 +274,7 @@ namespace FOG.Handlers
             var hex = new StringBuilder(ba.Length*2);
             foreach (var b in ba)
                 hex.AppendFormat("{0:x2}", b);
+            
             return hex.ToString();
         }
 
@@ -296,10 +285,11 @@ namespace FOG.Handlers
         /// </summary>
         public static byte[] HexStringToByteArray(string hex)
         {
-            var NumberChars = hex.Length;
-            var bytes = new byte[NumberChars/2];
-            for (var i = 0; i < NumberChars; i += 2)
+            var numberChars = hex.Length;
+            var bytes = new byte[numberChars/2];
+            for (var i = 0; i < numberChars; i += 2)
                 bytes[i/2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            
             return bytes;
         }
 
@@ -324,19 +314,18 @@ namespace FOG.Handlers
         /// </summary>
         public static string GetMD5Hash(string filePath)
         {
-            if (File.Exists(filePath))
+            if (!File.Exists(filePath)) return "";
+
+            var sBuilder = new StringBuilder();
+            var md5 = new MD5CryptoServiceProvider();
+            var bytes = File.ReadAllBytes(filePath);
+            var result = md5.ComputeHash(bytes);
+            foreach (int hashInt in result)
             {
-                var sBuilder = new StringBuilder();
-                var md5 = new MD5CryptoServiceProvider();
-                var bytes = File.ReadAllBytes(filePath);
-                var result = md5.ComputeHash(bytes);
-                foreach (int hashInt in result)
-                {
-                    sBuilder.Append(hashInt.ToString("x2"));
-                }
-                return sBuilder.ToString();
+                sBuilder.Append(hashInt.ToString("x2"));
             }
-            return "";
+           
+            return sBuilder.ToString();
         }
     }
 }

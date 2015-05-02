@@ -42,15 +42,14 @@ namespace FOG.Modules
             var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (!tasksResponse.Error)
-            {
-                var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
+            if (tasksResponse.Error) return;
+            
+            var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
 
-                //Filter existing tasks
-                tasks = filterTasks(tasks);
-                //Add new tasks
-                createTasks(tasks);
-            }
+            //Filter existing tasks
+            tasks = filterTasks(tasks);
+            //Add new tasks
+            createTasks(tasks);
         }
 
         private List<string> filterTasks(List<string> newTasks)
@@ -92,9 +91,12 @@ namespace FOG.Modules
                 taskDefinition.Principal.UserId = "SYSTEM";
 
                 //Create task trigger
-                var trigger = new DailyTrigger(1);
-                trigger.StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
-                                        TimeSpan.FromMinutes(int.Parse(taskData[1])); //Run at the specified time
+                var trigger = new DailyTrigger(1)
+                {
+                    StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
+                                    TimeSpan.FromMinutes(int.Parse(taskData[1]))
+                };
+                //Run at the specified time
 
                 taskDefinition.Triggers.Add(trigger);
 

@@ -43,13 +43,11 @@ namespace FOG.Modules
                 var server = int.Parse(serverVersion.Replace(".", ""));
                 var local = int.Parse(localVersion.Replace(".", ""));
 
-                if (server > local)
-                {
-                    CommunicationHandler.DownloadFile("/client/FOGService.msi",
-                        AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
-                    prepareUpdateHelpers();
-                    ShutdownHandler.UpdatePending = true;
-                }
+                if (server <= local) return;
+                CommunicationHandler.DownloadFile("/client/FOGService.msi",
+                    AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
+                prepareUpdateHelpers();
+                ShutdownHandler.UpdatePending = true;
             }
             catch (Exception ex)
             {

@@ -83,15 +83,7 @@
     <Compile Include="UserHandler\UserData.cs" />
     <Compile Include="UserHandler\UserHandler.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommunicationHandler" />
-    <Folder Include="EncryptionHandler" />
-    <Folder Include="LogHandler" />
-    <Folder Include="UserHandler" />
-    <Folder Include="ShutdownHandler" />
-    <Folder Include="RegistryHandler" />
-    <Folder Include="NotificationHandler" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

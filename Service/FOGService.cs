@@ -252,9 +252,9 @@ namespace FOG
 
             try
             {
-                if (!sleepResponse.Error && !sleepResponse.getField("#sleep").Equals(""))
+                if (!sleepResponse.Error && !sleepResponse.GetField("#sleep").Equals(""))
                 {
-                    var sleepTime = int.Parse(sleepResponse.getField("#sleep"));
+                    var sleepTime = int.Parse(sleepResponse.GetField("#sleep"));
                     if (sleepTime >= sleepDefaultTime)
                     {
                         return sleepTime;

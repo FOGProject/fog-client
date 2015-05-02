@@ -53,10 +53,7 @@ namespace FOG.Handlers
                 {
                     var keyValue = key.GetValue(keyName).ToString();
                     key.Close();
-                    if (keyValue != null)
-                    {
-                        return keyValue.Trim();
-                    }
+                    return keyValue.Trim();
                 }
             }
             catch (Exception ex)

@@ -139,10 +139,15 @@ namespace FOG.Handlers
         {
             LogHandler.Log(LOG_NAME, "Restarting service");
             ShutdownPending = true;
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                         @"\RestartFOGService.exe";
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                               @"\RestartFOGService.exe"
+                }
+            };
             process.Start();
         }
 
@@ -154,11 +159,16 @@ namespace FOG.Handlers
         {
             LogHandler.Log(LOG_NAME, "Spawning update waiter");
 
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                         @"\tmp\FOGUpdateWaiter.exe";
-            process.StartInfo.Arguments = "\"" + fileName + "\"";
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                               @"\tmp\FOGUpdateWaiter.exe",
+                    Arguments = "\"" + fileName + "\""
+                }
+            };
 
             LogHandler.Log(LOG_NAME, "Update Waiter args");
             LogHandler.Log(LOG_NAME, process.StartInfo.FileName + " " + process.StartInfo.Arguments);

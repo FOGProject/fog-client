@@ -42,22 +42,21 @@ namespace FOG.Modules
             var taskResponse = CommunicationHandler.GetResponse("/service/jobs.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (!taskResponse.Error)
+            if (taskResponse.Error) return;
+            
+            LogHandler.Log(Name, "Restarting computer for task");
+            if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
             {
-                LogHandler.Log(Name, "Restarting computer for task");
-                if (!UserHandler.IsUserLoggedIn() || taskResponse.getField("#force").Equals("1"))
-                {
-                    ShutdownHandler.Restart(Name, 30);
-                }
-                else if (!taskResponse.Error && !notifiedUser)
-                {
-                    LogHandler.Log(Name, "User is currently logged in, will try again later");
-                    NotificationHandler.Notifications.Add(new Notification("Please log off",
-                        NotificationHandler.Company +
-                        " is attemping to service your computer, please log off at the soonest available time",
-                        60));
-                    notifiedUser = true;
-                }
+                ShutdownHandler.Restart(Name, 30);
+            }
+            else if (!taskResponse.Error && !notifiedUser)
+            {
+                LogHandler.Log(Name, "User is currently logged in, will try again later");
+                NotificationHandler.Notifications.Add(new Notification("Please log off",
+                    NotificationHandler.Company +
+                    " is attemping to service your computer, please log off at the soonest available time",
+                    60));
+                notifiedUser = true;
             }
         }
     }

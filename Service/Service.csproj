@@ -69,7 +69,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="main.cs" />
-    <Compile Include="FOGService.cs" />
+    <Compile Include="FOGService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="UpdateHandler.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,10 +97,6 @@
     <ProjectReference Include="..\UpdateWaiter\UpdateWaiter.csproj">
       <Project>{C7113642-59C8-41C0-BF64-2F29BAE45910}</Project>
       <Name>UpdateWaiter</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\UserCleanup\UserCleanup.csproj">
-      <Project>{9BC2248C-9A29-4936-859D-CF263E53A00F}</Project>
-      <Name>UserCleanup</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

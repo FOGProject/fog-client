@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 using FOG.Handlers;
 
@@ -50,13 +51,11 @@ namespace FOG.Modules
                 {
                     try
                     {
-                        var x = int.Parse(taskResponse.getField("#x"));
-                        var y = int.Parse(taskResponse.getField("#y"));
-                        var r = int.Parse(taskResponse.getField("#r"));
-                        if (getDisplays().Count > 0)
-                            changeResolution(getDisplays()[0], x, y, r);
-                        else
-                            changeResolution("", x, y, r);
+                        var x = int.Parse(taskResponse.GetField("#x"));
+                        var y = int.Parse(taskResponse.GetField("#y"));
+                        var r = int.Parse(taskResponse.GetField("#r"));
+
+                        changeResolution(getDisplays().Count > 0 ? getDisplays()[0] : "", x, y, r);
                     }
                     catch (Exception ex)
                     {
@@ -95,14 +94,9 @@ namespace FOG.Modules
 
         private List<string> getDisplays()
         {
-            var displays = new List<string>();
             var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
 
-            foreach (var monitor in monitorSearcher.Get())
-            {
-                displays.Add(monitor["Name"].ToString());
-            }
-            return displays;
+            return (from ManagementBaseObject monitor in monitorSearcher.Get() select monitor["Name"].ToString()).ToList();
         }
     }
 }

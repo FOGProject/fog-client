@@ -80,72 +80,69 @@ namespace FOG.Modules
         //Rename the computer and remove it from active directory
         private void renameComputer(Response taskResponse)
         {
-            LogHandler.Log(Name, taskResponse.getField("#hostname") + ":" + Environment.MachineName);
-            if (!taskResponse.getField("#hostname").Equals(""))
+            LogHandler.Log(Name, taskResponse.GetField("#hostname") + ":" + Environment.MachineName);
+            if (taskResponse.GetField("#hostname").Equals("")) return;
+            if (!Environment.MachineName.ToLower().Equals(taskResponse.GetField("#hostname").ToLower()))
             {
-                if (!Environment.MachineName.ToLower().Equals(taskResponse.getField("#hostname").ToLower()))
+                LogHandler.Log(Name, "Renaming host to " + taskResponse.GetField("#hostname"));
+                if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
                 {
-                    LogHandler.Log(Name, "Renaming host to " + taskResponse.getField("#hostname"));
-                    if (!UserHandler.IsUserLoggedIn() || taskResponse.getField("#force").Equals("1"))
-                    {
-                        LogHandler.Log(Name, "Unregistering computer");
-                        //First unjoin it from active directory
-                        unRegisterComputer(taskResponse);
+                    LogHandler.Log(Name, "Unregistering computer");
+                    //First unjoin it from active directory
+                    unRegisterComputer(taskResponse);
 
-                        LogHandler.Log(Name, "Updating registry");
-                        RegistryKey regKey;
+                    LogHandler.Log(Name, "Updating registry");
 
-                        regKey = Registry.LocalMachine.OpenSubKey(
-                            @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", true);
-                        regKey.SetValue("NV Hostname", taskResponse.getField("#hostname"));
-                        regKey =
-                            Registry.LocalMachine.OpenSubKey(
-                                @"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", true);
-                        regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));
-                        regKey =
-                            Registry.LocalMachine.OpenSubKey(
-                                @"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", true);
-                        regKey.SetValue("ComputerName", taskResponse.getField("#hostname"));
+                    var regKey = Registry.LocalMachine.OpenSubKey(
+                        @"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", true);
+                    regKey.SetValue("NV Hostname", taskResponse.GetField("#hostname"));
+                    regKey =
+                        Registry.LocalMachine.OpenSubKey(
+                            @"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", true);
+                    regKey.SetValue("ComputerName", taskResponse.GetField("#hostname"));
+                    regKey =
+                        Registry.LocalMachine.OpenSubKey(
+                            @"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", true);
+                    regKey.SetValue("ComputerName", taskResponse.GetField("#hostname"));
 
-                        ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
-                    }
-                    else if (!notifiedUser)
-                    {
-                        LogHandler.Log(Name, "User is currently logged in, will try again later");
-                        //Notify the user they should log off if it is not forced
-                        NotificationHandler.Notifications.Add(new Notification("Please log off",
-                            NotificationHandler.Company +
-                            " is attemping to service your computer, please log off at the soonest available time",
-                            120));
-
-                        notifiedUser = true;
-                    }
+                    ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
                 }
-                else
+                else if (!notifiedUser)
                 {
-                    LogHandler.Log(Name, "Hostname is correct");
+                    LogHandler.Log(Name, "User is currently logged in, will try again later");
+                    //Notify the user they should log off if it is not forced
+                    NotificationHandler.Notifications.Add(new Notification("Please log off",
+                        NotificationHandler.Company +
+                        " is attemping to service your computer, please log off at the soonest available time",
+                        120));
+
+                    notifiedUser = true;
                 }
+            }
+            else
+            {
+                LogHandler.Log(Name, "Hostname is correct");
             }
         }
 
         //Add a host to active directory
         private void registerComputer(Response taskResponse)
         {
-            if (taskResponse.getField("#AD").Equals("1"))
+            if (taskResponse.GetField("#AD").Equals("1"))
             {
                 LogHandler.Log(Name, "Adding host to active directory");
-                if (!taskResponse.getField("#ADDom").Equals("") && !taskResponse.getField("#ADUser").Equals("") &&
-                    !taskResponse.getField("#ADPass").Equals(""))
+                if (!taskResponse.GetField("#ADDom").Equals("") && !taskResponse.GetField("#ADUser").Equals("") &&
+                    !taskResponse.GetField("#ADPass").Equals(""))
                 {
-                    var userPassword = taskResponse.getField("#ADPass");
+                    var userPassword = taskResponse.GetField("#ADPass");
 
-                    var returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"),
-                        taskResponse.getField("#ADUser"), userPassword,
+                    var returnCode = NetJoinDomain(null, taskResponse.GetField("#ADDom"), taskResponse.GetField("#ADOU"),
+                        taskResponse.GetField("#ADUser"), userPassword,
                         (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
                     if (returnCode == 2224)
                     {
-                        returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"),
-                            taskResponse.getField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);
+                        returnCode = NetJoinDomain(null, taskResponse.GetField("#ADDom"), taskResponse.GetField("#ADOU"),
+                            taskResponse.GetField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);
                     }
 
                     //Log the response
@@ -177,10 +174,10 @@ namespace FOG.Modules
         private void unRegisterComputer(Response taskResponse)
         {
             LogHandler.Log(Name, "Removing host from active directory");
-            if (!taskResponse.getField("#ADUser").Equals("") && !taskResponse.getField("#ADPass").Equals(""))
+            if (!taskResponse.GetField("#ADUser").Equals("") && !taskResponse.GetField("#ADPass").Equals(""))
             {
-                var userPassword = taskResponse.getField("#ADPass");
-                var returnCode = NetUnjoinDomain(null, taskResponse.getField("#ADUser"), userPassword,
+                var userPassword = taskResponse.GetField("#ADPass");
+                var returnCode = NetUnjoinDomain(null, taskResponse.GetField("#ADUser"), userPassword,
                     UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
 
                 //Log the response
@@ -210,15 +207,20 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "Activing host with product key");
 
                 //The standard windows key is 29 characters long -- 5 sections of 5 characters with 4 dashes (5*5+4)
-                if (taskResponse.getField("#Key").Length == 29)
+                if (taskResponse.GetField("#Key").Length == 29)
                 {
-                    var process = new Process();
+                    var process = new Process
+                    {
+                        StartInfo =
+                        {
+                            FileName = @"cscript",
+                            Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ipk " +
+                                        taskResponse.GetField("#Key"),
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        }
+                    };
 
                     //Give windows the new key
-                    process.StartInfo.FileName = @"cscript";
-                    process.StartInfo.Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ipk " +
-                                                  taskResponse.getField("#Key");
-                    process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     process.Start();
                     process.WaitForExit();
                     process.Close();

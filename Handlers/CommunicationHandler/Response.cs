@@ -49,7 +49,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="id">The ID to return</param>
         /// <returns>The value stored at key ID, if the ID is not present, return an empty string</returns>
-        public string getField(string id)
+        public string GetField(string id)
         {
             return Data.ContainsKey(id) ? Data[id] : "";
         }
