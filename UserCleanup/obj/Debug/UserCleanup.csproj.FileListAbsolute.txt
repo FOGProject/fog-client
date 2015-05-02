@@ -1,5 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\UserCleanup.dll
-C:\Users\jbob\Desktop\fog-client\bin\UserCleanup.pdb
-C:\Users\jbob\Desktop\fog-client\UserCleanup\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\UserCleanup\obj\Debug\UserCleanup.dll
-C:\Users\jbob\Desktop\fog-client\UserCleanup\obj\Debug\UserCleanup.pdb

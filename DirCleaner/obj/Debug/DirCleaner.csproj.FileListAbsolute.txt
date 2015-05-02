@@ -1,5 +1,0 @@
-C:\Users\jbob\Desktop\fog-client\bin\DirCleaner.dll
-C:\Users\jbob\Desktop\fog-client\bin\DirCleaner.pdb
-C:\Users\jbob\Desktop\fog-client\DirCleaner\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\jbob\Desktop\fog-client\DirCleaner\obj\Debug\DirCleaner.dll
-C:\Users\jbob\Desktop\fog-client\DirCleaner\obj\Debug\DirCleaner.pdb
