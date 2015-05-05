@@ -1,3 +1,0 @@
-D:\fog\client\bin\Handlers.dll
-D:\fog\client\Handlers\obj\Release\ResolveAssemblyReference.cache
-D:\fog\client\Handlers\obj\Release\Handlers.dll

@@ -22,7 +22,7 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
-      <Merge Id="VCRedist" SourceFile="..\..\Microsoft_VC90_CRT_x86.msm" DiskId="1" Language="0" />
+      <Merge Id="VCRedist" SourceFile="..\..\Microsoft_VC110_CRT_x86.msm" DiskId="1" Language="0" />
 
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">

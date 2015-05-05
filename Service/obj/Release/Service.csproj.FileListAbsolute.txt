@@ -1,4 +1,0 @@
-D:\fog\client\bin\FOGService.exe.config
-D:\fog\client\bin\FOGService.exe
-D:\fog\client\Service\obj\Release\ResolveAssemblyReference.cache
-D:\fog\client\Service\obj\Release\FOGService.exe

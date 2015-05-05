@@ -1,3 +1,0 @@
-D:\fog\client\Modules\obj\Release\ResolveAssemblyReference.cache
-D:\fog\client\bin\Modules.dll
-D:\fog\client\Modules\obj\Release\Modules.dll

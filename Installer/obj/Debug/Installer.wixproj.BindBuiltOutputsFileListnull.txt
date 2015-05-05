@@ -1,2 +1,0 @@
-D:\fog\client\bin\FOGService.msi
-D:\fog\client\bin\FOGService.wixpdb
