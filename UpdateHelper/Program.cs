@@ -64,7 +64,7 @@ namespace FOG
 
         private static void applyUpdates()
         {
-            var LOG_NAME = "Update Helper";
+            const string LOG_NAME = "Update Helper";
 
             var useTray = RegistryHandler.GetSystemSetting("Tray");
             var https = RegistryHandler.GetSystemSetting("HTTPS");

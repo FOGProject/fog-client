@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using FOG.Handlers;
@@ -54,24 +55,22 @@ namespace FOG
         public FOGService()
         {
             //Initialize everything
-            if (CommunicationHandler.GetAndSetServerAddress())
-            {
-                initializeModules();
-                threadManager = new Thread(serviceLooper);
-                status = Status.Stopped;
+            if (!CommunicationHandler.GetAndSetServerAddress()) return;
+            initializeModules();
+            threadManager = new Thread(serviceLooper);
+            status = Status.Stopped;
 
-                //Setup the notification pipe server
-                notificationPipeThread = new Thread(notificationPipeHandler);
-                notificationPipe = new PipeServer("fog_pipe_notification");
-                notificationPipe.MessageReceived += notificationPipeServer_MessageReceived;
+            //Setup the notification pipe server
+            notificationPipeThread = new Thread(notificationPipeHandler);
+            notificationPipe = new PipeServer("fog_pipe_notification");
+            notificationPipe.MessageReceived += notificationPipeServer_MessageReceived;
 
-                //Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
-                servicePipe = new PipeServer("fog_pipe_service");
-                servicePipe.MessageReceived += servicePipeService_MessageReceived;
+            //Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
+            servicePipe = new PipeServer("fog_pipe_service");
+            servicePipe.MessageReceived += servicePipeService_MessageReceived;
 
-                //Unschedule any old updates
-                ShutdownHandler.UpdatePending = false;
-            }
+            //Unschedule any old updates
+            ShutdownHandler.UpdatePending = false;
         }
 
         //This is run by the pipe thread, it will send out notifications to the tray
@@ -114,38 +113,36 @@ namespace FOG
         //Called when the service starts
         protected override void OnStart(string[] args)
         {
-            if (!status.Equals(Status.Broken))
+            if (status.Equals(Status.Broken)) return;
+            status = Status.Running;
+
+            //Start the pipe server
+            notificationPipeThread.Priority = ThreadPriority.Normal;
+            notificationPipeThread.Start();
+
+            servicePipe.start();
+
+            //Start the main thread that handles all modules
+            threadManager.Priority = ThreadPriority.Normal;
+            threadManager.IsBackground = true;
+            threadManager.Name = "FOGService";
+            threadManager.Start();
+
+            //Unschedule any old updates
+            ShutdownHandler.UpdatePending = false;
+
+            //Delete old temp files
+            try
             {
-                status = Status.Running;
-
-                //Start the pipe server
-                notificationPipeThread.Priority = ThreadPriority.Normal;
-                notificationPipeThread.Start();
-
-                servicePipe.start();
-
-                //Start the main thread that handles all modules
-                threadManager.Priority = ThreadPriority.Normal;
-                threadManager.IsBackground = true;
-                threadManager.Name = "FOGService";
-                threadManager.Start();
-
-                //Unschedule any old updates
-                ShutdownHandler.UpdatePending = false;
-
-                //Delete old temp files
-                try
+                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp"))
                 {
-                    if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp"))
-                    {
-                        Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
-                    }
+                    Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
                 }
-                catch (Exception ex)
-                {
-                    LogHandler.Log(LOG_NAME, "Could not delete tmp dir");
-                    LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Log(LOG_NAME, "Could not delete tmp dir");
+                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
         }
 
@@ -169,13 +166,9 @@ namespace FOG
                 status = Status.Stopped;
 
             foreach (var process in Process.GetProcessesByName("FOGUserService"))
-            {
                 process.Kill();
-            }
             foreach (var process in Process.GetProcessesByName("FOGTray"))
-            {
                 process.Kill();
-            }
             //Delete old temp files
             try
             {
@@ -201,11 +194,8 @@ namespace FOG
             //Only run the service if there wasn't a stop or shutdown request
             while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
-                foreach (var module in modules)
+                foreach (var module in modules.TakeWhile(module => !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending))
                 {
-                    if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
-                        break;
-
                     //Log file formatting
                     LogHandler.NewLine();
                     LogHandler.PaddedHeader(module.Name);
@@ -213,11 +203,11 @@ namespace FOG
 
                     try
                     {
-                        module.start();
+                        module.Start();
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to start " + module.Name);
+                        LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
                         LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                     }
 
@@ -227,14 +217,12 @@ namespace FOG
                 }
 
 
-                if (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
-                {
-                    //Once all modules have been run, sleep for the set time
-                    var sleepTime = getSleepTime();
-                    RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
-                    LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
-                    Thread.Sleep(sleepTime*1000);
-                }
+                if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending) continue;
+                //Once all modules have been run, sleep for the set time
+                var sleepTime = getSleepTime();
+                RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
+                LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
+                Thread.Sleep(sleepTime*1000);
             }
 
             if (ShutdownHandler.UpdatePending)
@@ -256,9 +244,7 @@ namespace FOG
                 {
                     var sleepTime = int.Parse(sleepResponse.GetField("#sleep"));
                     if (sleepTime >= sleepDefaultTime)
-                    {
                         return sleepTime;
-                    }
                     LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime);
                 }
             }

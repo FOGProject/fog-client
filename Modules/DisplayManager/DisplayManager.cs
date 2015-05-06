@@ -47,21 +47,20 @@ namespace FOG.Modules
                 //Get task info
                 var taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php", true);
 
-                if (!taskResponse.Error)
-                {
-                    try
-                    {
-                        var x = int.Parse(taskResponse.GetField("#x"));
-                        var y = int.Parse(taskResponse.GetField("#y"));
-                        var r = int.Parse(taskResponse.GetField("#r"));
+                if (taskResponse.Error) return;
 
-                        changeResolution(getDisplays().Count > 0 ? getDisplays()[0] : "", x, y, r);
-                    }
-                    catch (Exception ex)
-                    {
-                        LogHandler.Log(Name, "ERROR");
-                        LogHandler.Log(Name, ex.Message);
-                    }
+                try
+                {
+                    var x = int.Parse(taskResponse.GetField("#x"));
+                    var y = int.Parse(taskResponse.GetField("#y"));
+                    var r = int.Parse(taskResponse.GetField("#r"));
+
+                    changeResolution(getDisplays().Count > 0 ? getDisplays()[0] : "", x, y, r);
+                }
+                catch (Exception ex)
+                {
+                    LogHandler.Log(Name, "ERROR");
+                    LogHandler.Log(Name, ex.Message);
                 }
             }
             else
@@ -77,11 +76,8 @@ namespace FOG.Modules
                 !(width.Equals(display.Configuration.dmPelsWidth) && height.Equals(display.Configuration.dmPelsHeight) &&
                   refresh.Equals(display.Configuration.dmDisplayFrequency)))
             {
-                LogHandler.Log(Name, "Current Resolution: " + display.Configuration.dmPelsWidth + " x " +
-                                     display.Configuration.dmPelsHeight + " " + display.Configuration.dmDisplayFrequency +
-                                     "hz");
-                LogHandler.Log(Name,
-                    "Attempting to change resoltution to " + width + " x " + height + " " + refresh + "hz");
+                LogHandler.Log(Name, string.Format("Current Resolution: {0} x {1} {2}hz", display.Configuration.dmPelsWidth, display.Configuration.dmPelsHeight, display.Configuration.dmDisplayFrequency));
+                LogHandler.Log(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
                 LogHandler.Log(Name, "Display name: " + device);
 
                 display.ChangeResolution(device, width, height, refresh);

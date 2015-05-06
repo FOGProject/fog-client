@@ -33,9 +33,11 @@ namespace FOG.Modules
 
         public Display()
         {
-            Configuration = new User_32.DEVMODE1();
-            Configuration.dmDeviceName = new string(new char[32]);
-            Configuration.dmFormName = new string(new char[32]);
+            Configuration = new User_32.DEVMODE1
+            {
+                dmDeviceName = new string(new char[32]),
+                dmFormName = new string(new char[32])
+            };
             Configuration.dmSize = (short) Marshal.SizeOf(Configuration);
             PopulatedSettings = LoadDisplaySettings();
         }
@@ -49,9 +51,8 @@ namespace FOG.Modules
         public bool LoadDisplaySettings()
         {
             if (User_32.EnumDisplaySettings(null, User_32.ENUM_CURRENT_SETTINGS, ref Configuration) != 0)
-            {
                 return true;
-            }
+
             LogHandler.Log(LOG_NAME, "Unable to load display settings");
             return false;
         }
@@ -66,6 +67,7 @@ namespace FOG.Modules
         public void ChangeResolution(string device, int width, int height, int refresh)
         {
             if (!PopulatedSettings) return;
+
             Configuration.dmPelsWidth = width;
             Configuration.dmPelsHeight = height;
             Configuration.dmDisplayFrequency = refresh;
@@ -76,26 +78,18 @@ namespace FOG.Modules
             var changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_TEST);
 
             if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
-            {
                 LogHandler.Log(LOG_NAME, "Failed");
-            }
             else
             {
                 LogHandler.Log(LOG_NAME, "Changing resolution");
                 changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_UPDATEREGISTRY);
 
                 if (changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL))
-                {
                     LogHandler.Log(LOG_NAME, "Success");
-                }
                 else if (changeStatus.Equals(User_32.DISP_CHANGE_RESTART))
-                {
                     LogHandler.Log(LOG_NAME, "Success, requires reboot");
-                }
                 else if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
-                {
                     LogHandler.Log(LOG_NAME, "Failed");
-                }
             }
         }
     }

@@ -44,6 +44,7 @@ namespace FOG.Modules
                 var local = int.Parse(localVersion.Replace(".", ""));
 
                 if (server <= local) return;
+
                 CommunicationHandler.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
                 prepareUpdateHelpers();

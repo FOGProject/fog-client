@@ -42,27 +42,18 @@ namespace FOG.Modules
             var newUsernames = UserHandler.GetUsersLoggedIn();
 
             foreach (var username in newUsernames)
-            {
-                if (usernames.Contains(username))
-                {
-                    // Remove users that are have remained logged in
-                    usernames.Remove(username);
-                }
-                else
-                {
-                    // Contact FOG about new users
+                // Remove users that are have remained logged in
+                if (!usernames.Contains(username))
                     CommunicationHandler.Contact(
-                        "/service/usertracking.report.php?action=login&user=" + Dns.GetHostName() + "\\" + username,
-                        true);
-                }
-            }
+                        string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Dns.GetHostName(),
+                            username), true);
+                else
+                    usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
             foreach (var username in usernames)
-            {
                 CommunicationHandler.Contact(
-                    "/service/usertracking.report.php?action=logout&user=" + Dns.GetHostName() + "\\" + username, true);
-            }
+                    string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Dns.GetHostName(), username), true);
 
             usernames = newUsernames;
         }

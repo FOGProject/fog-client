@@ -58,19 +58,17 @@ namespace FOG.Modules
             var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
 
             foreach (var task in existingTasks)
-            {
                 if (!newTasks.Contains(task.Name))
                 {
                     LogHandler.Log(Name, "Delete task " + task.Name);
                     taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
-                        //If the existing task is not in the new list delete it
+                    //If the existing task is not in the new list delete it
                 }
                 else
                 {
                     LogHandler.Log(Name, "Removing " + task.Name + " from queue");
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
-            }
 
             return newTasks;
         }
@@ -102,13 +100,9 @@ namespace FOG.Modules
 
                 //Create task action
                 if (taskData[2].Equals("r"))
-                {
                     taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/r /c \"Green FOG\" /t 0", null));
-                }
                 else if (taskData[2].Equals("s"))
-                {
                     taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0", null));
-                }
 
                 //Register the task
                 try

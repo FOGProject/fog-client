@@ -67,14 +67,13 @@ namespace FOG.Modules
             //Get task info
             var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
-            if (!taskResponse.Error)
-            {
-                renameComputer(taskResponse);
-                if (!ShutdownHandler.ShutdownPending)
-                    registerComputer(taskResponse);
-                if (!ShutdownHandler.ShutdownPending)
-                    activateComputer(taskResponse);
-            }
+            if (taskResponse.Error) return;
+
+            renameComputer(taskResponse);
+            if (!ShutdownHandler.ShutdownPending)
+                registerComputer(taskResponse);
+            if (!ShutdownHandler.ShutdownPending)
+                activateComputer(taskResponse);
         }
 
         //Rename the computer and remove it from active directory
@@ -85,7 +84,20 @@ namespace FOG.Modules
             if (!Environment.MachineName.ToLower().Equals(taskResponse.GetField("#hostname").ToLower()))
             {
                 LogHandler.Log(Name, "Renaming host to " + taskResponse.GetField("#hostname"));
-                if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
+                if (UserHandler.IsUserLoggedIn() && !taskResponse.GetField("#force").Equals("1"))
+                {
+                    if (notifiedUser) return;
+                   
+                    LogHandler.Log(Name, "User is currently logged in, will try again later");
+                    //Notify the user they should log off if it is not forced
+                    NotificationHandler.Notifications.Add(new Notification("Please log off",
+                        NotificationHandler.Company +
+                        " is attemping to service your computer, please log off at the soonest available time",
+                        120));
+
+                    notifiedUser = true;
+                }
+                else
                 {
                     LogHandler.Log(Name, "Unregistering computer");
                     //First unjoin it from active directory
@@ -106,17 +118,6 @@ namespace FOG.Modules
                     regKey.SetValue("ComputerName", taskResponse.GetField("#hostname"));
 
                     ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
-                }
-                else if (!notifiedUser)
-                {
-                    LogHandler.Log(Name, "User is currently logged in, will try again later");
-                    //Notify the user they should log off if it is not forced
-                    NotificationHandler.Notifications.Add(new Notification("Please log off",
-                        NotificationHandler.Company +
-                        " is attemping to service your computer, please log off at the soonest available time",
-                        120));
-
-                    notifiedUser = true;
                 }
             }
             else
@@ -140,10 +141,8 @@ namespace FOG.Modules
                         taskResponse.GetField("#ADUser"), userPassword,
                         (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
                     if (returnCode == 2224)
-                    {
                         returnCode = NetJoinDomain(null, taskResponse.GetField("#ADDom"), taskResponse.GetField("#ADOU"),
                             taskResponse.GetField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);
-                    }
 
                     //Log the response
                     if (adErrors.ContainsKey(returnCode))
@@ -182,21 +181,15 @@ namespace FOG.Modules
 
                 //Log the response
                 if (adErrors.ContainsKey(returnCode))
-                {
                     LogHandler.Log(Name, adErrors[returnCode] + " Return code: " + returnCode);
-                }
                 else
-                {
                     LogHandler.Log(Name, "Unknown return code: " + returnCode);
-                }
 
                 if (returnCode.Equals(successIndex))
                     ShutdownHandler.Restart("Host joined to active directory, restart needed", 20);
             }
             else
-            {
                 LogHandler.Log(Name, "Unable to remove host from active directory, some settings are empty");
-            }
         }
 
         //Active a computer with a product key

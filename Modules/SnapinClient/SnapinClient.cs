@@ -42,7 +42,6 @@ namespace FOG.Modules
                 //Get task info
                 var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php", true);
 
-
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
@@ -56,9 +55,10 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "    Args: " + taskResponse.GetField("SNAPINARGS"));
                 LogHandler.Log(Name, "    Reboot: " + taskResponse.GetField("SNAPINBOUNCE"));
 
-                var snapinFilePath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + taskResponse.GetField("SNAPINFILENAME");
+                var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
-                var downloaded = CommunicationHandler.DownloadFile("/service/snapins.file.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID"), snapinFilePath);
+                var downloaded = CommunicationHandler.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
+                    CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
                 var exitCode = "-1";
 
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
@@ -68,22 +68,22 @@ namespace FOG.Modules
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
+                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" +
+                                                 CommunicationHandler.GetMacAddresses() + "&taskid=" +
+                                                 taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
 
-                    if (taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
+                    if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
+                        if (!ShutdownHandler.ShutdownPending)
+                            //Rerun this method to check for the next snapin
+                            continue;
+                    }
+                    else
                         ShutdownHandler.Restart("Snapin requested shutdown", 30);
-                    }
-                    else if (!ShutdownHandler.ShutdownPending)
-                    {
-                        //Rerun this method to check for the next snapin
-                        continue;
-                    }
                 }
                 else
-                {
-                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" + CommunicationHandler.GetMacAddresses() + "&taskid=" + taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
-                }
+                    CommunicationHandler.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
+                        CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
                 break;
             }
         }
@@ -92,8 +92,7 @@ namespace FOG.Modules
         private string startSnapin(Response taskResponse, string snapinPath)
         {
             NotificationHandler.Notifications.Add(new Notification(taskResponse.GetField("SNAPINNAME"),
-                "FOG is installing " +
-                taskResponse.GetField("SNAPINNAME"), 10));
+                string.Format("FOG is installing {0}", taskResponse.GetField("SNAPINNAME")), 10));
 
             var process = generateProcess(taskResponse, snapinPath);
 
@@ -104,9 +103,11 @@ namespace FOG.Modules
                 process.WaitForExit();
                 LogHandler.Log(Name, "Snapin finished");
                 LogHandler.Log(Name, "Return Code: " + process.ExitCode);
+                
                 NotificationHandler.Notifications.Add(new Notification(
-                    "Finished " + taskResponse.GetField("SNAPINNAME"),
+                    string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
                     taskResponse.GetField("SNAPINNAME") + " finished installing", 10));
+
                 return process.ExitCode.ToString();
             }
             catch (Exception ex)

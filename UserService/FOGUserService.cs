@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Threading;
 using FOG.Handlers;
@@ -57,45 +58,41 @@ namespace FOG
 
             LogHandler.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
             LogHandler.Log(LOG_NAME, "Initializing");
-            if (CommunicationHandler.GetAndSetServerAddress())
+            if (!CommunicationHandler.GetAndSetServerAddress()) return;
+            initializeModules();
+            threadManager = new Thread(serviceLooper);
+            status = Status.Stopped;
+
+            //Setup the notification pipe server
+            notificationPipeThread = new Thread(notificationPipeHandler);
+            notificationPipe = new PipeServer("fog_pipe_notification_user_" + UserHandler.GetCurrentUser());
+            notificationPipe.MessageReceived += pipeServer_MessageReceived;
+            notificationPipe.start();
+
+            //Setup the service pipe client
+            servicePipe = new PipeClient("fog_pipe_service");
+            servicePipe.MessageReceived += pipeClient_MessageReceived;
+            servicePipe.connect();
+
+
+            status = Status.Running;
+
+
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
             {
-                initializeModules();
-                threadManager = new Thread(serviceLooper);
-                status = Status.Stopped;
-
-                //Setup the notification pipe server
-                notificationPipeThread = new Thread(notificationPipeHandler);
-                notificationPipe = new PipeServer("fog_pipe_notification_user_" + UserHandler.GetCurrentUser());
-                notificationPipe.MessageReceived += pipeServer_MessageReceived;
-                notificationPipe.start();
-
-                //Setup the service pipe client
-                servicePipe = new PipeClient("fog_pipe_service");
-                servicePipe.MessageReceived += pipeClient_MessageReceived;
-                servicePipe.connect();
-
-
-                status = Status.Running;
-
-
-                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
-                {
-                    LogHandler.Log(LOG_NAME, "Update.info found, exiting program");
-                    ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
-                    Environment.Exit(0);
-                }
-
-
-                //Start the main thread that handles all modules
-                threadManager.Priority = ThreadPriority.Normal;
-                threadManager.IsBackground = false;
-                threadManager.Start();
-
-                if (RegistryHandler.GetSystemSetting("Tray").Trim().Equals("1"))
-                {
-                    startTray();
-                }
+                LogHandler.Log(LOG_NAME, "Update.info found, exiting program");
+                ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
+                Environment.Exit(0);
             }
+
+
+            //Start the main thread that handles all modules
+            threadManager.Priority = ThreadPriority.Normal;
+            threadManager.IsBackground = false;
+            threadManager.Start();
+
+            if (RegistryHandler.GetSystemSetting("Tray").Trim().Equals("1"))
+                startTray();
         }
 
         //This is run by the pipe thread, it will send out notifications to the tray
@@ -135,19 +132,15 @@ namespace FOG
             LogHandler.Log(LOG_NAME, "Message recieved from service");
             LogHandler.Log(LOG_NAME, "MSG: " + message);
 
-            if (message.Equals("UPD"))
-            {
-                ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
-                ShutdownHandler.UpdatePending = true;
-            }
+            if (!message.Equals("UPD")) return;
+            ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
+            ShutdownHandler.UpdatePending = true;
         }
 
         //Load all of the modules
         private static void initializeModules()
         {
-            modules = new List<AbstractModule>();
-            modules.Add(new AutoLogOut());
-            modules.Add(new DisplayManager());
+            modules = new List<AbstractModule> {new AutoLogOut(), new DisplayManager()};
         }
 
         //Run each service
@@ -156,22 +149,19 @@ namespace FOG
             //Only run the service if there wasn't a stop or shutdown request
             while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
-                foreach (var module in modules)
+                foreach (var module in modules.TakeWhile(module => !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending))
                 {
-                    if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending)
-                        break;
-
                     LogHandler.NewLine();
                     LogHandler.PaddedHeader(module.Name);
                     LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
 
                     try
                     {
-                        module.start();
+                        module.Start();
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to start " + module.Name);
+                        LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
                         LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
                     }
 
@@ -216,10 +206,15 @@ namespace FOG
 
         private static void startTray()
         {
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                         @"\FOGTray.exe";
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                               @"\FOGTray.exe"
+                }
+            };
             process.Start();
         }
 

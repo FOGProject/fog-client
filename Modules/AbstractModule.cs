@@ -39,9 +39,9 @@ namespace FOG.Modules
         public string EnabledURL { get; protected set; }
 
         /// <summary>
-        ///     Called to start the module. Filters out modules that are disabled on the server
+        ///     Called to Start the module. Filters out modules that are disabled on the server
         /// </summary>
-        public virtual void start()
+        public virtual void Start()
         {
             LogHandler.Log(Name, "Running...");
             if (isEnabled())
@@ -51,7 +51,7 @@ namespace FOG.Modules
         }
 
         /// <summary>
-        ///     Called after start() filters out disabled modules. Contains the module's functionality
+        ///     Called after Start() filters out disabled modules. Contains the module's functionality
         /// </summary>
         protected abstract void doWork();
 
@@ -61,7 +61,7 @@ namespace FOG.Modules
         /// <returns>True if the module is enabled</returns>
         public bool isEnabled()
         {
-            var moduleActiveResponse = CommunicationHandler.GetResponse(EnabledURL + "?moduleid=" + Name.ToLower(), true);
+            var moduleActiveResponse = CommunicationHandler.GetResponse(string.Format("{0}?moduleid={1}", EnabledURL, Name.ToLower()), true);
             return !moduleActiveResponse.Error;
         }
     }
