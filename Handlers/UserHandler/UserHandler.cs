@@ -177,7 +177,7 @@ namespace FOG.Handlers
         {
             return
                 RegistryHandler.GetRegisitryValue(
-                    @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\", "ProfileImagePath");
+                    string.Format(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid), "ProfileImagePath");
         }
 
         /// <summary>
@@ -191,7 +191,7 @@ namespace FOG.Handlers
             if (user == null)
                 return false;
 
-            LogHandler.Log(LOG_NAME, "Purging " + user.Name + " from system");
+            LogHandler.Log(LOG_NAME, string.Format("Purging {0} from system", user.Name));
 
             return deleteData
                 ? UnregisterUser(user.Name) && RemoveUserProfile(user.SID) && CleanUserRegistryEntries(user.SID)
@@ -207,7 +207,7 @@ namespace FOG.Handlers
         {
             try
             {
-                var userDir = new DirectoryEntry("WinNT://" + Environment.MachineName + ",computer");
+                var userDir = new DirectoryEntry(string.Format("WinNT://{0},computer", Environment.MachineName));
                 var userToDelete = userDir.Children.Find(user);
 
                 userDir.Children.Remove(userToDelete);
@@ -216,7 +216,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Unable to unregister user");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return false;
         }
@@ -234,7 +234,7 @@ namespace FOG.Handlers
                 if (path == null)
                     return false;
 
-                LogHandler.Log(LOG_NAME, "User path: " + path);
+                LogHandler.Log(LOG_NAME, string.Format("User path: {0}", path));
 
                 TakeOwnership(path);
                 ResetRights(path);
@@ -245,7 +245,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Unable to remove user data");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return false;
         }
@@ -259,7 +259,7 @@ namespace FOG.Handlers
         {
             return
                 RegistryHandler.DeleteFolder(
-                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\" + sid + @"\");
+                    string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid));
         }
 
         /// <summary>

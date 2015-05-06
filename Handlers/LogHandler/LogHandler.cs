@@ -58,8 +58,7 @@ namespace FOG.Handlers
         /// <param name="message">The message to log</param>
         public static void Log(string caller, string message)
         {
-            WriteLine(" " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString() + " " + caller +
-                      " " + message);
+            WriteLine(string.Format(" {0} {1} {2} {3}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), caller, message));
         }
 
         /// <summary>
@@ -87,16 +86,12 @@ namespace FOG.Handlers
             double headerSize = (HEADER_LENGTH - text.Length)/2;
             var output = "";
             for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
-            {
                 output += "-";
-            }
 
             output += text;
 
             for (var i = 0; i < ((int) Math.Floor(headerSize)); i++)
-            {
                 output += "-";
-            }
             WriteLine(output);
         }
 
@@ -167,7 +162,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log(LOG_NAME, "Failed to delete log file: " + ex.Message);
+                Log(LOG_NAME, string.Format("Failed to delete log file: {0}", ex.Message));
             }
         }
     }

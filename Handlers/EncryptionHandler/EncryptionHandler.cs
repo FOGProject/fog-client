@@ -49,7 +49,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error encoding base64");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, message: "ERROR: " + ex.Message);
             }
             return "";
         }
@@ -69,7 +69,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error decoding base64");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
         }
@@ -129,7 +129,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error encoding AES");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
         }
@@ -161,7 +161,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error decoding from AES");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
         }
@@ -321,10 +321,8 @@ namespace FOG.Handlers
             var bytes = File.ReadAllBytes(filePath);
             var result = md5.ComputeHash(bytes);
             foreach (int hashInt in result)
-            {
                 sBuilder.Append(hashInt.ToString("x2"));
-            }
-           
+
             return sBuilder.ToString();
         }
     }

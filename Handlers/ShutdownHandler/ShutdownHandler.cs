@@ -72,7 +72,7 @@ namespace FOG.Handlers
         private static void createShutdownCommand(string parameters)
         {
             LogHandler.Log(LOG_NAME, "Creating shutdown request");
-            LogHandler.Log(LOG_NAME, "Parameters: " + parameters);
+            LogHandler.Log(LOG_NAME, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
         }
@@ -85,7 +85,7 @@ namespace FOG.Handlers
         public static void Shutdown(string comment, int seconds)
         {
             ShutdownPending = true;
-            createShutdownCommand("/s /c \"" + comment + "\" /t " + seconds);
+            createShutdownCommand(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace FOG.Handlers
         public static void Restart(string comment, int seconds)
         {
             ShutdownPending = true;
-            createShutdownCommand("/r /c \"" + comment + "\" /t " + seconds);
+            createShutdownCommand(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -166,12 +166,12 @@ namespace FOG.Handlers
                     UseShellExecute = false,
                     FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                                @"\tmp\FOGUpdateWaiter.exe",
-                    Arguments = "\"" + fileName + "\""
+                    Arguments = string.Format("\"{0}\"", fileName)
                 }
             };
 
             LogHandler.Log(LOG_NAME, "Update Waiter args");
-            LogHandler.Log(LOG_NAME, process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+            LogHandler.Log(LOG_NAME, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
             process.Start();
         }
     }

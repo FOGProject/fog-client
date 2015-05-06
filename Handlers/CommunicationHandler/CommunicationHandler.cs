@@ -69,18 +69,18 @@ namespace FOG.Handlers
         /// </summary>
         public static bool GetAndSetServerAddress()
         {
-            if (RegistryHandler.GetSystemSetting("Server") != null &&
-                RegistryHandler.GetSystemSetting("WebRoot") != null &&
-                RegistryHandler.GetSystemSetting("Tray") != null && RegistryHandler.GetSystemSetting("HTTPS") != null)
+            if (RegistryHandler.GetSystemSetting("Server") == null || RegistryHandler.GetSystemSetting("WebRoot") == null || 
+                RegistryHandler.GetSystemSetting("Tray") == null || RegistryHandler.GetSystemSetting("HTTPS") == null)
             {
-                ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
-                ServerAddress += RegistryHandler.GetSystemSetting("Server") +
-                                 RegistryHandler.GetSystemSetting("WebRoot");
-                return true;
+                LogHandler.Log(LogName, "Regisitry keys are not set");
+                return false;
             }
-            LogHandler.Log(LogName, "Regisitry keys are not set");
 
-            return false;
+
+            ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
+            ServerAddress += RegistryHandler.GetSystemSetting("Server") +
+                             RegistryHandler.GetSystemSetting("WebRoot");
+            return true;
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace FOG.Handlers
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            LogHandler.Log(LogName, "URL: " + ServerAddress + postfix);
+            LogHandler.Log(LogName, string.Format("URL: {0}{1}", ServerAddress, postfix));
 
             var webClient = new WebClient();
             try
@@ -105,19 +105,19 @@ namespace FOG.Handlers
                 foreach (var returnMessage in ReturnMessages.Keys.Where(returnMessage => response.StartsWith(returnMessage)))
                 {
                     messageFound = true;
-                    LogHandler.Log(LogName, "Response: " + ReturnMessages[returnMessage]);
+                    LogHandler.Log(LogName, string.Format("Response: {0}", ReturnMessages[returnMessage]));
                     break;
                 }
 
                 if (!messageFound)
-                    LogHandler.Log(LogName, "Unknown Response: " + response.Replace("\n", ""));
+                    LogHandler.Log(LogName, string.Format("Unknown Response: {0}", response.Replace("\n", "")));
 
                 return parseResponse(response);
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error contacting FOG server");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
            
             return new Response();
@@ -159,7 +159,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error contacting FOG");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(caller: LogName, message: "ERROR: " + ex.Message);
             }
 
             return "";
@@ -173,7 +173,7 @@ namespace FOG.Handlers
         {
             try
             {
-                var keyPath = AppDomain.CurrentDomain.BaseDirectory + @"tmp\" + "public.key";
+                var keyPath = string.Format("{0}tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
@@ -181,8 +181,7 @@ namespace FOG.Handlers
                 Passkey = aes.Key;
 
                 var encryptedKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
-                var authenticationResponse = GetResponse("/management/index.php?sub=authorize&sym_key=" + encryptedKey,
-                    true);
+                var authenticationResponse = GetResponse(string.Format("/management/index.php?sub=authorize&sym_key={0}", encryptedKey), true);
 
                 if (!authenticationResponse.Error)
                 {
@@ -191,11 +190,11 @@ namespace FOG.Handlers
                 }
 
                 if (authenticationResponse.ReturnCode.Equals("#!ih"))
-                    Contact("/service/register.php?hostname=" + Dns.GetHostName(), true);
+                    Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             LogHandler.Log(LogName, "Failed to authenticate");
@@ -219,14 +218,10 @@ namespace FOG.Handlers
                 toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
                 return toDecode;
             }
-            if (toDecode.StartsWith(encryptedFlag))
-            {
-                var decryptedResponse = toDecode.Substring(encryptedFlag.Length);
-                toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
-            }
+            if (!toDecode.StartsWith(encryptedFlag)) return toDecode;
 
-
-            return toDecode;
+            var decrypted = toDecode.Substring(encryptedFlag.Length);
+            return EncryptionHandler.AESDecrypt(decrypted, passKey);
         }
 
         /// <summary>
@@ -239,8 +234,7 @@ namespace FOG.Handlers
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            LogHandler.Log(LogName,
-                "URL: " + ServerAddress + postfix);
+            LogHandler.Log(LogName, string.Format("URL: {0}{1}", ServerAddress, postfix));
             var webClient = new WebClient();
 
             try
@@ -251,7 +245,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error contacting FOG");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
             return false;
         }
@@ -294,7 +288,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error parsing response");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
             return response;
         }
@@ -328,7 +322,7 @@ namespace FOG.Handlers
 
         public static bool DownloadExternalFile(string url, string filePath)
         {
-            LogHandler.Log(LogName, "URL: " + url);
+            LogHandler.Log(LogName, string.Format("URL: {0}", url));
             var webClient = new WebClient();
             try
             {
@@ -345,7 +339,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error downloading file");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
             return false;
         }
@@ -384,7 +378,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LogName, "Error getting MAC addresses");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             return macs;
