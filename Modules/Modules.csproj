@@ -93,15 +93,6 @@
       <Name>PipeServer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="AutoLogOut" />
-    <Folder Include="ClientUpdater" />
-    <Folder Include="DisplayManager" />
-    <Folder Include="HostnameChanger" />
-    <Folder Include="GreenFOG" />
-    <Folder Include="UserTracker" />
-    <Folder Include="TaskReboot" />
-    <Folder Include="SnapinClient" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
