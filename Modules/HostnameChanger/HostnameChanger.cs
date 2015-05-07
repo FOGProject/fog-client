@@ -161,9 +161,9 @@ namespace FOG.Modules
                     int returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"), 
                                          taskResponse.getField("#ADUser"), userPassword, 
                                          (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
-                    if (returnCode == 2224)
+                    if (returnCode == 2224 || returnCode == 2)
                     {
-                        returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), taskResponse.getField("#ADOU"), 
+                        returnCode = NetJoinDomain(null, taskResponse.getField("#ADDom"), "", 
                             taskResponse.getField("#ADUser"), userPassword, JoinOptions.NETSETUP_JOIN_DOMAIN);				
                     }
 					

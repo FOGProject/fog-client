@@ -57,23 +57,26 @@ namespace FOG.Modules
 		
         private List<String> filterTasks(List<String> newTasks)
         {
-            var taskService = new TaskService();			
-            var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
-			
-            foreach (var task in existingTasks)
-            {
-                if (!newTasks.Contains(task.Name))
+            try {
+                var taskService = new TaskService();			
+                var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
+    			
+                foreach (var task in existingTasks)
                 {
-                    LogHandler.Log(Name, "Delete task " + task.Name);
-                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
-                }
-                else
-                {
-                    LogHandler.Log(Name, "Removing " + task.Name + " from queue");
-                    newTasks.Remove(task.Name); //Remove the existing task from the queue
-                }
+                    if (!newTasks.Contains(task.Name))
+                    {
+                        LogHandler.Log(Name, "Delete task " + task.Name);
+                        taskService.RootFolder.DeleteTask(@"FOG\" + task.Name, true); //If the existing task is not in the new list delete it
+                    }
+                    else
+                    {
+                        LogHandler.Log(Name, "Removing " + task.Name + " from queue");
+                        newTasks.Remove(task.Name); //Remove the existing task from the queue
+                    }
+                } 
+            } catch (Exception ex) {
+                LogHandler.Log(Name, "ERROR: " + ex.Message);
             }
-			
             return newTasks;
         }
 		

@@ -64,20 +64,34 @@ namespace FOG
 			
         }
 		
-        private static void applyUpdates()
-        {
-            String LOG_NAME = "Update Helper";
-            var process = new Process();
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-			
-            process.StartInfo.FileName = "msiexec";
-            ;
-            process.StartInfo.Arguments = "/i \"" + (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi") + "\" /quiet";
-            LogHandler.Log(LOG_NAME, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
-            process.Start();
-            process.WaitForExit();
-        }
+      private static void applyUpdates()
+      {
+          const string LOG_NAME = "Update Helper";
+
+          var useTray = RegistryHandler.GetSystemSetting("Tray");
+          var https = RegistryHandler.GetSystemSetting("HTTPS");
+          var webRoot = RegistryHandler.GetSystemSetting("WebRoot");
+          var server = RegistryHandler.GetSystemSetting("Server");
+
+          var process = new Process
+          {
+              StartInfo =
+              {
+                  Arguments = string.Format("/i \"{0}\" /quiet /USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\"", 
+                      (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi"), 
+                      useTray, https, server, webRoot)
+              }
+          };
+          process.StartInfo.CreateNoWindow = true;
+          process.StartInfo.UseShellExecute = false;
+          process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+          process.StartInfo.FileName = "msiexec";
+
+
+          LogHandler.Log(LOG_NAME, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+          process.Start();
+          process.WaitForExit();
+      }
     }
 }
