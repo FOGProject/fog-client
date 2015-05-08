@@ -145,15 +145,12 @@ namespace FOG.Handlers
         {
             try
             {
-                using (var rijndaelManaged = new RijndaelManaged())
+
+
+                using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros})
                 using (var memoryStream = new MemoryStream(toDecode))
                 using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
                 {
-                    rijndaelManaged.Key = key;
-                    rijndaelManaged.IV = iv;
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    rijndaelManaged.Padding = PaddingMode.Zeros;
-
                     //Return the  stream, but trim null bytes due to reading too far
                     return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", string.Empty).Trim();
                 }
@@ -301,6 +298,7 @@ namespace FOG.Handlers
         /// </summary>
         public static string AESDecrypt(string toDecode, byte[] key)
         {
+            LogHandler.Log(LOG_NAME, toDecode);
             var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
             var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
 

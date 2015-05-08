@@ -26,15 +26,11 @@ namespace FOG
     {
         public static void Main(string[] args)
         {
-            CommunicationHandler.GetAndSetServerAddress();
-
-            LogHandler.NewLine();
-            LogHandler.PaddedHeader("Registry test");
+            LogHandler.Mode = LogHandler.LogMode.Console;;
+            CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 
-            RegistryHandler.SetSystemSetting("Sleep", "5");
-            LogHandler.NewLine();
-
+            LogHandler.Log("Debugger", "Test finished");
             Console.ReadLine();
         }
     }
