@@ -106,16 +106,12 @@ namespace FOG.Handlers
             {
                 byte[] encrypted;
 
-                using (var rijndaelManaged = new RijndaelManaged())
+                using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros })
                 using (var encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV))
                 using (var msEncrypt = new MemoryStream())
                 using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                 using (var swEncrypt = new StreamWriter(csEncrypt))
                 {
-                    rijndaelManaged.Key = key;
-                    rijndaelManaged.IV = iv;
-                    rijndaelManaged.Mode = CipherMode.CBC;
-                    rijndaelManaged.Padding = PaddingMode.Zeros;
                     // Create a decrytor to perform the stream transform.
                 
                     //Write all data to the stream.
@@ -145,8 +141,6 @@ namespace FOG.Handlers
         {
             try
             {
-
-
                 using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros})
                 using (var memoryStream = new MemoryStream(toDecode))
                 using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
