@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using FOG.Handlers;
 
 namespace FOG {
 	/// <summary>
@@ -12,70 +13,60 @@ namespace FOG {
 		
 		private int gracePeriod;
 		
-		public MainForm(string[] args) {
+		public MainForm(IEnumerable<string> args) {
 			setGracePeriod();
-			if(gracePeriod == 0) {
-				Environment.Exit(0);
-			}
-			//
+		    if (gracePeriod == 0)
+		        Environment.Exit(0);
+		    //
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//
 			InitializeComponent();
 			
 			
 			//Generate the message
-			String message = "This computer needs to ";
-			String reason = ".";
+			var message = "This computer needs to ";
+			var reason = ".";
 			
-			foreach(String arg in args) {
-				if(arg.Contains("noAbort")) {
-					this.btnAbort.Enabled = false;
-				}else if(arg.Contains("shutdown")) {
-					this.btnNow.Text = "Shutdown Now";
-				} else if(arg.Contains("reboot")) {
-					this.btnNow.Text = "Reboot Now";
-				} else if(arg.Contains("snapin")) {
-					reason = " to apply new software.";
-				} else if(arg.Contains("task")) {
-				   	reason = " to perform a task.";
-				}
-				          	
-			}	
-			
-			if(this.btnNow.Text.Contains("Shutdown")) {
-				message = message + "shutdown";
-			} else {
-				message = message + "reboot";
+			foreach(var arg in args) {
+			    if (arg.Contains("noAbort"))
+			        btnAbort.Enabled = false;
+			    else if (arg.Contains("shutdown"))
+			        btnNow.Text = "Shutdown Now";
+			    else if (arg.Contains("reboot"))
+			        btnNow.Text = "Reboot Now";
+			    else if (arg.Contains("snapin"))
+			        reason = " to apply new software.";
+			    else if (arg.Contains("task"))
+			        reason = " to perform a task.";
 			}
-			
-			message = message + reason + " Please save all work and close programs.";
-			
-			
-			if(this.btnAbort.Enabled) {
-				message = message + " Press Abort to cancel.";
-			}
-			
-			this.textBox1.Text = message;
-			this.textBox1.Select(0,0);
 
-			this.progressBar1.Maximum = this.gracePeriod-1;		
-			this.label1.Text = this.gracePeriod.ToString() + " seconds";
-			Rectangle workingArea = Screen.GetWorkingArea(this);
-			this.Location = new Point(workingArea.Right - Size.Width, 
-			                          workingArea.Bottom - Size.Height);
+		    message = btnNow.Text.Contains("Shutdown") ? message + "shutdown" : message + "reboot";
+
+		    message = message + reason + " Please save all work and close programs.";
+
+
+		    if (btnAbort.Enabled)
+		        message = message + " Press Abort to cancel.";
+
+		    textBox1.Text = message;
+			textBox1.Select(0,0);
+
+			progressBar1.Maximum = gracePeriod-1;		
+			label1.Text = gracePeriod + " seconds";
+			var workingArea = Screen.GetWorkingArea(this);
+			Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
 		}
 		
 		private void setGracePeriod() {
-			String regValue = RegistryHandler.GetSystemSetting("NotificationPromptTime");
-			this.gracePeriod = 60;
-			if(regValue != null) {
-				try {
-					this.gracePeriod = int.Parse(regValue);
-				} catch (Exception) {
-					this.gracePeriod = 60;
-				}
-			}
-
+			var regValue = RegistryHandler.GetSystemSetting("NotificationPromptTime");
+			gracePeriod = 60;
+		    if (regValue == null) return;
+		    
+            try {
+		        gracePeriod = int.Parse(regValue);
+		    } catch (Exception) {
+		        gracePeriod = 60;
+		    }
 		}
 		
 		//Prevent the window from being moved
@@ -86,7 +77,7 @@ namespace FOG {
 		
 		    switch(message.Msg) {
 		        case WM_SYSCOMMAND:
-		           int command = message.WParam.ToInt32() & 0xfff0;
+		           var command = message.WParam.ToInt32() & 0xfff0;
 		           if (command == SC_MOVE)
 		              return;
 		           break;
@@ -96,12 +87,11 @@ namespace FOG {
 		}		
 		
 		void TimerTick(object sender, EventArgs e) {
-			if(progressBar1.Value >= progressBar1.Maximum) {
-				Environment.Exit(0);
-			}
-			progressBar1.Value++;
+		    if (progressBar1.Value >= progressBar1.Maximum)
+		        Environment.Exit(0);
+		    progressBar1.Value++;
 			progressBar1.Update();
-			this.label1.Text = (this.gracePeriod-this.progressBar1.Value).ToString() + " seconds";
+			label1.Text = (gracePeriod-progressBar1.Value) + " seconds";
 		}
 		
 		void BtnNowClick(object sender, EventArgs e) {

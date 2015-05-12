@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Modules", "Modules\Modules.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HandlersTest", "HandlersTest\HandlersTest.csproj", "{0B2B30C6-7973-4BEA-B4F7-043EC47D9B3C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationGUI", "NotificationGUI\NotificationGUI.csproj", "{C83363D0-6686-419C-AA0B-09EE999EC3EA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -130,6 +132,14 @@ Global
 		{0B2B30C6-7973-4BEA-B4F7-043EC47D9B3C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0B2B30C6-7973-4BEA-B4F7-043EC47D9B3C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0B2B30C6-7973-4BEA-B4F7-043EC47D9B3C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
