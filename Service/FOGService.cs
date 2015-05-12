@@ -34,13 +34,6 @@ namespace FOG
     /// </summary>
     public class FOGService : ServiceBase
     {
-        //Module status -- used for stopping/starting
-        public enum Status
-        {
-            Broken = 2,
-            Running = 1,
-            Stopped = 0
-        }
 
         private const string LOG_NAME = "Service";
         private readonly PipeServer notificationPipe;
@@ -50,7 +43,6 @@ namespace FOG
         //Define variables
         private readonly Thread threadManager;
         private List<AbstractModule> modules;
-        private Status status;
 
         public FOGService()
         {
@@ -58,7 +50,6 @@ namespace FOG
             if (!CommunicationHandler.GetAndSetServerAddress()) return;
             initializeModules();
             threadManager = new Thread(serviceLooper);
-            status = Status.Stopped;
 
             //Setup the notification pipe server
             notificationPipeThread = new Thread(notificationPipeHandler);
@@ -113,9 +104,6 @@ namespace FOG
         //Called when the service starts
         protected override void OnStart(string[] args)
         {
-            if (status.Equals(Status.Broken)) return;
-            status = Status.Running;
-
             //Start the pipe server
             notificationPipeThread.Priority = ThreadPriority.Normal;
             notificationPipeThread.Start();
@@ -164,9 +152,6 @@ namespace FOG
         //Called when the service stops
         protected override void OnStop()
         {
-            if (!status.Equals(Status.Broken))
-                status = Status.Stopped;
-
             foreach (var process in Process.GetProcessesByName("FOGUserService"))
                 process.Kill();
             foreach (var process in Process.GetProcessesByName("FOGTray"))
@@ -194,7 +179,7 @@ namespace FOG
             LogHandler.NewLine();
 
             //Only run the service if there wasn't a stop or shutdown request
-            while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
+            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 foreach (var module in modules.TakeWhile(module => !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending))
                 {

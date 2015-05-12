@@ -34,12 +34,6 @@ namespace FOG
     /// </summary>
     internal class FOGUserService
     {
-        //Module status -- used for stopping/starting
-        public enum Status
-        {
-            Running = 1,
-            Stopped = 0
-        }
 
         private const string LOG_NAME = "UserService";
         //Define variables
@@ -49,7 +43,6 @@ namespace FOG
         private static PipeServer notificationPipe;
         private static PipeClient servicePipe;
         private const int sleepDefaultTime = 60;
-        private static Status status;
 
         public static void Main(string[] args)
         {
@@ -63,7 +56,6 @@ namespace FOG
             if (!CommunicationHandler.GetAndSetServerAddress()) return;
             initializeModules();
             threadManager = new Thread(serviceLooper);
-            status = Status.Stopped;
 
             //Setup the notification pipe server
             notificationPipeThread = new Thread(notificationPipeHandler);
@@ -75,10 +67,6 @@ namespace FOG
             servicePipe = new PipeClient("fog_pipe_service");
             servicePipe.MessageReceived += pipeClient_MessageReceived;
             servicePipe.connect();
-
-
-            status = Status.Running;
-
 
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
             {
@@ -93,7 +81,7 @@ namespace FOG
             threadManager.IsBackground = false;
             threadManager.Start();
 
-            if (RegistryHandler.GetSystemSetting("Tray").Trim().Equals("1"))
+            if (RegistryHandler.GetSystemSetting("Tray").Equals("1"))
                 startTray();
         }
 
@@ -149,7 +137,7 @@ namespace FOG
         private static void serviceLooper()
         {
             //Only run the service if there wasn't a stop or shutdown request
-            while (status.Equals(Status.Running) && !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
+            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 foreach (var module in modules.TakeWhile(module => !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending))
                 {
@@ -163,7 +151,7 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        FOG.Handlers.LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
+                        LogHandler.Log(LOG_NAME, string.Format("Failed to Start {0}", module.Name));
                         LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
                     }
 
