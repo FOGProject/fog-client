@@ -42,19 +42,19 @@ namespace FOG.Modules
             if (UserHandler.IsUserLoggedIn())
             {
                 //Get task info
-                var taskResponse =
-                    CommunicationHandler.GetResponse("/service/autologout.php?mac=" +
-                                                     CommunicationHandler.GetMacAddresses());
+                var taskResponse = CommunicationHandler.GetResponse("/service/autologout.php", true);
 
                 if (taskResponse.Error) return;
                 var timeOut = getTimeOut(taskResponse);
                 if (timeOut <= 0) return;
-                LogHandler.Log(Name, "Time set to " + timeOut + " seconds");
-                LogHandler.Log(Name, "Inactive for " + UserHandler.GetUserInactivityTime() + " seconds");
+
+                LogHandler.Log(Name, string.Format("Time set to {0} seconds", timeOut));
+                LogHandler.Log(Name, string.Format("Inactive for {0} seconds", UserHandler.GetUserInactivityTime()));
                 
                 if (UserHandler.GetUserInactivityTime() < timeOut) return;
                 NotificationHandler.Notifications.Add(new Notification("You are about to be logged off",
                     "Due to inactivity you will be logged off if you remain inactive", 20));
+                
                 //Wait 20 seconds and check if the user is no longer inactive
                 Thread.Sleep(20000);
                 if (UserHandler.GetUserInactivityTime() >= timeOut)
@@ -80,7 +80,7 @@ namespace FOG.Modules
             catch (Exception ex)
             {
                 LogHandler.Log(Name, "Unable to parsing time set");
-                LogHandler.Log(Name, "ERROR: " + ex.Message);
+                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
             }
 
             return 0;

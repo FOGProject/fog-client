@@ -93,6 +93,7 @@ namespace FOG
             }
             catch
             {
+                // ignored
             }
         }
 

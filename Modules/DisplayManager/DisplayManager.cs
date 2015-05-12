@@ -72,19 +72,22 @@ namespace FOG.Modules
         //Change the resolution of the screen
         private void changeResolution(string device, int width, int height, int refresh)
         {
-            if (
-                !(width.Equals(display.Configuration.dmPelsWidth) && height.Equals(display.Configuration.dmPelsHeight) &&
-                  refresh.Equals(display.Configuration.dmDisplayFrequency)))
+            try
             {
+                if ((width.Equals(display.Configuration.dmPelsWidth) && height.Equals(display.Configuration.dmPelsHeight) &&
+                  refresh.Equals(display.Configuration.dmDisplayFrequency)))
+                    throw new Exception("Resolution is already configured correctly");
+
                 LogHandler.Log(Name, string.Format("Current Resolution: {0} x {1} {2}hz", display.Configuration.dmPelsWidth, display.Configuration.dmPelsHeight, display.Configuration.dmDisplayFrequency));
                 LogHandler.Log(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
                 LogHandler.Log(Name, "Display name: " + device);
 
                 display.ChangeResolution(device, width, height, refresh);
             }
-            else
+            catch (Exception ex)
             {
-                LogHandler.Log(Name, "Current resolution is already set correctly");
+                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+
             }
         }
 

@@ -53,7 +53,9 @@ namespace FOG.Modules
                 LogHandler.Log(Name, "User is currently logged in, will try again later");
                 
                 NotificationHandler.Notifications.Add(new Notification("Please log off",
-                    string.Format("{0} is attemping to service your computer, please log off at the soonest available time", NotificationHandler.Company), 60));
+                    string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
+                        NotificationHandler.Company), 60));
+
                 notifiedUser = true;
             }
         }

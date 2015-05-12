@@ -61,8 +61,7 @@ namespace FOG
         //start the pipe server
         public void start()
         {
-            listenThread = new Thread(listenForClients);
-            listenThread.IsBackground = true;
+            listenThread = new Thread(listenForClients) {IsBackground = true};
             listenThread.Start();
             running = true;
         }
@@ -98,25 +97,22 @@ namespace FOG
         }
 
         //Change the security settings of the pipe so the SYSTEM ACCOUNT can interact with user accounts
-        private IntPtr createSecurity()
+        private static IntPtr createSecurity()
         {
             var ptrSec = IntPtr.Zero;
             var securityAttribute = new SECURITY_ATTRIBUTES();
             SECURITY_DESCRIPTOR securityDescription;
 
-            if (InitializeSecurityDescriptor(out securityDescription, 1))
-            {
-                if (SetSecurityDescriptorDacl(ref securityDescription, true, IntPtr.Zero, false))
-                {
-                    securityAttribute.lpSecurityDescriptor =
-                        Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_DESCRIPTOR)));
-                    Marshal.StructureToPtr(securityDescription, securityAttribute.lpSecurityDescriptor, false);
-                    securityAttribute.bInheritHandle = false;
-                    securityAttribute.nLength = Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES));
-                    ptrSec = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES)));
-                    Marshal.StructureToPtr(securityAttribute, ptrSec, false);
-                }
-            }
+            if (!InitializeSecurityDescriptor(out securityDescription, 1)) return ptrSec;
+            if (!SetSecurityDescriptorDacl(ref securityDescription, true, IntPtr.Zero, false)) return ptrSec;
+            
+            securityAttribute.lpSecurityDescriptor =
+                Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_DESCRIPTOR)));
+            Marshal.StructureToPtr(securityDescription, securityAttribute.lpSecurityDescriptor, false);
+            securityAttribute.bInheritHandle = false;
+            securityAttribute.nLength = Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES));
+            ptrSec = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES)));
+            Marshal.StructureToPtr(securityAttribute, ptrSec, false);
             return ptrSec;
         }
 

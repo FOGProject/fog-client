@@ -73,10 +73,9 @@ namespace FOG.Modules
             return newTasks;
         }
 
-        private void createTasks(List<string> tasks)
+        private void createTasks(IEnumerable<string> tasks)
         {
             var taskService = new TaskService();
-            var index = 0;
 
             foreach (var task in tasks)
             {
@@ -115,8 +114,6 @@ namespace FOG.Modules
                     LogHandler.Log(Name, "Error registering task: " + task);
                     LogHandler.Log(Name, "ERROR: " + ex.Message);
                 }
-
-                index++;
             }
         }
     }

@@ -46,14 +46,14 @@ namespace FOG.Modules
                 if (taskResponse.Error) return;
 
                 LogHandler.Log(Name, "Snapin Found:");
-                LogHandler.Log(Name, "    ID: " + taskResponse.GetField("JOBTASKID"));
-                LogHandler.Log(Name, "    RunWith: " + taskResponse.GetField("SNAPINRUNWITH"));
-                LogHandler.Log(Name, "    RunWithArgs: " + taskResponse.GetField("SNAPINRUNWITHARGS"));
-                LogHandler.Log(Name, "    Name: " + taskResponse.GetField("SNAPINNAME"));
-                LogHandler.Log(Name, "    File: " + taskResponse.GetField("SNAPINFILENAME"));
-                LogHandler.Log(Name, "    Created: " + taskResponse.GetField("JOBCREATION"));
-                LogHandler.Log(Name, "    Args: " + taskResponse.GetField("SNAPINARGS"));
-                LogHandler.Log(Name, "    Reboot: " + taskResponse.GetField("SNAPINBOUNCE"));
+                LogHandler.Log(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
+                LogHandler.Log(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
+                LogHandler.Log(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
+                LogHandler.Log(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
+                LogHandler.Log(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
+                LogHandler.Log(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
+                LogHandler.Log(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
+                LogHandler.Log(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
 
                 var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
@@ -68,9 +68,8 @@ namespace FOG.Modules
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    CommunicationHandler.Contact("/service/snapins.checkin.php?mac=" +
-                                                 CommunicationHandler.GetMacAddresses() + "&taskid=" +
-                                                 taskResponse.GetField("JOBTASKID") + "&exitcode=" + exitCode);
+                    CommunicationHandler.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
+                        CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
@@ -142,8 +141,8 @@ namespace FOG.Modules
                     taskResponse.GetField("SNAPINRUNWITHARGS"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.GetField("SNAPINRUNWITHARGS") + " \"" + snapinPath + " \"" +
-                    Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS")));
+                    string.Format("{0} \"{1} \"{2}", taskResponse.GetField("SNAPINRUNWITHARGS"), 
+                        snapinPath, Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))));
             }
             else
             {
