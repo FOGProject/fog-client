@@ -11,9 +11,9 @@ namespace HandlersTest.Communication
         [TestMethod]
         public void Authenticate()
         {
-            var sucess = CommunicationHandler.Authenticate();
+            var success = CommunicationHandler.Authenticate();
 
-            Assert.AreEqual(true, sucess);
+            Assert.AreEqual(true, success);
         }
 
     }
