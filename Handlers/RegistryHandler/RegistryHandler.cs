@@ -49,8 +49,8 @@ namespace FOG.Handlers
             try
             {
                 var key = Registry.LocalMachine.OpenSubKey(keyPath);
-                
-                if(key == null) throw new Exception("Null key");
+
+                if (key == null) throw new NullReferenceException("Null key");
                 
                 var keyValue = key.GetValue(keyName).ToString();
                 key.Close();
@@ -62,6 +62,74 @@ namespace FOG.Handlers
                 LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
             return null;
+        }
+
+        public static bool SetRegistryValue(string keyPath, string keyName, string value)
+        {
+            try
+            {
+                var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
+                if (key == null) throw new NullReferenceException("Null key");
+
+                key.CreateSubKey(keyName);
+                key.SetValue(keyName, value);
+                key.Close();
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Log(LOG_NAME, string.Format("Error setting {0}{1}", keyPath, keyName));
+                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+            }
+
+            return false;
+        }
+
+        public static bool DeleteFolder(string path)
+        {
+            try
+            {
+                var key = Registry.LocalMachine.OpenSubKey(path, true);
+                if (key == null) throw new NullReferenceException("Null key");
+
+                key.DeleteSubKeyTree(path);
+                key.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", path));
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+            }
+
+            return false;
+        }
+
+        public static bool DeleteKey(string keyPath, string keyName)
+        {
+            try
+            {
+                var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
+                if (key == null) throw new NullReferenceException("Null key");
+
+                key.DeleteValue(keyName);
+                key.Close();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", keyPath));
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+            }
+
+            return false;
+        }
+
+        public static string GetRoot()
+        {
+            if (root.Equals(""))
+                updateRoot();
+
+            return root;
         }
 
         public static string GetSystemSetting(string name)
@@ -92,74 +160,6 @@ namespace FOG.Handlers
         public static bool DeleteModule(string module)
         {
             return DeleteFolder(string.Format("{0}\\{1}", GetRoot(), module));
-        }
-
-        public static bool SetRegistryValue(string keyPath, string keyName, string value)
-        {
-            try
-            {
-                var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
-                if (key == null) throw new Exception("Null key");
-
-                key.CreateSubKey(keyName);
-                key.SetValue(keyName, value);
-                key.Close();
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, string.Format("Error setting {0}{1}", keyPath, keyName));
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
-            }
-
-            return false;
-        }
-
-        public static bool DeleteFolder(string path)
-        {
-            try
-            {
-                var key = Registry.LocalMachine.OpenSubKey(path, true);
-                if(key == null) throw new Exception("Null key");
-
-                key.DeleteSubKeyTree(path);
-                key.Close();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", path));
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-            }
-
-            return false;
-        }
-
-        public static bool DeleteKey(string keyPath, string keyName)
-        {
-            try
-            {
-                var key = Registry.LocalMachine.OpenSubKey(keyPath, true);
-                if(key == null) throw new Exception("Null key");
-
-                key.DeleteValue(keyName);
-                key.Close();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", keyPath));
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-            }
-
-            return false;
-        }
-
-        public static string GetRoot()
-        {
-            if (root.Equals(""))
-                updateRoot();
-
-            return root;
         }
     }
 }

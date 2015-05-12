@@ -154,7 +154,7 @@ namespace FOG.Handlers
         ///     Wipe the log
         /// </summary>
         /// <param name="logFile"></param>
-        private static void cleanLog(FileInfo logFile)
+        private static void cleanLog(FileSystemInfo logFile)
         {
             try
             {

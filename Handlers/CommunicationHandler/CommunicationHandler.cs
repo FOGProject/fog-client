@@ -63,26 +63,30 @@ namespace FOG.Handlers
 
         private static bool _isAddressSet = GetAndSetServerAddress();
 
-
-
         /// <summary>
         ///     Load the server information from the registry and apply it
         ///     <returns>True if settings were updated</returns>
         /// </summary>
         public static bool GetAndSetServerAddress()
         {
-            if (RegistryHandler.GetSystemSetting("Server") == null || RegistryHandler.GetSystemSetting("WebRoot") == null || 
-                RegistryHandler.GetSystemSetting("Tray") == null || RegistryHandler.GetSystemSetting("HTTPS") == null)
+            try
             {
-                LogHandler.Log(LogName, "Regisitry keys are not set");
-                return false;
+                if (RegistryHandler.GetSystemSetting("HTTPS") == null) throw new NullReferenceException("HTTPS key not set");
+                if (RegistryHandler.GetSystemSetting("Server") == null) throw new NullReferenceException("Server key not set");
+                if (RegistryHandler.GetSystemSetting("WebRoot") == null) throw new NullReferenceException("WebRoot key not set");
+
+                ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
+                ServerAddress += RegistryHandler.GetSystemSetting("Server") +
+                                 RegistryHandler.GetSystemSetting("WebRoot");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Log(LogName, "Error getting regisitry information");
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
-
-            ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
-            ServerAddress += RegistryHandler.GetSystemSetting("Server") +
-                             RegistryHandler.GetSystemSetting("WebRoot");
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -102,6 +106,7 @@ namespace FOG.Handlers
             {
                 var response = webClient.DownloadString(ServerAddress + postfix);
                 response = AESDecrypt(response, Passkey);
+                
                 //See if the return code is known
                 var messageFound = false;
                 foreach (var returnMessage in ReturnMessages.Keys.Where(returnMessage => response.StartsWith(returnMessage)))
@@ -196,10 +201,10 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
+                LogHandler.Log(LogName, "Error authenticating");
                 LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
-            LogHandler.Log(LogName, "Failed to authenticate");
             return false;
         }
 
@@ -328,6 +333,8 @@ namespace FOG.Handlers
             var webClient = new WebClient();
             try
             {
+                if(filePath == null) throw new NullReferenceException("Filepath is null");
+
                 //Create the directory that the file will go in if it doesn't already exist
                 if (!Directory.Exists(Path.GetDirectoryName(filePath)))
                 {

@@ -170,7 +170,7 @@ namespace FOG.Modules
                         (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
 
                 LogHandler.Log(Name, string.Format("{0} {1}", (returnCodes.ContainsKey(returnCode)
-                    ? returnCodes[returnCode] + ", code = "
+                    ? string.Format("{0}, code = ", returnCodes[returnCode])
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
@@ -196,7 +196,7 @@ namespace FOG.Modules
                     response.GetField("#ADPass"), UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
 
                 LogHandler.Log(Name, string.Format("{0} {1}", (returnCodes.ContainsKey(returnCode)
-                    ? returnCodes[returnCode] + ", code = "
+                    ? string.Format("{0}, code = ", returnCodes[returnCode])
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
@@ -225,8 +225,7 @@ namespace FOG.Modules
                     StartInfo =
                     {
                         FileName = @"cscript",
-                        Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ipk " +
-                                    response.GetField("#Key"),
+                        Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", Environment.SystemDirectory, response.GetField("#Key")),
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
                 };
@@ -237,7 +236,7 @@ namespace FOG.Modules
                 process.Close();
 
                 //Try and activate the new key
-                process.StartInfo.Arguments = "//B //Nologo " + Environment.SystemDirectory + @"\slmgr.vbs /ato";
+                process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
                 process.Start();
                 process.WaitForExit();
                 process.Close();

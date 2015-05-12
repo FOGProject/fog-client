@@ -49,7 +49,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error encoding base64");
-                LogHandler.Log(LOG_NAME, message: "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
             return "";
         }
@@ -99,11 +99,10 @@ namespace FOG.Handlers
         /// <returns>An encrypted string of toEncode</returns>
         public static string AESEncrypt(string toEncode, byte[] key, byte[] iv)
         {
-            if (toEncode == null || key.Length == 0 || iv.Length == 0)
-                return "";
-
             try
             {
+                if (toEncode == null || key.Length == 0 || iv.Length == 0) throw new Exception("Invalid data");
+
                 byte[] encrypted;
 
                 using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros })
@@ -293,8 +292,8 @@ namespace FOG.Handlers
         public static string AESDecrypt(string toDecode, byte[] key)
         {
             LogHandler.Log(LOG_NAME, toDecode);
-            var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
-            var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
+            var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|", StringComparison.Ordinal)));
+            var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|", StringComparison.Ordinal) + 1));
 
             return AESDecrypt(data, key, iv);
         }

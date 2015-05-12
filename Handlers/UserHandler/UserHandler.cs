@@ -48,6 +48,42 @@ namespace FOG.Handlers
         [DllImport("Wtsapi32.dll")]
         private static extern void WTSFreeMemory(IntPtr pointer);
 
+
+        private enum WtsInfoClass
+        {
+            WTSInitialProgram,
+            WTSApplicationName,
+            WTSWorkingDirectory,
+            WTSOEMId,
+            WTSSessionId,
+            WTSUserName,
+            WTSWinStationName,
+            WTSDomainName,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType,
+            WTSIdleTime,
+            WTSLogonTime,
+            WTSIncomingBytes,
+            WTSOutgoingBytes,
+            WTSIncomingFrames,
+            WTSOutgoingFrames,
+            WTSClientInfo,
+            WTSSessionInfo
+        };
+
+        internal struct LASTINPUTINFO
+        {
+            public uint cbSize;
+            public uint dwTime;
+        }
+
         /// <summary>
         /// </summary>
         /// <returns>True if a user is logged in</returns>
@@ -76,7 +112,8 @@ namespace FOG.Handlers
             var query = new SelectQuery("Win32_UserAccount");
             var searcher = new ManagementObjectSearcher(query);
 
-            return (from ManagementBaseObject envVar in searcher.Get() select new UserData(envVar["Name"].ToString(), envVar["SID"].ToString())).ToList();
+            return (from ManagementBaseObject envVar in searcher.Get() select new UserData(envVar["Name"].ToString(), 
+                envVar["SID"].ToString())).ToList();
         }
 
         /// <summary>
@@ -108,7 +145,8 @@ namespace FOG.Handlers
         {
             var sessionIds = GetSessionIds();
 
-            return (from sessionId in sessionIds where !GetUserNameFromSessionId(sessionId, false).Equals("SYSTEM") select GetUserNameFromSessionId(sessionId, false)).ToList();
+            return (from sessionId in sessionIds where !GetUserNameFromSessionId(sessionId, false)
+                        .Equals("SYSTEM") select GetUserNameFromSessionId(sessionId, false)).ToList();
         }
 
         /// <summary>
@@ -178,177 +216,6 @@ namespace FOG.Handlers
             return
                 RegistryHandler.GetRegisitryValue(
                     string.Format(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid), "ProfileImagePath");
-        }
-
-        /// <summary>
-        ///     Completely remove a user from the registry and the filesystem
-        /// </summary>
-        /// <param name="user">The user to purge</param>
-        /// <param name="deleteData">If the user profile should be deleted</param>
-        /// <returns>True if sucessfull</returns>
-        public static bool PurgeUser(UserData user, bool deleteData)
-        {
-            if (user == null)
-                return false;
-
-            LogHandler.Log(LOG_NAME, string.Format("Purging {0} from system", user.Name));
-
-            return deleteData
-                ? UnregisterUser(user.Name) && RemoveUserProfile(user.SID) && CleanUserRegistryEntries(user.SID)
-                : UnregisterUser(user.Name);
-        }
-
-        /// <summary>
-        ///     Unregister a user from windows
-        /// </summary>
-        /// <param name="user">The username to unregister</param>
-        /// <returns>True is sucessfull</returns>
-        public static bool UnregisterUser(string user)
-        {
-            try
-            {
-                var userDir = new DirectoryEntry(string.Format("WinNT://{0},computer", Environment.MachineName));
-                var userToDelete = userDir.Children.Find(user);
-
-                userDir.Children.Remove(userToDelete);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, "Unable to unregister user");
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-            }
-            return false;
-        }
-
-        /// <summary>
-        ///     Attempt to delete the user profile, current not working
-        /// </summary>
-        /// <param name="sid">The user's security ID</param>
-        /// <returns>True if sucessfull</returns>
-        public static bool RemoveUserProfile(string sid)
-        {
-            try
-            {
-                var path = GetUserProfilePath(sid);
-                if (path == null)
-                    return false;
-
-                LogHandler.Log(LOG_NAME, string.Format("User path: {0}", path));
-
-                TakeOwnership(path);
-                ResetRights(path);
-                RemoveWriteProtection(path);
-                Directory.Delete(path, true);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, "Unable to remove user data");
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-            }
-            return false;
-        }
-
-        /// <summary>
-        ///     Remove a user from the registry
-        /// </summary>
-        /// <param name="sid">The user's security ID</param>
-        /// <returns>True if sucessfull</returns>
-        public static bool CleanUserRegistryEntries(string sid)
-        {
-            return
-                RegistryHandler.DeleteFolder(
-                    string.Format(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid));
-        }
-
-        /// <summary>
-        ///     Take ownership of a directory
-        /// </summary>
-        /// <param name="path">The directory path</param>
-        public static void TakeOwnership(string path)
-        {
-            using (new PrivilegeEnabler(Process.GetCurrentProcess(), Privilege.TakeOwnership))
-            {
-                var directoryInfo = new DirectoryInfo(path);
-                var directorySecurity = directoryInfo.GetAccessControl();
-
-                if (directorySecurity == null)
-                    return;
-
-                Directory.SetAccessControl(path, directorySecurity);
-                var windowsIdentity = WindowsIdentity.GetCurrent();
-
-                if (windowsIdentity == null || windowsIdentity.User == null)
-                    return;
-
-                directorySecurity.SetOwner(windowsIdentity.User);
-            }
-        }
-
-        private static DirectorySecurity removeExplicitSecurity(DirectorySecurity directorySecurity)
-        {
-            var rules = directorySecurity.GetAccessRules(true, false, typeof (NTAccount));
-            foreach (FileSystemAccessRule rule in rules)
-                directorySecurity.RemoveAccessRule(rule);
-            return directorySecurity;
-        }
-
-        /// <summary>
-        ///     Reset the rights of a directory
-        /// </summary>
-        /// <param name="path">The directory path</param>
-        public static void ResetRights(string path)
-        {
-            var directoryInfo = new DirectoryInfo(path);
-            var directorySecurity = directoryInfo.GetAccessControl();
-            directorySecurity = removeExplicitSecurity(directorySecurity);
-            Directory.SetAccessControl(path, directorySecurity);
-        }
-
-        /// <summary>
-        ///     Remove write protection on a directory
-        /// </summary>
-        /// <param name="path">The directory path</param>
-        public static void RemoveWriteProtection(string path)
-        {
-            var directoryInfo = new DirectoryInfo(path);
-            directoryInfo.Attributes &= ~FileAttributes.ReadOnly;
-        }
-
-        private enum WtsInfoClass
-        {
-            WTSInitialProgram,
-            WTSApplicationName,
-            WTSWorkingDirectory,
-            WTSOEMId,
-            WTSSessionId,
-            WTSUserName,
-            WTSWinStationName,
-            WTSDomainName,
-            WTSConnectState,
-            WTSClientBuildNumber,
-            WTSClientName,
-            WTSClientDirectory,
-            WTSClientProductId,
-            WTSClientHardwareId,
-            WTSClientAddress,
-            WTSClientDisplay,
-            WTSClientProtocolType,
-            WTSIdleTime,
-            WTSLogonTime,
-            WTSIncomingBytes,
-            WTSOutgoingBytes,
-            WTSIncomingFrames,
-            WTSOutgoingFrames,
-            WTSClientInfo,
-            WTSSessionInfo
-        };
-
-        internal struct LASTINPUTINFO
-        {
-            public uint cbSize;
-            public uint dwTime;
         }
     }
 }
