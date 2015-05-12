@@ -1,6 +1,0 @@
-D:\fog\client\bin\LogViewer.exe.config
-D:\fog\client\bin\LogViewer.exe
-D:\fog\client\LogViewer\obj\Release\ResolveAssemblyReference.cache
-D:\fog\client\LogViewer\obj\Release\LogViewer.csproj.GenerateResource.Cache
-D:\fog\client\LogViewer\obj\Release\LogViewer.exe
-D:\fog\client\LogViewer\obj\Release\FOG.MainForm.resources
