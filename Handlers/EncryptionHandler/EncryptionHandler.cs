@@ -75,59 +75,6 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     AES encrypts a string
-        ///     <param name="toEncode">The string to be encrypted</param>
-        ///     <param name="passKey">The AES pass key</param>
-        ///     <param name="initializationVector">The AES initialization vector</param>
-        ///     <returns>An encrypted string of toEncode</returns>
-        /// </summary>
-        public static string AESEncrypt(string toEncode, string passKey, string initializationVector)
-        {
-            //Convert the initialization vector and key into a byte array
-            var key = Encoding.UTF8.GetBytes(passKey);
-            var iv = Encoding.UTF8.GetBytes(initializationVector);
-
-            return AESEncrypt(toEncode, key, iv);
-        }
-
-        /// <summary>
-        ///     AES encrypts a string
-        /// </summary>
-        /// <param name="toEncode">The string to be encrypted</param>
-        /// <param name="key">The AES pass key</param>
-        /// <param name="iv">The AES initialization vector</param>
-        /// <returns>An encrypted string of toEncode</returns>
-        public static string AESEncrypt(string toEncode, byte[] key, byte[] iv)
-        {
-            try
-            {
-                if (toEncode == null || key.Length == 0 || iv.Length == 0) throw new Exception("Invalid data");
-
-                using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros })
-                using (var encryptor = rijndaelManaged.CreateEncryptor())
-                using (var msEncrypt = new MemoryStream())
-                using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
-                using (var swEncrypt = new StreamWriter(csEncrypt))
-                {                
-                    //Write all data to the stream.
-                    swEncrypt.Write(toEncode);
-                    var encrypted = msEncrypt.ToArray();
-
-                    // Return the encrypted bytes from the memory stream. 
-                    return ByteArrayToHexString(encrypted);
-                }
-
-
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Log(LOG_NAME, "Error encoding AES");
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-            }
-            return "";
-        }
-
-        /// <summary>
         ///     AES decrypts a string
         /// </summary>
         /// <param name="toDecode">The string to be decrypted</param>
@@ -240,31 +187,6 @@ namespace FOG.Handlers
             byte[] encryptedData;
             using (var openSLLRSA = RSA.FromPublicKey(BIO.File(pemFile, "r")))
                 encryptedData = openSLLRSA.PublicEncrypt(toEncode, RSA.Padding.PKCS1);
-
-            return encryptedData;
-        }
-
-        /// <summary>
-        ///     RSA decrypts a message
-        /// </summary>
-        /// <param name="toDecode">The message to decrypt</param>
-        /// <param name="rsa">The rsa object storing the key info</param>
-        /// <returns>A decrypted string of the message</returns>
-        public static string RSADecrypt(string toDecode, RSA rsa)
-        {
-            return Encoding.Default.GetString(RawRSADecrypt(toDecode, rsa));
-        }
-
-        /// <summary>
-        ///     RSA decrypts a message
-        /// </summary>
-        /// <param name="toDecode">The message to decrypt</param>
-        /// <param name="rsa">The rsa object storing the key info</param>
-        /// <returns>A decrypted byte array of the message</returns>
-        public static byte[] RawRSADecrypt(string toDecode, RSA rsa)
-        {
-            var message = HexStringToByteArray(toDecode);
-            var encryptedData = rsa.PrivateDecrypt(message, RSA.Padding.PKCS1);
 
             return encryptedData;
         }

@@ -1,4 +1,5 @@
-﻿using FOG.Handlers;
+﻿using System.Text;
+using FOG.Handlers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HandlersTest.Encryption
@@ -29,20 +30,6 @@ namespace HandlersTest.Encryption
             var decoded = EncryptionHandler.ByteArrayToHexString(encoded);
 
             Assert.AreEqual(message, decoded);
-        }
-
-        [TestMethod]
-        public void RoundTrip_AES()
-        {
-            const string message = "tratePhudrUChuQUdzU7aqktrapRastA";
-            const string key = "tDtadeqbcaba7abraguchuheZ4benRdR";
-            const string iv = "tHeHut2bkReWrdTA";
-
-            var encryptedMSG = EncryptionHandler.AESEncrypt(message, key, iv);
-            Assert.AreNotEqual(string.Empty, encryptedMSG);
-            var decryptedMSG = EncryptionHandler.AESDecrypt(encryptedMSG, key, iv);
-
-            Assert.AreEqual(message, decryptedMSG);
         }
 
         [TestMethod]

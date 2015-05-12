@@ -3,8 +3,3 @@ D:\fog-client\Tray\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
 D:\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
 D:\fog-client\Tray\obj\Release\FOGTray.exe
-D:\fog\client\bin\FOGTray.exe
-D:\fog\client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
-D:\fog\client\Tray\obj\Release\FOG.NotificationIcon.resources
-D:\fog\client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
-D:\fog\client\Tray\obj\Release\FOGTray.exe

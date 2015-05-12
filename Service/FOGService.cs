@@ -166,6 +166,7 @@ namespace FOG
             }
             catch (Exception ex)
             {
+                // ignored
             }
         }
 
