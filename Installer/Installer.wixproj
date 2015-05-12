@@ -73,7 +73,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <WixExtension Include="C:\Program Files %28x86%29\WiX Toolset v3.8\bin\WixUIExtension.dll" />
+    <WixExtension Include="WixUIExtension">
+      <HintPath>C:\Program Files (x86)\WiX Toolset v3.8\bin\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
   <PropertyGroup Condition=" '$(Configuration)' == 'Public Release' ">
@@ -83,7 +86,9 @@
     <StartAction>Project</StartAction>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>..\SignBinaries.cmd</PreBuildEvent>
     <PostBuildEvent>..\SignCode.cmd ..\bin\FOGService.msi</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent />
   </PropertyGroup>
 </Project>

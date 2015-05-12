@@ -125,6 +125,7 @@ namespace FOG.Handlers
             {
                 LogHandler.Log(LOG_NAME, "Error encoding AES");
                 LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                return ex.Message;
             }
             return "";
         }
@@ -154,6 +155,23 @@ namespace FOG.Handlers
                 LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
+        }
+
+        /// <summary>
+        ///     AES decrypts a string
+        ///     <param name="toDecode">The hex-code string to be decrypted</param>
+        ///     <param name="passKey">The AES pass key</param>
+        ///     <param name="initializationVector">The AES initialization vector</param>
+        ///     <returns>An decrypted string of toDecode</returns>
+        /// </summary>
+        public static string AESDecrypt(string toDecode, string passKey, string initializationVector)
+        {
+            //Convert the initialization vector and key into a byte array
+            var key = Encoding.UTF8.GetBytes(passKey);
+            var iv = Encoding.UTF8.GetBytes(initializationVector);
+            var msg = HexStringToByteArray(toDecode);
+
+            return AESDecrypt(msg, key, iv);
         }
 
         /// <summary>
