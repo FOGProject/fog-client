@@ -1,9 +1,7 @@
-﻿using System;
-using System.Linq;
+﻿using FOG.Handlers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FOG.Handlers;
 
-namespace HandlersTest
+namespace HandlersTest.Encryption
 {
     [TestClass]
     public class EncryptionTest
@@ -15,6 +13,7 @@ namespace HandlersTest
             const string message = "The dog jumped over the fence #@//\\\\$";
 
             var encoded = EncryptionHandler.EncodeBase64(message);
+            Assert.AreNotEqual(string.Empty, encoded);
             var decoded = EncryptionHandler.DecodeBase64(encoded);
 
             Assert.AreEqual(message, decoded);
@@ -26,6 +25,7 @@ namespace HandlersTest
             const string message = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
 
             var encoded = EncryptionHandler.HexStringToByteArray(message);
+            Assert.AreNotEqual(string.Empty, encoded);
             var decoded = EncryptionHandler.ByteArrayToHexString(encoded);
 
             Assert.AreEqual(message, decoded);
@@ -39,9 +39,10 @@ namespace HandlersTest
             const string iv = "tHeHut2bkReWrdTA";
 
             var encryptedMSG = EncryptionHandler.AESEncrypt(message, key, iv);
+            Assert.AreNotEqual(string.Empty, encryptedMSG);
             var decryptedMSG = EncryptionHandler.AESDecrypt(encryptedMSG, key, iv);
 
-            Assert.AreEqual(message, encryptedMSG);
+            Assert.AreEqual(message, decryptedMSG);
         }
 
         [TestMethod]

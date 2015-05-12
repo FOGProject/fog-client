@@ -103,29 +103,26 @@ namespace FOG.Handlers
             {
                 if (toEncode == null || key.Length == 0 || iv.Length == 0) throw new Exception("Invalid data");
 
-                byte[] encrypted;
-
                 using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros })
-                using (var encryptor = rijndaelManaged.CreateEncryptor(rijndaelManaged.Key, rijndaelManaged.IV))
+                using (var encryptor = rijndaelManaged.CreateEncryptor())
                 using (var msEncrypt = new MemoryStream())
                 using (var csEncrypt = new CryptoStream(msEncrypt, encryptor, CryptoStreamMode.Write))
                 using (var swEncrypt = new StreamWriter(csEncrypt))
-                {
-                    // Create a decrytor to perform the stream transform.
-                
+                {                
                     //Write all data to the stream.
                     swEncrypt.Write(toEncode);
-                    encrypted = msEncrypt.ToArray();
+                    var encrypted = msEncrypt.ToArray();
+
+                    // Return the encrypted bytes from the memory stream. 
+                    return ByteArrayToHexString(encrypted);
                 }
 
-                // Return the encrypted bytes from the memory stream. 
-                return ByteArrayToHexString(encrypted);
+
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Error encoding AES");
                 LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
-                return ex.Message;
             }
             return "";
         }
@@ -143,7 +140,7 @@ namespace FOG.Handlers
             {
                 using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros})
                 using (var memoryStream = new MemoryStream(toDecode))
-                using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(key, iv), CryptoStreamMode.Read))
+                using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Read))
                 {
                     //Return the  stream, but trim null bytes due to reading too far
                     return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", string.Empty).Trim();

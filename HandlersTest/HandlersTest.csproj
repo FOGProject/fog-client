@@ -53,7 +53,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="EncryptionTest.cs" />
+    <Compile Include="Encryption\EncryptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
