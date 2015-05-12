@@ -74,6 +74,11 @@
     <Compile Include="DisplayManager\User_32.cs" />
     <Compile Include="GreenFOG\GreenFOG.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
+    <Compile Include="PrinterManager\LocalPrinter.cs" />
+    <Compile Include="PrinterManager\iPrintPrinter.cs" />
+    <Compile Include="PrinterManager\NetworkPrinter.cs" />
+    <Compile Include="PrinterManager\Printer.cs" />
+    <Compile Include="PrinterManager\PrinterManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SnapinClient\SnapinClient.cs" />
     <Compile Include="TaskReboot\TaskReboot.cs" />
