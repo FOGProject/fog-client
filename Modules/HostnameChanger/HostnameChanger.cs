@@ -21,9 +21,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
+using FOG.Handlers.NotificationHandler;
+using FOG.Handlers.RegistryHandler;
+using FOG.Handlers.ShutdownHandler;
+using FOG.Handlers.UserHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.HostnameChanger
 {
     /// <summary>
     ///     Rename a host, register with AD, and activate the windows key

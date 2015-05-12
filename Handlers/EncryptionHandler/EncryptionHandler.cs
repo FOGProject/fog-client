@@ -25,7 +25,7 @@ using OpenSSL.Core;
 using RSA = OpenSSL.Crypto.RSA;
 // ReSharper disable InconsistentNaming
 
-namespace FOG.Handlers
+namespace FOG.Handlers.EncryptionHandler
 {
     /// <summary>
     ///     Handle all encryption/decryption
@@ -48,8 +48,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, "Error encoding base64");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.LogHandler.Log(LOG_NAME, "Error encoding base64");
+                LogHandler.LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
             }
             return "";
         }
@@ -68,8 +68,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, "Error decoding base64");
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.LogHandler.Log(LOG_NAME, "Error decoding base64");
+                LogHandler.LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
         }
@@ -95,8 +95,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, "Error decoding from AES");
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.LogHandler.Log(LOG_NAME, "Error decoding from AES");
+                LogHandler.LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
             return "";
         }
@@ -228,7 +228,7 @@ namespace FOG.Handlers
         /// </summary>
         public static string AESDecrypt(string toDecode, byte[] key)
         {
-            LogHandler.Log(LOG_NAME, toDecode);
+            LogHandler.LogHandler.Log(LOG_NAME, toDecode);
             var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|", StringComparison.Ordinal)));
             var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|", StringComparison.Ordinal) + 1));
 

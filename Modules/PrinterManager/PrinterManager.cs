@@ -21,9 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.PrinterManager
 {
     /// <summary>
     ///     Manage printers

@@ -19,7 +19,7 @@
 
 using System.Runtime.InteropServices;
 
-namespace FOG.Modules
+namespace FOG.Modules.DisplayManager
 {
     public static class User32
     {

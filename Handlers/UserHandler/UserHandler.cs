@@ -24,7 +24,7 @@ using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 
-namespace FOG.Handlers
+namespace FOG.Handlers.UserHandler
 {
     /// <summary>
     ///     Detect the current user
@@ -141,8 +141,8 @@ namespace FOG.Handlers
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(LogName, "Unable to parse Session Id");
-                    LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                    LogHandler.LogHandler.Log(LogName, "Unable to parse Session Id");
+                    LogHandler.LogHandler.Log(LogName, "ERROR: " + ex.Message);
                 }
             }
 
@@ -185,7 +185,7 @@ namespace FOG.Handlers
         public static string GetUserProfilePath(string sid)
         {
             return
-                RegistryHandler.GetRegisitryValue(
+                RegistryHandler.RegistryHandler.GetRegisitryValue(
                     string.Format(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid), "ProfileImagePath");
         }
     }

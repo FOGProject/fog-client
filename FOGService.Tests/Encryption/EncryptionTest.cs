@@ -1,4 +1,4 @@
-﻿using FOG.Handlers;
+﻿using FOG.Handlers.EncryptionHandler;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HandlersTest.Encryption

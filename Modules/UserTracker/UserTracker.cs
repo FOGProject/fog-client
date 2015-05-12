@@ -19,9 +19,10 @@
 
 using System.Collections.Generic;
 using System.Net;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.UserHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.UserTracker
 {
     /// <summary>
     ///     Report what users log on or off and at what time

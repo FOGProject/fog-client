@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using FOG.Handlers;
+using FOG.Handlers.LogHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.PrinterManager
 {
     // ReSharper disable once InconsistentNaming
     class iPrintPrinter : Printer

@@ -19,9 +19,13 @@
 
 using System;
 using System.Threading;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
+using FOG.Handlers.NotificationHandler;
+using FOG.Handlers.ShutdownHandler;
+using FOG.Handlers.UserHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.AutoLogOut
 {
     /// <summary>
     ///     Automatically log out the user after a given duration of inactivity

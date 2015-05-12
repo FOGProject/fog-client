@@ -1,0 +1,8 @@
+language: csharp
+solution: FOGService.sln
+install:
+  - nuget restore FOGService.sln
+  - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+script:
+  - xbuild /p:Configuration=Release FOGService.sln
+  - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./bin/FOGService.Tests.dll

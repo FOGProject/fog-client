@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Management;
-using FOG.Handlers;
+using FOG.Handlers.LogHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.PrinterManager
 {
     class NetworkPrinter : Printer
     {

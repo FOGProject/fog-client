@@ -24,8 +24,19 @@ using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
+using FOG.Handlers.NotificationHandler;
+using FOG.Handlers.RegistryHandler;
+using FOG.Handlers.ShutdownHandler;
 using FOG.Modules;
+using FOG.Modules.ClientUpdater;
+using FOG.Modules.DisplayManager;
+using FOG.Modules.GreenFOG;
+using FOG.Modules.HostnameChanger;
+using FOG.Modules.SnapinClient;
+using FOG.Modules.TaskReboot;
+using FOG.Modules.UserTracker;
 
 namespace FOG
 {

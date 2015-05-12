@@ -20,7 +20,7 @@
 using System;
 using System.IO;
 
-namespace FOG.Handlers
+namespace FOG.Handlers.LogHandler
 {
     /// <summary>
     ///     Handle all interaction with the log file

@@ -23,7 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace FOG.Handlers
+namespace FOG.Handlers.ShutdownHandler
 {
     /// <summary>
     ///     Handle all shutdown requests
@@ -71,8 +71,8 @@ namespace FOG.Handlers
         /// <param name="parameters">The parameters to use</param>
         private static void CreateShutdownCommand(string parameters)
         {
-            LogHandler.Log(LogName, "Creating shutdown request");
-            LogHandler.Log(LogName, string.Format("Parameters: {0}", parameters));
+            LogHandler.LogHandler.Log(LogName, "Creating shutdown request");
+            LogHandler.LogHandler.Log(LogName, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
         }
@@ -137,7 +137,7 @@ namespace FOG.Handlers
         /// </summary>
         public static void RestartService()
         {
-            LogHandler.Log(LogName, "Restarting service");
+            LogHandler.LogHandler.Log(LogName, "Restarting service");
             ShutdownPending = true;
             var process = new Process
             {
@@ -157,7 +157,7 @@ namespace FOG.Handlers
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(string fileName)
         {
-            LogHandler.Log(LogName, "Spawning update waiter");
+            LogHandler.LogHandler.Log(LogName, "Spawning update waiter");
 
             var process = new Process
             {
@@ -170,8 +170,8 @@ namespace FOG.Handlers
                 }
             };
 
-            LogHandler.Log(LogName, "Update Waiter args");
-            LogHandler.Log(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
+            LogHandler.LogHandler.Log(LogName, "Update Waiter args");
+            LogHandler.LogHandler.Log(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
             process.Start();
         }
     }

@@ -20,10 +20,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
 using Microsoft.Win32.TaskScheduler;
 
-namespace FOG.Modules
+namespace FOG.Modules.GreenFOG
 {
     /// <summary>
     ///     Perform cron style power tasks

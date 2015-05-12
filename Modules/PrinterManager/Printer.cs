@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FOG.Handlers;
+using FOG.Handlers.LogHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.PrinterManager
 {
     public abstract class Printer
     {

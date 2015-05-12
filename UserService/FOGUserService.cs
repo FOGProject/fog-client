@@ -24,8 +24,15 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
+using FOG.Handlers.NotificationHandler;
+using FOG.Handlers.RegistryHandler;
+using FOG.Handlers.ShutdownHandler;
+using FOG.Handlers.UserHandler;
 using FOG.Modules;
+using FOG.Modules.AutoLogOut;
+using FOG.Modules.DisplayManager;
 
 namespace FOG
 {

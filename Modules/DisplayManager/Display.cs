@@ -18,9 +18,9 @@
  */
 
 using System.Runtime.InteropServices;
-using FOG.Handlers;
+using FOG.Handlers.LogHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.DisplayManager
 {
     /// <summary>
     ///     Contains functionality to resize display

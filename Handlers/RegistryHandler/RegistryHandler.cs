@@ -20,7 +20,7 @@
 using System;
 using Microsoft.Win32;
 
-namespace FOG.Handlers
+namespace FOG.Handlers.RegistryHandler
 {
     /// <summary>
     ///     Handle all interaction with the registry
@@ -35,12 +35,12 @@ namespace FOG.Handlers
             if (GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null)
             {
                 _root = @"Software\Wow6432Node\FOG\";
-                LogHandler.Log(LogName, "64 bit registry detected");
+                LogHandler.LogHandler.Log(LogName, "64 bit registry detected");
             }
             else
             {
                 _root = @"Software\FOG\";
-                LogHandler.Log(LogName, "32 bit registry detected");
+                LogHandler.LogHandler.Log(LogName, "32 bit registry detected");
             }
         }
 
@@ -58,8 +58,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "Error retrieving " + keyPath + keyName);
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.LogHandler.Log(LogName, "Error retrieving " + keyPath + keyName);
+                LogHandler.LogHandler.Log(LogName, "ERROR: " + ex.Message);
             }
             return null;
         }
@@ -77,8 +77,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, string.Format("Error setting {0}{1}", keyPath, keyName));
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.LogHandler.Log(LogName, string.Format("Error setting {0}{1}", keyPath, keyName));
+                LogHandler.LogHandler.Log(LogName, "ERROR: " + ex.Message);
             }
 
             return false;
@@ -97,8 +97,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", path));
-                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", path));
+                LogHandler.LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             return false;
@@ -117,8 +117,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", keyPath));
-                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", keyPath));
+                LogHandler.LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             return false;

@@ -19,9 +19,12 @@
 
 using System;
 using System.IO;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
+using FOG.Handlers.RegistryHandler;
+using FOG.Handlers.ShutdownHandler;
 
-namespace FOG.Modules
+namespace FOG.Modules.ClientUpdater
 {
     /// <summary>
     ///     Update the FOG Service

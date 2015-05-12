@@ -18,7 +18,8 @@
  */
 
 using System;
-using FOG.Handlers;
+using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers.LogHandler;
 
 namespace FOG
 {
