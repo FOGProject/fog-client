@@ -46,7 +46,7 @@ namespace FOG
         private readonly PipeServer notificationPipe;
         private readonly Thread notificationPipeThread;
         private readonly PipeServer servicePipe;
-        private readonly int sleepDefaultTime = 60;
+        private const int sleepDefaultTime = 60;
         //Define variables
         private readonly Thread threadManager;
         private List<AbstractModule> modules;
@@ -84,11 +84,11 @@ namespace FOG
                 if (NotificationHandler.Notifications.Count > 0)
                 {
                     //Split up the notification into 3 messages: Title, Message, and Duration
-                    notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
+                    notificationPipe.sendMessage(string.Format("TLE:{0}", NotificationHandler.Notifications[0].Title));
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
+                    notificationPipe.sendMessage(string.Format("MSG:{0}", NotificationHandler.Notifications[0].Message));
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration);
+                    notificationPipe.sendMessage(string.Format("DUR:{0}", NotificationHandler.Notifications[0].Duration));
                     NotificationHandler.Notifications.RemoveAt(0);
                 }
 
@@ -134,9 +134,9 @@ namespace FOG
             //Delete old temp files
             try
             {
-                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp"))
+                if (Directory.Exists(string.Format("{0}\\tmp", AppDomain.CurrentDomain.BaseDirectory)))
                 {
-                    Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
+                    Directory.Delete(string.Format("{0}\\tmp", AppDomain.CurrentDomain.BaseDirectory));
                 }
             }
             catch (Exception ex)
@@ -149,14 +149,16 @@ namespace FOG
         //Load all of the modules
         private void initializeModules()
         {
-            modules = new List<AbstractModule>();
-            modules.Add(new ClientUpdater());
-            modules.Add(new TaskReboot());
-            modules.Add(new HostnameChanger());
-            modules.Add(new SnapinClient());
-            modules.Add(new DisplayManager());
-            modules.Add(new GreenFOG());
-            modules.Add(new UserTracker());
+            modules = new List<AbstractModule>
+            {
+                new ClientUpdater(),
+                new TaskReboot(),
+                new HostnameChanger(),
+                new SnapinClient(),
+                new DisplayManager(),
+                new GreenFOG(),
+                new UserTracker()
+            };
         }
 
         //Called when the service stops
@@ -187,7 +189,7 @@ namespace FOG
         {
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Authentication");
-            LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
+            LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 
@@ -199,7 +201,7 @@ namespace FOG
                     //Log file formatting
                     LogHandler.NewLine();
                     LogHandler.PaddedHeader(module.Name);
-                    LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
+                    LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
 
                     try
                     {
@@ -207,8 +209,8 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
-                        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                        LogHandler.Log(LOG_NAME, string.Format("Failed to Start {0}", module.Name));
+                        LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
                     }
 
                     //Log file formatting
@@ -221,7 +223,7 @@ namespace FOG
                 //Once all modules have been run, sleep for the set time
                 var sleepTime = getSleepTime();
                 RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
-                LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
+                LogHandler.Log(LOG_NAME, string.Format("Sleeping for {0} seconds", sleepTime));
                 Thread.Sleep(sleepTime*1000);
             }
 
@@ -232,7 +234,7 @@ namespace FOG
         }
 
         //Get the time to sleep from the FOG server, if it cannot it will use the default time
-        private int getSleepTime()
+        private static int getSleepTime()
         {
             LogHandler.Log(LOG_NAME, "Getting sleep duration...");
 
@@ -245,13 +247,13 @@ namespace FOG
                     var sleepTime = int.Parse(sleepResponse.GetField("#sleep"));
                     if (sleepTime >= sleepDefaultTime)
                         return sleepTime;
-                    LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime);
+                    LogHandler.Log(LOG_NAME, string.Format("Sleep time set on the server is below the minimum of {0}", sleepDefaultTime));
                 }
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Failed to parse sleep time");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
 
             LogHandler.Log(LOG_NAME, "Using default sleep time");

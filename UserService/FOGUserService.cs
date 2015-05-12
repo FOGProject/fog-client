@@ -48,7 +48,7 @@ namespace FOG
         private static Thread notificationPipeThread;
         private static PipeServer notificationPipe;
         private static PipeClient servicePipe;
-        private static readonly int sleepDefaultTime = 60;
+        private const int sleepDefaultTime = 60;
         private static Status status;
 
         public static void Main(string[] args)
@@ -109,11 +109,11 @@ namespace FOG
                 if (NotificationHandler.Notifications.Count > 0)
                 {
                     //Split up the notification into 3 messages: Title, Message, and Duration
-                    notificationPipe.sendMessage("TLE:" + NotificationHandler.Notifications[0].Title);
+                    notificationPipe.sendMessage(string.Format("TLE:{0}", NotificationHandler.Notifications[0].Title));
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("MSG:" + NotificationHandler.Notifications[0].Message);
+                    notificationPipe.sendMessage(string.Format("MSG:{0}", NotificationHandler.Notifications[0].Message));
                     Thread.Sleep(750);
-                    notificationPipe.sendMessage("DUR:" + NotificationHandler.Notifications[0].Duration);
+                    notificationPipe.sendMessage(string.Format("DUR:{0}", NotificationHandler.Notifications[0].Duration));
                     NotificationHandler.Notifications.RemoveAt(0);
                 }
 
@@ -125,14 +125,14 @@ namespace FOG
         private static void pipeServer_MessageReceived(Client client, string message)
         {
             LogHandler.Log(LOG_NAME, "Message recieved from tray");
-            LogHandler.Log(LOG_NAME, "MSG:" + message);
+            LogHandler.Log(LOG_NAME, string.Format("MSG:{0}", message));
         }
 
         //Handle recieving a message
         private static void pipeClient_MessageReceived(string message)
         {
             LogHandler.Log(LOG_NAME, "Message recieved from service");
-            LogHandler.Log(LOG_NAME, "MSG: " + message);
+            LogHandler.Log(LOG_NAME, string.Format("MSG: {0}", message));
 
             if (!message.Equals("UPD")) return;
             ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
@@ -155,7 +155,7 @@ namespace FOG
                 {
                     LogHandler.NewLine();
                     LogHandler.PaddedHeader(module.Name);
-                    LogHandler.Log("Client-Info", "Version: " + RegistryHandler.GetSystemSetting("Version"));
+                    LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
 
                     try
                     {
@@ -163,8 +163,8 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
-                        LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                        FOG.Handlers.LogHandler.Log(LOG_NAME, "Failed to Start " + module.Name);
+                        LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
                     }
 
                     //Log file formatting
@@ -176,7 +176,7 @@ namespace FOG
                     break;
                 //Once all modules have been run, sleep for the set time
                 var sleepTime = getSleepTime();
-                LogHandler.Log(LOG_NAME, "Sleeping for " + sleepTime + " seconds");
+                LogHandler.Log(LOG_NAME, string.Format("Sleeping for {0} seconds", sleepTime));
                 Thread.Sleep(sleepTime*1000);
             }
         }
@@ -193,12 +193,12 @@ namespace FOG
                 {
                     return sleepTime;
                 }
-                LogHandler.Log(LOG_NAME, "Sleep time set on the server is below the minimum of " + sleepDefaultTime);
+                LogHandler.Log(LOG_NAME, string.Format("Sleep time set on the server is below the minimum of {0}", sleepDefaultTime));
             }
             catch (Exception ex)
             {
                 LogHandler.Log(LOG_NAME, "Failed to parse sleep time");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
             }
 
             LogHandler.Log(LOG_NAME, "Using default sleep time");
@@ -213,8 +213,7 @@ namespace FOG
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                               @"\FOGTray.exe"
+                    FileName = string.Format("{0}\\FOGTray.exe", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
                 }
             };
             process.Start();
