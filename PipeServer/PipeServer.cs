@@ -15,19 +15,19 @@ namespace FOG
     {
         public delegate void MessageReceivedHandler(Client client, string message);
 
-        private const uint DUPLEX = (0x00000003);
-        private const uint FILE_FLAG_OVERLAPPED = (0x40000000);
-        public const int BUFFER_SIZE = 4096;
-        private readonly List<Client> clients;
-        private readonly string pipeName;
-        private Thread listenThread;
-        private bool running;
+        private const uint Duplex = (0x00000003);
+        private const uint FileFlagOverlapped = (0x40000000);
+        public const int BufferSize = 4096;
+        private readonly List<Client> _clients;
+        private readonly string _pipeName;
+        private Thread _listenThread;
+        private bool _running;
 
         public PipeServer(string pipeName)
         {
-            running = false;
-            this.pipeName = pipeName;
-            clients = new List<Client>();
+            _running = false;
+            _pipeName = pipeName;
+            _clients = new List<Client>();
         }
 
         //Import DLL functions
@@ -40,41 +40,41 @@ namespace FOG
         public static extern int ConnectNamedPipe(SafeFileHandle hNamedPipe, IntPtr lpOverlapped);
 
         [DllImport("Advapi32.dll", SetLastError = true)]
-        public static extern bool InitializeSecurityDescriptor(out SECURITY_DESCRIPTOR sd, int dwRevision);
+        public static extern bool InitializeSecurityDescriptor(out SecurityDescriptor sd, int dwRevision);
 
         [DllImport("Advapi32.dll", SetLastError = true)]
-        public static extern bool SetSecurityDescriptorDacl(ref SECURITY_DESCRIPTOR sd, bool bDaclPresent, IntPtr Dacl,
+        public static extern bool SetSecurityDescriptorDacl(ref SecurityDescriptor sd, bool bDaclPresent, IntPtr dacl,
             bool bDaclDefaulted);
 
         public event MessageReceivedHandler MessageReceived;
 
-        public bool isRunning()
+        public bool IsRunning()
         {
-            return running;
+            return _running;
         }
 
-        public string getPipeName()
+        public string GetPipeName()
         {
-            return pipeName;
+            return _pipeName;
         }
 
         //start the pipe server
-        public void start()
+        public void Start()
         {
-            listenThread = new Thread(listenForClients) {IsBackground = true};
-            listenThread.Start();
-            running = true;
+            _listenThread = new Thread(ListenForClients) {IsBackground = true};
+            _listenThread.Start();
+            _running = true;
         }
 
         //Wait for a client to try and connect
-        private void listenForClients()
+        private void ListenForClients()
         {
-            var ptrSec = createSecurity();
+            var ptrSec = CreateSecurity();
 
             while (true)
             {
-                var clientHandle = CreateNamedPipe(@"\\.\pipe\" + pipeName, DUPLEX | FILE_FLAG_OVERLAPPED,
-                    0, 255, BUFFER_SIZE, BUFFER_SIZE, 0, ptrSec);
+                var clientHandle = CreateNamedPipe(@"\\.\pipe\" + _pipeName, Duplex | FileFlagOverlapped,
+                    0, 255, BufferSize, BufferSize, 0, ptrSec);
 
                 if (clientHandle.IsInvalid)
                     return;
@@ -85,44 +85,43 @@ namespace FOG
                     return;
 
                 var client = new Client();
-                client.setFileHandle(clientHandle);
+                client.SetFileHandle(clientHandle);
 
-                lock (clients)
-                    clients.Add(client);
+                lock (_clients)
+                    _clients.Add(client);
 
-                var readThread = new Thread(read);
-                readThread.IsBackground = true;
+                var readThread = new Thread(Read) {IsBackground = true};
                 readThread.Start(client);
             }
         }
 
         //Change the security settings of the pipe so the SYSTEM ACCOUNT can interact with user accounts
-        private static IntPtr createSecurity()
+        private static IntPtr CreateSecurity()
         {
             var ptrSec = IntPtr.Zero;
-            var securityAttribute = new SECURITY_ATTRIBUTES();
-            SECURITY_DESCRIPTOR securityDescription;
+            var securityAttribute = new SecurityAttributes();
+            SecurityDescriptor securityDescription;
 
             if (!InitializeSecurityDescriptor(out securityDescription, 1)) return ptrSec;
             if (!SetSecurityDescriptorDacl(ref securityDescription, true, IntPtr.Zero, false)) return ptrSec;
             
             securityAttribute.lpSecurityDescriptor =
-                Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_DESCRIPTOR)));
+                Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SecurityDescriptor)));
             Marshal.StructureToPtr(securityDescription, securityAttribute.lpSecurityDescriptor, false);
             securityAttribute.bInheritHandle = false;
-            securityAttribute.nLength = Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES));
-            ptrSec = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SECURITY_ATTRIBUTES)));
+            securityAttribute.nLength = Marshal.SizeOf(typeof (SecurityAttributes));
+            ptrSec = Marshal.AllocHGlobal(Marshal.SizeOf(typeof (SecurityAttributes)));
             Marshal.StructureToPtr(securityAttribute, ptrSec, false);
             return ptrSec;
         }
 
         //Read a message sent over the pipe
-        private void read(object objClient)
+        private void Read(object objClient)
         {
             var client = (Client) objClient;
-            client.setFileStream(new FileStream(client.getSafeFileHandle(), FileAccess.ReadWrite, BUFFER_SIZE, true));
+            client.SetFileStream(new FileStream(client.GetSafeFileHandle(), FileAccess.ReadWrite, BufferSize, true));
 
-            var buffer = new byte[BUFFER_SIZE];
+            var buffer = new byte[BufferSize];
             var encoder = new ASCIIEncoding();
 
             while (true)
@@ -131,10 +130,11 @@ namespace FOG
 
                 try
                 {
-                    bRead = client.getFileStream().Read(buffer, 0, BUFFER_SIZE);
+                    bRead = client.GetFileStream().Read(buffer, 0, BufferSize);
                 }
                 catch
                 {
+                    // ignored
                 }
 
                 if (bRead == 0)
@@ -144,31 +144,31 @@ namespace FOG
                     MessageReceived(client, encoder.GetString(buffer, 0, bRead));
             }
 
-            client.getFileStream().Close();
-            client.getFileStream().Close();
-            lock (clients)
-                clients.Remove(client);
+            client.GetFileStream().Close();
+            client.GetFileStream().Close();
+            lock (_clients)
+                _clients.Remove(client);
         }
 
         //Send a message across the pipe
-        public void sendMessage(string msg)
+        public void SendMessage(string msg)
         {
-            lock (clients)
+            lock (_clients)
             {
                 var encoder = new ASCIIEncoding();
                 var mBuf = encoder.GetBytes(msg);
 
-                foreach (var client in clients)
+                foreach (var client in _clients)
                 {
-                    client.getFileStream().Write(mBuf, 0, mBuf.Length);
-                    client.getFileStream().Flush();
+                    client.GetFileStream().Write(mBuf, 0, mBuf.Length);
+                    client.GetFileStream().Flush();
                 }
             }
         }
 
         //Define variables
         [StructLayout(LayoutKind.Sequential)]
-        public struct SECURITY_ATTRIBUTES
+        public struct SecurityAttributes
         {
             public int nLength;
             public IntPtr lpSecurityDescriptor;
@@ -176,7 +176,7 @@ namespace FOG
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct SECURITY_DESCRIPTOR
+        public struct SecurityDescriptor
         {
             private readonly byte Revision;
             private readonly byte Sbz1;

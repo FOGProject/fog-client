@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Management;
-using System.Text;
+﻿using System.Diagnostics;
 using FOG.Handlers;
 
 namespace FOG.Modules
@@ -30,7 +25,7 @@ namespace FOG.Modules
 
             var proc = Process.Start("rundll32.exe", 
                 string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"", Name, File, Port, Model));
-            proc.WaitForExit(120000);
+            if (proc != null) proc.WaitForExit(120000);
         }
     }
 }

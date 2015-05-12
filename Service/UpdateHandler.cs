@@ -31,9 +31,9 @@ namespace FOG
     /// </summary>
     public static class UpdateHandler
     {
-        private const string LOG_NAME = "Service-Update";
+        private const string LogName = "Service-Update";
 
-        private static void killSubProcesses()
+        private static void KillSubProcesses()
         {
             //If the User Service is still running, wait 120 seconds and kill it
 
@@ -47,7 +47,7 @@ namespace FOG
             }
         }
 
-        public static void beginUpdate(PipeServer servicePipe)
+        public static void BeginUpdate(PipeServer servicePipe)
         {
             try
             {
@@ -58,24 +58,29 @@ namespace FOG
                 Thread.Sleep(1000);
 
                 //Notify all FOG sub processes that an update is about to occu
-                servicePipe.sendMessage("UPD");
+                servicePipe.SendMessage("UPD");
 
                 //Kill any FOG sub processes still running after the notification
-                killSubProcesses();
+                KillSubProcesses();
 
                 //Launch the updater
-                LogHandler.Log(LOG_NAME, "Spawning update helper");
+                LogHandler.Log(LogName, "Spawning update helper");
 
-                var process = new Process();
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                             @"\tmp\FOGUpdateHelper.exe";
+                var process = new Process
+                {
+                    StartInfo =
+                    {
+                        UseShellExecute = false,
+                        FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                                   @"\tmp\FOGUpdateHelper.exe"
+                    }
+                };
                 process.Start();
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, "Unable to perform update");
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, "Unable to perform update");
+                LogHandler.Log(LogName, "ERROR: " + ex.Message);
             }
         }
     }

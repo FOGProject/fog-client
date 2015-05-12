@@ -11,11 +11,11 @@ namespace FOG {
 	/// </summary>
 	public partial class MainForm : Form {
 		
-		private int gracePeriod;
+		private int _gracePeriod;
 		
 		public MainForm(IEnumerable<string> args) {
-			setGracePeriod();
-		    if (gracePeriod == 0)
+			SetGracePeriod();
+		    if (_gracePeriod == 0)
 		        Environment.Exit(0);
 		    //
 			// The InitializeComponent() call is required for Windows Forms designer support.
@@ -51,34 +51,34 @@ namespace FOG {
 		    textBox1.Text = message;
 			textBox1.Select(0,0);
 
-			progressBar1.Maximum = gracePeriod-1;		
-			label1.Text = gracePeriod + " seconds";
+			progressBar1.Maximum = _gracePeriod-1;		
+			label1.Text = _gracePeriod + " seconds";
 			var workingArea = Screen.GetWorkingArea(this);
 			Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
 		}
 		
-		private void setGracePeriod() {
+		private void SetGracePeriod() {
 			var regValue = RegistryHandler.GetSystemSetting("NotificationPromptTime");
-			gracePeriod = 60;
+			_gracePeriod = 60;
 		    if (regValue == null) return;
 		    
             try {
-		        gracePeriod = int.Parse(regValue);
+		        _gracePeriod = int.Parse(regValue);
 		    } catch (Exception) {
-		        gracePeriod = 60;
+		        _gracePeriod = 60;
 		    }
 		}
 		
 		//Prevent the window from being moved
 		//http://stackoverflow.com/a/907868
 		protected override void WndProc(ref Message message) {
-		    const int WM_SYSCOMMAND = 0x0112;
-		    const int SC_MOVE = 0xF010;
+		    const int wmSyscommand = 0x0112;
+		    const int scMove = 0xF010;
 		
 		    switch(message.Msg) {
-		        case WM_SYSCOMMAND:
+		        case wmSyscommand:
 		           var command = message.WParam.ToInt32() & 0xfff0;
-		           if (command == SC_MOVE)
+		           if (command == scMove)
 		              return;
 		           break;
 		    }
@@ -91,7 +91,7 @@ namespace FOG {
 		        Environment.Exit(0);
 		    progressBar1.Value++;
 			progressBar1.Update();
-			label1.Text = (gracePeriod-progressBar1.Value) + " seconds";
+			label1.Text = (_gracePeriod-progressBar1.Value) + " seconds";
 		}
 		
 		void BtnNowClick(object sender, EventArgs e) {
@@ -99,7 +99,7 @@ namespace FOG {
 		}
 		
 		//Abort button
-		void btnAbortClick(object sender, EventArgs e) {
+		void BtnAbortClick(object sender, EventArgs e) {
 			Environment.Exit(2);
 		}
 	}

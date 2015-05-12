@@ -21,14 +21,14 @@ using System.Runtime.InteropServices;
 
 namespace FOG.Modules
 {
-    public static class User_32
+    public static class User32
     {
-        public const int ENUM_CURRENT_SETTINGS = -1;
-        public const int CDS_UPDATEREGISTRY = 0x01;
-        public const int CDS_TEST = 0x02;
-        public const int DISP_CHANGE_SUCCESSFUL = 0;
-        public const int DISP_CHANGE_RESTART = 1;
-        public const int DISP_CHANGE_FAILED = -1;
+        public const int EnumCurrentSettings = -1;
+        public const int CdsUpdateregistry = 0x01;
+        public const int CdsTest = 0x02;
+        public const int DispChangeSuccessful = 0;
+        public const int DispChangeRestart = 1;
+        public const int DispChangeFailed = -1;
 
         /// <summary>
         ///     Populate a given display's configuration
@@ -38,7 +38,7 @@ namespace FOG.Modules
         /// <param name="settings">The variable to populate the configuration to</param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref DEVMODE1 settings);
+        public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref Devmode1 settings);
 
         /// <summary>
         ///     Adjust a given display's configuration
@@ -47,10 +47,10 @@ namespace FOG.Modules
         /// <param name="flags"></param>
         /// <returns></returns>
         [DllImport("user32.dll")]
-        public static extern int ChangeDisplaySettings(ref DEVMODE1 settings, int flags);
+        public static extern int ChangeDisplaySettings(ref Devmode1 settings, int flags);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct DEVMODE1
+        public struct Devmode1
         {
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)] public string dmDeviceName;
             public short dmSpecVersion;

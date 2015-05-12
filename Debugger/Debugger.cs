@@ -26,7 +26,7 @@ namespace FOG
     {
         public static void Main(string[] args)
         {
-            LogHandler.Mode = LogHandler.LogMode.Console;;
+            LogHandler.Mode = LogHandler.LogMode.Console;
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 

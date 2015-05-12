@@ -28,16 +28,16 @@ namespace FOG.Modules
     /// </summary>
     public class AutoLogOut : AbstractModule
     {
-        private readonly int minimumTime;
+        private readonly int _minimumTime;
 
         public AutoLogOut()
         {
             Name = "AutoLogOut";
             Description = "Automatically log out the user if they are inactive";
-            minimumTime = 300;
+            _minimumTime = 300;
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             if (UserHandler.IsUserLoggedIn())
             {
@@ -45,7 +45,7 @@ namespace FOG.Modules
                 var taskResponse = CommunicationHandler.GetResponse("/service/autologout.php", true);
 
                 if (taskResponse.Error) return;
-                var timeOut = getTimeOut(taskResponse);
+                var timeOut = GetTimeOut(taskResponse);
                 if (timeOut <= 0) return;
 
                 LogHandler.Log(Name, string.Format("Time set to {0} seconds", timeOut));
@@ -67,12 +67,12 @@ namespace FOG.Modules
         }
 
         //Get how long a user must be inactive before logging them out
-        private int getTimeOut(Response taskResponse)
+        private int GetTimeOut(Response taskResponse)
         {
             try
             {
                 var timeOut = int.Parse(taskResponse.GetField("#time"));
-                if (timeOut >= minimumTime)
+                if (timeOut >= _minimumTime)
                     return timeOut;
 
                 LogHandler.Log(Name, "Time set is less than 1 minute");

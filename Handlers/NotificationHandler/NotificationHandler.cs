@@ -26,12 +26,12 @@ namespace FOG.Handlers
     /// </summary>
     public static class NotificationHandler
     {
-        private static bool initialized = initialize();
+        private static bool _initialized = Initialize();
         //Define variable
         public static List<Notification> Notifications { get; set; }
         public static string Company { get; private set; }
 
-        private static bool initialize()
+        private static bool Initialize()
         {
             Notifications = new List<Notification>();
             Company = "FOG";

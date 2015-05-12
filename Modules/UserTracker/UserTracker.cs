@@ -28,34 +28,34 @@ namespace FOG.Modules
     /// </summary>
     public class UserTracker : AbstractModule
     {
-        private List<string> usernames;
+        private List<string> _usernames;
 
         public UserTracker()
         {
             Name = "UserTracker";
             Description = "Tracker user logins and logouts";
-            usernames = new List<string>();
+            _usernames = new List<string>();
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             var newUsernames = UserHandler.GetUsersLoggedIn();
 
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in
-                if (!usernames.Contains(username))
+                if (!_usernames.Contains(username))
                     CommunicationHandler.Contact(
                         string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Dns.GetHostName(),
                             username), true);
                 else
-                    usernames.Remove(username);
+                    _usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
-            foreach (var username in usernames)
+            foreach (var username in _usernames)
                 CommunicationHandler.Contact(
                     string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Dns.GetHostName(), username), true);
 
-            usernames = newUsernames;
+            _usernames = newUsernames;
         }
     }
 }

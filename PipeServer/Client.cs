@@ -8,37 +8,37 @@ namespace FOG
     /// </summary>
     public class Client
     {
-        private FileStream fileStream;
-        private SafeFileHandle safeFileHandle;
+        private FileStream _fileStream;
+        private SafeFileHandle _safeFileHandle;
 
         public Client(SafeFileHandle safeFileHandle, FileStream fileStream)
         {
-            this.safeFileHandle = safeFileHandle;
-            this.fileStream = fileStream;
+            _safeFileHandle = safeFileHandle;
+            _fileStream = fileStream;
         }
 
         public Client()
         {
         }
 
-        public SafeFileHandle getSafeFileHandle()
+        public SafeFileHandle GetSafeFileHandle()
         {
-            return safeFileHandle;
+            return _safeFileHandle;
         }
 
-        public void setFileHandle(SafeFileHandle safeFilHandle)
+        public void SetFileHandle(SafeFileHandle safeFilHandle)
         {
-            safeFileHandle = safeFilHandle;
+            _safeFileHandle = safeFilHandle;
         }
 
-        public FileStream getFileStream()
+        public FileStream GetFileStream()
         {
-            return fileStream;
+            return _fileStream;
         }
 
-        public void setFileStream(FileStream fileStream)
+        public void SetFileStream(FileStream fileStream)
         {
-            this.fileStream = fileStream;
+            _fileStream = fileStream;
         }
     }
 }

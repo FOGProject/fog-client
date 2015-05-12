@@ -33,19 +33,19 @@ namespace FOG.Handlers
             Console
         }
 
-        private const long DEFAULT_MAX_LOG_SIZE = 502400;
-        private const int HEADER_LENGTH = 78;
-        private const string LOG_NAME = "LogHandler";
-        private static bool initialized = initialize();
+        private const long DefaultMaxLogSize = 502400;
+        private const int HeaderLength = 78;
+        private const string LogName = "LogHandler";
+        private static bool _initialized = Initialize();
         //Define variables
         public static string FilePath { get; set; }
         public static long MaxSize { get; set; }
         public static LogMode Mode { get; set; }
 
-        private static bool initialize()
+        private static bool Initialize()
         {
             FilePath = @"\fog.log";
-            MaxSize = DEFAULT_MAX_LOG_SIZE;
+            MaxSize = DefaultMaxLogSize;
             Mode = LogMode.File;
 
             return true;
@@ -83,7 +83,7 @@ namespace FOG.Handlers
         /// <param name="text">The text to put in the center of the header</param>
         public static void Header(string text)
         {
-            double headerSize = (HEADER_LENGTH - text.Length)/2;
+            double headerSize = (HeaderLength - text.Length)/2;
             var output = "";
             for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
                 output += "-";
@@ -125,7 +125,7 @@ namespace FOG.Handlers
 
                 //Delete the log file if it excedes the max log size
                 if (logFile.Exists && logFile.Length > MaxSize)
-                    cleanLog(logFile);
+                    CleanLog(logFile);
 
                 try
                 {
@@ -152,9 +152,9 @@ namespace FOG.Handlers
 
         public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {
-            Log(LOG_NAME, "Unhandled exception caught");
-            Log(LOG_NAME, string.Format("    Terminating: {0}", ex.IsTerminating));
-            Log(LOG_NAME, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
+            Log(LogName, "Unhandled exception caught");
+            Log(LogName, string.Format("    Terminating: {0}", ex.IsTerminating));
+            Log(LogName, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
 
         }
 
@@ -162,7 +162,7 @@ namespace FOG.Handlers
         ///     Wipe the log
         /// </summary>
         /// <param name="logFile"></param>
-        private static void cleanLog(FileSystemInfo logFile)
+        private static void CleanLog(FileSystemInfo logFile)
         {
             try
             {
@@ -170,7 +170,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log(LOG_NAME, string.Format("Failed to delete log file: {0}", ex.Message));
+                Log(LogName, string.Format("Failed to delete log file: {0}", ex.Message));
             }
         }
     }

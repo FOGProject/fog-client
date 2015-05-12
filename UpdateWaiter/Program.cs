@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 namespace FOG
@@ -33,33 +34,38 @@ namespace FOG
             if (args.Length > 0)
             {
                 //Wait for all update files to be applied
-                while (updateFilePresent())
+                while (UpdateFilePresent())
                 {
                 }
                 //Spawn the process that originally called this program
                 if (File.Exists(args[0]))
-                    spawnParentProgram(args[0]);
+                    SpawnParentProgram(args[0]);
             }
         }
 
-        private static bool updateFilePresent()
+        private static bool UpdateFilePresent()
         {
             var fileFound = false;
-            foreach (var fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory))
+            foreach (var fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
+                .Where(fileName => fileName.EndsWith("updating.info")))
             {
-                if (fileName.EndsWith("updating.info"))
-                    fileFound = true;
+                fileFound = true;
             }
             Thread.Sleep(10*1000);
 
             return fileFound;
         }
 
-        private static void spawnParentProgram(string fileName)
+        private static void SpawnParentProgram(string fileName)
         {
-            var process = new Process();
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.FileName = fileName;
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = fileName
+                }
+            };
             process.Start();
         }
     }

@@ -47,7 +47,7 @@ namespace FOG {
 			this.btnAbort.TabIndex = 1;
 			this.btnAbort.Text = "Abort";
 			this.btnAbort.UseVisualStyleBackColor = true;
-			this.btnAbort.Click += new System.EventHandler(this.btnAbortClick);
+			this.btnAbort.Click += new System.EventHandler(this.BtnAbortClick);
 			// 
 			// progressBar1
 			// 

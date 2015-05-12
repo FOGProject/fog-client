@@ -35,7 +35,7 @@ namespace FOG.Modules
             Description = "Installs snapins on client computers";
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             while (true)
             {
@@ -64,7 +64,7 @@ namespace FOG.Modules
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
-                    exitCode = startSnapin(taskResponse, snapinFilePath);
+                    exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
@@ -88,12 +88,12 @@ namespace FOG.Modules
         }
 
         //Execute the snapin once it has been downloaded
-        private string startSnapin(Response taskResponse, string snapinPath)
+        private string StartSnapin(Response taskResponse, string snapinPath)
         {
             NotificationHandler.Notifications.Add(new Notification(taskResponse.GetField("SNAPINNAME"),
                 string.Format("FOG is installing {0}", taskResponse.GetField("SNAPINNAME")), 10));
 
-            var process = generateProcess(taskResponse, snapinPath);
+            var process = GenerateProcess(taskResponse, snapinPath);
 
             try
             {
@@ -119,7 +119,7 @@ namespace FOG.Modules
         }
 
         //Create a proccess to run the snapin with
-        private Process generateProcess(Response taskResponse, string snapinPath)
+        private static Process GenerateProcess(Response taskResponse, string snapinPath)
         {
             var process = new Process
             {

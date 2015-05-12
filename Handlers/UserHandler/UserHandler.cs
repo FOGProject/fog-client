@@ -19,15 +19,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.DirectoryServices;
-using System.IO;
 using System.Linq;
 using System.Management;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 using System.Security.Principal;
-using ProcessPrivileges;
 
 namespace FOG.Handlers
 {
@@ -36,10 +31,10 @@ namespace FOG.Handlers
     /// </summary>
     public static class UserHandler
     {
-        private const string LOG_NAME = "UserHandler";
+        private const string LogName = "UserHandler";
 
         [DllImport("user32.dll")]
-        private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+        private static extern bool GetLastInputInfo(ref Lastinputinfo plii);
 
         [DllImport("Wtsapi32.dll")]
         private static extern bool WTSQuerySessionInformation(IntPtr hServer, int sessionId, WtsInfoClass wtsInfoClass,
@@ -51,37 +46,14 @@ namespace FOG.Handlers
 
         private enum WtsInfoClass
         {
-            WTSInitialProgram,
-            WTSApplicationName,
-            WTSWorkingDirectory,
-            WTSOEMId,
-            WTSSessionId,
             WTSUserName,
-            WTSWinStationName,
-            WTSDomainName,
-            WTSConnectState,
-            WTSClientBuildNumber,
-            WTSClientName,
-            WTSClientDirectory,
-            WTSClientProductId,
-            WTSClientHardwareId,
-            WTSClientAddress,
-            WTSClientDisplay,
-            WTSClientProtocolType,
-            WTSIdleTime,
-            WTSLogonTime,
-            WTSIncomingBytes,
-            WTSOutgoingBytes,
-            WTSIncomingFrames,
-            WTSOutgoingFrames,
-            WTSClientInfo,
-            WTSSessionInfo
+            WTSDomainName
         };
 
-        internal struct LASTINPUTINFO
+        internal struct Lastinputinfo
         {
-            public uint cbSize;
-            public uint dwTime;
+            public uint CbSize;
+            public uint DwTime;
         }
 
         /// <summary>
@@ -121,18 +93,17 @@ namespace FOG.Handlers
         /// <returns>The inactivity time of the current user in seconds</returns>
         public static int GetUserInactivityTime()
         {
-            uint idleTime = 0;
-            var lastInputInfo = new LASTINPUTINFO();
-            lastInputInfo.cbSize = (uint) Marshal.SizeOf(lastInputInfo);
-            lastInputInfo.dwTime = 0;
+            var lastInputInfo = new Lastinputinfo();
+            lastInputInfo.CbSize = (uint) Marshal.SizeOf(lastInputInfo);
+            lastInputInfo.DwTime = 0;
 
             var envTicks = (uint) Environment.TickCount;
 
             if (!GetLastInputInfo(ref lastInputInfo))
                 return 0;
                 
-            var lastInputTick = lastInputInfo.dwTime;
-            idleTime = envTicks - lastInputTick;
+            var lastInputTick = lastInputInfo.DwTime;
+            var idleTime = envTicks - lastInputTick;
 
             return (int) idleTime/1000;
         }
@@ -170,8 +141,8 @@ namespace FOG.Handlers
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(LOG_NAME, "Unable to parse Session Id");
-                    LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                    LogHandler.Log(LogName, "Unable to parse Session Id");
+                    LogHandler.Log(LogName, "ERROR: " + ex.Message);
                 }
             }
 

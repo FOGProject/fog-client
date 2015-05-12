@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FOG.Handlers;
-using Microsoft.Win32;
 
 namespace FOG.Modules
 {
@@ -31,9 +30,9 @@ namespace FOG.Modules
     /// </summary>
     public class HostnameChanger : AbstractModule
     {
-        private bool notifiedUser;
+        private bool _notifiedUser;
 
-        private readonly Dictionary<int, string> returnCodes = new Dictionary<int, string>
+        private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
         {
             {0, "Success"},
             {2, "The OU parameter is not set properly or not working with this current setup"},
@@ -51,27 +50,20 @@ namespace FOG.Modules
         [Flags]
         private enum UnJoinOptions
         {
-            NONE = 0x00000000,
-            NETSETUP_ACCOUNT_DELETE = 0x00000004
+            NetsetupAccountDelete = 0x00000004
         }
 
         [Flags]
         private enum JoinOptions
         {
-            NETSETUP_JOIN_DOMAIN = 0x00000001,
-            NETSETUP_ACCT_CREATE = 0x00000002,
-            NETSETUP_ACCT_DELETE = 0x00000004,
-            NETSETUP_WIN9X_UPGRADE = 0x00000010,
-            NETSETUP_DOMAIN_JOIN_IF_JOINED = 0x00000020,
-            NETSETUP_JOIN_UNSECURE = 0x00000040,
-            NETSETUP_MACHINE_PWD_PASSED = 0x00000080,
-            NETSETUP_DEFER_SPN_SET = 0x10000000
+            NetsetupJoinDomain = 0x00000001,
+            NetsetupAcctCreate = 0x00000002,
         }
 
         //Import dll methods
         [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
         private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
-            string lpAccount, string lpPassword, JoinOptions NameType);
+            string lpAccount, string lpPassword, JoinOptions nameType);
 
         [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
         private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
@@ -82,25 +74,25 @@ namespace FOG.Modules
             Name = "HostnameChanger";
             Description = "Rename a host, register with AD, and activate the windows key";
 
-            notifiedUser = false;
+            _notifiedUser = false;
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             //Get task info
             var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
             if (taskResponse.Error) return;
 
-            renameComputer(taskResponse);
+            RenameComputer(taskResponse);
             if (!ShutdownHandler.ShutdownPending)
-                registerComputer(taskResponse);
+                RegisterComputer(taskResponse);
             if (!ShutdownHandler.ShutdownPending)
-                activateComputer(taskResponse);
+                ActivateComputer(taskResponse);
         }
 
         //Rename the computer and remove it from active directory
-        private void renameComputer(Response taskResponse)
+        private void RenameComputer(Response taskResponse)
         {
             LogHandler.Log(Name, "Checking Hostname");
 
@@ -116,7 +108,7 @@ namespace FOG.Modules
                 {
                     LogHandler.Log(Name, "Unregistering computer");
                     //First unjoin it from active directory
-                    unRegisterComputer(taskResponse);
+                    UnRegisterComputer(taskResponse);
 
                     LogHandler.Log(Name, "Updating registry");
 
@@ -129,7 +121,7 @@ namespace FOG.Modules
 
                     ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
                 }
-                else if(!notifiedUser)
+                else if(!_notifiedUser)
                 {
                     LogHandler.Log(Name, "User is currently logged in, will try again later");
 
@@ -137,7 +129,7 @@ namespace FOG.Modules
                         string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
                         NotificationHandler.Company), 120));
 
-                    notifiedUser = true;
+                    _notifiedUser = true;
                 }
             }
             catch (Exception ex)
@@ -147,7 +139,7 @@ namespace FOG.Modules
         }
 
         //Add a host to active directory
-        private void registerComputer(Response response)
+        private void RegisterComputer(Response response)
         {
             LogHandler.Log(Name, "Registering host with active directory");
             try
@@ -160,17 +152,17 @@ namespace FOG.Modules
                 
                 var returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"),
                         response.GetField("#ADUser"), response.GetField("#ADPass"),
-                        (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
+                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
                 if (returnCode.Equals(2224))
                     returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"), response.GetField("#ADUser"),
-                        response.GetField("#ADPass"), (JoinOptions.NETSETUP_JOIN_DOMAIN));
+                        response.GetField("#ADPass"), (JoinOptions.NetsetupJoinDomain));
                 else if (returnCode.Equals(2))
                     returnCode = NetJoinDomain(null, response.GetField("#ADDom"), null, response.GetField("#ADUser"), response.GetField("#ADPass"),
-                        (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
+                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-                LogHandler.Log(Name, string.Format("{0} {1}", (returnCodes.ContainsKey(returnCode)
-                    ? string.Format("{0}, code = ", returnCodes[returnCode])
+                LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
+                    ? string.Format("{0}, code = ", _returnCodes[returnCode])
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
@@ -183,7 +175,7 @@ namespace FOG.Modules
         }
 
         //Remove the host from active directory
-        private void unRegisterComputer(Response response)
+        private void UnRegisterComputer(Response response)
         {
             LogHandler.Log(Name, "Removing host from active directory");
 
@@ -193,10 +185,10 @@ namespace FOG.Modules
                     throw new Exception("Required Domain information is missing");
 
                 var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"), 
-                    response.GetField("#ADPass"), UnJoinOptions.NETSETUP_ACCOUNT_DELETE);
+                    response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
 
-                LogHandler.Log(Name, string.Format("{0} {1}", (returnCodes.ContainsKey(returnCode)
-                    ? string.Format("{0}, code = ", returnCodes[returnCode])
+                LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
+                    ? string.Format("{0}, code = ", _returnCodes[returnCode])
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
@@ -210,7 +202,7 @@ namespace FOG.Modules
         }
 
         //Active a computer with a product key
-        private void activateComputer(Response response)
+        private void ActivateComputer(Response response)
         {
 
             LogHandler.Log(Name, "Activing host with product key");

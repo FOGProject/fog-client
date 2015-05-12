@@ -27,20 +27,20 @@ namespace FOG.Handlers
     /// </summary>
     public static class RegistryHandler
     {
-        private const string LOG_NAME = "RegistryHandler";
-        private static string root = "";
+        private const string LogName = "RegistryHandler";
+        private static string _root = "";
 
-        private static void updateRoot()
+        private static void UpdateRoot()
         {
             if (GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null)
             {
-                root = @"Software\Wow6432Node\FOG\";
-                LogHandler.Log(LOG_NAME, "64 bit registry detected");
+                _root = @"Software\Wow6432Node\FOG\";
+                LogHandler.Log(LogName, "64 bit registry detected");
             }
             else
             {
-                root = @"Software\FOG\";
-                LogHandler.Log(LOG_NAME, "32 bit registry detected");
+                _root = @"Software\FOG\";
+                LogHandler.Log(LogName, "32 bit registry detected");
             }
         }
 
@@ -58,8 +58,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, "Error retrieving " + keyPath + keyName);
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, "Error retrieving " + keyPath + keyName);
+                LogHandler.Log(LogName, "ERROR: " + ex.Message);
             }
             return null;
         }
@@ -77,8 +77,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, string.Format("Error setting {0}{1}", keyPath, keyName));
-                LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Log(LogName, string.Format("Error setting {0}{1}", keyPath, keyName));
+                LogHandler.Log(LogName, "ERROR: " + ex.Message);
             }
 
             return false;
@@ -97,8 +97,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", path));
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", path));
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             return false;
@@ -117,8 +117,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LOG_NAME, string.Format("Error while trying to remove {0}", keyPath));
-                LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Log(LogName, string.Format("Error while trying to remove {0}", keyPath));
+                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
             }
 
             return false;
@@ -126,10 +126,10 @@ namespace FOG.Handlers
 
         public static string GetRoot()
         {
-            if (root.Equals(""))
-                updateRoot();
+            if (_root.Equals(""))
+                UpdateRoot();
 
-            return root;
+            return _root;
         }
 
         public static string GetSystemSetting(string name)

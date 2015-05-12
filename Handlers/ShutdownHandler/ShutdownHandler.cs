@@ -57,7 +57,7 @@ namespace FOG.Handlers
             ForcedPowerOff = 12
         }
 
-        private const string LOG_NAME = "ShutdownHandler";
+        private const string LogName = "ShutdownHandler";
         //Define variables
         public static bool ShutdownPending { get; private set; }
         public static bool UpdatePending { get; set; }
@@ -69,10 +69,10 @@ namespace FOG.Handlers
         ///     Create a shutdown command
         /// </summary>
         /// <param name="parameters">The parameters to use</param>
-        private static void createShutdownCommand(string parameters)
+        private static void CreateShutdownCommand(string parameters)
         {
-            LogHandler.Log(LOG_NAME, "Creating shutdown request");
-            LogHandler.Log(LOG_NAME, string.Format("Parameters: {0}", parameters));
+            LogHandler.Log(LogName, "Creating shutdown request");
+            LogHandler.Log(LogName, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
         }
@@ -85,7 +85,7 @@ namespace FOG.Handlers
         public static void Shutdown(string comment, int seconds)
         {
             ShutdownPending = true;
-            createShutdownCommand(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
+            CreateShutdownCommand(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace FOG.Handlers
         public static void Restart(string comment, int seconds)
         {
             ShutdownPending = true;
-            createShutdownCommand(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
+            CreateShutdownCommand(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -104,7 +104,7 @@ namespace FOG.Handlers
         /// </summary>
         public static void LogOffUser()
         {
-            createShutdownCommand("/l");
+            CreateShutdownCommand("/l");
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace FOG.Handlers
         /// </summary>
         public static void Hibernate()
         {
-            createShutdownCommand("/h");
+            CreateShutdownCommand("/h");
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace FOG.Handlers
         public static void AbortShutdown()
         {
             ShutdownPending = false;
-            createShutdownCommand("/a");
+            CreateShutdownCommand("/a");
         }
 
         /// <summary>
@@ -137,7 +137,7 @@ namespace FOG.Handlers
         /// </summary>
         public static void RestartService()
         {
-            LogHandler.Log(LOG_NAME, "Restarting service");
+            LogHandler.Log(LogName, "Restarting service");
             ShutdownPending = true;
             var process = new Process
             {
@@ -157,7 +157,7 @@ namespace FOG.Handlers
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(string fileName)
         {
-            LogHandler.Log(LOG_NAME, "Spawning update waiter");
+            LogHandler.Log(LogName, "Spawning update waiter");
 
             var process = new Process
             {
@@ -170,8 +170,8 @@ namespace FOG.Handlers
                 }
             };
 
-            LogHandler.Log(LOG_NAME, "Update Waiter args");
-            LogHandler.Log(LOG_NAME, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
+            LogHandler.Log(LogName, "Update Waiter args");
+            LogHandler.Log(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
             process.Start();
         }
     }

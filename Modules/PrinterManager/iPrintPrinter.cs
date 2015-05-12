@@ -3,6 +3,7 @@ using FOG.Handlers;
 
 namespace FOG.Modules
 {
+    // ReSharper disable once InconsistentNaming
     class iPrintPrinter : Printer
     {
         public iPrintPrinter(string name, string ip, string port, bool defaulted)

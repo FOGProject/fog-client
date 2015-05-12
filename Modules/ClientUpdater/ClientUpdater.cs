@@ -34,7 +34,7 @@ namespace FOG.Modules
             Description = "Update the FOG Service";
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             var serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?clientver");
             var localVersion = RegistryHandler.GetSystemSetting("Version");
@@ -47,7 +47,7 @@ namespace FOG.Modules
 
                 CommunicationHandler.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
-                prepareUpdateHelpers();
+                PrepareUpdateHelpers();
                 ShutdownHandler.UpdatePending = true;
             }
             catch (Exception ex)
@@ -58,7 +58,7 @@ namespace FOG.Modules
         }
 
         //Prepare the downloaded update
-        private void prepareUpdateHelpers()
+        private void PrepareUpdateHelpers()
         {
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe") &&
                 File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))

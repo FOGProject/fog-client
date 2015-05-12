@@ -28,14 +28,10 @@ namespace FOG
 {
     public sealed class NotificationIcon
     {
-        private readonly ContextMenu notificationMenu;
         //Define variables
-        private readonly NotifyIcon notifyIcon;
-        private readonly PipeClient servicePipe;
-        private readonly PipeClient systemNotificationPipe;
-        private readonly PipeClient userNotificationPipe;
-        private bool isNotificationReady;
-        private Notification notification;
+        private readonly NotifyIcon _notifyIcon;
+        private bool _isNotificationReady;
+        private Notification _notification;
 
         #region Main - Program entry point
 
@@ -50,15 +46,13 @@ namespace FOG
 
             bool isFirstInstance;
             // Please use a unique name for the mutex to prevent conflicts with other programs
-            using (var mtx = new Mutex(true, "Tray", out isFirstInstance))
+            using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
-                if (isFirstInstance)
-                {
-                    var notificationIcon = new NotificationIcon();
-                    notificationIcon.notifyIcon.Visible = true;
-                    Application.Run();
-                    notificationIcon.notifyIcon.Dispose();
-                }
+                if (!isFirstInstance) return;
+                var notificationIcon = new NotificationIcon();
+                notificationIcon._notifyIcon.Visible = true;
+                Application.Run();
+                notificationIcon._notifyIcon.Dispose();
             } // releases the Mutex
         }
 
@@ -79,29 +73,29 @@ namespace FOG
             // Setup the pipe client
 
 
-            userNotificationPipe = new PipeClient("fog_pipe_notification_user_" + UserHandler.GetCurrentUser());
+            var userNotificationPipe = new PipeClient("fog_pipe_notification_user_" + UserHandler.GetCurrentUser());
             userNotificationPipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            userNotificationPipe.connect();
+            userNotificationPipe.Connect();
 
-            systemNotificationPipe = new PipeClient("fog_pipe_notification");
+            var systemNotificationPipe = new PipeClient("fog_pipe_notification");
             systemNotificationPipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            systemNotificationPipe.connect();
+            systemNotificationPipe.Connect();
 
-            servicePipe = new PipeClient("fog_pipe_service");
+            var servicePipe = new PipeClient("fog_pipe_service");
             servicePipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            servicePipe.connect();
+            servicePipe.Connect();
 
 
-            notifyIcon = new NotifyIcon();
-            notificationMenu = new ContextMenu(InitializeMenu());
+            _notifyIcon = new NotifyIcon();
+            var notificationMenu = new ContextMenu(InitializeMenu());
 
-            notifyIcon.DoubleClick += IconDoubleClick;
+            _notifyIcon.DoubleClick += IconDoubleClick;
             var resources = new ComponentResourceManager(typeof (NotificationIcon));
-            notifyIcon.Icon = (Icon) resources.GetObject("icon");
-            notifyIcon.ContextMenu = notificationMenu;
+            _notifyIcon.Icon = (Icon) resources.GetObject("icon");
+            _notifyIcon.ContextMenu = notificationMenu;
 
-            notification = new Notification();
-            isNotificationReady = false;
+            _notification = new Notification();
+            _isNotificationReady = false;
         }
 
         //Called when a message is recieved from the pipe server
@@ -110,37 +104,38 @@ namespace FOG
             if (message.StartsWith("TLE:"))
             {
                 message = message.Substring(4);
-                notification.Title = message;
+                _notification.Title = message;
             }
             else if (message.StartsWith("MSG:"))
             {
                 message = message.Substring(4);
-                notification.Message = message;
+                _notification.Message = message;
             }
             else if (message.StartsWith("DUR:"))
             {
                 message = message.Substring(4);
                 try
                 {
-                    notification.Duration = int.Parse(message);
+                    _notification.Duration = int.Parse(message);
                 }
                 catch
                 {
+                    // ignored
                 }
-                isNotificationReady = true;
+                _isNotificationReady = true;
             }
             else if (message.Equals("UPD"))
             {
                 Application.Exit();
             }
 
-            if (isNotificationReady)
+            if (_isNotificationReady)
             {
-                notifyIcon.BalloonTipTitle = notification.Title;
-                notifyIcon.BalloonTipText = notification.Message;
-                notifyIcon.ShowBalloonTip(notification.Duration);
-                isNotificationReady = false;
-                notification = new Notification();
+                _notifyIcon.BalloonTipTitle = _notification.Title;
+                _notifyIcon.BalloonTipText = _notification.Message;
+                _notifyIcon.ShowBalloonTip(_notification.Duration);
+                _isNotificationReady = false;
+                _notification = new Notification();
             }
         }
 

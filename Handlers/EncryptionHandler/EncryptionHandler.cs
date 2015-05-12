@@ -248,7 +248,7 @@ namespace FOG.Handlers
             var md5 = new MD5CryptoServiceProvider();
             var bytes = File.ReadAllBytes(filePath);
             var result = md5.ComputeHash(bytes);
-            foreach (int hashInt in result)
+            foreach (var hashInt in result)
                 sBuilder.Append(hashInt.ToString("x2"));
 
             return sBuilder.ToString();

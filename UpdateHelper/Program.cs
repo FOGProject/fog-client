@@ -30,16 +30,16 @@ namespace FOG
         public static void Main(string[] args)
         {
             var service = new ServiceController("fogservice");
-            var LOG_NAME = "Update Helper";
+            const string logName = "Update Helper";
 
-            LogHandler.Log(LOG_NAME, "Shutting down service...");
+            LogHandler.Log(logName, "Shutting down service...");
             //Stop the service
             if (service.Status == ServiceControllerStatus.Running)
                 service.Stop();
 
             service.WaitForStatus(ServiceControllerStatus.Stopped);
 
-            LogHandler.Log(LOG_NAME, "Killing remaining FOG processes...");
+            LogHandler.Log(logName, "Killing remaining FOG processes...");
             if (Process.GetProcessesByName("FOGService").Length > 0)
             {
                 foreach (var process in Process.GetProcessesByName("FOGService"))
@@ -48,12 +48,12 @@ namespace FOG
                 }
             }
 
-            LogHandler.Log(LOG_NAME, "Applying MSI...");
-            applyUpdates();
+            LogHandler.Log(logName, "Applying MSI...");
+            ApplyUpdates();
 
             //Start the service
 
-            LogHandler.Log(LOG_NAME, "Starting service...");
+            LogHandler.Log(logName, "Starting service...");
             service.Start();
             service.WaitForStatus(ServiceControllerStatus.Running);
             service.Dispose();
@@ -62,9 +62,9 @@ namespace FOG
                 File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info");
         }
 
-        private static void applyUpdates()
+        private static void ApplyUpdates()
         {
-            const string LOG_NAME = "Update Helper";
+            const string logName = "Update Helper";
 
             var useTray = RegistryHandler.GetSystemSetting("Tray");
             var https = RegistryHandler.GetSystemSetting("HTTPS");
@@ -87,7 +87,7 @@ namespace FOG
             process.StartInfo.FileName = "msiexec";
 
 
-            LogHandler.Log(LOG_NAME, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+            LogHandler.Log(logName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
             process.Start();
             process.WaitForExit();
         }

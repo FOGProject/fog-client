@@ -15,21 +15,21 @@ namespace FOG
         public delegate void MessageReceivedHandler(string message);
 
         //Define variables
-        private const uint GENERIC_READ = (0x80000000);
-        private const uint GENERIC_WRITE = (0x40000000);
-        private const uint OPEN_EXISTING = 3;
-        private const uint FILE_FLAG_OVERLAPPED = (0x40000000);
-        private const int BUFFER_SIZE = 4096;
-        private readonly string pipeName;
-        private bool connected;
-        private SafeFileHandle handle;
-        private Thread readThread;
-        private FileStream stream;
+        private const uint GenericRead = (0x80000000);
+        private const uint GenericWrite = (0x40000000);
+        private const uint OpenExisting = 3;
+        private const uint FileFlagOverlapped = (0x40000000);
+        private const int BufferSize = 4096;
+        private readonly string _pipeName;
+        private bool _connected;
+        private SafeFileHandle _handle;
+        private Thread _readThread;
+        private FileStream _stream;
 
         public PipeClient(string pipeName)
         {
-            connected = false;
-            this.pipeName = pipeName;
+            _connected = false;
+            _pipeName = pipeName;
         }
 
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -38,37 +38,37 @@ namespace FOG
 
         public event MessageReceivedHandler MessageReceived;
 
-        public bool isConnected()
+        public bool IsConnected()
         {
-            return connected;
+            return _connected;
         }
 
-        public string getPipeName()
+        public string GetPipeName()
         {
-            return pipeName;
+            return _pipeName;
         }
 
         //Connect to a server using the same pipe
-        public bool connect()
+        public bool Connect()
         {
             try
             {
-                handle = CreateFile(@"\\.\pipe\" + pipeName, GENERIC_READ | GENERIC_WRITE, 0, IntPtr.Zero,
-                    OPEN_EXISTING, FILE_FLAG_OVERLAPPED, IntPtr.Zero);
+                _handle = CreateFile(@"\\.\pipe\" + _pipeName, GenericRead | GenericWrite, 0, IntPtr.Zero,
+                    OpenExisting, FileFlagOverlapped, IntPtr.Zero);
 
-                if (handle == null)
+                if (_handle == null)
                     return false;
 
-                if (handle.IsInvalid)
+                if (_handle.IsInvalid)
                 {
-                    connected = false;
+                    _connected = false;
                     return false;
                 }
 
-                connected = true;
+                _connected = true;
 
-                readThread = new Thread(readFromPipe);
-                readThread.Start();
+                _readThread = new Thread(ReadFromPipe);
+                _readThread.Start();
 
                 return true;
             }
@@ -79,17 +79,17 @@ namespace FOG
         }
 
         //Stop the pipe client
-        public void kill()
+        public void Kill()
         {
             try
             {
-                if (stream != null)
-                    stream.Close();
+                if (_stream != null)
+                    _stream.Close();
 
-                if (handle != null)
-                    handle.Close();
+                if (_handle != null)
+                    _handle.Close();
 
-                readThread.Abort();
+                _readThread.Abort();
             }
             catch
             {
@@ -98,10 +98,10 @@ namespace FOG
         }
 
         //Read a message sent over from the pipe server
-        public void readFromPipe()
+        public void ReadFromPipe()
         {
-            stream = new FileStream(handle, FileAccess.ReadWrite, BUFFER_SIZE, true);
-            var readBuffer = new byte[BUFFER_SIZE];
+            _stream = new FileStream(_handle, FileAccess.ReadWrite, BufferSize, true);
+            var readBuffer = new byte[BufferSize];
 
             var encoder = new ASCIIEncoding();
             while (true)
@@ -110,7 +110,7 @@ namespace FOG
 
                 try
                 {
-                    bytesRead = stream.Read(readBuffer, 0, BUFFER_SIZE);
+                    bytesRead = _stream.Read(readBuffer, 0, BufferSize);
                 }
                 catch
                 {
@@ -123,23 +123,24 @@ namespace FOG
                 if (MessageReceived != null)
                     MessageReceived(encoder.GetString(readBuffer, 0, bytesRead));
             }
-            stream.Close();
-            handle.Close();
+            _stream.Close();
+            _handle.Close();
         }
 
         //Send a message across the pipe
-        public void sendMessage(string message)
+        public void SendMessage(string message)
         {
             try
             {
                 var encoder = new ASCIIEncoding();
                 var messageBuffer = encoder.GetBytes(message);
 
-                stream.Write(messageBuffer, 0, messageBuffer.Length);
-                stream.Flush();
+                _stream.Write(messageBuffer, 0, messageBuffer.Length);
+                _stream.Flush();
             }
             catch
             {
+                // ignored
             }
         }
     }

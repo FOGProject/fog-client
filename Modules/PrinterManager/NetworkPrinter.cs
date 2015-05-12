@@ -26,7 +26,7 @@ namespace FOG.Modules
 
             if (IP.Contains(":"))
             {
-                var arIP = IP.Split(new char[] {':'});
+                var arIP = IP.Split(':');
                 if (arIP.Length == 2)
                 {
                     IP = arIP[0];
@@ -53,27 +53,30 @@ namespace FOG.Modules
 
             var mPort = new ManagementClass(mScope, mPath, null).CreateInstance();
 
-            mPort.SetPropertyValue("Name", "IP_" + IP);
-            mPort.SetPropertyValue("Protocol", 1);
-            mPort.SetPropertyValue("HostAddress", IP);
-            mPort.SetPropertyValue("PortNumber", Port);
-            mPort.SetPropertyValue("SNMPEnabled", false);
-
-            var put = new PutOptions
+            if (mPort != null)
             {
-                UseAmendedQualifiers = true,
-                Type = PutType.UpdateOrCreate
-            };
-            mPort.Put(put);
+                mPort.SetPropertyValue("Name", "IP_" + IP);
+                mPort.SetPropertyValue("Protocol", 1);
+                mPort.SetPropertyValue("HostAddress", IP);
+                mPort.SetPropertyValue("PortNumber", Port);
+                mPort.SetPropertyValue("SNMPEnabled", false);
+
+                var put = new PutOptions
+                {
+                    UseAmendedQualifiers = true,
+                    Type = PutType.UpdateOrCreate
+                };
+                mPort.Put(put);
+            }
 
             if (!Name.StartsWith("\\\\")) return;
 
             // Add per machine printer connection
             var proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /ga /n " + Name);
-            proc.WaitForExit(120000);
+            if (proc != null) proc.WaitForExit(120000);
             // Add printer network connection, download the drivers from the print server
             proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /in /n " + Name);
-            proc.WaitForExit(120000);
+            if (proc != null) proc.WaitForExit(120000);
         }
     }
 }

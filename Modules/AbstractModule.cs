@@ -44,22 +44,22 @@ namespace FOG.Modules
         public virtual void Start()
         {
             LogHandler.Log(Name, "Running...");
-            if (isEnabled())
+            if (IsEnabled())
             {
-                doWork();
+                DoWork();
             }
         }
 
         /// <summary>
         ///     Called after Start() filters out disabled modules. Contains the module's functionality
         /// </summary>
-        protected abstract void doWork();
+        protected abstract void DoWork();
 
         /// <summary>
         ///     Check if the module is enabled
         /// </summary>
         /// <returns>True if the module is enabled</returns>
-        public bool isEnabled()
+        public bool IsEnabled()
         {
             var moduleActiveResponse = CommunicationHandler.GetResponse(string.Format("{0}?moduleid={1}", EnabledURL, Name.ToLower()), true);
             return !moduleActiveResponse.Error;

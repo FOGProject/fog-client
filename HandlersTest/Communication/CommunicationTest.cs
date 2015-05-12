@@ -1,5 +1,4 @@
-﻿using System.Text;
-using FOG.Handlers;
+﻿using FOG.Handlers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HandlersTest.Communication

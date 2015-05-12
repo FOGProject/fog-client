@@ -27,13 +27,13 @@ namespace FOG.Modules
     /// </summary>
     public class Display
     {
-        private const string LOG_NAME = "DisplayManager:Display";
+        private const string LogName = "DisplayManager:Display";
         // Cannot use auto-populated getters and setters as it would turn this property into a method
-        public User_32.DEVMODE1 Configuration;
+        public User32.Devmode1 Configuration;
 
         public Display()
         {
-            Configuration = new User_32.DEVMODE1
+            Configuration = new User32.Devmode1
             {
                 dmDeviceName = new string(new char[32]),
                 dmFormName = new string(new char[32])
@@ -50,10 +50,10 @@ namespace FOG.Modules
         /// <returns>True if the settings were successfully loaded</returns>
         public bool LoadDisplaySettings()
         {
-            if (User_32.EnumDisplaySettings(null, User_32.ENUM_CURRENT_SETTINGS, ref Configuration) != 0)
+            if (User32.EnumDisplaySettings(null, User32.EnumCurrentSettings, ref Configuration) != 0)
                 return true;
 
-            LogHandler.Log(LOG_NAME, "Unable to load display settings");
+            LogHandler.Log(LogName, "Unable to load display settings");
             return false;
         }
 
@@ -74,22 +74,22 @@ namespace FOG.Modules
             Configuration.dmDeviceName = device;
 
             //Test changing the resolution first
-            LogHandler.Log(LOG_NAME, "Testing resolution to ensure it is compatible");
-            var changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_TEST);
+            LogHandler.Log(LogName, "Testing resolution to ensure it is compatible");
+            var changeStatus = User32.ChangeDisplaySettings(ref Configuration, User32.CdsTest);
 
-            if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
-                LogHandler.Log(LOG_NAME, "Failed");
+            if (changeStatus.Equals(User32.DispChangeFailed))
+                LogHandler.Log(LogName, "Failed");
             else
             {
-                LogHandler.Log(LOG_NAME, "Changing resolution");
-                changeStatus = User_32.ChangeDisplaySettings(ref Configuration, User_32.CDS_UPDATEREGISTRY);
+                LogHandler.Log(LogName, "Changing resolution");
+                changeStatus = User32.ChangeDisplaySettings(ref Configuration, User32.CdsUpdateregistry);
 
-                if (changeStatus.Equals(User_32.DISP_CHANGE_SUCCESSFUL))
-                    LogHandler.Log(LOG_NAME, "Success");
-                else if (changeStatus.Equals(User_32.DISP_CHANGE_RESTART))
-                    LogHandler.Log(LOG_NAME, "Success, requires reboot");
-                else if (changeStatus.Equals(User_32.DISP_CHANGE_FAILED))
-                    LogHandler.Log(LOG_NAME, "Failed");
+                if (changeStatus.Equals(User32.DispChangeSuccessful))
+                    LogHandler.Log(LogName, "Success");
+                else if (changeStatus.Equals(User32.DispChangeRestart))
+                    LogHandler.Log(LogName, "Success, requires reboot");
+                else if (changeStatus.Equals(User32.DispChangeFailed))
+                    LogHandler.Log(LogName, "Failed");
             }
         }
     }

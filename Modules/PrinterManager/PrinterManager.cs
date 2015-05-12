@@ -36,7 +36,7 @@ namespace FOG.Modules
             Description = "Manage printers";
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             //Get printers
             var printerResponse = CommunicationHandler.GetResponse("/service/Printer.php", true);
@@ -44,20 +44,20 @@ namespace FOG.Modules
 
             var printerIDs = CommunicationHandler.ParseDataArray(printerResponse, "#printer", false);
 
-            var printers = createPrinters(printerIDs);
+            List<Printer> printers = CreatePrinters(printerIDs);
 
             if (printerResponse.GetField("mode").Equals("ar"))
-                removeExtraPrinters(printers);
+                RemoveExtraPrinters(printers);
 
             foreach (var printer in printers)
             {
                 printer.Add();
                 if(printer.Default)
-                    printer.setDefault();
+                    printer.SetDefault();
             }
         }
 
-        private void removeExtraPrinters(IEnumerable<Printer> newPrinters)
+        private static void RemoveExtraPrinters(List<Printer> newPrinters)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
             foreach (var name in from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name").ToString() into name let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name)) where !safe select name)
@@ -66,14 +66,14 @@ namespace FOG.Modules
             }
         }
 
-        private IEnumerable<Printer> createPrinters(IEnumerable<string> printerIDs)
+        private List<Printer> CreatePrinters(List<string> printerIDs)
         {
             try
             {
                 return
                     printerIDs.Select(
                         id => CommunicationHandler.GetResponse(string.Format("/service/Printer.php?id={0}", id), true))
-                        .Where(printerData => !printerData.Error).Select(printerFactory).ToList();
+                        .Where(printerData => !printerData.Error).Select(PrinterFactory).ToList();
             }
             catch (Exception ex)
             {
@@ -83,7 +83,7 @@ namespace FOG.Modules
 
         }
 
-        private Printer printerFactory(Response printerData)
+        private static Printer PrinterFactory(Response printerData)
         {
             if(printerData.GetField("type").Equals("iPrint"))
                 return new iPrintPrinter(printerData.GetField("name"), 

@@ -26,17 +26,17 @@ namespace FOG.Modules
     /// </summary>
     public class TaskReboot : AbstractModule
     {
-        private bool notifiedUser;
+        private bool _notifiedUser;
         //This variable is used to detect if the user has been told their is a pending shutdown
 
         public TaskReboot()
         {
             Name = "TaskReboot";
             Description = "Reboot if a task is scheduled";
-            notifiedUser = false;
+            _notifiedUser = false;
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             //Get task info
             var taskResponse = CommunicationHandler.GetResponse("/service/jobs.php", true);
@@ -48,7 +48,7 @@ namespace FOG.Modules
             if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
                 ShutdownHandler.Restart(Name, 30);
 
-            else if (!taskResponse.Error && !notifiedUser)
+            else if (!taskResponse.Error && !_notifiedUser)
             {
                 LogHandler.Log(Name, "User is currently logged in, will try again later");
                 
@@ -56,7 +56,7 @@ namespace FOG.Modules
                     string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
                         NotificationHandler.Company), 60));
 
-                notifiedUser = true;
+                _notifiedUser = true;
             }
         }
     }

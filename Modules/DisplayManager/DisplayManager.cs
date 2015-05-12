@@ -30,19 +30,19 @@ namespace FOG.Modules
     /// </summary>
     public class DisplayManager : AbstractModule
     {
-        private readonly Display display;
+        private readonly Display _display;
 
         public DisplayManager()
         {
             Name = "DisplayManager";
             Description = "Change the resolution of the display";
-            display = new Display();
+            _display = new Display();
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
-            display.LoadDisplaySettings();
-            if (display.PopulatedSettings)
+            _display.LoadDisplaySettings();
+            if (_display.PopulatedSettings)
             {
                 //Get task info
                 var taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php", true);
@@ -55,7 +55,7 @@ namespace FOG.Modules
                     var y = int.Parse(taskResponse.GetField("#y"));
                     var r = int.Parse(taskResponse.GetField("#r"));
 
-                    changeResolution(getDisplays().Count > 0 ? getDisplays()[0] : "", x, y, r);
+                    ChangeResolution(GetDisplays().Count > 0 ? GetDisplays()[0] : "", x, y, r);
                 }
                 catch (Exception ex)
                 {
@@ -70,19 +70,19 @@ namespace FOG.Modules
         }
 
         //Change the resolution of the screen
-        private void changeResolution(string device, int width, int height, int refresh)
+        private void ChangeResolution(string device, int width, int height, int refresh)
         {
             try
             {
-                if ((width.Equals(display.Configuration.dmPelsWidth) && height.Equals(display.Configuration.dmPelsHeight) &&
-                  refresh.Equals(display.Configuration.dmDisplayFrequency)))
+                if ((width.Equals(_display.Configuration.dmPelsWidth) && height.Equals(_display.Configuration.dmPelsHeight) &&
+                  refresh.Equals(_display.Configuration.dmDisplayFrequency)))
                     throw new Exception("Resolution is already configured correctly");
 
-                LogHandler.Log(Name, string.Format("Current Resolution: {0} x {1} {2}hz", display.Configuration.dmPelsWidth, display.Configuration.dmPelsHeight, display.Configuration.dmDisplayFrequency));
+                LogHandler.Log(Name, string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth, _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
                 LogHandler.Log(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
                 LogHandler.Log(Name, "Display name: " + device);
 
-                display.ChangeResolution(device, width, height, refresh);
+                _display.ChangeResolution(device, width, height, refresh);
             }
             catch (Exception ex)
             {
@@ -91,7 +91,7 @@ namespace FOG.Modules
             }
         }
 
-        private List<string> getDisplays()
+        private static List<string> GetDisplays()
         {
             var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
 

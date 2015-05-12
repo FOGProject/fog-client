@@ -36,7 +36,7 @@ namespace FOG.Modules
             Description = "Perform cron style power tasks";
         }
 
-        protected override void doWork()
+        protected override void DoWork()
         {
             //Get actions
             var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
@@ -47,12 +47,12 @@ namespace FOG.Modules
             var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
 
             //Filter existing tasks
-            tasks = filterTasks(tasks);
+            tasks = FilterTasks(tasks);
             //Add new tasks
-            createTasks(tasks);
+            CreateTasks(tasks);
         }
 
-        private List<string> filterTasks(List<string> newTasks)
+        private List<string> FilterTasks(List<string> newTasks)
         {
             var taskService = new TaskService();
             var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
@@ -73,7 +73,7 @@ namespace FOG.Modules
             return newTasks;
         }
 
-        private void createTasks(IEnumerable<string> tasks)
+        private void CreateTasks(IEnumerable<string> tasks)
         {
             var taskService = new TaskService();
 
@@ -88,7 +88,7 @@ namespace FOG.Modules
                 taskDefinition.Principal.UserId = "SYSTEM";
 
                 //Create task trigger
-                var trigger = new DailyTrigger(1)
+                var trigger = new DailyTrigger()
                 {
                     StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
                                     TimeSpan.FromMinutes(int.Parse(taskData[1]))
@@ -99,9 +99,9 @@ namespace FOG.Modules
 
                 //Create task action
                 if (taskData[2].Equals("r"))
-                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/r /c \"Green FOG\" /t 0", null));
+                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/r /c \"Green FOG\" /t 0"));
                 else if (taskData[2].Equals("s"))
-                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0", null));
+                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0"));
 
                 //Register the task
                 try
