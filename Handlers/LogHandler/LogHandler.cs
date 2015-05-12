@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Threading;
 
 namespace FOG.Handlers
 {
@@ -148,6 +149,14 @@ namespace FOG.Handlers
         public static void WriteLine(string line)
         {
             Write(line + "\r\n");
+        }
+
+        public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
+        {
+            Log(LOG_NAME, "Unhandled exception caught");
+            Log(LOG_NAME, string.Format("    Terminating: {0}", ex.IsTerminating));
+            Log(LOG_NAME, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
+
         }
 
         /// <summary>

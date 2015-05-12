@@ -57,6 +57,8 @@ namespace FOG
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
             LogHandler.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
+            AppDomain.CurrentDomain.UnhandledException += LogHandler.UnhandledException;
+
             LogHandler.Log(LOG_NAME, "Initializing");
             if (!CommunicationHandler.GetAndSetServerAddress()) return;
             initializeModules();

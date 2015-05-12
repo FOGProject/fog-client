@@ -97,14 +97,14 @@ namespace FOG
         }
 
         //Handle recieving a message
-        private void notificationPipeServer_MessageReceived(Client client, string message)
+        private static void notificationPipeServer_MessageReceived(Client client, string message)
         {
             LogHandler.Log("PipeServer", "Notification message recieved");
             LogHandler.Log("PipeServer", message);
         }
 
         //Handle recieving a message
-        private void servicePipeService_MessageReceived(Client client, string message)
+        private static void servicePipeService_MessageReceived(Client client, string message)
         {
             LogHandler.Log("PipeServer", "Server-Pipe message recieved");
             LogHandler.Log("PipeServer", message);
