@@ -93,10 +93,6 @@
     <Compile Include="UserHandler\UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="libeay32.dll" />
-    <Content Include="ssleay32.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

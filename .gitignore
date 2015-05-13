@@ -23,7 +23,9 @@ bld/
 [Oo]bj/
 
 # exclude everything but c dlls
-bin/
+
+bin/*
+!bin/
 !bin/libeay32.dll
 !bin/ssleay32.dll
 
