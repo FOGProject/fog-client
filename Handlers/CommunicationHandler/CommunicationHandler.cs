@@ -326,8 +326,8 @@ namespace FOG.Handlers
             var webClient = new WebClient();
             try
             {
-                if (SanityHandler.AreEmptyOrNull("URL is not set", url)) return false;
-                if (SanityHandler.AreEmptyOrNull("Filepath is not set", filePath)) return false;
+                if (!SanityHandler.AreNotEmptyOrNull("URL is not set", url)) return false;
+                if (!SanityHandler.AreNotEmptyOrNull("Filepath is not set", filePath)) return false;
 
                 //Create the directory that the file will go in if it doesn't already exist
                 if (!Directory.Exists(Path.GetDirectoryName(filePath)))

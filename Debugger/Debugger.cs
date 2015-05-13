@@ -24,8 +24,14 @@ namespace FOG
 {
     internal class Program
     {
+        private const string Server = "https://fog.jbob.io/fog";
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
+
         public static void Main(string[] args)
         {
+            CommunicationHandler.ServerAddress = Server;
+            CommunicationHandler.TestMAC = MAC;
+
             LogHandler.Mode = LogHandler.LogMode.Console;
             LogHandler.Verbose = true;
             CommunicationHandler.Authenticate();
