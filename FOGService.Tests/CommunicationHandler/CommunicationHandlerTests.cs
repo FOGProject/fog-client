@@ -9,19 +9,32 @@ namespace FOGService.Tests.Communication
         private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
 
+        [SetUp]
+        public void Init()
+        {
+            CommunicationHandler.ServerAddress = Server;
+            CommunicationHandler.TestMAC = MAC;          
+        }
+
         [Test]
-        public void Authenticate()
+        public void ParseDataArray()
         {
             /**
-             * Ensure that the client can authenticate still 
+             * Ensure that response arrays an be parsed
              */
 
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
+            const string msg = "#!ok\n" +
+                               "#obj0=foo\n" +
+                               "#obj1=bar\n" +
+                               "#obj2=22!";
 
-            var success = CommunicationHandler.Authenticate();
+            var response = CommunicationHandler.ParseResponse(msg);
+            var objArray = CommunicationHandler.ParseDataArray(response, "#obj", false);
 
-            Assert.AreEqual(true, success);
+            Assert.AreEqual(3, objArray.Count);
+            Assert.AreEqual("foo", objArray[0]);
+            Assert.AreEqual("bar", objArray[1]);
+            Assert.AreEqual("22!", objArray[2]);
         }
 
         [Test]
@@ -30,9 +43,6 @@ namespace FOGService.Tests.Communication
             /**
             * Ensure that responses are parsed correctly
             */
-
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
 
             const string msg = "#!ok\n" +
                                "#Foo=bar\n" +

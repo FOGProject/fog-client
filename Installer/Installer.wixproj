@@ -4,7 +4,7 @@
     <ProjectGuid>{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Package</OutputType>
+    <OutputType>Bundle</OutputType>
     <RootNamespace>Installer</RootNamespace>
     <OutputName>FOGService</OutputName>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>

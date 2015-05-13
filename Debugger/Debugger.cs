@@ -31,9 +31,7 @@ namespace FOG
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 
-            LogHandler.Log("Debugger", "Test finished");
-            LogHandler.Error("Debugger", "So ya, this is a debug message");
-            LogHandler.Debug("Debugger", "So ya, this is an error message");
+            LogHandler.Debug("Debugger", "Test Finished");
 
             Console.ReadLine();
         }
