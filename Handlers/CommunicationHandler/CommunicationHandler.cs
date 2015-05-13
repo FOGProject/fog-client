@@ -182,7 +182,7 @@ namespace FOG.Handlers
 
                 var encryptedKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
                 var authenticationResponse = GetResponse(string.Format("/management/index.php?sub=authorize&sym_key={0}", encryptedKey), true);
-
+               
                 if (!authenticationResponse.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
