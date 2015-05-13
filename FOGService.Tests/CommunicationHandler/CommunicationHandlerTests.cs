@@ -1,23 +1,21 @@
-﻿using System;
-using System.Reflection.Emit;
+﻿using NUnit.Framework;
 using FOG.Handlers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FOGService.Tests.Communication
 {
-    [TestClass]
+    [TestFixture]
     public class CommunicationTest
     {
         private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
 
-        [TestMethod]
+        [Test]
         public void Authenticate()
         {
             /**
              * Ensure that the client can authenticate still 
              */
- 
+
             CommunicationHandler.ServerAddress = Server;
             CommunicationHandler.TestMAC = MAC;
 
@@ -26,7 +24,7 @@ namespace FOGService.Tests.Communication
             Assert.AreEqual(true, success);
         }
 
-        [TestMethod]
+        [Test]
         public void ParseResponse()
         {
             /**

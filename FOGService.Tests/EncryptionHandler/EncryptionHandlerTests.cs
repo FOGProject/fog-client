@@ -1,13 +1,13 @@
-﻿using FOG.Handlers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using NUnit.Framework;
+using FOG.Handlers;
 
 namespace FOGService.Tests.Encryption
 {
-    [TestClass]
+    [TestFixture]
     public class EncryptionTest
     {
 
-        [TestMethod]
+        [Test]
         public void RoundTrip_Base64()
         {
             /**
@@ -23,7 +23,7 @@ namespace FOGService.Tests.Encryption
             Assert.AreEqual(message, decoded);
         }
 
-        [TestMethod]
+        [Test]
         public void RoundTrip_HexByteString()
         {
             /**
@@ -39,7 +39,7 @@ namespace FOGService.Tests.Encryption
             Assert.AreEqual(message, decoded);
         }
 
-        [TestMethod]
+        [Test]
         public void GeneratePassword()
         {
 
