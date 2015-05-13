@@ -15,8 +15,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateWaiter", "UpdateWaite
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateHelper", "UpdateHelper\UpdateHelper.csproj", "{788E1733-937F-415C-A6E9-46A43BB0B019}"
 EndProject
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Installer", "Installer\Installer.wixproj", "{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Debugger", "Debugger\Debugger.csproj", "{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PipeServer", "PipeServer\PipeServer.csproj", "{DF7C1145-E90C-486B-ACEC-543B42CF083F}"
@@ -90,13 +88,6 @@ Global
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Release|Any CPU.Build.0 = Release|Any CPU
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{788E1733-937F-415C-A6E9-46A43BB0B019}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.ActiveCfg = Release|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Any CPU.Build.0 = Release|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}.Release|Mixed Platforms.Build.0 = Release|x86
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{159AF4FF-F6DC-4A70-8D5D-ABE907CD814E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
