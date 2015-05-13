@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using FOG.Handlers;
 
 namespace FOGService.Tests.Handlers
@@ -7,7 +6,7 @@ namespace FOGService.Tests.Handlers
     [TestFixture]
     public class CommunicationTests
     {
-        private const string Server = "https://fog.jbob.io/fog";
+        private const string Server = "http://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
 
         [SetUp]
@@ -59,14 +58,14 @@ namespace FOGService.Tests.Handlers
             Assert.AreEqual("22!", objArray[2]);
         }
 
-        [Ignore]
+        [Test]
         public void Contact()
         {
             var success = CommunicationHandler.Contact("/index.php");
             Assert.IsTrue(success);
         }
 
-        [Ignore]
+        [Test]
         public void Authenticate()
         {
             var success = CommunicationHandler.Authenticate();
