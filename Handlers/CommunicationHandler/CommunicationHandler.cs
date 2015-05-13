@@ -184,7 +184,9 @@ namespace FOG.Handlers
             {
                 var keyPath = string.Format("{0}\\tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
-                var aes = new AesCryptoServiceProvider();
+
+                //Hard code reference to bypass mono bug
+                System.Security.Cryptography.AesCryptoServiceProvider aes = new System.Security.Cryptography.AesCryptoServiceProvider();
                 aes.GenerateKey();
 
                 Passkey = aes.Key;
