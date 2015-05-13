@@ -18,10 +18,14 @@
 x64/
 x86/
 build/
-bin/
 bld/
 [Bb]in/
 [Oo]bj/
+
+# exclude everything but c dlls
+bin/
+!bin/libeay32.dll
+!bin/ssleay32.dll
 
 # Visual Studo 2015 cache/options directory
 .vs/

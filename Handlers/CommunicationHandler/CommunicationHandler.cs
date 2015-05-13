@@ -182,7 +182,7 @@ namespace FOG.Handlers
         {
             try
             {
-                var keyPath = string.Format("{0}tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
+                var keyPath = string.Format("{0}\\tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
