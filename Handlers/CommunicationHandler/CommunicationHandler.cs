@@ -71,24 +71,15 @@ namespace FOG.Handlers
         /// </summary>
         public static bool GetAndSetServerAddress()
         {
-            try
-            {
-                if (RegistryHandler.GetSystemSetting("HTTPS") == null) throw new NullReferenceException("HTTPS key not set");
-                if (RegistryHandler.GetSystemSetting("Server") == null) throw new NullReferenceException("Server key not set");
-                if (RegistryHandler.GetSystemSetting("WebRoot") == null) throw new NullReferenceException("WebRoot key not set");
 
-                ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
-                ServerAddress += RegistryHandler.GetSystemSetting("Server") +
-                                 RegistryHandler.GetSystemSetting("WebRoot");
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Error(LogName, "Could not get registry information");
-                LogHandler.Error(LogName,  ex.Message);
-            }
+            if (SanityHandler.AreNotNull("HTTPS key not set", RegistryHandler.GetSystemSetting("HTTPS"))) return false;
+            if (SanityHandler.AreEmptyOrNull("Server key not set", RegistryHandler.GetSystemSetting("Server"))) return false;
+            if (SanityHandler.AreNotNull("WebRoot key not set", RegistryHandler.GetSystemSetting("WebRoot"))) return false;
 
-            return false;
+            ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
+            ServerAddress += RegistryHandler.GetSystemSetting("Server") +
+                             RegistryHandler.GetSystemSetting("WebRoot");
+            return true;
         }
 
         /// <summary>
@@ -335,7 +326,8 @@ namespace FOG.Handlers
             var webClient = new WebClient();
             try
             {
-                if(filePath == null) throw new NullReferenceException("Filepath is null");
+                if (SanityHandler.AreEmptyOrNull("URL is not set", url)) return false;
+                if (SanityHandler.AreEmptyOrNull("Filepath is not set", filePath)) return false;
 
                 //Create the directory that the file will go in if it doesn't already exist
                 if (!Directory.Exists(Path.GetDirectoryName(filePath)))
