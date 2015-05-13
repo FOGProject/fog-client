@@ -143,7 +143,7 @@ namespace FOG.Modules.HostnameChanger
         private void RegisterComputer(Response response)
         {
             LogHandler.Log(Name, "Registering host with active directory");
-
+             
             if (SanityHandler.AreNotEqual("Active directory joining disabled for this host", "1", response.GetField("#AD"))) return;
             if(SanityHandler.AreEqual("Required Domain Joining information is missing", string.Empty)
 
