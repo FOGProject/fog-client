@@ -1,10 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using FOG.Handlers;
 
-namespace FOGService.Tests.Communication
+namespace FOGService.Tests.Handlers
 {
     [TestFixture]
-    public class CommunicationTest
+    public class CommunicationTests
     {
         private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
@@ -14,6 +15,27 @@ namespace FOGService.Tests.Communication
         {
             CommunicationHandler.ServerAddress = Server;
             CommunicationHandler.TestMAC = MAC;          
+        }
+
+        [Test]
+        public void ParseResponse()
+        {
+            /**
+            * Ensure that responses are parsed correctly
+            */
+
+            const string msg = "#!ok\n" +
+                               "#Foo=bar\n" +
+                               "#Empty=\n" +
+                               "#-X=Special";
+
+            var response = CommunicationHandler.ParseResponse(msg);
+
+            Assert.IsFalse(response.Error);
+            Assert.AreEqual("bar", response.GetField("#Foo"));
+            Assert.IsEmpty(response.GetField("#Empty"));
+            Assert.AreEqual("Special", response.GetField("#-X"));
+            Assert.IsEmpty(response.GetField("#NON_EXISTENT"));
         }
 
         [Test]
@@ -38,24 +60,10 @@ namespace FOGService.Tests.Communication
         }
 
         [Test]
-        public void ParseResponse()
+        public void Contact()
         {
-            /**
-            * Ensure that responses are parsed correctly
-            */
-
-            const string msg = "#!ok\n" +
-                               "#Foo=bar\n" +
-                               "#Empty=\n" +
-                               "#-X=Special";
-
-            var response = CommunicationHandler.ParseResponse(msg);
-
-            Assert.AreEqual(false, response.Error);
-            Assert.AreEqual("bar", response.GetField("#Foo"));
-            Assert.AreEqual(string.Empty, response.GetField("#Empty"));
-            Assert.AreEqual("Special", response.GetField("#-X"));
-            Assert.AreEqual(string.Empty, response.GetField("#NON_EXISTENT"));
+            var success = CommunicationHandler.Contact("/index.php");
+            Assert.IsTrue(success);
         }
 
 

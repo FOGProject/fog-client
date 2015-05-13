@@ -1,10 +1,10 @@
 ﻿using NUnit.Framework;
 using FOG.Handlers;
 
-namespace FOGService.Tests.Encryption
+namespace FOGService.Tests.Handlers
 {
     [TestFixture]
-    public class EncryptionTest
+    public class EncryptionTests
     {
 
         [Test]
@@ -17,7 +17,7 @@ namespace FOGService.Tests.Encryption
             const string message = "The dog jumped over the fence #@//\\\\$";
 
             var encoded = EncryptionHandler.EncodeBase64(message);
-            Assert.AreNotEqual(string.Empty, encoded);
+            Assert.IsNotEmpty(encoded);
             var decoded = EncryptionHandler.DecodeBase64(encoded);
 
             Assert.AreEqual(message, decoded);
@@ -33,7 +33,7 @@ namespace FOGService.Tests.Encryption
             const string message = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
 
             var encoded = EncryptionHandler.HexStringToByteArray(message);
-            Assert.AreNotEqual(string.Empty, encoded);
+            Assert.IsNotEmpty(encoded);
             var decoded = EncryptionHandler.ByteArrayToHexString(encoded);
 
             Assert.AreEqual(message, decoded);
