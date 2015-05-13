@@ -1,5 +1,7 @@
 language: csharp
 solution: FOGService.sln
+mono:
+	- 3.12.0
 install:
   - nuget restore FOGService.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
