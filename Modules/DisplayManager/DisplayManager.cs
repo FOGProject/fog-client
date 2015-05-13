@@ -21,8 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.DisplayManager
 {
@@ -66,7 +66,7 @@ namespace FOG.Modules.DisplayManager
             }
             else
             {
-                LogHandler.Log(Name, "Settings are not populated; will not attempt to change resolution");
+                LogHandler.Error(Name, "Settings are not populated; will not attempt to change resolution");
             }
         }
 
@@ -87,7 +87,7 @@ namespace FOG.Modules.DisplayManager
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, ex.Message);
 
             }
         }

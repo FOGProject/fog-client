@@ -22,7 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG
 {

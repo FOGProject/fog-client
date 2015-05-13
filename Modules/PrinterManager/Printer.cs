@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {

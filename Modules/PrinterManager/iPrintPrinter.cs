@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {

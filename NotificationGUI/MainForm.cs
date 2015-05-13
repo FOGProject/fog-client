@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using FOG.Handlers.RegistryHandler;
+using FOG.Handlers;
 
 namespace FOG {
 	/// <summary>

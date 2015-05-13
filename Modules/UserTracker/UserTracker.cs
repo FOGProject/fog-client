@@ -19,8 +19,8 @@
 
 using System.Collections.Generic;
 using System.Net;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.UserHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.UserTracker
 {

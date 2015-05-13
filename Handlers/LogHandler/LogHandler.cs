@@ -20,13 +20,21 @@
 using System;
 using System.IO;
 
-namespace FOG.Handlers.LogHandler
+namespace FOG.Handlers
 {
     /// <summary>
     ///     Handle all interaction with the log file
     /// </summary>
     public static class LogHandler
     {
+
+        public enum Level
+        {
+            Normal,
+            Debug,
+            Error
+        }
+
         public enum LogMode
         {
             File,
@@ -37,10 +45,11 @@ namespace FOG.Handlers.LogHandler
         private const int HeaderLength = 78;
         private const string LogName = "LogHandler";
         private static bool _initialized = Initialize();
-        //Define variables
+
         public static string FilePath { get; set; }
         public static long MaxSize { get; set; }
         public static LogMode Mode { get; set; }
+        public static bool Verbose { get; set; }
 
         private static bool Initialize()
         {
@@ -54,12 +63,43 @@ namespace FOG.Handlers.LogHandler
         /// <summary>
         ///     Log a message
         /// </summary>
+        /// <param name="level">The logging level</param>
+        /// <param name="caller">The name of the calling method or class</param>
+        /// <param name="message">The message to log</param>
+        public static void Log(Level level, string caller, string message)
+        {
+            #if DEBUG
+            #else
+                if (!Verbose && level == Level.Debug) return;
+            #endif
+
+            var prefix = "";
+
+            if (level == Level.Debug || level == Level.Error)
+                prefix = level.ToString().ToUpper()+": ";
+
+            WriteLine(level, string.Format(" {0} {1} {2} {3}{4}",
+                DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), caller, prefix, message));
+        }
+
+        /// <summary>
+        ///     Log a message
+        /// </summary>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
         public static void Log(string caller, string message)
         {
-            WriteLine(string.Format(" {0} {1} {2} {3}", DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), caller, message));
+            Log(Level.Normal, caller, message);
         }
+
+        public static void Error(string caller, string message)
+        {
+            Log(Level.Error, caller, message);
+        }
+        public static void Debug(string caller, string message)
+        {
+            Log(Level.Debug, caller, message);
+        }       
 
         /// <summary>
         ///     Write a new line to the log
@@ -83,7 +123,7 @@ namespace FOG.Handlers.LogHandler
         /// <param name="text">The text to put in the center of the header</param>
         public static void Header(string text)
         {
-            double headerSize = (HeaderLength - text.Length)/2;
+            var headerSize = (double)((HeaderLength - text.Length))/2;
             var output = "";
             for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
                 output += "-";
@@ -106,16 +146,21 @@ namespace FOG.Handlers.LogHandler
             Divider();
         }
 
+
         /// <summary>
         ///     Write text to the log
         /// </summary>
+        /// <param name="level">The logging level</param>
         /// <param name="text">The text to write</param>
-        public static void Write(string text)
+        public static void Write(Level level, string text)
         {
             if (Mode == LogMode.Console)
             {
-                if (text.ToUpper().Contains("ERROR"))
+                if (level == Level.Error)
                     Console.BackgroundColor = ConsoleColor.Red;
+                if (level == Level.Debug)
+                    Console.BackgroundColor = ConsoleColor.Blue;
+
                 Console.Write(text);
                 Console.BackgroundColor = ConsoleColor.Black;
             }
@@ -142,6 +187,15 @@ namespace FOG.Handlers.LogHandler
         }
 
         /// <summary>
+        ///     Write text to the log
+        /// </summary>
+        /// <param name="text">The text to write</param>
+        public static void Write(string text)
+        {
+            Write(Level.Normal, text);
+        }
+
+        /// <summary>
         ///     Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
@@ -149,6 +203,17 @@ namespace FOG.Handlers.LogHandler
         {
             Write(line + "\r\n");
         }
+
+        /// <summary>
+        ///     Write a line to the log
+        /// </summary>
+        /// <param name="line">The line to write</param>
+        /// <param name="level">The logging level</param>
+        public static void WriteLine(Level level, string line)
+        {
+            Write(level, line + "\r\n");
+        }
+
 
         public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {

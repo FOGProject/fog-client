@@ -22,8 +22,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Handlers.NotificationHandler;
-using FOG.Handlers.UserHandler;
+using FOG.Handlers;
 
 namespace FOG
 {

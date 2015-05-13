@@ -19,7 +19,7 @@
 
 using System;
 using System.ServiceProcess;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG
 {

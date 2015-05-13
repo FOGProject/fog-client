@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 
-namespace FOG.Handlers.NotificationHandler
+namespace FOG.Handlers
 {
     /// <summary>
     ///     Handle all notifications

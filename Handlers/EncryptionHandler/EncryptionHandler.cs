@@ -25,14 +25,14 @@ using OpenSSL.Core;
 using RSA = OpenSSL.Crypto.RSA;
 // ReSharper disable InconsistentNaming
 
-namespace FOG.Handlers.EncryptionHandler
+namespace FOG.Handlers
 {
     /// <summary>
     ///     Handle all encryption/decryption
     /// </summary>
     public static class EncryptionHandler
     {
-        private const string LOG_NAME = "EncryptionHandler";
+        private const string LogName = "EncryptionHandler";
 
         /// <summary>
         ///     Base64 encode a string
@@ -48,8 +48,8 @@ namespace FOG.Handlers.EncryptionHandler
             }
             catch (Exception ex)
             {
-                LogHandler.LogHandler.Log(LOG_NAME, "Error encoding base64");
-                LogHandler.LogHandler.Log(LOG_NAME, "ERROR: " + ex.Message);
+                LogHandler.Error(LogName, "Could not base64 encode");
+                LogHandler.Error(LogName, ex.Message);
             }
             return "";
         }
@@ -68,8 +68,8 @@ namespace FOG.Handlers.EncryptionHandler
             }
             catch (Exception ex)
             {
-                LogHandler.LogHandler.Log(LOG_NAME, "Error decoding base64");
-                LogHandler.LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(LogName, "Could not base64 decode");
+                LogHandler.Error(LogName, ex.Message);
             }
             return "";
         }
@@ -95,8 +95,8 @@ namespace FOG.Handlers.EncryptionHandler
             }
             catch (Exception ex)
             {
-                LogHandler.LogHandler.Log(LOG_NAME, "Error decoding from AES");
-                LogHandler.LogHandler.Log(LOG_NAME, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(LogName, "Could not decrypt AES");
+                LogHandler.Error(LogName, ex.Message);
             }
             return "";
         }
@@ -228,7 +228,7 @@ namespace FOG.Handlers.EncryptionHandler
         /// </summary>
         public static string AESDecrypt(string toDecode, byte[] key)
         {
-            LogHandler.LogHandler.Log(LOG_NAME, toDecode);
+            LogHandler.Log(LogName, toDecode);
             var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|", StringComparison.Ordinal)));
             var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|", StringComparison.Ordinal) + 1));
 

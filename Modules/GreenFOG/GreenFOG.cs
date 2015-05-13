@@ -20,8 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG
@@ -112,8 +111,8 @@ namespace FOG.Modules.GreenFOG
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(Name, "Error registering task: " + task);
-                    LogHandler.Log(Name, "ERROR: " + ex.Message);
+                    LogHandler.Error(Name, "Could not register task: " + task);
+                    LogHandler.Error(Name, ex.Message);
                 }
             }
         }

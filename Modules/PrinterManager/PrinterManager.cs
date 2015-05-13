@@ -21,8 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Management;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.PrinterManager
 {
@@ -78,7 +78,7 @@ namespace FOG.Modules.PrinterManager
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, "ERROR:" + ex.Message);
+                LogHandler.Error(Name, ex.Message);
                 return new List<Printer>();
             }
 

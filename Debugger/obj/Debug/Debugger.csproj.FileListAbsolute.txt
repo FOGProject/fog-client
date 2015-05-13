@@ -4,3 +4,9 @@ C:\Users\jbob\Desktop\fog-client\bin\Debugger.pdb
 C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\Debugger.exe
 C:\Users\jbob\Desktop\fog-client\Debugger\obj\Debug\Debugger.pdb
+D:\fog\client\bin\Debugger.exe.config
+D:\fog\client\bin\Debugger.exe
+D:\fog\client\bin\Debugger.pdb
+D:\fog\client\Debugger\obj\Debug\Debugger.csprojResolveAssemblyReference.cache
+D:\fog\client\Debugger\obj\Debug\Debugger.exe
+D:\fog\client\Debugger\obj\Debug\Debugger.pdb

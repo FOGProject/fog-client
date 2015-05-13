@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 
-namespace FOG.Handlers.CommunicationHandler
+namespace FOG.Handlers
 {
     /// <summary>
     ///     Contains the information that the FOG Server responds with

@@ -18,7 +18,7 @@
  */
 
 using System.Runtime.InteropServices;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG.Modules.DisplayManager
 {
@@ -53,7 +53,7 @@ namespace FOG.Modules.DisplayManager
             if (User32.EnumDisplaySettings(null, User32.EnumCurrentSettings, ref Configuration) != 0)
                 return true;
 
-            LogHandler.Log(LogName, "Unable to load display settings");
+            LogHandler.Error(LogName, "Unable to load display settings");
             return false;
         }
 

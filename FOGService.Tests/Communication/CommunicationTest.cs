@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Reflection.Emit;
-using FOG.Handlers.CommunicationHandler;
+using FOG.Handlers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FOGService.Tests.Communication

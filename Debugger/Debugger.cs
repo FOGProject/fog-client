@@ -18,8 +18,7 @@
  */
 
 using System;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
+using FOG.Handlers;
 
 namespace FOG
 {
@@ -28,10 +27,14 @@ namespace FOG
         public static void Main(string[] args)
         {
             LogHandler.Mode = LogHandler.LogMode.Console;
+            LogHandler.Verbose = true;
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 
             LogHandler.Log("Debugger", "Test finished");
+            LogHandler.Error("Debugger", "So ya, this is a debug message");
+            LogHandler.Debug("Debugger", "So ya, this is an error message");
+
             Console.ReadLine();
         }
     }

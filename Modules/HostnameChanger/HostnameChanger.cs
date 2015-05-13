@@ -21,12 +21,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
-using FOG.Handlers.NotificationHandler;
-using FOG.Handlers.RegistryHandler;
-using FOG.Handlers.ShutdownHandler;
-using FOG.Handlers.UserHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.HostnameChanger
 {
@@ -175,7 +171,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, ex.Message);
             }
         }
 
@@ -202,7 +198,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, ex.Message);
             }
         }
 
@@ -241,7 +237,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, ex.Message);
             }
         }
     }

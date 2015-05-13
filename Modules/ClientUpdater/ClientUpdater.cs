@@ -19,10 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
-using FOG.Handlers.RegistryHandler;
-using FOG.Handlers.ShutdownHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.ClientUpdater
 {
@@ -55,8 +53,8 @@ namespace FOG.Modules.ClientUpdater
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, "Unable to parse versions");
-                LogHandler.Log(Name, "ERROR: " + ex.Message);
+                LogHandler.Error(Name, "Unable to parse versions");
+                LogHandler.Error(Name, ex.Message);
             }
         }
 
@@ -77,13 +75,13 @@ namespace FOG.Modules.ClientUpdater
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(Name, "Unable to prepare update helpers");
-                    LogHandler.Log(Name, "ERROR: " + ex.Message);
+                    LogHandler.Error(Name, "Unable to prepare update helpers");
+                    LogHandler.Error(Name, ex.Message);
                 }
             }
             else
             {
-                LogHandler.Log(Name, "Unable to locate helper files");
+                LogHandler.Error(Name, "Unable to locate helper files");
             }
         }
     }

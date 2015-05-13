@@ -19,11 +19,8 @@
 
 using System;
 using System.Threading;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
-using FOG.Handlers.NotificationHandler;
-using FOG.Handlers.ShutdownHandler;
-using FOG.Handlers.UserHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.AutoLogOut
 {
@@ -83,8 +80,8 @@ namespace FOG.Modules.AutoLogOut
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, "Unable to parsing time set");
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, "Unable to parse time set");
+                LogHandler.Error(Name, ex.Message);
             }
 
             return 0;

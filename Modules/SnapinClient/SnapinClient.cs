@@ -20,10 +20,8 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using FOG.Handlers.CommunicationHandler;
-using FOG.Handlers.LogHandler;
-using FOG.Handlers.NotificationHandler;
-using FOG.Handlers.ShutdownHandler;
+using FOG.Handlers;
+
 
 namespace FOG.Modules.SnapinClient
 {
@@ -114,8 +112,8 @@ namespace FOG.Modules.SnapinClient
             }
             catch (Exception ex)
             {
-                LogHandler.Log(Name, "Error starting snapin");
-                LogHandler.Log(Name, "ERROR: " + ex.Message);
+                LogHandler.Error(Name, "Could not start snapin");
+                LogHandler.Error(Name, ex.Message);
             }
 
             return "-1";
