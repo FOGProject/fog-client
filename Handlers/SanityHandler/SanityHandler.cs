@@ -8,70 +8,129 @@ namespace FOG.Handlers
     {
         private const string LogName = "SanityHandler";
 
-        public static bool AreEqual(string msg, object expected, params object[] actual)
+        /// <summary>
+        /// Check if any of the object(s) are null
+        /// </summary>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNull(params object[] objects)
         {
-            if (actual.All(expected.Equals)) return true;
-
-            LogHandler.Error(LogName, msg);
-            return false;
+            return objects.Any(obj => obj == null);
         }
 
-        public static bool AreTrue(string msg, params bool[] objects)
+        /// <summary>
+        /// Check if any of the object(s) are null, if so log an error
+        /// </summary>
+        /// <param name="msg">The error message to log</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNull(string msg, params object[] objects)
         {
-            if (!objects.Any(obj => !obj)) return true;
+            if (!AnyNull(objects)) return false;
 
             LogHandler.Error(LogName, msg);
-            return false;
+            return true;
         }
 
-        public static bool AreFalse(string msg, params bool[] objects)
+        /// <summary>
+        /// Check if any of the string(s) are null or empty
+        /// </summary>
+        /// <param name="strings">The string(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNullOrEmpty(params string[] strings)
         {
-            if (!objects.Any(obj => obj)) return true;
+            return strings.Any(string.IsNullOrEmpty);
+        }
+
+        /// <summary>
+        /// Check if any of the string(s) are null or empty, if so log an error
+        /// </summary>
+        /// <param name="msg">The error message to log</param>
+        /// <param name="strings">The string(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNullOrEmpty(string msg, params string[] strings)
+        {
+            if (!AnyNullOrEmpty(strings)) return false;
 
             LogHandler.Error(LogName, msg);
-            return false;
+            return true;
         }
 
-        public static bool AreNotEqual(string msg, object expected, params object[] actual)
+        /// <summary>
+        /// Check if any of the object(s) are equal to expected
+        /// </summary>
+        /// <param name="expected">The object to compare to</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyEqual(object expected, params object[] objects)
         {
-            if (!actual.Any(expected.Equals)) return true;
+            return objects.Any(expected.Equals);
+        }
+
+        /// <summary>
+        /// Check if any of the object(s) are equal to expected, if so log an error
+        /// </summary>
+        /// <param name="msg">The error to log</param>
+        /// <param name="expected">The object to compare to</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyEqual(string msg, object expected, params object[] objects)
+        {
+            if (!AnyEqual(objects)) return false;
 
             LogHandler.Error(LogName, msg);
-            return false;
+            return true;
         }
 
-        public static bool AreNull(string msg, params object[] objects)
+        /// <summary>
+        /// Check if any of the object(s) are not equal to expected
+        /// </summary>
+        /// <param name="expected">The object to compare to</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNotEqual(object expected, params object[] objects)
         {
-            if (objects.All(obj => obj == null)) return true;
+            return objects.Any(obj => !expected.Equals(obj));
+        }
+
+        /// <summary>
+        /// Check if any of the object(s) are not equal to expected, if so log an error
+        /// </summary>
+        /// <param name="msg">The error to log</param>
+        /// <param name="expected">The object to compare to</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyNotEqual(string msg, object expected, params object[] objects)
+        {
+            if (!AnyNotEqual(objects)) return false;
 
             LogHandler.Error(LogName, msg);
-            return false;
+            return true;
         }
 
-        public static bool AreNotNull(string msg, params object[] objects)
+        /// <summary>
+        /// Check if any of the object(s) are duplicates
+        /// </summary>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyDuplicates(params object[] objects)
         {
-            if (objects.All(obj => obj != null)) return true;
+            return objects.Distinct().Count() == objects.Length;
+        }
+
+        /// <summary>
+        /// Check if any of the object(s) are duplicates, if so log an error
+        /// </summary>
+        /// <param name="msg">The error to log</param>
+        /// <param name="objects">The object(s) to check</param>
+        /// <returns></returns>
+        public static bool AnyDuplicates(string msg, params object[] objects)
+        {
+            if (!AnyDuplicates(objects)) return false;
 
             LogHandler.Error(LogName, msg);
-            return false;
+            return true;
         }
-
-        public static bool AreEmptyOrNull(string msg, params string[] objects)
-        {
-            if (objects.All(obj => obj == null || obj.Equals(string.Empty))) return true;
-
-            LogHandler.Error(LogName, msg);
-            return false;
-        }
-
-        public static bool AreNotEmptyOrNull(string msg, params string[] objects)
-        {
-            if (!objects.Any(obj => obj == null || obj.Equals(string.Empty))) return true;
-
-            LogHandler.Error(LogName, msg);
-            return false;
-        }
-
 
     }
 }

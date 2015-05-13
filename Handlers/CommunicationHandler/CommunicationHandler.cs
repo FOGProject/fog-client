@@ -323,12 +323,11 @@ namespace FOG.Handlers
         public static bool DownloadExternalFile(string url, string filePath)
         {
             LogHandler.Log(LogName, string.Format("URL: {0}", url));
+            if (SanityHandler.AnyNullOrEmpty("Invalid parameters", url, filePath)) return false;
+
             var webClient = new WebClient();
             try
             {
-                if (!SanityHandler.AreNotEmptyOrNull("URL is not set", url)) return false;
-                if (!SanityHandler.AreNotEmptyOrNull("Filepath is not set", filePath)) return false;
-
                 //Create the directory that the file will go in if it doesn't already exist
                 if (!Directory.Exists(Path.GetDirectoryName(filePath)))
                 {
