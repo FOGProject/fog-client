@@ -96,6 +96,7 @@ namespace FOG.Handlers
         {
             Log(Level.Error, caller, message);
         }
+
         public static void Debug(string caller, string message)
         {
             Log(Level.Debug, caller, message);
@@ -220,7 +221,6 @@ namespace FOG.Handlers
             Log(LogName, "Unhandled exception caught");
             Log(LogName, string.Format("    Terminating: {0}", ex.IsTerminating));
             Log(LogName, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
-
         }
 
         /// <summary>
@@ -235,7 +235,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log(LogName, string.Format("Failed to delete log file: {0}", ex.Message));
+                Error(LogName, "Failed to delete log file");
+                Error(LogName, ex.Message);
             }
         }
     }

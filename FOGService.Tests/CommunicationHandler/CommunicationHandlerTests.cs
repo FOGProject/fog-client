@@ -20,7 +20,7 @@ namespace FOGService.Tests.Handlers
         public void ParseResponse()
         {
             /**
-            * Ensure that responses are parsed correctly
+            * Ensure that responses can be parsed
             */
 
             const string msg = "#!ok\n" +
@@ -41,7 +41,7 @@ namespace FOGService.Tests.Handlers
         public void ParseDataArray()
         {
             /**
-             * Ensure that response arrays an be parsed
+             * Ensure that response arrays can be parsed
              */
 
             const string msg = "#!ok\n" +
@@ -63,6 +63,13 @@ namespace FOGService.Tests.Handlers
         {
             var success = CommunicationHandler.Contact("/index.php");
             Assert.IsTrue(success);
+        }
+
+        [Test]
+        public void ContactFail()
+        {
+            var success = CommunicationHandler.Contact("/no-exist");
+            Assert.IsFalse(success);
         }
 
         //This test will fail for mono due to a bug
