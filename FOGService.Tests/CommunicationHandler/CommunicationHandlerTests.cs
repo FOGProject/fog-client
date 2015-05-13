@@ -6,7 +6,7 @@ namespace FOGService.Tests.Handlers
     [TestFixture]
     public class CommunicationTests
     {
-        private const string Server = "http://fog.jbob.io/fog";
+        private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
 
         [SetUp]
@@ -74,7 +74,7 @@ namespace FOGService.Tests.Handlers
 
         //This test will fail for mono due to a bug
         //TODO find mono fix
-        [Ignore]
+        [Test]
         public void Authenticate()
         {
             var success = CommunicationHandler.Authenticate();
