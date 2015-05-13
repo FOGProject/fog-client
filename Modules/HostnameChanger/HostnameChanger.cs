@@ -99,9 +99,11 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
-                if (taskResponse.GetField("#hostname").Equals("")) throw new Exception("Hostname is not specified");
-                if (Environment.MachineName.ToLower().Equals(taskResponse.GetField("#hostname").ToLower())) 
-                    throw new Exception("Hostname is correct");
+                if (SanityHandler.AreNotEmptyOrNull("Hostname is not specified", taskResponse.GetField("#hostname")))
+                    return;
+                if (SanityHandler.AreEqual("Hostname is correct", Environment.MachineName.ToLower(), 
+                    taskResponse.GetField("#hostname").ToLower())) return;
+
 
                 LogHandler.Log(Name, string.Format("Renaming host to {0}", taskResponse.GetField("#hostname")));
 
@@ -144,32 +146,39 @@ namespace FOG.Modules.HostnameChanger
         {
             LogHandler.Log(Name, "Registering host with active directory");
              
-            if (SanityHandler.AreNotEqual("Active directory joining disabled for this host", "1", response.GetField("#AD"))) return;
-            if(SanityHandler.AreEqual("Required Domain Joining information is missing", string.Empty)
+            if (SanityHandler.AreNotEqual("Active directory joining disabled for this host", "1", 
+                response.GetField("#AD"))) return;
 
-            if (!response.GetField("#AD").Equals("1")) throw new Exception("Active directory joining disabled for this host");
-            if (response.GetField("#ADDom").Equals("") || 
-                response.GetField("#ADUser").Equals("") || 
-                response.GetField("#ADPass").Equals("")) 
-                throw new Exception("Required Domain Joining information is missing");
-            
-            var returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"),
-                    response.GetField("#ADUser"), response.GetField("#ADPass"),
-                    (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            if (SanityHandler.AreEmptyOrNull("Required Domain Joining information is missing",
+                response.GetField("#ADDom"), 
+                response.GetField("#ADUser"), 
+                response.GetField("#ADPass"))) return;
+
+            // Attempt to join the domain
+            var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
             if (returnCode.Equals(2224))
-                returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"), response.GetField("#ADUser"),
-                    response.GetField("#ADPass"), (JoinOptions.NetsetupJoinDomain));
+                returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
             else if (returnCode.Equals(2))
-                returnCode = NetJoinDomain(null, response.GetField("#ADDom"), null, response.GetField("#ADUser"), response.GetField("#ADPass"),
-                    (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
+            // Log the results
             LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
                 ? string.Format("{0}, code = ", _returnCodes[returnCode])
                 : "Unknown Return Code: "), returnCode));
 
             if (returnCode.Equals(0))
                 ShutdownHandler.Restart("Host joined to Active Directory, restart required", 20);
+        }
+
+        private static int DomainWrapper(Response response, bool ou, JoinOptions options)
+        {
+            return NetJoinDomain(null,
+                response.GetField("#ADDom"),
+                ou ? response.GetField("#ADOU") :  null,
+                response.GetField("#ADUser"),
+                response.GetField("#ADPass"),
+                options);           
         }
 
         //Remove the host from active directory
@@ -179,9 +188,10 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
-                if (response.GetField("#ADUser").Equals("") || response.GetField("#ADPass").Equals(""))
-                    throw new Exception("Required Domain information is missing");
-
+                if (SanityHandler.AreEmptyOrNull("Required Domain information is missing", 
+                    response.GetField("#ADUser"),
+                    response.GetField("#ADPass"))) return;
+              
                 var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"), 
                     response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
 
@@ -207,15 +217,16 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
-                if (!response.Data.ContainsKey("#Key")) throw  new Exception("Windows activation disabled");
-                if (response.GetField("#Key").Length != 29) throw new Exception("Invalid product key");
+                if (SanityHandler.AreEmptyOrNull("Windows activation disabled", response.GetField("#Key"))) return;
+                if (SanityHandler.AreEqual("Invalid product key", 29, response.GetField("#Key").Length)) return;
 
                 var process = new Process
                 {
                     StartInfo =
                     {
                         FileName = @"cscript",
-                        Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", Environment.SystemDirectory, response.GetField("#Key")),
+                        Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", 
+                            Environment.SystemDirectory, response.GetField("#Key")),
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
                 };

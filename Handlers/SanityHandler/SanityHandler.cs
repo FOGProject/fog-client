@@ -11,7 +11,7 @@ namespace FOG.Handlers
         {
             if (actual.All(expected.Equals)) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
@@ -19,7 +19,7 @@ namespace FOG.Handlers
         {
             if (!actual.Any(expected.Equals)) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
@@ -27,7 +27,7 @@ namespace FOG.Handlers
         {
             if (objects.All(obj => obj == null)) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
@@ -35,7 +35,7 @@ namespace FOG.Handlers
         {
             if (objects.All(obj => obj != null)) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
@@ -43,7 +43,7 @@ namespace FOG.Handlers
         {
             if (objects.All(obj => obj == null || obj.Equals(string.Empty))) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
@@ -51,7 +51,7 @@ namespace FOG.Handlers
         {
             if (!objects.Any(obj => obj == null || obj.Equals(string.Empty))) return true;
 
-            LogHandler.Log(LogName, msg);
+            LogHandler.Error(LogName, msg);
             return false;
         }
 
