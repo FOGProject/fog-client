@@ -60,6 +60,7 @@ namespace FOG.Handlers.CommunicationHandler
 
         //Define variables
         public static string ServerAddress { get; set; }
+        public static string TestMAC { get; set; }
         private static byte[] Passkey { get; set; }
 
         private static bool _isAddressSet = GetAndSetServerAddress();
@@ -120,7 +121,7 @@ namespace FOG.Handlers.CommunicationHandler
                 if (!messageFound)
                     LogHandler.LogHandler.Log(LogName, string.Format("Unknown Response: {0}", response.Replace("\n", "")));
 
-                return parseResponse(response);
+                return ParseResponse(response);
             }
             catch (Exception ex)
             {
@@ -271,7 +272,7 @@ namespace FOG.Handlers.CommunicationHandler
         ///     <param name="rawResponse">The unparsed response</param>
         ///     <returns>A response object containing all of the parsed information</returns>
         /// </summary>
-        private static Response parseResponse(string rawResponse)
+        public static Response ParseResponse(string rawResponse)
         {
             var data = rawResponse.Split('\n'); //Split the response at every new line
             var parsedData = new Dictionary<string, string>();
@@ -373,6 +374,8 @@ namespace FOG.Handlers.CommunicationHandler
         /// </summary>
         public static string GetMacAddresses()
         {
+            if (!string.IsNullOrEmpty(TestMAC)) return TestMAC;
+
             var macs = "";
             try
             {
