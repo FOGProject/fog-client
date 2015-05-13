@@ -59,10 +59,17 @@ namespace FOGService.Tests.Handlers
             Assert.AreEqual("22!", objArray[2]);
         }
 
-        [Test]
+        [Ignore]
         public void Contact()
         {
             var success = CommunicationHandler.Contact("/index.php");
+            Assert.IsTrue(success);
+        }
+
+        [Ignore]
+        public void Authenticate()
+        {
+            var success = CommunicationHandler.Authenticate();
             Assert.IsTrue(success);
         }
 
