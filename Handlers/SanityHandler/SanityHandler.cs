@@ -1,5 +1,6 @@
 ﻿
 using System.Linq;
+using System.Runtime.Serialization.Formatters;
 
 namespace FOG.Handlers
 {
@@ -10,6 +11,22 @@ namespace FOG.Handlers
         public static bool AreEqual(string msg, object expected, params object[] actual)
         {
             if (actual.All(expected.Equals)) return true;
+
+            LogHandler.Error(LogName, msg);
+            return false;
+        }
+
+        public static bool AreTrue(string msg, params bool[] objects)
+        {
+            if (!objects.Any(obj => !obj)) return true;
+
+            LogHandler.Error(LogName, msg);
+            return false;
+        }
+
+        public static bool AreFalse(string msg, params bool[] objects)
+        {
+            if (!objects.Any(obj => obj)) return true;
 
             LogHandler.Error(LogName, msg);
             return false;

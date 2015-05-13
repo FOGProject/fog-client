@@ -61,27 +61,24 @@ namespace FOG.Modules.ClientUpdater
         //Prepare the downloaded update
         private void PrepareUpdateHelpers()
         {
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe") &&
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))
+            
+            if (!SanityHandler.AreTrue("Unable to locate helper files",
+                File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe"),
+                File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))) return;
+            
+            try
             {
-                try
-                {
-                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
-                        AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe");
-                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
-                        AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
-                    File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
-                        AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll");
-                }
-                catch (Exception ex)
-                {
-                    LogHandler.Error(Name, "Unable to prepare update helpers");
-                    LogHandler.Error(Name, ex.Message);
-                }
+                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe");
+                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
+                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll");
             }
-            else
+            catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to locate helper files");
+                LogHandler.Error(Name, "Unable to prepare update helpers");
+                LogHandler.Error(Name, ex.Message);
             }
         }
     }
