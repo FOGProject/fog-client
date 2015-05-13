@@ -143,36 +143,33 @@ namespace FOG.Modules.HostnameChanger
         private void RegisterComputer(Response response)
         {
             LogHandler.Log(Name, "Registering host with active directory");
-            try
-            {
-                if (!response.GetField("#AD").Equals("1")) throw new Exception("Active directory joining disabled for this host");
-                if (response.GetField("#ADDom").Equals("") || 
-                    response.GetField("#ADUser").Equals("") || 
-                    response.GetField("#ADPass").Equals("")) 
-                    throw new Exception("Required Domain Joining information is missing");
-                
-                var returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"),
-                        response.GetField("#ADUser"), response.GetField("#ADPass"),
-                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-                if (returnCode.Equals(2224))
-                    returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"), response.GetField("#ADUser"),
-                        response.GetField("#ADPass"), (JoinOptions.NetsetupJoinDomain));
-                else if (returnCode.Equals(2))
-                    returnCode = NetJoinDomain(null, response.GetField("#ADDom"), null, response.GetField("#ADUser"), response.GetField("#ADPass"),
-                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            if (SanityHandler.AreNotEqual("Active directory joining disabled for this host", "1", response.GetField("#AD"))) return;
+            if(SanityHandler.AreEqual("Required Domain Joining information is missing", string.Empty)
 
-                LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                    ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                    : "Unknown Return Code: "), returnCode));
+            if (!response.GetField("#AD").Equals("1")) throw new Exception("Active directory joining disabled for this host");
+            if (response.GetField("#ADDom").Equals("") || 
+                response.GetField("#ADUser").Equals("") || 
+                response.GetField("#ADPass").Equals("")) 
+                throw new Exception("Required Domain Joining information is missing");
+            
+            var returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"),
+                    response.GetField("#ADUser"), response.GetField("#ADPass"),
+                    (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-                if (returnCode.Equals(0))
-                    ShutdownHandler.Restart("Host joined to Active Directory, restart required", 20);
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Error(Name, ex.Message);
-            }
+            if (returnCode.Equals(2224))
+                returnCode = NetJoinDomain(null, response.GetField("#ADDom"), response.GetField("#ADOU"), response.GetField("#ADUser"),
+                    response.GetField("#ADPass"), (JoinOptions.NetsetupJoinDomain));
+            else if (returnCode.Equals(2))
+                returnCode = NetJoinDomain(null, response.GetField("#ADDom"), null, response.GetField("#ADUser"), response.GetField("#ADPass"),
+                    (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+
+            LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
+                ? string.Format("{0}, code = ", _returnCodes[returnCode])
+                : "Unknown Return Code: "), returnCode));
+
+            if (returnCode.Equals(0))
+                ShutdownHandler.Restart("Host joined to Active Directory, restart required", 20);
         }
 
         //Remove the host from active directory

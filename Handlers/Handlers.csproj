@@ -79,6 +79,7 @@
     <Compile Include="NotificationHandler\NotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistryHandler\RegistryHandler.cs" />
+    <Compile Include="SanityHandler\SanityHandler.cs" />
     <Compile Include="ShutdownHandler\ShutdownHandler.cs" />
     <Compile Include="UserHandler\UserData.cs" />
     <Compile Include="UserHandler\UserHandler.cs" />
