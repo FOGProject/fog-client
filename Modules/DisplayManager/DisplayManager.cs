@@ -60,8 +60,7 @@ namespace FOG.Modules.DisplayManager
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Log(Name, "ERROR");
-                    LogHandler.Log(Name, ex);
+                    LogHandler.Error(Name, ex);
                 }
             }
             else
