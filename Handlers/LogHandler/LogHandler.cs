@@ -38,7 +38,8 @@ namespace FOG.Handlers
         public enum LogMode
         {
             File,
-            Console
+            Console,
+            Testing
         }
 
         private const long DefaultMaxLogSize = 502400;
@@ -95,6 +96,14 @@ namespace FOG.Handlers
         public static void Error(string caller, string message)
         {
             Log(Level.Error, caller, message);
+        }
+
+        public static void Error(string caller, Exception ex)
+        {
+            if (Mode == LogMode.Testing)
+                throw ex;
+
+            Log(Level.Error, caller, ex.Message);
         }
 
         public static void Debug(string caller, string message)

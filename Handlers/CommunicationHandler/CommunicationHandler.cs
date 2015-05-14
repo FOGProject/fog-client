@@ -61,6 +61,7 @@ namespace FOG.Handlers
         //Define variables
         public static string ServerAddress { get; set; }
         public static string TestMAC { get; set; }
+        public static byte[] TestPassKey { get; set; }
         private static byte[] Passkey { get; set; }
 
         private static bool _isAddressSet = GetAndSetServerAddress();
@@ -101,7 +102,7 @@ namespace FOG.Handlers
             try
             {
                 var response = webClient.DownloadString(ServerAddress + postfix);
-                response = AESDecrypt(response, Passkey);
+                response = AESDecrypt(response, TestPassKey ?? Passkey);
                 
                 //See if the return code is known
                 var messageFound = false;
@@ -174,8 +175,8 @@ namespace FOG.Handlers
         /// </summary>
         public static bool Authenticate()
         {
-            //try
-            //{
+            try
+            {
                 var keyPath = string.Format("{0}\\tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
                 
@@ -195,12 +196,12 @@ namespace FOG.Handlers
 
                 if (response.ReturnCode.Equals("#!ih"))
                     Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
-            //}
-            //catch (Exception ex)
-            //{
+            }
+            catch (Exception ex)
+            {
                 LogHandler.Error(LogName, "Could not authenticate");
-                //LogHandler.Error(LogName, ex.Message);
-            //}
+                LogHandler.Error(LogName, ex.Message);
+            }
 
             return false;
         }
