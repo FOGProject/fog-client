@@ -2,4 +2,3 @@ D:\fog-client\bin\PipeServer.dll
 D:\fog-client\PipeServer\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\PipeServer\obj\Release\PipeServer.dll
 D:\fog\client\bin\PipeServer.dll
-D:\fog\client\PipeServer\obj\Release\PipeServer.dll
