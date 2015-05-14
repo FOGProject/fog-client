@@ -45,6 +45,7 @@ namespace FOG.Modules.TaskReboot
             if (taskResponse.Error) return;
             
             LogHandler.Log(Name, "Restarting computer for task");
+            
             if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
                 ShutdownHandler.Restart(Name, 30);
 

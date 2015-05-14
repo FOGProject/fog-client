@@ -7,6 +7,12 @@ namespace FOGService.Tests.Handlers
     public class EncryptionTests
     {
 
+        [SetUp]
+        public void Init()
+        {
+            LogHandler.Mode = LogHandler.LogMode.Console;
+        }
+
         [Test]
         public void RoundTrip_Base64()
         {

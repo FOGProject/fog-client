@@ -17,6 +17,7 @@ namespace FOGService.Tests.Handlers
         [SetUp]
         public void Init()
         {
+            LogHandler.Mode = LogHandler.LogMode.Console;
             CommunicationHandler.ServerAddress = Server;
             CommunicationHandler.TestMAC = MAC;
         }
@@ -29,16 +30,14 @@ namespace FOGService.Tests.Handlers
             */
 
             CommunicationHandler.TestPassKey = EncryptionHandler.HexStringToByteArray(PassKeyHex);
-            var response1 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKey));
-            var response2 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKey));
+            var response1 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKeyHex));
+            var response2 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKeyHex));
 
-            //Assert.IsFalse(response1.Error);
+            Assert.IsFalse(response1.Error);
             Assert.AreEqual("Foobar22!", response1.GetField("#data"));
 
-            //Assert.IsFalse(response2.Error);
+            Assert.IsFalse(response2.Error);
             Assert.AreEqual("Foobar22!", response2.GetField("#data"));
-
-
         }
 
         [Test]
