@@ -93,51 +93,48 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Rename the computer and remove it from active directory
-        private void RenameComputer(Response taskResponse)
+        private void RenameComputer(Response response)
         {
             LogHandler.Log(Name, "Checking Hostname");
-
-            try
+            if (!response.IsFieldValid("#hostname"))
             {
-                if (SanityHandler.AreNotEmptyOrNull("Hostname is not specified", taskResponse.GetField("#hostname")))
-                    return;
-                if (SanityHandler.AreEqual("Hostname is correct", Environment.MachineName.ToLower(), 
-                    taskResponse.GetField("#hostname").ToLower())) return;
-
-
-                LogHandler.Log(Name, string.Format("Renaming host to {0}", taskResponse.GetField("#hostname")));
-
-                if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
-                {
-                    LogHandler.Log(Name, "Unregistering computer");
-                    //First unjoin it from active directory
-                    UnRegisterComputer(taskResponse);
-
-                    LogHandler.Log(Name, "Updating registry");
-
-                    RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
-                        taskResponse.GetField("#hostname"));
-                    RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName",
-                        taskResponse.GetField("#hostname"));
-                    RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
-                        taskResponse.GetField("#hostname"));
-
-                    ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
-                }
-                else if(!_notifiedUser)
-                {
-                    LogHandler.Log(Name, "User is currently logged in, will try again later");
-
-                    NotificationHandler.Notifications.Add(new Notification("Please log off",
-                        string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
-                        NotificationHandler.Company), 120));
-
-                    _notifiedUser = true;
-                }
+                LogHandler.Error(Name, "Hostname is not specified");
+                return;
             }
-            catch (Exception ex)
+            if (string.Compare(Environment.MachineName, response.GetField("#hostname"), StringComparison.OrdinalIgnoreCase) == 1)
             {
-                LogHandler.Log(Name, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(Name, "Hostname is correct");
+                return;
+            }
+            
+            LogHandler.Log(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
+
+            if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
+            {
+                LogHandler.Log(Name, "Unregistering computer");
+                //First unjoin it from active directory
+                UnRegisterComputer(response);
+
+                LogHandler.Log(Name, "Updating registry");
+
+                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
+                    response.GetField("#hostname"));
+                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName",
+                    response.GetField("#hostname"));
+                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
+                    response.GetField("#hostname"));
+
+                ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
+            }
+            else if(!_notifiedUser)
+            {
+                LogHandler.Log(Name, "User is currently logged in, will try again later");
+
+                NotificationHandler.Notifications.Add(new Notification("Please log off",
+                    string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
+                    NotificationHandler.Company), 120));
+
+                _notifiedUser = true;
             }
         }
 
@@ -145,14 +142,18 @@ namespace FOG.Modules.HostnameChanger
         private void RegisterComputer(Response response)
         {
             LogHandler.Log(Name, "Registering host with active directory");
-             
-            if (SanityHandler.AreNotEqual("Active directory joining disabled for this host", "1", 
-                response.GetField("#AD"))) return;
 
-            if (SanityHandler.AreEmptyOrNull("Required Domain Joining information is missing",
-                response.GetField("#ADDom"), 
-                response.GetField("#ADUser"), 
-                response.GetField("#ADPass"))) return;
+            if (response.GetField("#AD") != "1")
+            {
+                LogHandler.Error(Name, "Active directory joining disabled for this host");
+                return;
+            }
+
+            if (!response.IsFieldValid("ADDom") && !response.IsFieldValid("ADUsers") && !response.IsFieldValid("ADPass"))
+            {
+                LogHandler.Error(Name, "Required Domain Joining information is missing");
+                return;
+            }
 
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
@@ -186,12 +187,14 @@ namespace FOG.Modules.HostnameChanger
         {
             LogHandler.Log(Name, "Removing host from active directory");
 
+            if (!response.IsFieldValid("#ADUser") || ! response.IsFieldValid("#ADPass"))
+            {
+                LogHandler.Error(Name, "Required Domain information is missing");
+                return;
+            }
+
             try
             {
-                if (SanityHandler.AreEmptyOrNull("Required Domain information is missing", 
-                    response.GetField("#ADUser"),
-                    response.GetField("#ADPass"))) return;
-              
                 var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"), 
                     response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
 
@@ -201,7 +204,6 @@ namespace FOG.Modules.HostnameChanger
 
                 if (returnCode.Equals(0))
                     ShutdownHandler.Restart("Host joined to active directory, restart needed", 20);
-
             }
             catch (Exception ex)
             {
@@ -212,14 +214,21 @@ namespace FOG.Modules.HostnameChanger
         //Active a computer with a product key
         private void ActivateComputer(Response response)
         {
-
             LogHandler.Log(Name, "Activing host with product key");
+
+            if (!response.IsFieldValid("#Key"))
+            {
+                LogHandler.Error(Name, "Windows activation disabled");
+                return;
+            }
+            if (response.GetField("#Key").Length != 29)
+            {
+                LogHandler.Error(Name, "Invalid product key");
+                return;
+            }
 
             try
             {
-                if (SanityHandler.AreEmptyOrNull("Windows activation disabled", response.GetField("#Key"))) return;
-                if (SanityHandler.AreEqual("Invalid product key", 29, response.GetField("#Key").Length)) return;
-
                 var process = new Process
                 {
                     StartInfo =

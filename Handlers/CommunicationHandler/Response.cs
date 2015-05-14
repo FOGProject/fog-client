@@ -53,5 +53,10 @@ namespace FOG.Handlers
         {
             return Data.ContainsKey(id) ? Data[id] : "";
         }
+
+        public bool IsFieldValid(string id)
+        {
+            return !string.IsNullOrEmpty(GetField(id));
+        }
     }
 }

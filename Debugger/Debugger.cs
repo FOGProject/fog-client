@@ -34,6 +34,7 @@ namespace FOG
 
             LogHandler.Mode = LogHandler.LogMode.Console;
             LogHandler.Verbose = true;
+
             CommunicationHandler.Authenticate();
             LogHandler.NewLine();
 

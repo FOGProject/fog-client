@@ -72,9 +72,12 @@ namespace FOG.Handlers
         public static bool GetAndSetServerAddress()
         {
 
-            if (SanityHandler.AreNotNull("HTTPS key not set", RegistryHandler.GetSystemSetting("HTTPS"))) return false;
-            if (SanityHandler.AreEmptyOrNull("Server key not set", RegistryHandler.GetSystemSetting("Server"))) return false;
-            if (SanityHandler.AreNotNull("WebRoot key not set", RegistryHandler.GetSystemSetting("WebRoot"))) return false;
+            if (RegistryHandler.GetSystemSetting("HTTPS") == null || RegistryHandler.GetSystemSetting("WebRoot") == null || 
+                string.IsNullOrEmpty(RegistryHandler.GetSystemSetting("Server")))
+            {
+                LogHandler.Error(LogName, "Invalid parameters");
+                return false;
+            }
 
             ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
             ServerAddress += RegistryHandler.GetSystemSetting("Server") +
@@ -171,32 +174,33 @@ namespace FOG.Handlers
         /// </summary>
         public static bool Authenticate()
         {
-            try
-            {
+            //try
+            //{
                 var keyPath = string.Format("{0}\\tmp\\" + "public.key", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
+                
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
 
                 Passkey = aes.Key;
 
                 var encryptedKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
-                var authenticationResponse = GetResponse(string.Format("/management/index.php?sub=authorize&sym_key={0}", encryptedKey), true);
+                var response = GetResponse(string.Format("/management/index.php?sub=authorize&sym_key={0}", encryptedKey), true);
                
-                if (!authenticationResponse.Error)
+                if (!response.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
                     return true;
                 }
 
-                if (authenticationResponse.ReturnCode.Equals("#!ih"))
+                if (response.ReturnCode.Equals("#!ih"))
                     Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
-            }
-            catch (Exception ex)
-            {
+            //}
+            //catch (Exception ex)
+            //{
                 LogHandler.Error(LogName, "Could not authenticate");
-                LogHandler.Error(LogName, ex.Message);
-            }
+                //LogHandler.Error(LogName, ex.Message);
+            //}
 
             return false;
         }
@@ -323,7 +327,12 @@ namespace FOG.Handlers
         public static bool DownloadExternalFile(string url, string filePath)
         {
             LogHandler.Log(LogName, string.Format("URL: {0}", url));
-            if (SanityHandler.AnyNullOrEmpty("Invalid parameters", url, filePath)) return false;
+            
+            if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(filePath))
+            {
+                LogHandler.Error(LogName, "Invalid parameters");
+                return false;
+            }
 
             var webClient = new WebClient();
             try

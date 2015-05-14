@@ -61,10 +61,13 @@ namespace FOG.Modules.ClientUpdater
         //Prepare the downloaded update
         private void PrepareUpdateHelpers()
         {
-            
-            if (!SanityHandler.AreTrue("Unable to locate helper files",
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe"),
-                File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))) return;
+
+            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe") &&
+                !File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))
+            {
+                LogHandler.Error(Name, "Unable to locate helper files");
+                return;
+            }
             
             try
             {
