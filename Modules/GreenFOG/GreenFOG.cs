@@ -112,7 +112,7 @@ namespace FOG.Modules.GreenFOG
                 catch (Exception ex)
                 {
                     LogHandler.Error(Name, "Could not register task: " + task);
-                    LogHandler.Error(Name, ex.Message);
+                    LogHandler.Error(Name, ex);
                 }
             }
         }

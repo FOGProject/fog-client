@@ -74,7 +74,7 @@ namespace FOG
         //This is run by the pipe thread, it will send out notifications to the tray
         private void notificationPipeHandler()
         {
-            while (true)
+            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 if (!_notificationPipe.IsRunning())
                     _notificationPipe.Start();
@@ -97,15 +97,15 @@ namespace FOG
         //Handle recieving a message
         private static void notificationPipeServer_MessageReceived(Client client, string message)
         {
-            LogHandler.Log("PipeServer", "Notification message recieved");
-            LogHandler.Log("PipeServer", message);
+            LogHandler.Debug("PipeServer", "Notification message recieved");
+            LogHandler.Debug("PipeServer", message);
         }
 
         //Handle recieving a message
         private static void servicePipeService_MessageReceived(Client client, string message)
         {
-            LogHandler.Log("PipeServer", "Server-Pipe message recieved");
-            LogHandler.Log("PipeServer", message);
+            LogHandler.Debug("PipeServer", "Server-Pipe message recieved");
+            LogHandler.Debug("PipeServer", message);
         }
 
         //Called when the service starts
@@ -130,14 +130,12 @@ namespace FOG
             try
             {
                 if (Directory.Exists(string.Format("{0}\\tmp", AppDomain.CurrentDomain.BaseDirectory)))
-                {
                     Directory.Delete(string.Format("{0}\\tmp", AppDomain.CurrentDomain.BaseDirectory));
-                }
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "Could not delete tmp dir");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Error(LogName, "Could not delete tmp dir");
+                LogHandler.Error(LogName, ex);
             }
         }
 
@@ -167,9 +165,7 @@ namespace FOG
             try
             {
                 if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\tmp"))
-                {
                     Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\tmp");
-                }
             }
             catch (Exception)
             {
@@ -202,8 +198,7 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LogName, string.Format("Failed to Start {0}", module.Name));
-                        LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                        LogHandler.Error(LogName, ex);
                     }
 
                     //Log file formatting
@@ -221,9 +216,7 @@ namespace FOG
             }
 
             if (ShutdownHandler.UpdatePending)
-            {
                 UpdateHandler.BeginUpdate(_servicePipe);
-            }
         }
 
         //Get the time to sleep from the FOG server, if it cannot it will use the default time
@@ -245,8 +238,8 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "Failed to parse sleep time");
-                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(LogName, "Failed to parse sleep time");
+                LogHandler.Error(LogName, ex);
             }
 
             LogHandler.Log(LogName, "Using default sleep time");

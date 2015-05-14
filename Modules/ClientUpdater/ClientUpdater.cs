@@ -54,7 +54,7 @@ namespace FOG.Modules.ClientUpdater
             catch (Exception ex)
             {
                 LogHandler.Error(Name, "Unable to parse versions");
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
         }
 
@@ -81,7 +81,7 @@ namespace FOG.Modules.ClientUpdater
             catch (Exception ex)
             {
                 LogHandler.Error(Name, "Unable to prepare update helpers");
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
         }
     }

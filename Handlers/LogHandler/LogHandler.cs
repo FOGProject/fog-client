@@ -164,35 +164,38 @@ namespace FOG.Handlers
         /// <param name="text">The text to write</param>
         public static void Write(Level level, string text)
         {
-            if (Mode == LogMode.Console)
+            switch (Mode)
             {
-                if (level == Level.Error)
-                    Console.BackgroundColor = ConsoleColor.Red;
-                if (level == Level.Debug)
-                    Console.BackgroundColor = ConsoleColor.Blue;
+                case LogMode.Testing:
+                    break;
+                case LogMode.Console:
+                    if (level == Level.Error)
+                        Console.BackgroundColor = ConsoleColor.Red;
+                    if (level == Level.Debug)
+                        Console.BackgroundColor = ConsoleColor.Blue;
 
-                Console.Write(text);
-                Console.BackgroundColor = ConsoleColor.Black;
-            }
-            else
-            {
-                var logFile = new FileInfo(FilePath);
+                    Console.Write(text);
+                    Console.BackgroundColor = ConsoleColor.Black;
+                    break;
+                default:
+                    var logFile = new FileInfo(FilePath);
 
-                //Delete the log file if it excedes the max log size
-                if (logFile.Exists && logFile.Length > MaxSize)
-                    CleanLog(logFile);
+                    //Delete the log file if it excedes the max log size
+                    if (logFile.Exists && logFile.Length > MaxSize)
+                        CleanLog(logFile);
 
-                try
-                {
-                    //Write message to log file
-                    var logWriter = new StreamWriter(FilePath, true);
-                    logWriter.Write(text);
-                    logWriter.Close();
-                }
-                catch
-                {
-                    //If logging fails then nothing can really be done to silently notify the user
-                }
+                    try
+                    {
+                        //Write message to log file
+                        var logWriter = new StreamWriter(FilePath, true);
+                        logWriter.Write(text);
+                        logWriter.Close();
+                    }
+                    catch
+                    {
+                        //If logging fails then nothing can really be done to silently notify the user
+                    }
+                    break;
             }
         }
 

@@ -61,7 +61,7 @@ namespace FOG.Modules.DisplayManager
                 catch (Exception ex)
                 {
                     LogHandler.Log(Name, "ERROR");
-                    LogHandler.Log(Name, ex.Message);
+                    LogHandler.Log(Name, ex);
                 }
             }
             else
@@ -92,7 +92,7 @@ namespace FOG.Modules.DisplayManager
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
 
             }
         }

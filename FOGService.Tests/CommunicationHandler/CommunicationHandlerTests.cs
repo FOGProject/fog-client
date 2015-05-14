@@ -17,7 +17,6 @@ namespace FOGService.Tests.Handlers
         [SetUp]
         public void Init()
         {
-            LogHandler.Mode = LogHandler.LogMode.Testing;
             CommunicationHandler.ServerAddress = Server;
             CommunicationHandler.TestMAC = MAC;
         }

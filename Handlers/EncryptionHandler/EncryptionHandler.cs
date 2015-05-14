@@ -49,7 +49,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not base64 encode");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return "";
         }
@@ -69,7 +69,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not base64 decode");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return "";
         }
@@ -96,7 +96,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not decrypt AES");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return "";
         }

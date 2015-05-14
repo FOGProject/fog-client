@@ -59,7 +59,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, string.Format("Could not retrieve {0}{1}", keyPath, keyName));
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return null;
         }
@@ -78,7 +78,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, string.Format("Could not set {0}{1}", keyPath, keyName));
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return false;
@@ -98,7 +98,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, string.Format("Could not delete {0}", path));
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return false;
@@ -118,7 +118,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, string.Format("Could not delete {0}", keyPath));
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return false;

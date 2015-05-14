@@ -113,7 +113,7 @@ namespace FOG.Modules.SnapinClient
             catch (Exception ex)
             {
                 LogHandler.Error(Name, "Could not start snapin");
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
 
             return "-1";

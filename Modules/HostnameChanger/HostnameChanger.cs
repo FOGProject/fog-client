@@ -207,7 +207,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
         }
 
@@ -254,7 +254,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
         }
     }

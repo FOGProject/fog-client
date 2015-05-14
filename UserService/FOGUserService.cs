@@ -90,7 +90,7 @@ namespace FOG
         //This is run by the pipe thread, it will send out notifications to the tray
         private static void notificationPipeHandler()
         {
-            while (true)
+            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
             {
                 if (!_notificationPipe.IsRunning())
                     _notificationPipe.Start();
@@ -114,15 +114,15 @@ namespace FOG
         //Handle recieving a message
         private static void pipeServer_MessageReceived(Client client, string message)
         {
-            LogHandler.Log(LogName, "Message recieved from tray");
-            LogHandler.Log(LogName, string.Format("MSG:{0}", message));
+            LogHandler.Debug(LogName, "Message recieved from tray");
+            LogHandler.Debug(LogName, string.Format("MSG:{0}", message));
         }
 
         //Handle recieving a message
         private static void pipeClient_MessageReceived(string message)
         {
-            LogHandler.Log(LogName, "Message recieved from service");
-            LogHandler.Log(LogName, string.Format("MSG: {0}", message));
+            LogHandler.Debug(LogName, "Message recieved from service");
+            LogHandler.Debug(LogName, string.Format("MSG: {0}", message));
 
             if (!message.Equals("UPD")) return;
             ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
@@ -153,8 +153,7 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Log(LogName, string.Format("Failed to Start {0}", module.Name));
-                        LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                        LogHandler.Error(LogName, ex);
                     }
 
                     //Log file formatting
@@ -180,15 +179,12 @@ namespace FOG
                 var sleepTimeStr = RegistryHandler.GetSystemSetting("Sleep");
                 var sleepTime = int.Parse(sleepTimeStr);
                 if (sleepTime >= SleepDefaultTime)
-                {
                     return sleepTime;
-                }
                 LogHandler.Log(LogName, string.Format("Sleep time set on the server is below the minimum of {0}", SleepDefaultTime));
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "Failed to parse sleep time");
-                LogHandler.Log(LogName, string.Format("ERROR: {0}", ex.Message));
+                LogHandler.Error(LogName, ex);
             }
 
             LogHandler.Log(LogName, "Using default sleep time");

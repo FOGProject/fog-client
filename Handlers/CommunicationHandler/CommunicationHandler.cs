@@ -121,7 +121,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
            
             return new Response();
@@ -163,7 +163,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return "";
@@ -200,7 +200,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not authenticate");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return false;
@@ -250,7 +250,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return false;
         }
@@ -293,7 +293,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not parse response");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return response;
         }
@@ -351,7 +351,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not download file");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
             return false;
         }
@@ -392,7 +392,7 @@ namespace FOG.Handlers
             catch (Exception ex)
             {
                 LogHandler.Error(LogName, "Could not get MAC addresses");
-                LogHandler.Error(LogName, ex.Message);
+                LogHandler.Error(LogName, ex);
             }
 
             return macs;

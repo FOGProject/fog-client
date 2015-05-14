@@ -81,7 +81,7 @@ namespace FOG.Modules.AutoLogOut
             catch (Exception ex)
             {
                 LogHandler.Error(Name, "Unable to parse time set");
-                LogHandler.Error(Name, ex.Message);
+                LogHandler.Error(Name, ex);
             }
 
             return 0;

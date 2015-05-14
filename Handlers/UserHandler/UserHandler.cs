@@ -142,7 +142,7 @@ namespace FOG.Handlers
                 catch (Exception ex)
                 {
                     LogHandler.Error(LogName, "Unable to parse Session ID");
-                    LogHandler.Error(LogName, ex.Message);
+                    LogHandler.Error(LogName, ex);
                 }
             }
 
