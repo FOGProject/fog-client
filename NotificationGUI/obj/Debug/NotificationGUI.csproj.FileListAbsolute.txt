@@ -7,8 +7,13 @@ C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.ex
 C:\Users\jbob\Desktop\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb
 D:\fog\client\bin\FOGNotificationGUI.exe
 D:\fog\client\bin\FOGNotificationGUI.pdb
-D:\fog\client\NotificationGUI\obj\Debug\ResolveAssemblyReference.cache
 D:\fog\client\NotificationGUI\obj\Debug\FOG.MainForm.resources
 D:\fog\client\NotificationGUI\obj\Debug\NotificationGUI.csproj.GenerateResource.Cache
 D:\fog\client\NotificationGUI\obj\Debug\FOGNotificationGUI.exe
 D:\fog\client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb
+D:\fog\client\NotificationGUI\bin\x86\Debug\FOGNotificationGUI.exe
+D:\fog\client\NotificationGUI\bin\x86\Debug\FOGNotificationGUI.pdb
+D:\fog\client\NotificationGUI\bin\x86\Debug\Handlers.dll
+D:\fog\client\NotificationGUI\bin\x86\Debug\ManagedOpenSsl.dll
+D:\fog\client\NotificationGUI\bin\x86\Debug\Handlers.pdb
+D:\fog\client\NotificationGUI\obj\Debug\NotificationGUI.csprojResolveAssemblyReference.cache

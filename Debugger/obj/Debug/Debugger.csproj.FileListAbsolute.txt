@@ -10,3 +10,12 @@ D:\fog\client\bin\Debugger.pdb
 D:\fog\client\Debugger\obj\Debug\Debugger.csprojResolveAssemblyReference.cache
 D:\fog\client\Debugger\obj\Debug\Debugger.exe
 D:\fog\client\Debugger\obj\Debug\Debugger.pdb
+D:\fog\client\Debugger\bin\x86\Debug\Debugger.exe.config
+D:\fog\client\Debugger\bin\x86\Debug\Debugger.exe
+D:\fog\client\Debugger\bin\x86\Debug\Debugger.pdb
+D:\fog\client\Debugger\bin\x86\Debug\Handlers.dll
+D:\fog\client\Debugger\bin\x86\Debug\Modules.dll
+D:\fog\client\Debugger\bin\x86\Debug\ManagedOpenSsl.dll
+D:\fog\client\Debugger\bin\x86\Debug\Microsoft.Win32.TaskScheduler.dll
+D:\fog\client\Debugger\bin\x86\Debug\Handlers.pdb
+D:\fog\client\Debugger\bin\x86\Debug\Modules.pdb

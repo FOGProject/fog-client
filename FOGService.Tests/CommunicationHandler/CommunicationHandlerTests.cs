@@ -11,7 +11,6 @@ namespace FOGService.Tests.Handlers
         private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string URL = "/service/Test.php?unit=";
-        private const string PassKey = "fs5yYQD0V58heryg1ntb69ZlmH5Z918c";
         private const string PassKeyHex = "66733579595144305635386865727967316e746236395a6c6d48355a39313863";
 
         [SetUp]
@@ -22,7 +21,7 @@ namespace FOGService.Tests.Handlers
             CommunicationHandler.TestMAC = MAC;
         }
 
-        [Ignore]
+        [Test]
         public void AESDecryptResponse()
         {
             /**

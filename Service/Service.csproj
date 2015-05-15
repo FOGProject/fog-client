@@ -67,7 +67,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
+    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <FileAlignment>4096</FileAlignment>
@@ -95,8 +95,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FOGSystemService.cs" />
     <Compile Include="main.cs" />
-    <Compile Include="FOGService.cs">
+    <Compile Include="Service.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UpdateHandler.cs" />
@@ -105,6 +106,10 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AbstractService\AbstractService.csproj">
+      <Project>{5f592f0c-8c91-473b-841c-29d832a533d1}</Project>
+      <Name>AbstractService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Handlers\Handlers.csproj">
       <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
       <Name>Handlers</Name>

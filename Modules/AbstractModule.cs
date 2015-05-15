@@ -27,6 +27,11 @@ namespace FOG.Modules
     /// </summary>
     public abstract class AbstractModule
     {
+        //Basic variables every module needs
+        public string Name { get; protected set; }
+        public string Description { get; protected set; }
+        public string EnabledURL { get; protected set; }
+
         protected AbstractModule()
         {
             Name = "Generic Module";
@@ -34,21 +39,14 @@ namespace FOG.Modules
             EnabledURL = "/service/servicemodule-active.php";
         }
 
-        //Basic variables every module needs
-        public string Name { get; protected set; }
-        public string Description { get; protected set; }
-        public string EnabledURL { get; protected set; }
-
         /// <summary>
         ///     Called to Start the module. Filters out modules that are disabled on the server
         /// </summary>
-        public virtual void Start()
+        public void Start()
         {
             LogHandler.Log(Name, "Running...");
             if (IsEnabled())
-            {
                 DoWork();
-            }
         }
 
         /// <summary>

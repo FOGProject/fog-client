@@ -3,4 +3,6 @@ D:\fog-client\NotificationGUI\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\NotificationGUI\obj\Release\FOG.MainForm.resources
 D:\fog-client\NotificationGUI\obj\Release\NotificationGUI.csproj.GenerateResource.Cache
 D:\fog-client\NotificationGUI\obj\Release\FOGNotificationGUI.exe
-D:\fog\client\bin\FOGNotificationGUI.exe
+D:\fog\client\NotificationGUI\bin\x86\Release\FOGNotificationGUI.exe
+D:\fog\client\NotificationGUI\bin\x86\Release\Handlers.dll
+D:\fog\client\NotificationGUI\bin\x86\Release\ManagedOpenSsl.dll

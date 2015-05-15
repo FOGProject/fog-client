@@ -17,21 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.ServiceProcess;
-using FOG.Handlers;
 
 namespace FOG
 {
-    internal static class Program
+    /// <summary>
+    ///     Coordinate all system wide FOG modules
+    /// </summary>
+    public class Service : ServiceBase
     {
-        /// <summary>
-        ///     Start the FOG Service
-        /// </summary>
-        private static void Main()
+
+        private readonly AbstractService _fogService;
+
+        public Service()
         {
-            AppDomain.CurrentDomain.UnhandledException += LogHandler.UnhandledException;
-            ServiceBase.Run(new Service());
+            //Initialize everything
+            _fogService = new FOGSystemService();
+        }
+
+        //Called when the service starts
+        protected override void OnStart(string[] args)
+        {
+            _fogService.Start();
+        }
+
+        //Called when the service stops
+        protected override void OnStop()
+        {
+            _fogService.Stop();  
         }
     }
 }

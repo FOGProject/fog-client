@@ -8,3 +8,11 @@ C:\Users\jbob\Desktop\fog-client\bin\FOGUpdateHelper.pdb
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.exe
 C:\Users\jbob\Desktop\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.pdb
+D:\fog\client\UpdateHelper\bin\x86\Debug\FOGUpdateHelper.exe
+D:\fog\client\UpdateHelper\bin\x86\Debug\FOGUpdateHelper.pdb
+D:\fog\client\UpdateHelper\bin\x86\Debug\Handlers.dll
+D:\fog\client\UpdateHelper\bin\x86\Debug\ManagedOpenSsl.dll
+D:\fog\client\UpdateHelper\bin\x86\Debug\Handlers.pdb
+D:\fog\client\UpdateHelper\obj\Debug\UpdateHelper.csprojResolveAssemblyReference.cache
+D:\fog\client\UpdateHelper\obj\Debug\FOGUpdateHelper.exe
+D:\fog\client\UpdateHelper\obj\Debug\FOGUpdateHelper.pdb

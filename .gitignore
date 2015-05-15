@@ -22,6 +22,8 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+TestResults/
+
 # exclude everything but c dlls
 
 bin/*

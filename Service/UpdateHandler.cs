@@ -79,8 +79,8 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                LogHandler.Log(LogName, "Unable to perform update");
-                LogHandler.Log(LogName, "ERROR: " + ex.Message);
+                LogHandler.Error(LogName, "Unable to perform update");
+                LogHandler.Error(LogName, ex);
             }
         }
     }

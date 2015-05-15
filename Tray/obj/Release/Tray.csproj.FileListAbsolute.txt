@@ -3,4 +3,7 @@ D:\fog-client\Tray\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
 D:\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
 D:\fog-client\Tray\obj\Release\FOGTray.exe
-D:\fog\client\bin\FOGTray.exe
+D:\fog\client\Tray\bin\x86\Release\FOGTray.exe
+D:\fog\client\Tray\bin\x86\Release\Handlers.dll
+D:\fog\client\Tray\bin\x86\Release\PipeClient.dll
+D:\fog\client\Tray\bin\x86\Release\ManagedOpenSsl.dll

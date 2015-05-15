@@ -2,5 +2,9 @@ D:\fog-client\bin\Debugger.exe.config
 D:\fog-client\bin\Debugger.exe
 D:\fog-client\Debugger\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\Debugger\obj\Release\Debugger.exe
-D:\fog\client\bin\Debugger.exe.config
-D:\fog\client\bin\Debugger.exe
+D:\fog\client\Debugger\bin\x86\Release\Debugger.exe.config
+D:\fog\client\Debugger\bin\x86\Release\Debugger.exe
+D:\fog\client\Debugger\bin\x86\Release\Handlers.dll
+D:\fog\client\Debugger\bin\x86\Release\Modules.dll
+D:\fog\client\Debugger\bin\x86\Release\ManagedOpenSsl.dll
+D:\fog\client\Debugger\bin\x86\Release\Microsoft.Win32.TaskScheduler.dll

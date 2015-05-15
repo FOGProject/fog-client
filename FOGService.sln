@@ -32,6 +32,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{59849E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FOGService.Tests", "FOGService.Tests\FOGService.Tests.csproj", "{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractService", "AbstractService\AbstractService.csproj", "{5F592F0C-8C91-473B-841C-29D832A533D1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -261,6 +263,24 @@ Global
 		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|x86.ActiveCfg = Release|x86
 		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|x86.Build.0 = Release|x86
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Debug|x86.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|Mixed Platforms.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|x86.ActiveCfg = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Development|x86.Build.0 = Debug|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|x86.ActiveCfg = Release|Any CPU
+		{5F592F0C-8C91-473B-841C-29D832A533D1}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,5 @@ C:\Users\jbob\Desktop\fog-client\PipeClient\obj\Debug\PipeClient.dll
 C:\Users\jbob\Desktop\fog-client\PipeClient\obj\Debug\PipeClient.pdb
 D:\fog\client\bin\PipeClient.dll
 D:\fog\client\bin\PipeClient.pdb
-D:\fog\client\PipeClient\obj\Debug\PipeClient.csprojResolveAssemblyReference.cache
 D:\fog\client\PipeClient\obj\Debug\PipeClient.dll
 D:\fog\client\PipeClient\obj\Debug\PipeClient.pdb
