@@ -95,7 +95,5 @@ namespace FOG
             _moduleThread.Abort();
         }
 
-
-
     }
 }

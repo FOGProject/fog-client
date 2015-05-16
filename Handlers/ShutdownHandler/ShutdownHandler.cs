@@ -59,6 +59,7 @@ namespace FOG.Handlers
 
         private const string LogName = "ShutdownHandler";
         //Define variables
+
         public static bool ShutdownPending { get; private set; }
         public static bool UpdatePending { get; set; }
         //Load the ability to lock the computer from the native user32 dll

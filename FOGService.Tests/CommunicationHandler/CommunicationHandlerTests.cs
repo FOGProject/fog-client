@@ -165,9 +165,7 @@ namespace FOGService.Tests.Handlers
             CommunicationHandler.TestPassKey = null;
             var success = CommunicationHandler.Authenticate();
             Assert.IsTrue(success);
+
         }
-
-
-
     }
 }

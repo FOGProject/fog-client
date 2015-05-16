@@ -29,7 +29,7 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    class PrinterManager : AbstractModule
+    public class PrinterManager : AbstractModule
     {
         public PrinterManager()
         {

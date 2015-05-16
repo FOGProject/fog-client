@@ -83,6 +83,14 @@ namespace FOG.Modules.HostnameChanger
             //Get task info
             var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
+            LogHandler.Debug(Name, "AD Settings");
+            LogHandler.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
+            LogHandler.Debug(Name, "   AD:" + taskResponse.GetField("#AD"));
+            LogHandler.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
+            LogHandler.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
+            LogHandler.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
+            LogHandler.Debug(Name, "   ADPass:" + taskResponse.GetField("#ADPass"));
+
             if (taskResponse.Error) return;
 
             RenameComputer(taskResponse);
@@ -149,7 +157,7 @@ namespace FOG.Modules.HostnameChanger
                 return;
             }
 
-            if (!response.IsFieldValid("ADDom") && !response.IsFieldValid("ADUsers") && !response.IsFieldValid("ADPass"))
+            if (!response.IsFieldValid("ADDom") && !response.IsFieldValid("ADUser") && !response.IsFieldValid("ADPass"))
             {
                 LogHandler.Error(Name, "Required Domain Joining information is missing");
                 return;

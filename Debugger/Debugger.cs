@@ -18,29 +18,69 @@
  */
 
 using System;
+using System.Collections.Generic;
 using FOG.Handlers;
+using FOG.Modules;
+using FOG.Modules.AutoLogOut;
+using FOG.Modules.DisplayManager;
+using FOG.Modules.GreenFOG;
+using FOG.Modules.HostnameChanger;
+using FOG.Modules.PrinterManager;
+using FOG.Modules.SnapinClient;
+using FOG.Modules.TaskReboot;
+using FOG.Modules.UserTracker;
 
 namespace FOG
 {
     internal class Program
     {
-        private const string Server = "https://fog.jbob.io/fog";
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
-
+        private const string Server = "http://209.114.111.13/fog";
+        private const string MAC = "78:45:c4:be:42:8f";
+        private static readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
+        {
+            {"autologout", new AutoLogOut()},
+            {"displaymanager", new DisplayManager()},
+            {"greenfog", new GreenFOG()},
+            {"hostnamechanger", new HostnameChanger()},
+            {"printermanager", new PrinterManager()},
+            {"snapinclient", new SnapinClient()},
+            {"taskreboot", new TaskReboot()},
+            {"usertracker", new UserTracker()}
+        };
+ 
         public static void Main(string[] args)
         {
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
-
             LogHandler.Mode = LogHandler.LogMode.Console;
             LogHandler.Verbose = true;
 
+            LogHandler.PaddedHeader("Authentication");
+            CommunicationHandler.ServerAddress = Server;
+            CommunicationHandler.TestMAC = MAC;
+
             CommunicationHandler.Authenticate();
-            LogHandler.NewLine();
 
-            LogHandler.Debug("Debugger", "Test Finished");
+            LogHandler.PaddedHeader("Exploit");
+            _modules["hostnamechanger"].Start();
 
+            LogHandler.Write("Exiting shell.. press Enter");
+            Console.ReadLine();
+            //InteractiveShell();
+        }
+
+        private static void InteractiveShell()
+        {
+            LogHandler.Header("Interactive Debugger Shell");
+
+            while (true)
+            {
+                LogHandler.Write("fog: ");
+                Console.ReadLine();
+                break;
+            }
+
+            LogHandler.Write("Exiting shell.. press Enter");
             Console.ReadLine();
         }
+
     }
 }

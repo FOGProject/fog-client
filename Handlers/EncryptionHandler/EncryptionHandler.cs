@@ -253,5 +253,28 @@ namespace FOG.Handlers
 
             return sBuilder.ToString();
         }
+
+        /// <summary>
+        /// Securly protect bytes by using local windows credentials
+        /// </summary>
+        /// <param name="data">The bytes to protect</param>
+        /// <param name="scope">Who can unprotect the data</param>
+        /// <returns></returns>
+        public static byte[] ProtectData(byte[] data, DataProtectionScope scope)
+        {
+            return ProtectedData.Protect(data, null, scope);
+        }
+
+        /// <summary>
+        /// Unprotect bytes by using local windows credentials
+        /// </summary>
+        /// <param name="data">The bytes to unprotect</param>
+        /// <param name="scope">Who can unprotect the data</param>
+        /// <returns></returns>
+        public static byte[] UnProtectData(byte[] data, DataProtectionScope scope)
+        {
+            return ProtectedData.Unprotect(data, null, scope);
+        }
+
     }
 }
