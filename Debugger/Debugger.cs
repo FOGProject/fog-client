@@ -34,8 +34,8 @@ namespace FOG
 {
     internal class Program
     {
-        private const string Server = "http://209.114.111.13/fog";
-        private const string MAC = "78:45:c4:be:42:8f";
+        private const string Server = "https://fog.jbob.io/fog";
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
         private static readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
         {
             {"autologout", new AutoLogOut()},
@@ -59,10 +59,10 @@ namespace FOG
 
             CommunicationHandler.Authenticate();
 
-            LogHandler.PaddedHeader("Exploit");
-            _modules["hostnamechanger"].Start();
-
-            LogHandler.Write("Exiting shell.. press Enter");
+            LogHandler.Write("Ready to run green fog");
+            Console.ReadLine();
+            _modules["snapinclient"].Start();
+            LogHandler.Write("Ready to exit");
             Console.ReadLine();
             //InteractiveShell();
         }

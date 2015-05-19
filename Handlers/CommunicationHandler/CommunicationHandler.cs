@@ -55,6 +55,7 @@ namespace FOG.Handlers
             {"#!na", "No actions"},
             {"#!nf", "No updates"},
             {"#!time", "Invalid time"},
+            {"#!ist", "Invalid security token"},
             {"#!er", "General error"}
         };
 
@@ -98,31 +99,38 @@ namespace FOG.Handlers
 
             LogHandler.Log(LogName, string.Format("URL: {0}{1}", ServerAddress, postfix));
 
-            var webClient = new WebClient();
-            try
+            using (var webClient = new WebClient())
             {
-                var response = webClient.DownloadString(ServerAddress + postfix);
-                response = AESDecrypt(response, TestPassKey ?? Passkey);
-                
-                //See if the return code is known
-                var messageFound = false;
-                foreach (var returnMessage in ReturnMessages.Keys.Where(returnMessage => response.StartsWith(returnMessage)))
+                try
                 {
-                    messageFound = true;
-                    LogHandler.Log(LogName, string.Format("Response: {0}", ReturnMessages[returnMessage]));
-                    break;
+                    var response = webClient.DownloadString(ServerAddress + postfix);
+                    response = AESDecrypt(response, TestPassKey ?? Passkey);
+
+                    //See if the return code is known
+                    var messageFound = false;
+                    foreach (var returnMessage in ReturnMessages.Keys.Where(returnMessage => response.StartsWith(returnMessage)))
+                    {
+                        messageFound = true;
+                        LogHandler.Log(LogName, string.Format("Response: {0}", ReturnMessages[returnMessage]));
+                        break;
+                    }
+
+                    if (!messageFound)
+                        LogHandler.Log(LogName, string.Format("Unknown Response: {0}", response.Replace("\n", "")));
+
+
+                    if (!response.StartsWith("#!ihc")) return ParseResponse(response);
+
+                    Authenticate();
+                    return GetResponse(postfix);
                 }
-
-                if (!messageFound)
-                    LogHandler.Log(LogName, string.Format("Unknown Response: {0}", response.Replace("\n", "")));
-
-                return ParseResponse(response);
+                catch (Exception ex)
+                {
+                    LogHandler.Error(LogName, "Could not contact FOG server");
+                    LogHandler.Error(LogName, ex);
+                }                
             }
-            catch (Exception ex)
-            {
-                LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex);
-            }
+
            
             return new Response();
         }
@@ -153,17 +161,18 @@ namespace FOG.Handlers
 
             LogHandler.Log(LogName, "URL: " + ServerAddress + postfix);
 
-            var webClient = new WebClient();
-
-            try
+            using (var webClient = new WebClient())
             {
-                var response = webClient.DownloadString(ServerAddress + postfix);
-                return response;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex);
+                try
+                {
+                    var response = webClient.DownloadString(ServerAddress + postfix);
+                    return response;
+                }
+                catch (Exception ex)
+                {
+                    LogHandler.Error(LogName, "Could not contact FOG server");
+                    LogHandler.Error(LogName, ex);
+                }               
             }
 
             return "";
@@ -185,17 +194,25 @@ namespace FOG.Handlers
 
                 Passkey = aes.Key;
 
-                var encryptedKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
-                var response = GetResponse(string.Format("/management/index.php?sub=authorize&sym_key={0}", encryptedKey), true);
-               
+                var token = GetSecurityToken("token.dat");
+                LogHandler.Debug(LogName, Passkey.Length.ToString());
+
+                var enKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
+                var enToken = EncryptionHandler.RSAEncrypt(token, keyPath);
+
+                var rawResponse = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
+                rawResponse = AESDecrypt(rawResponse, Passkey);
+ 
+                var response = ParseResponse(rawResponse);
                 if (!response.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
+                    SetSecurityToken("token.dat", EncryptionHandler.HexStringToByteArray(response.GetField("#token")));
                     return true;
                 }
 
-                if (response.ReturnCode.Equals("#!ih"))
-                    Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
+                //if (response.ReturnCode.Equals("#!ih"))
+                //    Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
             }
             catch (Exception ex)
             {
@@ -204,6 +221,57 @@ namespace FOG.Handlers
             }
 
             return false;
+        }
+
+        public static string Post(string postfix, string param)
+        {
+            LogHandler.Log(LogName, "POST URL: " + ServerAddress + postfix);
+            try
+            {
+                using (var webClient = new WebClient())
+                {
+                    webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
+                    return webClient.UploadString(ServerAddress + postfix, param);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Error(LogName, "Failed to POST data");
+                LogHandler.Error(LogName, ex);
+            }
+
+            return null;
+        }
+
+        private static byte[] GetSecurityToken(string filePath)
+        {
+            try
+            {
+                var token = File.ReadAllBytes(filePath);
+                token = EncryptionHandler.UnProtectData(token, DataProtectionScope.CurrentUser);
+                return token;
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Error(LogName, "Could not get security token");
+                LogHandler.Error(LogName, ex);
+            }
+
+            return new byte[0];
+        }
+
+        private static void SetSecurityToken(string filePath, byte[] token)
+        {
+            try
+            {
+                token = EncryptionHandler.ProtectData(token, DataProtectionScope.CurrentUser);
+                File.WriteAllBytes(filePath, token);    
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Error(LogName, "Could not save security token");
+                LogHandler.Error(LogName, ex);
+            }
         }
 
         /// <summary>
@@ -240,18 +308,21 @@ namespace FOG.Handlers
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
             LogHandler.Log(LogName, string.Format("URL: {0}{1}", ServerAddress, postfix));
-            var webClient = new WebClient();
+           
+            using (var webClient = new WebClient())
+            {
+                try
+                {
+                    webClient.DownloadString(ServerAddress + postfix);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    LogHandler.Error(LogName, "Could not contact FOG server");
+                    LogHandler.Error(LogName, ex);
+                }               
+            }
 
-            try
-            {
-                webClient.DownloadString(ServerAddress + postfix);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Error(LogName, "Could not contact FOG server");
-                LogHandler.Error(LogName, ex);
-            }
             return false;
         }
 
@@ -335,24 +406,27 @@ namespace FOG.Handlers
                 return false;
             }
 
-            var webClient = new WebClient();
-            try
+            using (var webClient = new WebClient())
             {
-                //Create the directory that the file will go in if it doesn't already exist
-                if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                try
                 {
-                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                }
-                webClient.DownloadFile(url, filePath);
+                    //Create the directory that the file will go in if it doesn't already exist
+                    if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                    {
+                        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                    }
+                    webClient.DownloadFile(url, filePath);
 
-                if (File.Exists(filePath))
-                    return true;
+                    if (File.Exists(filePath))
+                        return true;
+                }
+                catch (Exception ex)
+                {
+                    LogHandler.Error(LogName, "Could not download file");
+                    LogHandler.Error(LogName, ex);
+                }             
             }
-            catch (Exception ex)
-            {
-                LogHandler.Error(LogName, "Could not download file");
-                LogHandler.Error(LogName, ex);
-            }
+
             return false;
         }
 

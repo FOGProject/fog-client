@@ -45,7 +45,7 @@ namespace FOG.Modules.PrinterManager
 
             var printerIDs = CommunicationHandler.ParseDataArray(printerResponse, "#printer", false);
 
-            List<Printer> printers = CreatePrinters(printerIDs);
+            var printers = CreatePrinters(printerIDs);
 
             if (printerResponse.GetField("mode").Equals("ar"))
                 RemoveExtraPrinters(printers);
