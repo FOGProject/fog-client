@@ -191,28 +191,24 @@ namespace FOG.Handlers
                 
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
-
                 Passkey = aes.Key;
-
                 var token = GetSecurityToken("token.dat");
-                LogHandler.Debug(LogName, Passkey.Length.ToString());
 
                 var enKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
                 var enToken = EncryptionHandler.RSAEncrypt(token, keyPath);
 
-                var rawResponse = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
-                rawResponse = AESDecrypt(rawResponse, Passkey);
- 
-                var response = ParseResponse(rawResponse);
+                var response = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
+
                 if (!response.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
                     SetSecurityToken("token.dat", EncryptionHandler.HexStringToByteArray(response.GetField("#token")));
                     return true;
-                }
+                } 
+                
+                if (response.ReturnCode.Equals("#!ih"))
+                    Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
 
-                //if (response.ReturnCode.Equals("#!ih"))
-                //    Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
             }
             catch (Exception ex)
             {
@@ -223,7 +219,7 @@ namespace FOG.Handlers
             return false;
         }
 
-        public static string Post(string postfix, string param)
+        public static Response Post(string postfix, string param)
         {
             LogHandler.Log(LogName, "POST URL: " + ServerAddress + postfix);
             try
@@ -231,7 +227,25 @@ namespace FOG.Handlers
                 using (var webClient = new WebClient())
                 {
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-                    return webClient.UploadString(ServerAddress + postfix, param);
+
+                    var rawResponse = webClient.UploadString(ServerAddress + postfix, param);
+                    rawResponse = AESDecrypt(rawResponse, Passkey);
+
+                    var messageFound = false;
+                    foreach (var returnMessage in ReturnMessages.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
+                    {
+                        messageFound = true;
+                        LogHandler.Log(LogName, string.Format("Response: {0}", ReturnMessages[returnMessage]));
+                        break;
+                    }
+
+                    if (!messageFound)
+                        LogHandler.Log(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+
+
+                    var response = ParseResponse(rawResponse);
+
+                    return response;
                 }
             }
             catch (Exception ex)

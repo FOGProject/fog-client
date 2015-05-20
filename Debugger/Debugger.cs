@@ -36,6 +36,7 @@ namespace FOG
     {
         private const string Server = "https://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
+        private const string Name = "Console";
         private static readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
         {
             {"autologout", new AutoLogOut()},
@@ -53,33 +54,80 @@ namespace FOG
             LogHandler.Mode = LogHandler.LogMode.Console;
             LogHandler.Verbose = true;
 
-            LogHandler.PaddedHeader("Authentication");
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
-
-            CommunicationHandler.Authenticate();
-
-            LogHandler.Write("Ready to run green fog");
-            Console.ReadLine();
-            _modules["snapinclient"].Start();
-            LogHandler.Write("Ready to exit");
-            Console.ReadLine();
-            //InteractiveShell();
+            LogHandler.PaddedHeader("FOG Console");
+            CommunicationHandler.GetAndSetServerAddress();
+            LogHandler.Log(Name, "Type help for a list of commands");
+            LogHandler.NewLine();
+            InteractiveShell();
         }
 
         private static void InteractiveShell()
         {
-            LogHandler.Header("Interactive Debugger Shell");
-
             while (true)
             {
                 LogHandler.Write("fog: ");
-                Console.ReadLine();
-                break;
+                var input = Console.ReadLine();
+
+                if (string.IsNullOrEmpty(input)) continue;
+                if (ProcessCommand(input.ToLower().Split(' '))) break;
+                LogHandler.Divider();
+            }
+        }
+
+        private static bool ProcessCommand(string[] command)
+        {
+            if (command.Length == 0) return false;
+            if (command.Length == 1 && command[0].Equals("exit")) return true;
+
+            // Check modules
+            if (_modules.ContainsKey(command[0]))
+            {
+                _modules[command[0]].Start();
+                LogHandler.NewLine();
             }
 
-            LogHandler.Write("Exiting shell.. press Enter");
-            Console.ReadLine();
+            // Check custom commands
+            else if (command[0].Equals("authenticate"))
+                CommunicationHandler.Authenticate();
+            else if (command[0].Equals("info"))
+            {
+                LogHandler.Log(Name, "Server: " + CommunicationHandler.ServerAddress);
+                LogHandler.Log(Name, "MAC: " + CommunicationHandler.GetMacAddresses());
+            }
+
+            else if (command.Length == 3 && command[0].Equals("configure"))
+            {
+                if (command[1].Equals("server"))
+                    CommunicationHandler.ServerAddress = command[2];
+                else if (command[1].Equals("mac"))
+                    CommunicationHandler.TestMAC = command[2];
+            }
+
+            else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
+            {
+                CommunicationHandler.ServerAddress = Server;
+                CommunicationHandler.TestMAC = MAC;
+            }
+
+            else if (command.Length == 1 && command[0].Equals("help"))
+            {
+                LogHandler.WriteLine(" authenticate <-- Authenticates the debugger shell");
+                LogHandler.WriteLine(" configue server ____ <-- Sets the server address");
+                LogHandler.WriteLine(" configue mac ____ <-- Sets the mac address");
+                LogHandler.WriteLine(" configue default <-- Sets the default testing mac and server address");
+                foreach (var module in _modules.Keys)
+                {
+                    LogHandler.WriteLine(" " + module + "<-- Runs this specific module");
+                }
+                LogHandler.WriteLine(" exit <-- Exits the console");
+            }
+
+            else
+            {
+                LogHandler.Log(Name, "Unknown command");
+            }
+
+            return false;
         }
 
     }
