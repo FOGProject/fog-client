@@ -232,8 +232,8 @@ namespace FOG.Handlers
         public static string AESDecrypt(string toDecode, byte[] key)
         {
             LogHandler.Log(LogName, toDecode);
-            var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|", StringComparison.Ordinal)));
-            var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|", StringComparison.Ordinal) + 1));
+            var iv = HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
+            var data = HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
 
             return AESDecrypt(data, key, iv);
         }

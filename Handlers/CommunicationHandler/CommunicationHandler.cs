@@ -369,8 +369,8 @@ namespace FOG.Handlers
                 //Loop through each line returned and if it contains an '=' add it to the dictionary
                 foreach (var element in data.Where(element => element.Contains("=")))
                 {
-                    parsedData.Add(element.Substring(0, element.IndexOf("=", StringComparison.Ordinal)).Trim(),
-                        element.Substring(element.IndexOf("=", StringComparison.Ordinal) + 1).Trim());
+                    parsedData.Add(element.Substring(0, element.IndexOf("=")).Trim(),
+                        element.Substring(element.IndexOf("=") + 1).Trim());
                 }
 
                 response.Data = parsedData;
