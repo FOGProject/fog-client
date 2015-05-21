@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Eventing.Reader;
 using FOG.Handlers;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
@@ -58,7 +59,12 @@ namespace FOG
             CommunicationHandler.GetAndSetServerAddress();
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
-            InteractiveShell();
+            var keyPath = string.Format("{0}tmp\\public.pem", AppDomain.CurrentDomain.BaseDirectory);
+            LogHandler.Log(Name, keyPath);
+
+            var certificate = EncryptionHandler.PemToX509(keyPath);
+            LogHandler.Log(Name, certificate.FriendlyName);
+            // InteractiveShell();
         }
 
         private static void InteractiveShell()
