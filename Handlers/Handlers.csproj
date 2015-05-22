@@ -101,26 +101,26 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommunicationHandler\CommunicationHandler.cs" />
-    <Compile Include="CommunicationHandler\Response.cs" />
+    <Compile Include="Communication\CommunicationHandler.cs" />
+    <Compile Include="Communication\Response.cs" />
     <Compile Include="Encryption\DPAPI.cs" />
     <Compile Include="Encryption\AES.cs" />
     <Compile Include="Encryption\Generate.cs" />
     <Compile Include="Encryption\Transform.cs" />
     <Compile Include="Encryption\RSA.cs" />
-    <Compile Include="LogHandler\LogHandler.cs" />
-    <Compile Include="NotificationHandler\Notification.cs" />
-    <Compile Include="NotificationHandler\NotificationHandler.cs" />
+    <Compile Include="Log\Log.cs" />
+    <Compile Include="Notification\Notification.cs" />
+    <Compile Include="Notification\NotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="RegistryHandler\RegistryHandler.cs" />
-    <Compile Include="ShutdownHandler\ShutdownHandler.cs" />
-    <Compile Include="UserHandler\UserData.cs" />
-    <Compile Include="UserHandler\UserHandler.cs" />
+    <Compile Include="Registry\RegistryHandler.cs" />
+    <Compile Include="Shutdown\ShutdownHandler.cs" />
+    <Compile Include="User\UserData.cs" />
+    <Compile Include="User\UserHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
