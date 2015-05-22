@@ -24,6 +24,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 
 // ReSharper disable InconsistentNaming
 
@@ -186,23 +187,30 @@ namespace FOG.Handlers
         {
             try
             {
-                var keyPath = string.Format("{0}tmp\\public.key", AppDomain.CurrentDomain.BaseDirectory);
-                DownloadFile("/management/other/ssl/srvpublic.key", keyPath);
+                var keyPath = string.Format("{0}tmp\\public.crt", AppDomain.CurrentDomain.BaseDirectory);
+                DownloadFile("/management/other/ssl/srvpublic.crt", keyPath);
                 
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
                 Passkey = aes.Key;
                 var token = GetSecurityToken("token.dat");
 
-                var enKey = EncryptionHandler.RSAEncrypt(Passkey, keyPath);
-                var enToken = EncryptionHandler.RSAEncrypt(token, keyPath);
+                var certificate = new X509Certificate2(keyPath);
+
+                if (!Encryption.RSA.IsFromCA(Encryption.RSA.GetCACertificate(), certificate))
+                    throw new Exception("Certificate is not from FOG CA");
+                LogHandler.Log(LogName, "Cert OK");
+
+                var enKey = Encryption.RSA.Encrypt(certificate, Passkey);
+                var enToken = Encryption.RSA.Encrypt(certificate, token);
 
                 var response = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
+   
 
                 if (!response.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
-                    SetSecurityToken("token.dat", EncryptionHandler.HexStringToByteArray(response.GetField("#token")));
+                    SetSecurityToken("token.dat", Encryption.Transform.HexStringToByteArray(response.GetField("#token")));
                     return true;
                 } 
                 
@@ -262,7 +270,7 @@ namespace FOG.Handlers
             try
             {
                 var token = File.ReadAllBytes(filePath);
-                token = EncryptionHandler.UnProtectData(token, DataProtectionScope.CurrentUser);
+                token = Encryption.DPAPI.UnProtectData(token, DataProtectionScope.CurrentUser);
                 return token;
             }
             catch (Exception ex)
@@ -278,7 +286,7 @@ namespace FOG.Handlers
         {
             try
             {
-                token = EncryptionHandler.ProtectData(token, DataProtectionScope.CurrentUser);
+                token = Encryption.DPAPI.ProtectData(token, DataProtectionScope.CurrentUser);
                 File.WriteAllBytes(filePath, token);    
             }
             catch (Exception ex)
@@ -302,13 +310,13 @@ namespace FOG.Handlers
             if (toDecode.StartsWith(encryptedFlag2))
             {
                 var decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
-                toDecode = EncryptionHandler.AESDecrypt(decryptedResponse, passKey);
+                toDecode = Encryption.AES.Decrypt(decryptedResponse, passKey);
                 return toDecode;
             }
             if (!toDecode.StartsWith(encryptedFlag)) return toDecode;
 
             var decrypted = toDecode.Substring(encryptedFlag.Length);
-            return EncryptionHandler.AESDecrypt(decrypted, passKey);
+            return Encryption.AES.Decrypt(decrypted, passKey);
         }
 
         /// <summary>
@@ -393,8 +401,8 @@ namespace FOG.Handlers
         public static List<string> ParseDataArray(Response response, string identifier, bool base64Decode)
         {
             return response.Data.Keys.Where(key => key.Contains(identifier)).Select(key => 
-                base64Decode 
-                ? EncryptionHandler.DecodeBase64(response.GetField(key)) 
+                base64Decode
+                ? Encryption.Transform.DecodeBase64(response.GetField(key)) 
                 : response.GetField(key))
                 .ToList();
         }

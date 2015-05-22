@@ -2,6 +2,7 @@
 using System.IO;
 using NUnit.Framework;
 using FOG.Handlers;
+using FOG.Handlers.Encryption;
 
 namespace FOGService.Tests.Handlers
 {
@@ -28,7 +29,7 @@ namespace FOGService.Tests.Handlers
             * Ensure that decrypting AES responses works correct
             */
 
-            CommunicationHandler.TestPassKey = EncryptionHandler.HexStringToByteArray(PassKeyHex);
+            CommunicationHandler.TestPassKey = Transform.HexStringToByteArray(PassKeyHex);
             var response1 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKeyHex));
             var response2 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKeyHex));
 

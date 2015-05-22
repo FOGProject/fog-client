@@ -82,9 +82,6 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ManagedOpenSsl">
-      <HintPath>..\libs\ManagedOpenSsl.dll</HintPath>
-    </Reference>
     <Reference Include="ProcessPrivileges">
       <HintPath>..\libs\ProcessPrivileges.dll</HintPath>
     </Reference>
@@ -106,7 +103,11 @@
   <ItemGroup>
     <Compile Include="CommunicationHandler\CommunicationHandler.cs" />
     <Compile Include="CommunicationHandler\Response.cs" />
-    <Compile Include="EncryptionHandler\EncryptionHandler.cs" />
+    <Compile Include="Encryption\DPAPI.cs" />
+    <Compile Include="Encryption\AES.cs" />
+    <Compile Include="Encryption\Generate.cs" />
+    <Compile Include="Encryption\Transform.cs" />
+    <Compile Include="Encryption\RSA.cs" />
     <Compile Include="LogHandler\LogHandler.cs" />
     <Compile Include="NotificationHandler\Notification.cs" />
     <Compile Include="NotificationHandler\NotificationHandler.cs" />

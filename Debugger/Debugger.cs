@@ -60,49 +60,8 @@ namespace FOG
             CommunicationHandler.GetAndSetServerAddress();
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
-            var keyPath = string.Format("{0}tmp\\public.crt", AppDomain.CurrentDomain.BaseDirectory);
-            LogHandler.Log(Name, keyPath);
 
-            var certificate = EncryptionHandler.DERToX509(keyPath);
-            //var certificate = new X509Certificate2(keyPath);
-
-            try
-            {
-                X509Certificate2 CAroot = null;
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Server CA", true);
-
-                if (cers.Count > 0)
-                {
-                    LogHandler.Log(Name, "CA cert found!");
-                    CAroot = cers[0];
-                }
-                store.Close();
-
-                if (CAroot != null)
-                {
-                    LogHandler.Log(Name,
-                        EncryptionHandler.IsFromCA(CAroot, certificate)
-                            ? "Certificate came from CA!"
-                            : "Certificate did not come from CA!");
-                }
-                else
-                {
-                    LogHandler.Log(Name, "CA cert not found!");
-                }
-            }
-            catch (Exception ex)
-            {
-                LogHandler.Error(Name, "Unable to work with CA");
-                LogHandler.Error(Name, ex);
-            }
-
-
-            LogHandler.Log(Name, certificate.Issuer);
-            LogHandler.Log(Name, certificate.Thumbprint);
-            Console.ReadLine();
-            // InteractiveShell();
+            InteractiveShell();
         }
 
         private static void InteractiveShell()

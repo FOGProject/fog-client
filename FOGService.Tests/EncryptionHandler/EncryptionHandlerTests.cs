@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using FOG.Handlers;
+using FOG.Handlers.Encryption;
 
 namespace FOGService.Tests.Handlers
 {
@@ -22,9 +23,9 @@ namespace FOGService.Tests.Handlers
 
             const string message = "The dog jumped over the fence #@//\\\\$";
 
-            var encoded = EncryptionHandler.EncodeBase64(message);
+            var encoded = Transform.EncodeBase64(message);
             Assert.IsNotEmpty(encoded);
-            var decoded = EncryptionHandler.DecodeBase64(encoded);
+            var decoded = Transform.DecodeBase64(encoded);
 
             Assert.AreEqual(message, decoded);
         }
@@ -38,9 +39,9 @@ namespace FOGService.Tests.Handlers
 
             const string message = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
 
-            var encoded = EncryptionHandler.HexStringToByteArray(message);
+            var encoded = Transform.HexStringToByteArray(message);
             Assert.IsNotEmpty(encoded);
-            var decoded = EncryptionHandler.ByteArrayToHexString(encoded);
+            var decoded = Transform.ByteArrayToHexString(encoded);
 
             Assert.AreEqual(message, decoded);
         }
@@ -54,8 +55,8 @@ namespace FOGService.Tests.Handlers
             */
             const int length = 64;
 
-            var pw1 = EncryptionHandler.GeneratePassword(length);
-            var pw2 = EncryptionHandler.GeneratePassword(length);
+            var pw1 = Generate.Password(length);
+            var pw2 = Generate.Password(length);
 
             Assert.AreEqual(length, pw1.Length);
             Assert.AreEqual(length, pw2.Length);

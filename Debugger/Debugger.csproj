@@ -108,7 +108,7 @@
       <Name>Handlers</Name>
     </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
-      <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>
+      <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
       <Name>Modules</Name>
     </ProjectReference>
   </ItemGroup>
