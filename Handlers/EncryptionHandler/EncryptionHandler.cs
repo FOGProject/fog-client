@@ -279,9 +279,9 @@ namespace FOG.Handlers
             return ProtectedData.Unprotect(data, null, scope);
         }
 
-        public static X509Certificate2 PemToX509(string pemFile)
+        public static X509Certificate2 DERToX509(string certFile)
         {
-            using (var certificate = new OpenSSL.X509.X509Certificate(BIO.File(pemFile, "r")))
+            using (var certificate = new OpenSSL.X509.X509Certificate(BIO.File(certFile, "r")))
             {
                 return new X509Certificate2(certificate.DER);
             }
@@ -303,7 +303,6 @@ namespace FOG.Handlers
                 {
                     RevocationMode = X509RevocationMode.NoCheck,
                     RevocationFlag = X509RevocationFlag.ExcludeRoot,
-                    VerificationFlags = X509VerificationFlags.AllowUnknownCertificateAuthority,
                     VerificationTime = DateTime.Now,
                     UrlRetrievalTimeout = new TimeSpan(0, 0, 0)
                 }
