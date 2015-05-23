@@ -22,11 +22,10 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
-      <Merge Id="VCRedist" SourceFile="..\..\Microsoft_VC110_CRT_x86.msm" DiskId="1" Language="0" />
-
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
+            <File Id="CertificateManager" Name="CertificateManager.exe" Source="..\bin\CertificateManager.exe" />
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
@@ -37,9 +36,6 @@
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="System.Threading.Tasks.NET35" Name="System.Threading.Tasks.NET35.dll"
                   Source="..\bin\System.Threading.Tasks.NET35.dll" />
-            <File Id="libeay32" Name="libeay32.dll" Source="..\bin\libeay32.dll" />
-            <File Id="ssleay32" Name="ssleay32.dll" Source="..\bin\ssleay32.dll" />
-            <File Id="ManagedOpenSsl" Name="ManagedOpenSsl.dll" Source="..\bin\ManagedOpenSsl.dll" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe" />
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
@@ -83,6 +79,7 @@
               <RegistryValue Name="Version" Type="string" Value="[ProductVersion]" />
             </RegistryKey>
           </Component>
+          
 
 
         </Directory>

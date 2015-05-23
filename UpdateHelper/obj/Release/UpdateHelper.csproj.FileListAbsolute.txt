@@ -1,4 +1,5 @@
 D:\fog-client\bin\FOGUpdateHelper.exe
 D:\fog-client\UpdateHelper\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe
-D:\fog\client\bin\FOGUpdateHelper.exe
+D:\fog\client\UpdateHelper\bin\x86\Release\FOGUpdateHelper.exe
+D:\fog\client\UpdateHelper\bin\x86\Release\Handlers.dll

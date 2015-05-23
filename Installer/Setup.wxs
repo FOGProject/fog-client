@@ -31,6 +31,7 @@
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
+      <Custom Action="InstallCertificate" Before="InstallFinalize"></Custom>
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
     <!-- Setup the UI -->
@@ -43,15 +44,14 @@
     <Property Id="WEBADDRESS" Value="fog-server" />
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    <CustomAction Id="InstallCertificate" Directory="TARGETDIR" ExeCommand="[INSTALLLOCATION]CertificateManager.exe install" Execute="immediate" Return="ignore" />
+    <CustomAction Id="RemoveCertificate" Directory="TARGETDIR" ExeCommand="[INSTALLLOCATION]CertificateManager.exe uninstall" Execute="immediate" Return="ignore" />
 
     <UIRef Id="DialogStructure" />
     <!-- Configure what to install -->
     <Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high" />
     <Directory Id="TARGETDIR" Name="SourceDir">
     </Directory>
-    <Feature Id="VCRedist" Title="Visual C++Runtime" AllowAdvertise="no" Display="hidden" Level="1">
-      <MergeRef Id="VCRedist" />
-    </Feature>
     <Feature Id="Base" Title="FOG Service" Description="A client for the FOG server" Level="1">
       <ComponentRef Id="StandardComponent" />
       <ComponentRef Id="ServerRegistry" />
@@ -60,7 +60,6 @@
       <ComponentRef Id="HttpsRegistry" />
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
       <ComponentRef Id="VersionRegistry" />
-
     </Feature>
   </Product>
 </Wix>

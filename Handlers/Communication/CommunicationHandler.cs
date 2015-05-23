@@ -187,7 +187,7 @@ namespace FOG.Handlers
         {
             try
             {
-                var keyPath = string.Format("{0}tmp\\public.crt", AppDomain.CurrentDomain.BaseDirectory);
+                var keyPath = string.Format("{0}tmp\\public.cer", AppDomain.CurrentDomain.BaseDirectory);
                 DownloadFile("/management/other/ssl/srvpublic.crt", keyPath);
                 
                 var aes = new AesCryptoServiceProvider();
@@ -201,8 +201,8 @@ namespace FOG.Handlers
                     throw new Exception("Certificate is not from FOG CA");
                 LogHandler.Log(LogName, "Cert OK");
 
-                var enKey = Encryption.RSA.Encrypt(certificate, Passkey);
-                var enToken = Encryption.RSA.Encrypt(certificate, token);
+                var enKey = Encryption.Transform.ByteArrayToHexString( Encryption.RSA.Encrypt(certificate, Passkey) );
+                var enToken = Encryption.Transform.ByteArrayToHexString( Encryption.RSA.Encrypt(certificate, token) );
 
                 var response = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
    
@@ -237,6 +237,8 @@ namespace FOG.Handlers
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 
                     var rawResponse = webClient.UploadString(ServerAddress + postfix, param);
+                    LogHandler.Debug(LogName, rawResponse);
+
                     rawResponse = AESDecrypt(rawResponse, Passkey);
 
                     var messageFound = false;

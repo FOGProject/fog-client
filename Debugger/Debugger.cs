@@ -61,7 +61,11 @@ namespace FOG
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
 
-            InteractiveShell();
+            CommunicationHandler.ServerAddress = Server;
+            CommunicationHandler.TestMAC = MAC;
+            while (CommunicationHandler.Authenticate());
+            Console.ReadLine();
+            //InteractiveShell();
         }
 
         private static void InteractiveShell()

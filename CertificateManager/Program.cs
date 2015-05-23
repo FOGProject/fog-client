@@ -1,86 +1,72 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using System.Text;
+using FOG.Handlers;
+using FOG.Handlers.Encryption;
 
 namespace CertificateManager
 {
     class Program
     {
-        private const string CAName = "FOG Server CA";
+        private const string Name = "CertificateManager";
 
         static void Main(string[] args)
         {
+            LogHandler.Mode = LogHandler.LogMode.Console;
+            
             if (args.Length != 1) return;
 
             if (args[0].ToLower().Equals("install"))
                 InstallCert();
-            else if (args[1].ToLower().Equals("uninstall"))
+            else if (args[0].ToLower().Equals("uninstall"))
                 UninstallCert();
         }
 
         private static void InstallCert()
         {
-            var cert = GetCertFromStore();
+            var cert = RSA.GetCACertificate();
             if (cert != null) return;
+
+
+            CommunicationHandler.ServerAddress = CommunicationHandler.ServerAddress.Replace("https://", "http://");
+            var keyPath = string.Format("{0}tmp\\ca.cert.der", AppDomain.CurrentDomain.BaseDirectory);
+            var downloaded = CommunicationHandler.DownloadFile("/management/other/ca.cert.der", keyPath);
+            if (!downloaded) return;
+
+            LogHandler.Log(Name, "Installing FOG CA...");
 
             try
             {
+                cert = new X509Certificate2(keyPath);
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadWrite);
-                store.Certificates.Add(cert);
+                store.Add(cert);
 
                 store.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ignored
-            }
+                LogHandler.Error(Name, ex);
+             }
         }
 
         private static void UninstallCert()
         {
-            var cert = GetCertFromStore();
+            var cert = RSA.GetCACertificate();
             if (cert == null) return;
+
+            LogHandler.Log(Name, "Uninstalling FOG CA...");
 
             try
             {
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadWrite);
-                store.Certificates.Remove(cert);
+                store.Remove(cert);
                 store.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // ignored
+                LogHandler.Error(Name, ex);
             }
-        }
-
-        private static X509Certificate2 GetCertFromStore()
-        {
-            try
-            {
-                X509Certificate2 CAroot = null;
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, CAName, true);
-
-                if (cers.Count > 0)
-                {
-                    CAroot = cers[0];
-                }
-                store.Close();
-
-                return CAroot;
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-            return null;
         }
     }
 }

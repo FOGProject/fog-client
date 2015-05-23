@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
@@ -67,7 +68,7 @@ namespace FOG.Handlers.Encryption
                 return null;
 
             var rsa = (RSACryptoServiceProvider)cert.PublicKey.Key;
-            return rsa.Encrypt(data, true);
+            return rsa.Encrypt(data, false);
         }
 
         /// <summary>
@@ -82,7 +83,7 @@ namespace FOG.Handlers.Encryption
                 return null;
 
             var rsa = (RSACryptoServiceProvider)cert.PrivateKey;
-            return rsa.Decrypt(data, true);
+            return rsa.Decrypt(data, false);
         }
 
         /// <summary>
@@ -94,45 +95,55 @@ namespace FOG.Handlers.Encryption
         /// <returns>True if the certificate came from the authority</returns>
         public static bool IsFromCA(X509Certificate2 authority, X509Certificate2 certificate)
         {
-            var chain = new X509Chain
+            try
             {
-                ChainPolicy =
+                var chain = new X509Chain
                 {
-                    RevocationMode = X509RevocationMode.NoCheck,
-                    RevocationFlag = X509RevocationFlag.ExcludeRoot,
-                    VerificationTime = DateTime.Now,
-                    UrlRetrievalTimeout = new TimeSpan(0, 0, 0)
+                    ChainPolicy =
+                    {
+                        RevocationMode = X509RevocationMode.NoCheck,
+                        RevocationFlag = X509RevocationFlag.ExcludeRoot,
+                        VerificationTime = DateTime.Now,
+                        UrlRetrievalTimeout = new TimeSpan(0, 0, 0)
+                    }
+                };
+
+                // This part is very important. You're adding your known root here.
+                // It doesn't have to be in the computer store at all. Neither certificates do.
+                chain.ChainPolicy.ExtraStore.Add(authority);
+
+                var isChainValid = chain.Build(certificate);
+
+                if (!isChainValid)
+                {
+                    var errors = chain.ChainStatus
+                        .Select(x => string.Format("{0} ({1})", x.StatusInformation.Trim(), x.Status))
+                        .ToArray();
+                    var certificateErrorsString = "Unknown errors.";
+
+                    if (errors != null && errors.Length > 0)
+                        certificateErrorsString = string.Join(", ", errors);
+
+                    LogHandler.Error(LogName, "Certificate validation failed");
+                    LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
+                    return false;
                 }
-            };
 
-            // This part is very important. You're adding your known root here.
-            // It doesn't have to be in the computer store at all. Neither certificates do.
-            chain.ChainPolicy.ExtraStore.Add(authority);
-
-            var isChainValid = chain.Build(certificate);
-
-            if (!isChainValid)
-            {
-                var errors = chain.ChainStatus
-                    .Select(x => string.Format("{0} ({1})", x.StatusInformation.Trim(), x.Status))
-                    .ToArray();
-                var certificateErrorsString = "Unknown errors.";
-
-                if (errors != null && errors.Length > 0)
-                    certificateErrorsString = string.Join(", ", errors);
+                // This piece makes sure it actually matches your known root
+                if (chain.ChainElements.Cast<X509ChainElement>().Any(x => x.Certificate.Thumbprint == authority.Thumbprint))
+                    return true;
 
                 LogHandler.Error(LogName, "Certificate validation failed");
-                LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
+                LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                LogHandler.Error(LogName, "Could not verify certificate is from CA");
+                LogHandler.Error(LogName, ex);
                 return false;
             }
 
-            // This piece makes sure it actually matches your known root
-            if (chain.ChainElements.Cast<X509ChainElement>().Any(x => x.Certificate.Thumbprint == authority.Thumbprint))
-                return true;
-
-            LogHandler.Error(LogName, "Certificate validation failed");
-            LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
-            return false;
         }
 
         /// <summary>
