@@ -1,91 +1,75 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <ProjectGuid>{E54A6E6A-2E1F-4270-A641-BD3C0E1F16EB}</ProjectGuid>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <OutputType>Bundle</OutputType>
-    <RootNamespace>Installer</RootNamespace>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>3.9</ProductVersion>
+    <ProjectGuid>b364328d-cb64-4b22-93dc-fd1732064818</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
     <OutputName>FOGService</OutputName>
+    <OutputType>Package</OutputType>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
     <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
-    <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <OutputPath>..\bin\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>Full</DebugType>
-    <Optimize>False</Optimize>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-    <DebugSymbols>False</DebugSymbols>
-    <DebugType>None</DebugType>
-    <Optimize>True</Optimize>
-    <StartAction>Project</StartAction>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\bin\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DialogStructure.wxs" />
     <Compile Include="Dialog_Config.wxs" />
     <Compile Include="Files.wxs" />
-    <Compile Include="Setup.wxs" />
+    <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AbstractService\AbstractService.csproj">
-      <Name>AbstractService</Name>
-      <Project>{5f592f0c-8c91-473b-841c-29d832a533d1}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\CertificateManager\CertificateManager.csproj">
-      <Name>CertificateManager</Name>
-      <Project>{54016198-3151-437b-b495-f6fd493573b5}</Project>
-      <Private>True</Private>
-      <DoNotHarvest>True</DoNotHarvest>
-      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
-      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
-    </ProjectReference>
-    <ProjectReference Include="..\Handlers\Handlers.csproj">
-      <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
-      <Name>Handlers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Modules\Modules.csproj">
-      <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>
-      <Name>Modules</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
-      <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
-      <Name>PipeClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
-      <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
-      <Name>PipeServer</Name>
-    </ProjectReference>
+    <Content Include="icon.ico" />
+    <Content Include="license.rtf" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Service\Service.csproj">
-      <Project>{5C3289AB-B65D-42F8-BFD0-21C61619729A}</Project>
       <Name>Service</Name>
+      <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
     <ProjectReference Include="..\Tray\Tray.csproj">
-      <Project>{3E31CCE4-D06A-4F02-A3E8-981B9033CA32}</Project>
       <Name>Tray</Name>
+      <Project>{3e31cce4-d06a-4f02-a3e8-981b9033ca32}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
     <ProjectReference Include="..\UpdateHelper\UpdateHelper.csproj">
-      <Project>{788E1733-937F-415C-A6E9-46A43BB0B019}</Project>
       <Name>UpdateHelper</Name>
+      <Project>{788e1733-937f-415c-a6e9-46a43bb0b019}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
     <ProjectReference Include="..\UpdateWaiter\UpdateWaiter.csproj">
-      <Project>{C7113642-59C8-41C0-BF64-2F29BAE45910}</Project>
       <Name>UpdateWaiter</Name>
+      <Project>{c7113642-59c8-41c0-bf64-2f29bae45910}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
     <ProjectReference Include="..\UserService\UserService.csproj">
-      <Project>{9F4E9573-031F-405C-A8A3-8BFE4F35B14D}</Project>
       <Name>UserService</Name>
+      <Project>{9f4e9573-031f-405c-a8a3-8bfe4f35b14d}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -95,16 +79,12 @@
     </WixExtension>
   </ItemGroup>
   <Import Project="$(WixTargetsPath)" />
-  <PropertyGroup Condition=" '$(Configuration)' == 'Public Release' ">
-    <DebugSymbols>False</DebugSymbols>
-    <DebugType>None</DebugType>
-    <Optimize>True</Optimize>
-    <StartAction>Project</StartAction>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PreBuildEvent />
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent />
-  </PropertyGroup>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+	<Target Name="AfterBuild">
+	</Target>
+	-->
 </Project>

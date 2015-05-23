@@ -1,4 +1,0 @@
-D:\fog\FOGService\bin\FOGService.msi
-D:\fog\FOGService\bin\FOGService.wixpdb
-C:\Users\jbob\Desktop\fog-client\bin\FOGService.msi
-C:\Users\jbob\Desktop\fog-client\bin\FOGService.wixpdb
