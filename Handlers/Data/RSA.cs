@@ -18,13 +18,12 @@
  */
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
-namespace FOG.Handlers.Encryption
+namespace FOG.Handlers.Data
 {
     public static class RSA
     {

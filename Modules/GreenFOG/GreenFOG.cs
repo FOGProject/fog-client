@@ -33,7 +33,6 @@ namespace FOG.Modules.GreenFOG
         public GreenFOG()
         {
             Name = "GreenFOG";
-            Description = "Perform cron style power tasks";
         }
 
         protected override void DoWork()
@@ -79,7 +78,6 @@ namespace FOG.Modules.GreenFOG
 
             foreach (var task in tasks)
             {
-                //Split up the response
                 var taskData = task.Split('@');
 
                 //Create task definition
@@ -87,13 +85,11 @@ namespace FOG.Modules.GreenFOG
                 taskDefinition.RegistrationInfo.Description = task;
                 taskDefinition.Principal.UserId = "SYSTEM";
 
-                //Create task trigger
                 var trigger = new DailyTrigger()
                 {
                     StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
                                     TimeSpan.FromMinutes(int.Parse(taskData[1]))
                 };
-                //Run at the specified time
 
                 taskDefinition.Triggers.Add(trigger);
 

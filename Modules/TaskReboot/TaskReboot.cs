@@ -18,6 +18,7 @@
  */
 
 using FOG.Handlers;
+using FOG.Handlers.Power;
 
 namespace FOG.Modules.TaskReboot
 {
@@ -32,7 +33,6 @@ namespace FOG.Modules.TaskReboot
         public TaskReboot()
         {
             Name = "TaskReboot";
-            Description = "Reboot if a task is scheduled";
             _notifiedUser = false;
         }
 
@@ -47,7 +47,7 @@ namespace FOG.Modules.TaskReboot
             LogHandler.Log(Name, "Restarting computer for task");
             
             if (!UserHandler.IsUserLoggedIn() || taskResponse.GetField("#force").Equals("1"))
-                ShutdownHandler.Restart(Name, 30);
+                Power.Restart(Name, 30);
 
             else if (!taskResponse.Error && !_notifiedUser)
             {

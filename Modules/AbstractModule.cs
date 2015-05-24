@@ -29,13 +29,11 @@ namespace FOG.Modules
     {
         //Basic variables every module needs
         public string Name { get; protected set; }
-        public string Description { get; protected set; }
         public string EnabledURL { get; protected set; }
 
         protected AbstractModule()
         {
             Name = "Generic Module";
-            Description = "Generic Description";
             EnabledURL = "/service/servicemodule-active.php";
         }
 

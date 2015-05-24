@@ -53,8 +53,4 @@ namespace FOG.Modules.PrinterManager
             SetDefaultPrinter(Name);
         }
     }
-
-
-    
-
 }

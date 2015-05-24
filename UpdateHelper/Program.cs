@@ -42,12 +42,8 @@ namespace FOG
 
             LogHandler.Log(logName, "Killing remaining FOG processes...");
             if (Process.GetProcessesByName("FOGService").Length > 0)
-            {
                 foreach (var process in Process.GetProcessesByName("FOGService"))
-                {
                     process.Kill();
-                }
-            }
 
             LogHandler.Log(logName, "Applying MSI...");
             ApplyUpdates();

@@ -24,7 +24,7 @@ using System.Text;
 
 // ReSharper disable InconsistentNaming
 
-namespace FOG.Handlers.Encryption
+namespace FOG.Handlers.Data
 {
     /// <summary>
     ///     Handle all encryption/decryption

@@ -91,7 +91,7 @@ namespace FOG.Handlers
         /// <summary>
         /// </summary>
         /// <returns>The inactivity time of the current user in seconds</returns>
-        public static int GetUserInactivityTime()
+        public static int GetInactivityTime()
         {
             var lastInputInfo = new Lastinputinfo();
             lastInputInfo.CbSize = (uint) Marshal.SizeOf(lastInputInfo);
@@ -182,11 +182,9 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="sid">The user's security ID</param>
         /// <returns>The user's profile path</returns>
-        public static string GetUserProfilePath(string sid)
+        public static string GetProfilePath(string sid)
         {
-            return
-                RegistryHandler.GetRegisitryValue(
-                    string.Format(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid), "ProfileImagePath");
+            return RegistryHandler.GetRegisitryValue(string.Format(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\ProfileList\{0}\", sid), "ProfileImagePath");
         }
     }
 }

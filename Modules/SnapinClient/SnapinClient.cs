@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 
 
 namespace FOG.Modules.SnapinClient
@@ -33,7 +34,6 @@ namespace FOG.Modules.SnapinClient
         public SnapinClient()
         {
             Name = "SnapinClient";
-            Description = "Installs snapins on client computers";
         }
 
         protected override void DoWork()
@@ -60,6 +60,7 @@ namespace FOG.Modules.SnapinClient
 
                 var downloaded = CommunicationHandler.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
                     CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
+
                 var exitCode = "-1";
 
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
@@ -73,13 +74,11 @@ namespace FOG.Modules.SnapinClient
                         CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
-                    {
-                        if (!ShutdownHandler.ShutdownPending)
+                        if (!Power.ShutdownPending)
                             //Rerun this method to check for the next snapin
                             continue;
-                    }
                     else
-                        ShutdownHandler.Restart("Snapin requested shutdown", 30);
+                        Power.Restart("Snapin requested shutdown", 30);
                 }
                 else
                     CommunicationHandler.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 

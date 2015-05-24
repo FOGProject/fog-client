@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using FOG.Handlers;
+// ReSharper disable ParameterTypeCanBeEnumerable.Local
 
 
 namespace FOG.Modules.PrinterManager
@@ -34,7 +35,6 @@ namespace FOG.Modules.PrinterManager
         public PrinterManager()
         {
             Name = "PrinterManager";
-            Description = "Manage printers";
         }
 
         protected override void DoWork()
@@ -61,20 +61,23 @@ namespace FOG.Modules.PrinterManager
         private static void RemoveExtraPrinters(List<Printer> newPrinters)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-            foreach (var name in from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name").ToString() into name let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name)) where !safe select name)
-            {
+
+            foreach (var name in from ManagementBaseObject printer in printerQuery.Get()
+                    select printer.GetPropertyValue("Name").ToString()
+                    into name
+                    let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
+                    where !safe
+                    select name)
                 Printer.Remove(name);
-            }
         }
 
         private List<Printer> CreatePrinters(List<string> printerIDs)
         {
             try
             {
-                return
-                    printerIDs.Select(
-                        id => CommunicationHandler.GetResponse(string.Format("/service/Printer.php?id={0}", id), true))
-                        .Where(printerData => !printerData.Error).Select(PrinterFactory).ToList();
+                return printerIDs
+                    .Select(id => CommunicationHandler.GetResponse(string.Format("/service/Printer.php?id={0}", id), true))
+                    .Where(printerData => !printerData.Error).Select(PrinterFactory).ToList();
             }
             catch (Exception ex)
             {
@@ -91,11 +94,13 @@ namespace FOG.Modules.PrinterManager
                     printerData.GetField("ip"), 
                     printerData.GetField("port"), 
                     bool.Parse(printerData.GetField("default")));
+
             if (printerData.GetField("type").Equals("Network"))
                 return new NetworkPrinter(printerData.GetField("name"),
                     printerData.GetField("ip"),
                     printerData.GetField("port"),
                     bool.Parse(printerData.GetField("default")));
+
             if (printerData.GetField("type").Equals("Local"))
                 return new LocalPrinter(printerData.GetField("name"),
                     printerData.GetField("file"),
@@ -105,7 +110,5 @@ namespace FOG.Modules.PrinterManager
 
             return null;
         }
-
-
     }
 }

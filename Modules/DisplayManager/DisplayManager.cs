@@ -36,7 +36,6 @@ namespace FOG.Modules.DisplayManager
         public DisplayManager()
         {
             Name = "DisplayManager";
-            Description = "Change the resolution of the display";
             _display = new Display();
         }
 
@@ -64,9 +63,7 @@ namespace FOG.Modules.DisplayManager
                 }
             }
             else
-            {
                 LogHandler.Error(Name, "Settings are not populated; will not attempt to change resolution");
-            }
         }
 
         //Change the resolution of the screen

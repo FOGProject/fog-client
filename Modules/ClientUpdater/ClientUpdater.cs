@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 
 
 namespace FOG.Modules.ClientUpdater
@@ -32,7 +33,6 @@ namespace FOG.Modules.ClientUpdater
         public ClientUpdater()
         {
             Name = "ClientUpdater";
-            Description = "Update the FOG Service";
         }
 
         protected override void DoWork()
@@ -48,8 +48,9 @@ namespace FOG.Modules.ClientUpdater
 
                 CommunicationHandler.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
+
                 PrepareUpdateHelpers();
-                ShutdownHandler.UpdatePending = true;
+                Power.UpdatePending = true;
             }
             catch (Exception ex)
             {
@@ -62,8 +63,8 @@ namespace FOG.Modules.ClientUpdater
         private void PrepareUpdateHelpers()
         {
 
-            if (!File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe") &&
-                !File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe"))
+            if (!File.Exists(string.Format("{0}\\FOGUpdateHelper.exe", AppDomain.CurrentDomain.BaseDirectory)) &&
+                !File.Exists(string.Format("{0}\\FOGUpdateWaiter.exe", AppDomain.CurrentDomain.BaseDirectory)))
             {
                 LogHandler.Error(Name, "Unable to locate helper files");
                 return;
@@ -73,8 +74,10 @@ namespace FOG.Modules.ClientUpdater
             {
                 File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
                     AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe");
+
                 File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
                     AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
+
                 File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
                     AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll");
             }

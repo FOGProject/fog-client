@@ -31,16 +31,13 @@ namespace FOG
         {
             //Update Line
             //Check if an parameter was passed
-            if (args.Length > 0)
-            {
-                //Wait for all update files to be applied
-                while (UpdateFilePresent())
-                {
-                }
-                //Spawn the process that originally called this program
-                if (File.Exists(args[0]))
-                    SpawnParentProgram(args[0]);
-            }
+            if (args.Length <= 0) return;
+
+            //Wait for all update files to be applied
+            while (UpdateFilePresent()) { }
+            //Spawn the process that originally called this program
+            if (File.Exists(args[0]))
+                SpawnParentProgram(args[0]);
         }
 
         private static bool UpdateFilePresent()
@@ -48,9 +45,8 @@ namespace FOG
             var fileFound = false;
             foreach (var fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
                 .Where(fileName => fileName.EndsWith("updating.info")))
-            {
                 fileFound = true;
-            }
+
             Thread.Sleep(10*1000);
 
             return fileFound;

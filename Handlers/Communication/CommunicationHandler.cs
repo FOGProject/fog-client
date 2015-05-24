@@ -197,12 +197,12 @@ namespace FOG.Handlers
 
                 var certificate = new X509Certificate2(keyPath);
 
-                if (!Encryption.RSA.IsFromCA(Encryption.RSA.GetCACertificate(), certificate))
+                if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
                 LogHandler.Log(LogName, "Cert OK");
 
-                var enKey = Encryption.Transform.ByteArrayToHexString( Encryption.RSA.Encrypt(certificate, Passkey) );
-                var enToken = Encryption.Transform.ByteArrayToHexString( Encryption.RSA.Encrypt(certificate, token) );
+                var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
+                var enToken = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, token));
 
                 var response = Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, GetMacAddresses()));
    
@@ -210,7 +210,7 @@ namespace FOG.Handlers
                 if (!response.Error)
                 {
                     LogHandler.Log(LogName, "Authenticated");
-                    SetSecurityToken("token.dat", Encryption.Transform.HexStringToByteArray(response.GetField("#token")));
+                    SetSecurityToken("token.dat", Data.Transform.HexStringToByteArray(response.GetField("#token")));
                     return true;
                 } 
                 
@@ -272,7 +272,7 @@ namespace FOG.Handlers
             try
             {
                 var token = File.ReadAllBytes(filePath);
-                token = Encryption.DPAPI.UnProtectData(token, DataProtectionScope.CurrentUser);
+                token = Data.DPAPI.UnProtectData(token, DataProtectionScope.CurrentUser);
                 return token;
             }
             catch (Exception ex)
@@ -288,7 +288,7 @@ namespace FOG.Handlers
         {
             try
             {
-                token = Encryption.DPAPI.ProtectData(token, DataProtectionScope.CurrentUser);
+                token = Data.DPAPI.ProtectData(token, DataProtectionScope.CurrentUser);
                 File.WriteAllBytes(filePath, token);    
             }
             catch (Exception ex)
@@ -312,13 +312,13 @@ namespace FOG.Handlers
             if (toDecode.StartsWith(encryptedFlag2))
             {
                 var decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
-                toDecode = Encryption.AES.Decrypt(decryptedResponse, passKey);
+                toDecode = Data.AES.Decrypt(decryptedResponse, passKey);
                 return toDecode;
             }
             if (!toDecode.StartsWith(encryptedFlag)) return toDecode;
 
             var decrypted = toDecode.Substring(encryptedFlag.Length);
-            return Encryption.AES.Decrypt(decrypted, passKey);
+            return Data.AES.Decrypt(decrypted, passKey);
         }
 
         /// <summary>
@@ -404,7 +404,7 @@ namespace FOG.Handlers
         {
             return response.Data.Keys.Where(key => key.Contains(identifier)).Select(key => 
                 base64Decode
-                ? Encryption.Transform.DecodeBase64(response.GetField(key)) 
+                ? Data.Transform.DecodeBase64(response.GetField(key)) 
                 : response.GetField(key))
                 .ToList();
         }

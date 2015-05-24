@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using FOG.Handlers;
-using FOG.Handlers.Encryption;
+using FOG.Handlers.Data;
 
 namespace FOGService.Tests.Handlers
 {
@@ -11,7 +11,7 @@ namespace FOGService.Tests.Handlers
         [SetUp]
         public void Init()
         {
-            LogHandler.Mode = LogHandler.LogMode.Console;
+            LogHandler.Output = LogHandler.Mode.Console;
         }
 
         [Test]

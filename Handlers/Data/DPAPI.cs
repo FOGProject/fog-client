@@ -19,7 +19,7 @@
 
 using System.Security.Cryptography;
 
-namespace FOG.Handlers.Encryption
+namespace FOG.Handlers.Data
 {
     public static class DPAPI
     {

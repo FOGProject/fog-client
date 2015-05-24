@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography.X509Certificates;
 using FOG.Handlers;
-using FOG.Handlers.Encryption;
+using FOG.Handlers.Data;
 
 namespace CertificateManager
 {
@@ -11,7 +11,7 @@ namespace CertificateManager
 
         static void Main(string[] args)
         {
-            LogHandler.Mode = LogHandler.LogMode.Console;
+            LogHandler.Output = LogHandler.Mode.Console;
             
             if (args.Length != 1) return;
 

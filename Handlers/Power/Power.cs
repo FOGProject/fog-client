@@ -23,13 +23,13 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace FOG.Handlers
+namespace FOG.Handlers.Power
 {
     /// <summary>
     ///     Handle all shutdown requests
     ///     The windows shutdown command is used instead of the win32 api because it notifies the user prior
     /// </summary>
-    public static class ShutdownHandler
+    public static class Power
     {
         //List options on how to exit windows
         [Flags]

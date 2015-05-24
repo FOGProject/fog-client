@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 using FOG.Modules;
 
 namespace FOG
@@ -45,10 +46,10 @@ namespace FOG
         protected virtual void ModuleLooper()
         {
             // Only run the service if there isn't a shutdown or update pending
-            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
+            while (!Power.ShutdownPending && !Power.UpdatePending)
             {
                 // Stop looping as soon as a shutdown or update pending
-                foreach (var module in _modules.TakeWhile(module => !ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending))
+                foreach (var module in _modules.TakeWhile(module => !Power.ShutdownPending && !Power.UpdatePending))
                 {
                     // Log file formatting
                     LogHandler.NewLine();
@@ -71,7 +72,7 @@ namespace FOG
 
 
                 // Skip checking for sleep time if there is a shutdown or update pending
-                if (ShutdownHandler.ShutdownPending || ShutdownHandler.UpdatePending) break;
+                if (Power.ShutdownPending || Power.UpdatePending) break;
 
                 // Once all modules have been run, sleep for the set time
                 var sleepTime = GetSleepTime() ?? DefaultSleepTime;

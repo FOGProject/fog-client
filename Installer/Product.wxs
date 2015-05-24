@@ -44,8 +44,8 @@
     <Property Id="WEBADDRESS" Value="fog-server" />
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
-    <CustomAction Id="InstallCertificate" Directory="TARGETDIR" ExeCommand="[INSTALLLOCATION]CertificateManager.exe install" Execute="immediate" Return="ignore" />
-    <CustomAction Id="RemoveCertificate" Directory="TARGETDIR" ExeCommand="[INSTALLLOCATION]CertificateManager.exe uninstall" Execute="immediate" Return="ignore" />
+    <CustomAction Id="InstallCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" install' Execute="deferred" Return="ignore" />
+    <CustomAction Id="RemoveCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" uninstall' Execute="deferred" Return="ignore" />
 
     <UIRef Id="DialogStructure" />
     <!-- Configure what to install -->

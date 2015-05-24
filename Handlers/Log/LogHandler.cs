@@ -35,11 +35,10 @@ namespace FOG.Handlers
             Error
         }
 
-        public enum LogMode
+        public enum Mode
         {
             File,
-            Console,
-            Testing
+            Console
         }
 
         private const long DefaultMaxLogSize = 502400;
@@ -49,14 +48,14 @@ namespace FOG.Handlers
 
         public static string FilePath { get; set; }
         public static long MaxSize { get; set; }
-        public static LogMode Mode { get; set; }
+        public static Mode Output { get; set; }
         public static bool Verbose { get; set; }
 
         private static bool Initialize()
         {
             FilePath = @"\fog.log";
             MaxSize = DefaultMaxLogSize;
-            Mode = LogMode.File;
+            Output = Mode.File;
 
             return true;
         }
@@ -71,7 +70,7 @@ namespace FOG.Handlers
         {
             #if DEBUG
             #else
-                if (!Verbose && level == Level.Debug) return;
+            if (level == Level.Debug && !Verbose) return;
             #endif
 
             var prefix = "";
@@ -100,9 +99,6 @@ namespace FOG.Handlers
 
         public static void Error(string caller, Exception ex)
         {
-            if (Mode == LogMode.Testing)
-                throw ex;
-
             Log(Level.Error, caller, ex.Message);
         }
 
@@ -134,12 +130,16 @@ namespace FOG.Handlers
         public static void Header(string text)
         {
             var headerSize = (double)((HeaderLength - text.Length))/2;
+            
+            // Construct the first section
             var output = "";
             for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
                 output += "-";
 
+            // Add the text
             output += text;
 
+            // Construct the last section
             for (var i = 0; i < ((int) Math.Floor(headerSize)); i++)
                 output += "-";
             WriteLine(output);
@@ -156,7 +156,6 @@ namespace FOG.Handlers
             Divider();
         }
 
-
         /// <summary>
         ///     Write text to the log
         /// </summary>
@@ -164,11 +163,9 @@ namespace FOG.Handlers
         /// <param name="text">The text to write</param>
         public static void Write(Level level, string text)
         {
-            switch (Mode)
+            switch (Output)
             {
-                case LogMode.Testing:
-                    break;
-                case LogMode.Console:
+                case Mode.Console:
                     if (level == Level.Error)
                         Console.BackgroundColor = ConsoleColor.Red;
                     if (level == Level.Debug)
@@ -226,7 +223,6 @@ namespace FOG.Handlers
         {
             Write(level, line + "\r\n");
         }
-
 
         public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {

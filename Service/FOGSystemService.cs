@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.ClientUpdater;
 using FOG.Modules.DisplayManager;
@@ -64,7 +65,7 @@ namespace FOG
         //This is run by the pipe thread, it will send out notifications to the tray
         private void notificationPipeHandler()
         {
-            while (!ShutdownHandler.ShutdownPending && !ShutdownHandler.UpdatePending)
+            while (!Power.ShutdownPending && !Power.UpdatePending)
             {
                 if (!_notificationPipe.IsRunning())
                     _notificationPipe.Start();
@@ -103,7 +104,7 @@ namespace FOG
         {
             base.ModuleLooper();
 
-            if (ShutdownHandler.UpdatePending)
+            if (Power.UpdatePending)
                 UpdateHandler.BeginUpdate(_servicePipe);
         }
 

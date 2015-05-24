@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 
 namespace FOG
 {
@@ -48,7 +49,7 @@ namespace FOG
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
             {
                 LogHandler.Log(LogName, "Update.info found, exiting program");
-                ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
+                Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
                 Environment.Exit(0);
             }
 

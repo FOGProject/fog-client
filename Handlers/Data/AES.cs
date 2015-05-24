@@ -22,7 +22,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace FOG.Handlers.Encryption
+namespace FOG.Handlers.Data
 {
     public static class AES
     {

@@ -53,7 +53,7 @@ namespace FOG
  
         public static void Main(string[] args)
         {
-            LogHandler.Mode = LogHandler.LogMode.Console;
+            LogHandler.Output = LogHandler.Mode.Console;
             LogHandler.Verbose = true;
 
             LogHandler.PaddedHeader("FOG Console");

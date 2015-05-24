@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 
 
 namespace FOG.Modules.HostnameChanger
@@ -73,8 +74,6 @@ namespace FOG.Modules.HostnameChanger
         public HostnameChanger()
         {
             Name = "HostnameChanger";
-            Description = "Rename a host, register with AD, and activate the windows key";
-
             _notifiedUser = false;
         }
 
@@ -94,9 +93,9 @@ namespace FOG.Modules.HostnameChanger
             if (taskResponse.Error) return;
 
             RenameComputer(taskResponse);
-            if (!ShutdownHandler.ShutdownPending)
+            if (!Power.ShutdownPending)
                 RegisterComputer(taskResponse);
-            if (!ShutdownHandler.ShutdownPending)
+            if (!Power.ShutdownPending)
                 ActivateComputer(taskResponse);
         }
 
@@ -132,7 +131,7 @@ namespace FOG.Modules.HostnameChanger
                 RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
                     response.GetField("#hostname"));
 
-                ShutdownHandler.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
+                Power.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
             }
             else if(!_notifiedUser)
             {
@@ -177,7 +176,7 @@ namespace FOG.Modules.HostnameChanger
                 : "Unknown Return Code: "), returnCode));
 
             if (returnCode.Equals(0))
-                ShutdownHandler.Restart("Host joined to Active Directory, restart required", 20);
+                Power.Restart("Host joined to Active Directory, restart required", 20);
         }
 
         private static int DomainWrapper(Response response, bool ou, JoinOptions options)
@@ -211,7 +210,7 @@ namespace FOG.Modules.HostnameChanger
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
-                    ShutdownHandler.Restart("Host joined to active directory, restart needed", 20);
+                    Power.Restart("Host joined to active directory, restart needed", 20);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
@@ -34,8 +35,8 @@ namespace FOG
 
             if (!message.Equals("UPD")) return;
 
-            ShutdownHandler.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
-            ShutdownHandler.UpdatePending = true;
+            Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
+            Power.UpdatePending = true;
         }
 
         public override void Stop()

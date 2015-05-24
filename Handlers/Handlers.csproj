@@ -103,12 +103,12 @@
   <ItemGroup>
     <Compile Include="Communication\CommunicationHandler.cs" />
     <Compile Include="Communication\Response.cs" />
-    <Compile Include="Encryption\DPAPI.cs" />
-    <Compile Include="Encryption\AES.cs" />
-    <Compile Include="Encryption\Generate.cs" />
-    <Compile Include="Encryption\Transform.cs" />
-    <Compile Include="Encryption\RSA.cs" />
-    <Compile Include="Log\Log.cs" />
+    <Compile Include="Data\DPAPI.cs" />
+    <Compile Include="Data\AES.cs" />
+    <Compile Include="Data\Generate.cs" />
+    <Compile Include="Data\Transform.cs" />
+    <Compile Include="Data\RSA.cs" />
+    <Compile Include="Log\LogHandler.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Notification\NotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -118,7 +118,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Registry\RegistryHandler.cs" />
-    <Compile Include="Shutdown\ShutdownHandler.cs" />
+    <Compile Include="Power\Power.cs" />
     <Compile Include="User\UserData.cs" />
     <Compile Include="User\UserHandler.cs" />
   </ItemGroup>
