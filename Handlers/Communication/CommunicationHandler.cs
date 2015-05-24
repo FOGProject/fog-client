@@ -272,7 +272,7 @@ namespace FOG.Handlers
             try
             {
                 var token = File.ReadAllBytes(filePath);
-                token = Data.DPAPI.UnProtectData(token, DataProtectionScope.CurrentUser);
+                token = Data.DPAPI.UnProtectData(token, true);
                 return token;
             }
             catch (Exception ex)
@@ -288,7 +288,7 @@ namespace FOG.Handlers
         {
             try
             {
-                token = Data.DPAPI.ProtectData(token, DataProtectionScope.CurrentUser);
+                token = Data.DPAPI.ProtectData(token, true);
                 File.WriteAllBytes(filePath, token);    
             }
             catch (Exception ex)

@@ -29,22 +29,22 @@ namespace FOG.Handlers.Data
         /// Securly protect bytes by using local windows credentials
         /// </summary>
         /// <param name="data">The bytes to protect</param>
-        /// <param name="scope">Who can unprotect the data</param>
+        /// <param name="userScope">Encrypt the data as the current user (false means use the local machine)</param>
         /// <returns></returns>
-        public static byte[] ProtectData(byte[] data, DataProtectionScope scope)
+        public static byte[] ProtectData(byte[] data, bool userScope)
         {
-            return ProtectedData.Protect(data, null, scope);
+            return ProtectedData.Protect(data, null, userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
         }
 
         /// <summary>
         /// Unprotect bytes by using local windows credentials
         /// </summary>
         /// <param name="data">The bytes to unprotect</param>
-        /// <param name="scope">Who can unprotect the data</param>
+        /// <param name="userScope">Decrypt the data as the current user (false means use the local machine)</param>
         /// <returns></returns>
-        public static byte[] UnProtectData(byte[] data, DataProtectionScope scope)
+        public static byte[] UnProtectData(byte[] data, bool userScope)
         {
-            return ProtectedData.Unprotect(data, null, scope);
+            return ProtectedData.Unprotect(data, null, userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
         }
     }
 }
