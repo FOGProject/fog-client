@@ -31,7 +31,7 @@
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
-      <Custom Action="InstallCertificate" Before="InstallFinalize"></Custom>
+      <Custom Action="LaunchFile" After="InstallFiles">NOT INSTALLED</Custom>
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
     <!-- Setup the UI -->
@@ -44,6 +44,14 @@
     <Property Id="WEBADDRESS" Value="fog-server" />
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+
+    <Property Id="WixShellExecTarget" Value="[#CertificateManager.exe] install" />
+    <CustomAction Id="LaunchFile"
+      BinaryKey="WixCA"
+      DllEntry="WixShellExec"
+      Impersonate="no" 
+      Execute="deferred"/>
+    
     <CustomAction Id="InstallCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" install' Execute="deferred" Return="ignore" />
     <CustomAction Id="RemoveCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" uninstall' Execute="deferred" Return="ignore" />
 
