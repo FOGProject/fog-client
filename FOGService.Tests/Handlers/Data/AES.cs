@@ -2,10 +2,10 @@
 using FOG.Handlers;
 using FOG.Handlers.Data;
 
-namespace FOGService.Tests.Handlers
+namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
-    public class EncryptionTests
+    public class AESTests
     {
 
         [SetUp]

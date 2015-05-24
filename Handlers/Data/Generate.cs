@@ -15,6 +15,9 @@ namespace FOG.Handlers.Data
         /// </summary>
         public static int Random(RNGCryptoServiceProvider rngProvider, int min, int max)
         {
+            if (rngProvider == null) throw new ArgumentNullException("rngProvider");
+            if (min > max) throw new ArgumentException("Min is greater than max");
+
             var b = new byte[sizeof(uint)];
             rngProvider.GetBytes(b);
             var d = BitConverter.ToUInt32(b, 0) / (double)uint.MaxValue;
@@ -29,6 +32,8 @@ namespace FOG.Handlers.Data
         /// </summary>
         public static string Password(int length)
         {
+            if (length <= 0) return null;
+
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[length];
             var random = new RNGCryptoServiceProvider();

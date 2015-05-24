@@ -19,8 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Eventing.Reader;
-using System.Security.Cryptography.X509Certificates;
 using FOG.Handlers;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
@@ -61,11 +59,7 @@ namespace FOG
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
 
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
-            while (CommunicationHandler.Authenticate());
-            Console.ReadLine();
-            //InteractiveShell();
+            InteractiveShell();
         }
 
         private static void InteractiveShell()
@@ -130,9 +124,7 @@ namespace FOG
             }
 
             else
-            {
                 LogHandler.Log(Name, "Unknown command");
-            }
 
             return false;
         }

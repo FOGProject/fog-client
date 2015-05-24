@@ -103,22 +103,31 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Creates an md5 hash of a file
-        ///     <param name="filePath">The path to the file</param>
-        ///     <returns>The md5 hash of the given file</returns>
+        ///     Creates an md5 hash of bytes
+        ///     <param name="data">The bytes to hash</param>
+        ///     <returns></returns>
         /// </summary>
-        public static string GetMD5Hash(string filePath)
+        public static string MD5Hash(byte[] data)
         {
-            if (!File.Exists(filePath)) return "";
+            if (data == null) return null;
 
             var sBuilder = new StringBuilder();
             var md5 = new MD5CryptoServiceProvider();
-            var bytes = File.ReadAllBytes(filePath);
-            var result = md5.ComputeHash(bytes);
+            var result = md5.ComputeHash(data);
             foreach (var hashInt in result)
                 sBuilder.Append(hashInt.ToString("x2"));
 
             return sBuilder.ToString();
+        }
+
+        /// <summary>
+        ///     Creates an md5 hash of a file
+        ///     <param name="filePath">The path to the file</param>
+        ///     <returns></returns>
+        /// </summary>
+        public static string MD5Hash(string filePath)
+        {
+            return !File.Exists(filePath) ? null : MD5Hash(File.ReadAllBytes(filePath));
         }
     }
 }
