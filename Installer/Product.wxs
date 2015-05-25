@@ -31,7 +31,8 @@
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
-      <Custom Action="LaunchFile" After="InstallFiles">NOT INSTALLED</Custom>
+      <Custom Action="InstallCert" After="InstallFiles">NOT REMOVE="ALL"</Custom>
+      <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
     <!-- Setup the UI -->
@@ -45,15 +46,10 @@
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
-    <Property Id="WixShellExecTarget" Value="[#CertificateManager.exe] install" />
-    <CustomAction Id="LaunchFile"
-      BinaryKey="WixCA"
-      DllEntry="WixShellExec"
-      Impersonate="no" 
-      Execute="deferred"/>
-    
-    <CustomAction Id="InstallCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" install' Execute="deferred" Return="ignore" />
-    <CustomAction Id="RemoveCertificate" Impersonate="no" Directory="TARGETDIR" ExeCommand='"[INSTALLLOCATION]CertificateManager.exe" uninstall' Execute="deferred" Return="ignore" />
+    <Binary Id="SetupHelper.CA.dll" src="..\bin\SetupHelper.CA.dll" />
+    <CustomAction Id="InstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="InstallCert" />
+    <CustomAction Id="UninstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="UninstallCert" />
+
 
     <UIRef Id="DialogStructure" />
     <!-- Configure what to install -->

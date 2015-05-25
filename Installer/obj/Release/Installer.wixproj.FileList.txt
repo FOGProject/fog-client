@@ -1,9 +1,0 @@
-obj\Release\DialogStructure.wixobj
-obj\Release\Dialog_Config.wixobj
-obj\Release\Files.wixobj
-obj\Release\Product.wixobj
-obj\Release\Installer.wixproj.BindContentsFileListnull.txt
-obj\Release\Installer.wixproj.BindOutputsFileListnull.txt
-obj\Release\Installer.wixproj.BindBuiltOutputsFileListnull.txt
-D:\fog\client\bin\FOGService.msi
-D:\fog\client\bin\FOGService.wixpdb

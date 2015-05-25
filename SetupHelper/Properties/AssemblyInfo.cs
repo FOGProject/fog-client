@@ -5,12 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CertificateManager")]
+[assembly: AssemblyTitle("SetupHelper")]
 [assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("FOG")]
-[assembly: AssemblyProduct("FOG:CertificateManager")]
-[assembly: AssemblyCopyright("Copyright © FOG 2015")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("SetupHelper")]
+[assembly: AssemblyCopyright("Copyright ©  2015")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("53b1a148-2507-4d36-b286-43db3dc65ab7")]
+[assembly: Guid("03ca71ed-16de-4476-af19-fac0aa83f038")]
 
 // Version information for an assembly consists of the following four values:
 //
