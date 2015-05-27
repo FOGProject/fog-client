@@ -80,7 +80,7 @@ namespace FOG.Modules.HostnameChanger
         protected override void DoWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
+            var taskResponse = Middleware.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
             LogHandler.Debug(Name, "AD Settings");
             LogHandler.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));

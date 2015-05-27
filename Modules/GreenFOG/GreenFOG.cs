@@ -38,12 +38,12 @@ namespace FOG.Modules.GreenFOG
         protected override void DoWork()
         {
             //Get actions
-            var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
+            var tasksResponse = Middleware.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (tasksResponse.Error) return;
             
-            var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
+            var tasks = Middleware.ParseDataArray(tasksResponse, "#task", false);
 
             //Filter existing tasks
             tasks = FilterTasks(tasks);

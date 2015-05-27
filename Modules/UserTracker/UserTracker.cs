@@ -44,13 +44,13 @@ namespace FOG.Modules.UserTracker
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in
                 if (!_usernames.Contains(username))
-                    CommunicationHandler.Contact(string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Dns.GetHostName(), username), true);
+                    Middleware.Contact(string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Dns.GetHostName(), username), true);
                 else
                     _usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
             foreach (var username in _usernames)
-                CommunicationHandler.Contact(string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Dns.GetHostName(), username), true);
+                Middleware.Contact(string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Dns.GetHostName(), username), true);
 
             _usernames = newUsernames;
         }

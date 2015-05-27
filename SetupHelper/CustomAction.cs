@@ -24,9 +24,9 @@ namespace SetupHelper
 
             var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            CommunicationHandler.ServerAddress = CommunicationHandler.ServerAddress.Replace("https://", "http://");
+            Middleware.ServerAddress = Middleware.ServerAddress.Replace("https://", "http://");
             var keyPath = string.Format("{0}ca.cert.der", tempDirectory);
-            var downloaded = CommunicationHandler.DownloadFile("/management/other/ca.cert.der", keyPath);
+            var downloaded = Middleware.DownloadFile("/management/other/ca.cert.der", keyPath);
             if (!downloaded)
             {
                 DisplayMSIError(session, "Failed to download CA certificate");

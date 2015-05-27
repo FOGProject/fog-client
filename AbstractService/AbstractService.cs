@@ -36,7 +36,7 @@ namespace FOG
         public virtual void Start()
         {
             // Only start if a valid server address is present
-            if (string.IsNullOrEmpty(CommunicationHandler.ServerAddress)) return;
+            if (string.IsNullOrEmpty(Middleware.ServerAddress)) return;
             _moduleThread.Start();
         }
 

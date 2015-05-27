@@ -55,7 +55,7 @@ namespace FOG
             LogHandler.Verbose = true;
 
             LogHandler.PaddedHeader("FOG Console");
-            CommunicationHandler.GetAndSetServerAddress();
+            Middleware.GetAndSetServerAddress();
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
 
@@ -89,25 +89,25 @@ namespace FOG
 
             // Check custom commands
             else if (command[0].Equals("authenticate"))
-                CommunicationHandler.Authenticate();
+                Middleware.Authenticate();
             else if (command[0].Equals("info"))
             {
-                LogHandler.Log(Name, "Server: " + CommunicationHandler.ServerAddress);
-                LogHandler.Log(Name, "MAC: " + CommunicationHandler.GetMacAddresses());
+                LogHandler.Log(Name, "Server: " + Middleware.ServerAddress);
+                LogHandler.Log(Name, "MAC: " + Middleware.GetMacAddresses());
             }
 
             else if (command.Length == 3 && command[0].Equals("configure"))
             {
                 if (command[1].Equals("server"))
-                    CommunicationHandler.ServerAddress = command[2];
+                    Middleware.ServerAddress = command[2];
                 else if (command[1].Equals("mac"))
-                    CommunicationHandler.TestMAC = command[2];
+                    Middleware.TestMAC = command[2];
             }
 
             else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
             {
-                CommunicationHandler.ServerAddress = Server;
-                CommunicationHandler.TestMAC = MAC;
+                Middleware.ServerAddress = Server;
+                Middleware.TestMAC = MAC;
             }
 
             else if (command.Length == 1 && command[0].Equals("help"))

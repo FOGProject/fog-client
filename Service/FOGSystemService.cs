@@ -41,7 +41,7 @@ namespace FOG
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Authentication");
             LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
-            if (!CommunicationHandler.Authenticate()) return;
+            if (!Middleware.Authenticate()) return;
             LogHandler.NewLine();
 
             base.Start();
@@ -110,7 +110,7 @@ namespace FOG
 
         protected override int? GetSleepTime()
         {
-            var response = CommunicationHandler.GetResponse("/management/index.php?node=client&sub=configure");
+            var response = Middleware.GetResponse("/management/index.php?node=client&sub=configure");
 
             if (response.Error || response.IsFieldValid("#sleep")) return null;
 

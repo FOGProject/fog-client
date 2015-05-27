@@ -45,7 +45,7 @@ namespace FOG.Modules.DisplayManager
             if (_display.PopulatedSettings)
             {
                 //Get task info
-                var taskResponse = CommunicationHandler.GetResponse("/service/displaymanager.php", true);
+                var taskResponse = Middleware.GetResponse("/service/displaymanager.php", true);
 
                 if (taskResponse.Error) return;
 

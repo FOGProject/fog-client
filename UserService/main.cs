@@ -43,7 +43,7 @@ namespace FOG
             AppDomain.CurrentDomain.UnhandledException += LogHandler.UnhandledException;
 
             LogHandler.Log(LogName, "Initializing");
-            if (!CommunicationHandler.GetAndSetServerAddress()) return;
+            if (!Middleware.GetAndSetServerAddress()) return;
 
 
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))

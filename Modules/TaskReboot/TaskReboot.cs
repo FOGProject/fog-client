@@ -39,7 +39,7 @@ namespace FOG.Modules.TaskReboot
         protected override void DoWork()
         {
             //Get task info
-            var taskResponse = CommunicationHandler.GetResponse("/service/jobs.php", true);
+            var taskResponse = Middleware.GetResponse("/service/jobs.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (taskResponse.Error) return;

@@ -43,7 +43,7 @@ namespace FOG.Modules.AutoLogOut
             if (UserHandler.IsUserLoggedIn())
             {
                 //Get task info
-                var taskResponse = CommunicationHandler.GetResponse("/service/autologout.php", true);
+                var taskResponse = Middleware.GetResponse("/service/autologout.php", true);
 
                 if (taskResponse.Error) return;
                 var timeOut = GetTimeOut(taskResponse);
