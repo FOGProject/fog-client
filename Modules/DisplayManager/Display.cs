@@ -53,7 +53,7 @@ namespace FOG.Modules.DisplayManager
             if (User32.EnumDisplaySettings(null, User32.EnumCurrentSettings, ref Configuration) != 0)
                 return true;
 
-            LogHandler.Error(LogName, "Unable to load display settings");
+            Log.Error(LogName, "Unable to load display settings");
             return false;
         }
 
@@ -74,22 +74,22 @@ namespace FOG.Modules.DisplayManager
             Configuration.dmDeviceName = device;
 
             //Test changing the resolution first
-            LogHandler.Log(LogName, "Testing resolution to ensure it is compatible");
+            Log.Entry(LogName, "Testing resolution to ensure it is compatible");
             var changeStatus = User32.ChangeDisplaySettings(ref Configuration, User32.CdsTest);
 
             if (changeStatus.Equals(User32.DispChangeFailed))
-                LogHandler.Log(LogName, "Failed");
+                Log.Entry(LogName, "Failed");
             else
             {
-                LogHandler.Log(LogName, "Changing resolution");
+                Log.Entry(LogName, "Changing resolution");
                 changeStatus = User32.ChangeDisplaySettings(ref Configuration, User32.CdsUpdateregistry);
 
                 if (changeStatus.Equals(User32.DispChangeSuccessful))
-                    LogHandler.Log(LogName, "Success");
+                    Log.Entry(LogName, "Success");
                 else if (changeStatus.Equals(User32.DispChangeRestart))
-                    LogHandler.Log(LogName, "Success, requires reboot");
+                    Log.Entry(LogName, "Success, requires reboot");
                 else if (changeStatus.Equals(User32.DispChangeFailed))
-                    LogHandler.Log(LogName, "Failed");
+                    Log.Entry(LogName, "Failed");
             }
         }
     }

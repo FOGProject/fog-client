@@ -75,8 +75,8 @@ namespace FOG.Handlers.Middleware
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not parse data");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not parse data");
+                Log.Error(LogName, ex);
             }
         }
 

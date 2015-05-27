@@ -43,7 +43,7 @@ namespace FOG.Handlers.Middleware
             if (RegistryHandler.GetSystemSetting("HTTPS") == null || RegistryHandler.GetSystemSetting("WebRoot") == null ||
                 string.IsNullOrEmpty(RegistryHandler.GetSystemSetting("Server")))
             {
-                LogHandler.Error(LogName, "Invalid parameters");
+                Log.Error(LogName, "Invalid parameters");
                 return false;
             }
 
@@ -88,8 +88,8 @@ namespace FOG.Handlers.Middleware
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not get MAC addresses");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not get MAC addresses");
+                Log.Error(LogName, ex);
             }
 
             return macs;

@@ -47,15 +47,15 @@ namespace FOG.Modules.SnapinClient
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
-                LogHandler.Log(Name, "Snapin Found:");
-                LogHandler.Log(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
-                LogHandler.Log(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
-                LogHandler.Log(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
-                LogHandler.Log(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
-                LogHandler.Log(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
-                LogHandler.Log(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
-                LogHandler.Log(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
-                LogHandler.Log(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
+                Log.Entry(Name, "Snapin Found:");
+                Log.Entry(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
+                Log.Entry(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
+                Log.Entry(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
+                Log.Entry(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
+                Log.Entry(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
+                Log.Entry(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
+                Log.Entry(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
+                Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
 
                 var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
@@ -98,11 +98,11 @@ namespace FOG.Modules.SnapinClient
 
             try
             {
-                LogHandler.Log(Name, "Starting snapin...");
+                Log.Entry(Name, "Starting snapin...");
                 process.Start();
                 process.WaitForExit();
-                LogHandler.Log(Name, "Snapin finished");
-                LogHandler.Log(Name, "Return Code: " + process.ExitCode);
+                Log.Entry(Name, "Snapin finished");
+                Log.Entry(Name, "Return Code: " + process.ExitCode);
                 
                 NotificationHandler.Notifications.Add(new Notification(
                     string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
@@ -112,8 +112,8 @@ namespace FOG.Modules.SnapinClient
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Could not start snapin");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Could not start snapin");
+                Log.Error(Name, ex);
             }
 
             return "-1";

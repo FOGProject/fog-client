@@ -60,11 +60,11 @@ namespace FOG.Modules.DisplayManager
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(Name, ex);
+                    Log.Error(Name, ex);
                 }
             }
             else
-                LogHandler.Error(Name, "Settings are not populated; will not attempt to change resolution");
+                Log.Error(Name, "Settings are not populated; will not attempt to change resolution");
         }
 
         //Change the resolution of the screen
@@ -75,21 +75,21 @@ namespace FOG.Modules.DisplayManager
                 !height.Equals(_display.Configuration.dmPelsHeight) &&
                 !refresh.Equals(_display.Configuration.dmDisplayFrequency))
             {
-                LogHandler.Log(Name, "Resolution is already configured correctly");
+                Log.Entry(Name, "Resolution is already configured correctly");
                 return;
             }
 
             try
             {
-                LogHandler.Log(Name, string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth, _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
-                LogHandler.Log(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
-                LogHandler.Log(Name, "Display name: " + device);
+                Log.Entry(Name, string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth, _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
+                Log.Entry(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
+                Log.Entry(Name, "Display name: " + device);
 
                 _display.ChangeResolution(device, width, height, refresh);
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, ex);
 
             }
         }

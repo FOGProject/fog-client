@@ -30,7 +30,7 @@ namespace FOG
         /// </summary>
         private static void Main()
         {
-            AppDomain.CurrentDomain.UnhandledException += LogHandler.UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
             ServiceBase.Run(new Service());
         }
     }

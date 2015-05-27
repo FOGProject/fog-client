@@ -43,7 +43,7 @@ namespace FOG.Modules
         /// </summary>
         public void Start()
         {
-            LogHandler.Log(Name, "Running...");
+            Log.Entry(Name, "Running...");
             if (IsEnabled())
                 DoWork();
         }

@@ -33,24 +33,24 @@ namespace FOG
             var service = new ServiceController("fogservice");
             const string logName = "Update Helper";
 
-            LogHandler.Log(logName, "Shutting down service...");
+            Log.Entry(logName, "Shutting down service...");
             //Stop the service
             if (service.Status == ServiceControllerStatus.Running)
                 service.Stop();
 
             service.WaitForStatus(ServiceControllerStatus.Stopped);
 
-            LogHandler.Log(logName, "Killing remaining FOG processes...");
+            Log.Entry(logName, "Killing remaining FOG processes...");
             if (Process.GetProcessesByName("FOGService").Length > 0)
                 foreach (var process in Process.GetProcessesByName("FOGService"))
                     process.Kill();
 
-            LogHandler.Log(logName, "Applying MSI...");
+            Log.Entry(logName, "Applying MSI...");
             ApplyUpdates();
 
             //Start the service
 
-            LogHandler.Log(logName, "Starting service...");
+            Log.Entry(logName, "Starting service...");
             service.Start();
             service.WaitForStatus(ServiceControllerStatus.Running);
             service.Dispose();
@@ -84,7 +84,7 @@ namespace FOG
             process.StartInfo.FileName = "msiexec";
 
 
-            LogHandler.Log(logName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+            Log.Entry(logName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
             process.Start();
             process.WaitForExit();
         }

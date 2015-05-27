@@ -25,9 +25,8 @@ namespace FOG.Handlers
     /// <summary>
     ///     Handle all interaction with the log file
     /// </summary>
-    public static class LogHandler
+    public static class Log
     {
-
         public enum Level
         {
             Normal,
@@ -43,7 +42,7 @@ namespace FOG.Handlers
 
         private const long DefaultMaxLogSize = 502400;
         private const int HeaderLength = 78;
-        private const string LogName = "LogHandler";
+        private const string LogName = "Log";
         private static bool _initialized = Initialize();
 
         public static string FilePath { get; set; }
@@ -61,12 +60,12 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Log a message
+        ///     Entry a message
         /// </summary>
         /// <param name="level">The logging level</param>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
-        public static void Log(Level level, string caller, string message)
+        public static void Entry(Level level, string caller, string message)
         {
             #if DEBUG
             #else
@@ -83,28 +82,28 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Log a message
+        ///     Entry a message
         /// </summary>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
-        public static void Log(string caller, string message)
+        public static void Entry(string caller, string message)
         {
-            Log(Level.Normal, caller, message);
+            Entry(Level.Normal, caller, message);
         }
 
         public static void Error(string caller, string message)
         {
-            Log(Level.Error, caller, message);
+            Entry(Level.Error, caller, message);
         }
 
         public static void Error(string caller, Exception ex)
         {
-            Log(Level.Error, caller, ex.Message);
+            Entry(Level.Error, caller, ex.Message);
         }
 
         public static void Debug(string caller, string message)
         {
-            Log(Level.Debug, caller, message);
+            Entry(Level.Debug, caller, message);
         }       
 
         /// <summary>
@@ -226,9 +225,9 @@ namespace FOG.Handlers
 
         public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {
-            Log(LogName, "Unhandled exception caught");
-            Log(LogName, string.Format("    Terminating: {0}", ex.IsTerminating));
-            Log(LogName, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
+            Entry(LogName, "Unhandled exception caught");
+            Entry(LogName, string.Format("    Terminating: {0}", ex.IsTerminating));
+            Entry(LogName, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
         }
 
         /// <summary>

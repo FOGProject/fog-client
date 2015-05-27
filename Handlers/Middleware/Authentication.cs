@@ -53,7 +53,7 @@ namespace FOG.Handlers.Middleware
 
                 if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
-                LogHandler.Log(LogName, "Cert OK");
+                Log.Entry(LogName, "Cert OK");
 
                 var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
                 var enToken = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, token));
@@ -63,7 +63,7 @@ namespace FOG.Handlers.Middleware
 
                 if (!response.Error)
                 {
-                    LogHandler.Log(LogName, "Authenticated");
+                    Log.Entry(LogName, "Authenticated");
                     SetSecurityToken("token.dat", Data.Transform.HexStringToByteArray(response.GetField("#token")));
                     return true;
                 } 
@@ -74,8 +74,8 @@ namespace FOG.Handlers.Middleware
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not authenticate");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not authenticate");
+                Log.Error(LogName, ex);
             }
 
             return false;
@@ -91,8 +91,8 @@ namespace FOG.Handlers.Middleware
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not get security token");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not get security token");
+                Log.Error(LogName, ex);
             }
 
             return new byte[0];
@@ -107,8 +107,8 @@ namespace FOG.Handlers.Middleware
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not save security token");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not save security token");
+                Log.Error(LogName, ex);
             }
         }
 

@@ -39,11 +39,11 @@ namespace FOG
 
             _servicePipe.Start();
 
-            LogHandler.NewLine();
-            LogHandler.PaddedHeader("Authentication");
-            LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+            Log.NewLine();
+            Log.PaddedHeader("Authentication");
+            Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
             if (!Authentication.HandShake()) return;
-            LogHandler.NewLine();
+            Log.NewLine();
 
             base.Start();
         }
@@ -121,12 +121,12 @@ namespace FOG
                 if (sleepTime >= DefaultSleepTime)
                     return sleepTime;
 
-                LogHandler.Log(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to parse sleep time");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to parse sleep time");
+                Log.Error(Name, ex);
             }
             return null;
         }

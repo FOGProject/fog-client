@@ -110,7 +110,7 @@
     <Compile Include="Data\Generate.cs" />
     <Compile Include="Data\Transform.cs" />
     <Compile Include="Data\RSA.cs" />
-    <Compile Include="Log\LogHandler.cs" />
+    <Compile Include="Log\Log.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Notification\NotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

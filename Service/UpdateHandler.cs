@@ -64,7 +64,7 @@ namespace FOG
                 KillSubProcesses();
 
                 //Launch the updater
-                LogHandler.Log(LogName, "Spawning update helper");
+                Log.Entry(LogName, "Spawning update helper");
 
                 var process = new Process
                 {
@@ -79,8 +79,8 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Unable to perform update");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Unable to perform update");
+                Log.Error(LogName, ex);
             }
         }
     }

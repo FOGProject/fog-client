@@ -52,10 +52,10 @@ namespace FOG
                 // Stop looping as soon as a shutdown or update pending
                 foreach (var module in _modules.TakeWhile(module => !Power.ShutdownPending && !Power.UpdatePending))
                 {
-                    // Log file formatting
-                    LogHandler.NewLine();
-                    LogHandler.PaddedHeader(module.Name);
-                    LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+                    // Entry file formatting
+                    Log.NewLine();
+                    Log.PaddedHeader(module.Name);
+                    Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
 
                     try
                     {
@@ -63,12 +63,12 @@ namespace FOG
                     }
                     catch (Exception ex)
                     {
-                        LogHandler.Error(Name, ex);
+                        Log.Error(Name, ex);
                     }
 
-                    // Log file formatting
-                    LogHandler.Divider();
-                    LogHandler.NewLine();
+                    // Entry file formatting
+                    Log.Divider();
+                    Log.NewLine();
                 }
 
 
@@ -78,7 +78,7 @@ namespace FOG
                 // Once all modules have been run, sleep for the set time
                 var sleepTime = GetSleepTime() ?? DefaultSleepTime;
                 RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
-                LogHandler.Log(Name, string.Format("Sleeping for {0} seconds", sleepTime));
+                Log.Entry(Name, string.Format("Sleeping for {0} seconds", sleepTime));
                 Thread.Sleep(sleepTime * 1000);
             } 
         }
@@ -93,7 +93,7 @@ namespace FOG
         /// </summary>
         public virtual void Stop()
         {
-            LogHandler.Log(Name, "Stop requested");
+            Log.Entry(Name, "Stop requested");
             _moduleThread.Abort();
         }
 

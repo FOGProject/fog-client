@@ -45,14 +45,14 @@ namespace FOG.Modules.TaskReboot
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (response.Error) return;
             
-            LogHandler.Log(Name, "Restarting computer for task");
+            Log.Entry(Name, "Restarting computer for task");
 
             if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
                 Power.Restart(Name, 30);
 
             else if (!response.Error && !_notifiedUser)
             {
-                LogHandler.Log(Name, "User is currently logged in, will try again later");
+                Log.Entry(Name, "User is currently logged in, will try again later");
                 
                 NotificationHandler.Notifications.Add(new Notification("Please log off",
                     string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 

@@ -39,14 +39,14 @@ namespace FOG
         public static void Main(string[] args)
         {
             //Initialize everything
-            LogHandler.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
-            AppDomain.CurrentDomain.UnhandledException += LogHandler.UnhandledException;
+            Log.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
+            AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
 
-            LogHandler.Log(LogName, "Initializing");
+            Log.Entry(LogName, "Initializing");
 
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
             {
-                LogHandler.Log(LogName, "Update.info found, exiting program");
+                Log.Entry(LogName, "Update.info found, exiting program");
                 Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
                 Environment.Exit(0);
             }

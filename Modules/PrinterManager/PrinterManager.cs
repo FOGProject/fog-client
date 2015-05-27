@@ -83,7 +83,7 @@ namespace FOG.Modules.PrinterManager
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, ex);
                 return new List<Printer>();
             }
 

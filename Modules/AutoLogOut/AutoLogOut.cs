@@ -50,8 +50,8 @@ namespace FOG.Modules.AutoLogOut
                 var timeOut = GetTimeOut(taskResponse);
                 if (timeOut <= 0) return;
 
-                LogHandler.Log(Name, string.Format("Time set to {0} seconds", timeOut));
-                LogHandler.Log(Name, string.Format("Inactive for {0} seconds", UserHandler.GetInactivityTime()));
+                Log.Entry(Name, string.Format("Time set to {0} seconds", timeOut));
+                Log.Entry(Name, string.Format("Inactive for {0} seconds", UserHandler.GetInactivityTime()));
                 
                 if (UserHandler.GetInactivityTime() < timeOut) return;
                 NotificationHandler.Notifications.Add(new Notification("You are about to be logged off",
@@ -64,7 +64,7 @@ namespace FOG.Modules.AutoLogOut
             }
             else
             {
-                LogHandler.Log(Name, "No user logged in");
+                Log.Entry(Name, "No user logged in");
             }
         }
 
@@ -77,12 +77,12 @@ namespace FOG.Modules.AutoLogOut
                 if (timeOut >= _minimumTime)
                     return timeOut;
 
-                LogHandler.Log(Name, "Time set is less than 1 minute");
+                Log.Entry(Name, "Time set is less than 1 minute");
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to parse time set");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to parse time set");
+                Log.Error(Name, ex);
             }
 
             return 0;

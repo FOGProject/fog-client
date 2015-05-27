@@ -83,13 +83,13 @@ namespace FOG.Modules.HostnameChanger
             //Get task info
             var taskResponse = Communication.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
-            LogHandler.Debug(Name, "AD Settings");
-            LogHandler.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
-            LogHandler.Debug(Name, "   AD:" + taskResponse.GetField("#AD"));
-            LogHandler.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
-            LogHandler.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
-            LogHandler.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
-            LogHandler.Debug(Name, "   ADPass:" + taskResponse.GetField("#ADPass"));
+            Log.Debug(Name, "AD Settings");
+            Log.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
+            Log.Debug(Name, "   AD:" + taskResponse.GetField("#AD"));
+            Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
+            Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
+            Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
+            Log.Debug(Name, "   ADPass:" + taskResponse.GetField("#ADPass"));
 
             if (taskResponse.Error) return;
 
@@ -103,27 +103,27 @@ namespace FOG.Modules.HostnameChanger
         //Rename the computer and remove it from active directory
         private void RenameComputer(Response response)
         {
-            LogHandler.Log(Name, "Checking Hostname");
+            Log.Entry(Name, "Checking Hostname");
             if (!response.IsFieldValid("#hostname"))
             {
-                LogHandler.Error(Name, "Hostname is not specified");
+                Log.Error(Name, "Hostname is not specified");
                 return;
             }
             if (Environment.MachineName.ToLower().Equals(response.GetField("#hostname").ToLower()))
             {
-                LogHandler.Log(Name, "Hostname is correct");
+                Log.Entry(Name, "Hostname is correct");
                 return;
             }
             
-            LogHandler.Log(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
+            Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
 
             if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
             {
-                LogHandler.Log(Name, "Unregistering computer");
+                Log.Entry(Name, "Unregistering computer");
                 //First unjoin it from active directory
                 UnRegisterComputer(response);
 
-                LogHandler.Log(Name, "Updating registry");
+                Log.Entry(Name, "Updating registry");
 
                 RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
                     response.GetField("#hostname"));
@@ -136,7 +136,7 @@ namespace FOG.Modules.HostnameChanger
             }
             else if(!_notifiedUser)
             {
-                LogHandler.Log(Name, "User is currently logged in, will try again later");
+                Log.Entry(Name, "User is currently logged in, will try again later");
 
                 NotificationHandler.Notifications.Add(new Notification("Please log off",
                     string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
@@ -149,17 +149,17 @@ namespace FOG.Modules.HostnameChanger
         //Add a host to active directory
         private void RegisterComputer(Response response)
         {
-            LogHandler.Log(Name, "Registering host with active directory");
+            Log.Entry(Name, "Registering host with active directory");
 
             if (response.GetField("#AD") != "1")
             {
-                LogHandler.Error(Name, "Active directory joining disabled for this host");
+                Log.Error(Name, "Active directory joining disabled for this host");
                 return;
             }
 
             if (!response.IsFieldValid("ADDom") && !response.IsFieldValid("ADUser") && !response.IsFieldValid("ADPass"))
             {
-                LogHandler.Error(Name, "Required Domain Joining information is missing");
+                Log.Error(Name, "Required Domain Joining information is missing");
                 return;
             }
 
@@ -171,8 +171,8 @@ namespace FOG.Modules.HostnameChanger
             else if (returnCode.Equals(2))
                 returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-            // Log the results
-            LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
+            // Entry the results
+            Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
                 ? string.Format("{0}, code = ", _returnCodes[returnCode])
                 : "Unknown Return Code: "), returnCode));
 
@@ -193,11 +193,11 @@ namespace FOG.Modules.HostnameChanger
         //Remove the host from active directory
         private void UnRegisterComputer(Response response)
         {
-            LogHandler.Log(Name, "Removing host from active directory");
+            Log.Entry(Name, "Removing host from active directory");
 
             if (!response.IsFieldValid("#ADUser") || ! response.IsFieldValid("#ADPass"))
             {
-                LogHandler.Error(Name, "Required Domain information is missing");
+                Log.Error(Name, "Required Domain information is missing");
                 return;
             }
 
@@ -206,7 +206,7 @@ namespace FOG.Modules.HostnameChanger
                 var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"), 
                     response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
 
-                LogHandler.Log(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
+                Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
                     ? string.Format("{0}, code = ", _returnCodes[returnCode])
                     : "Unknown Return Code: "), returnCode));
 
@@ -215,23 +215,23 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, ex);
             }
         }
 
         //Active a computer with a product key
         private void ActivateComputer(Response response)
         {
-            LogHandler.Log(Name, "Activing host with product key");
+            Log.Entry(Name, "Activing host with product key");
 
             if (!response.IsFieldValid("#Key"))
             {
-                LogHandler.Error(Name, "Windows activation disabled");
+                Log.Error(Name, "Windows activation disabled");
                 return;
             }
             if (response.GetField("#Key").Length != 29)
             {
-                LogHandler.Error(Name, "Invalid product key");
+                Log.Error(Name, "Invalid product key");
                 return;
             }
 
@@ -262,7 +262,7 @@ namespace FOG.Modules.HostnameChanger
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, ex);
             }
         }
     }

@@ -13,7 +13,7 @@ namespace FOGService.Tests.Handlers.Data
         [SetUp]
         public void Init()
         {
-            LogHandler.Output = LogHandler.Mode.Console;
+            Log.Output = Log.Mode.Console;
         }
 
         [Test]

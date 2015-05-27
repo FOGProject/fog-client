@@ -60,13 +60,13 @@ namespace FOG.Modules.GreenFOG
             foreach (var task in existingTasks)
                 if (!newTasks.Contains(task.Name))
                 {
-                    LogHandler.Log(Name, "Delete task " + task.Name);
+                    Log.Entry(Name, "Delete task " + task.Name);
                     taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
                     //If the existing task is not in the new list delete it
                 }
                 else
                 {
-                    LogHandler.Log(Name, "Removing " + task.Name + " from queue");
+                    Log.Entry(Name, "Removing " + task.Name + " from queue");
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
 
@@ -104,12 +104,12 @@ namespace FOG.Modules.GreenFOG
                 try
                 {
                     taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
-                    LogHandler.Log(Name, "Registered task: " + task);
+                    Log.Entry(Name, "Registered task: " + task);
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(Name, "Could not register task: " + task);
-                    LogHandler.Error(Name, ex);
+                    Log.Error(Name, "Could not register task: " + task);
+                    Log.Error(Name, ex);
                 }
             }
         }

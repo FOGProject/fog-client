@@ -40,7 +40,7 @@ namespace FOG.Handlers.Middleware
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            LogHandler.Log(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
+            Log.Entry(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
 
             using (var webClient = new WebClient())
             {
@@ -54,12 +54,12 @@ namespace FOG.Handlers.Middleware
                     foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                     {
                         messageFound = true;
-                        LogHandler.Log(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                        Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
                         break;
                     }
 
                     if (!messageFound)
-                        LogHandler.Log(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+                        Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
 
 
                     if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse);
@@ -68,8 +68,8 @@ namespace FOG.Handlers.Middleware
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(LogName, "Could not contact FOG server");
-                    LogHandler.Error(LogName, ex);
+                    Log.Error(LogName, "Could not contact FOG server");
+                    Log.Error(LogName, ex);
                 }                
             }
             return new Response();
@@ -99,7 +99,7 @@ namespace FOG.Handlers.Middleware
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            LogHandler.Log(LogName, "URL: " + Configuration.ServerAddress + postfix);
+            Log.Entry(LogName, "URL: " + Configuration.ServerAddress + postfix);
 
             using (var webClient = new WebClient())
             {
@@ -110,8 +110,8 @@ namespace FOG.Handlers.Middleware
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(LogName, "Could not contact FOG server");
-                    LogHandler.Error(LogName, ex);
+                    Log.Error(LogName, "Could not contact FOG server");
+                    Log.Error(LogName, ex);
                 }               
             }
 
@@ -120,7 +120,7 @@ namespace FOG.Handlers.Middleware
 
         public static Response Post(string postfix, string param)
         {
-            LogHandler.Log(LogName, "POST URL: " + Configuration.ServerAddress + postfix);
+            Log.Entry(LogName, "POST URL: " + Configuration.ServerAddress + postfix);
             try
             {
                 using (var webClient = new WebClient())
@@ -128,7 +128,7 @@ namespace FOG.Handlers.Middleware
                     webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
 
                     var rawResponse = webClient.UploadString(Configuration.ServerAddress + postfix, param);
-                    LogHandler.Debug(LogName, rawResponse);
+                    Log.Debug(LogName, rawResponse);
 
                     rawResponse = Authentication.Decrypt(rawResponse);
 
@@ -136,20 +136,20 @@ namespace FOG.Handlers.Middleware
                     foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                     {
                         messageFound = true;
-                        LogHandler.Log(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                        Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
                         break;
                     }
 
                     if (!messageFound)
-                        LogHandler.Log(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+                        Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
 
                     return new Response(rawResponse);
                 }
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Failed to POST data");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Failed to POST data");
+                Log.Error(LogName, ex);
             }
 
             return null;
@@ -165,7 +165,7 @@ namespace FOG.Handlers.Middleware
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            LogHandler.Log(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
+            Log.Entry(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
            
             using (var webClient = new WebClient())
             {
@@ -176,8 +176,8 @@ namespace FOG.Handlers.Middleware
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(LogName, "Could not contact FOG server");
-                    LogHandler.Error(LogName, ex);
+                    Log.Error(LogName, "Could not contact FOG server");
+                    Log.Error(LogName, ex);
                 }               
             }
 
@@ -205,11 +205,11 @@ namespace FOG.Handlers.Middleware
 
         public static bool DownloadExternalFile(string url, string filePath)
         {
-            LogHandler.Log(LogName, string.Format("URL: {0}", url));
+            Log.Entry(LogName, string.Format("URL: {0}", url));
             
             if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(filePath))
             {
-                LogHandler.Error(LogName, "Invalid parameters");
+                Log.Error(LogName, "Invalid parameters");
                 return false;
             }
 
@@ -229,8 +229,8 @@ namespace FOG.Handlers.Middleware
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(LogName, "Could not download file");
-                    LogHandler.Error(LogName, ex);
+                    Log.Error(LogName, "Could not download file");
+                    Log.Error(LogName, ex);
                 }             
             }
 
