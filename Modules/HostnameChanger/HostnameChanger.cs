@@ -110,7 +110,7 @@ namespace FOG.Modules.HostnameChanger
             }
             if (Environment.MachineName.ToLower().Equals(response.GetField("#hostname").ToLower()))
             {
-                LogHandler.Error(Name, "Hostname is correct");
+                LogHandler.Log(Name, "Hostname is correct");
                 return;
             }
             

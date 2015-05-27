@@ -31,9 +31,65 @@
     <Content Include="license.rtf" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AbstractService\AbstractService.csproj">
+      <Name>AbstractService</Name>
+      <Project>{5f592f0c-8c91-473b-841c-29d832a533d1}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Handlers\Handlers.csproj">
+      <Name>Handlers</Name>
+      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Modules\Modules.csproj">
+      <Name>Modules</Name>
+      <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\NotificationGUI\NotificationGUI.csproj">
+      <Name>NotificationGUI</Name>
+      <Project>{c83363d0-6686-419c-aa0b-09ee999ec3ea}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
+      <Name>PipeClient</Name>
+      <Project>{8f3f2e0b-f261-4f9c-a592-2062d8a3c2bd}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
+      <Name>PipeServer</Name>
+      <Project>{df7c1145-e90c-486b-acec-543b42cf083f}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\Service\Service.csproj">
       <Name>Service</Name>
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\SetupHelper\SetupHelper.csproj">
+      <Name>SetupHelper</Name>
+      <Project>{1e34afec-035c-45a1-bbe3-4d2d7c67f5c7}</Project>
       <Private>True</Private>
       <DoNotHarvest>True</DoNotHarvest>
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>

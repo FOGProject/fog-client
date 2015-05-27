@@ -46,7 +46,7 @@
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
-    <Binary Id="SetupHelper.CA.dll" src="..\bin\SetupHelper.CA.dll" />
+    <Binary Id="SetupHelper.CA.dll" SourceFile="..\bin\SetupHelper.CA.dll" />
     <CustomAction Id="InstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="InstallCert" />
     <CustomAction Id="UninstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="UninstallCert" />
 

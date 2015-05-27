@@ -26,6 +26,7 @@
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe" />
+            <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />

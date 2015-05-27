@@ -72,7 +72,7 @@ namespace FOG
             {
                 StartInfo =
                 {
-                    Arguments = string.Format("/i \"{0}\" /quiet /USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\"", 
+                    Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\"", 
                         (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi"), 
                         useTray, https, server, webRoot)
                 }

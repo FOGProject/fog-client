@@ -37,7 +37,7 @@ namespace FOG.Modules.ClientUpdater
 
         protected override void DoWork()
         {
-            var serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?clientver");
+            var serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?client");
             var localVersion = RegistryHandler.GetSystemSetting("Version");
             try
             {
@@ -45,6 +45,9 @@ namespace FOG.Modules.ClientUpdater
                 var local = int.Parse(localVersion.Replace(".", ""));
 
                 if (server <= local) return;
+
+                if (File.Exists(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory)))
+                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));     
 
                 CommunicationHandler.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
@@ -71,15 +74,15 @@ namespace FOG.Modules.ClientUpdater
             }
             
             try
-            {
-                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe");
+            {                         
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe", true);
 
-                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe");
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe", true);
 
-                File.Move(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll");
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll", true);
             }
             catch (Exception ex)
             {
