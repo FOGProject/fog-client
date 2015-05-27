@@ -20,18 +20,18 @@
 -->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="FOG Service" Language="1033" Version="0.8.0" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
+  <Product Id="*" Name="FOG Service" Language="1033" Version="0.8.1" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
            Manufacturer="FOG">
     <Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="300" Compressed="yes"
              InstallScope="perMachine" />
     <!-- Remove old versions -->
     <Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">
       <UpgradeVersion OnlyDetect="yes" Minimum="0.0.0" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.7.9" Property="OLDERVERSIONBEINGUPGRADED"
+      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.8.0" Property="OLDERVERSIONBEINGUPGRADED"
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
-      <Custom Action="InstallCert" After="InstallFiles">NOT REMOVE="ALL"</Custom>
+      <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
