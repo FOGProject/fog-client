@@ -41,7 +41,7 @@ namespace FOG
             LogHandler.NewLine();
             LogHandler.PaddedHeader("Authentication");
             LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
-            CommunicationHandler.Authenticate();
+            if (!CommunicationHandler.Authenticate()) return;
             LogHandler.NewLine();
 
             base.Start();

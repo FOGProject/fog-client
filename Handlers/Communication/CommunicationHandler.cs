@@ -122,8 +122,7 @@ namespace FOG.Handlers
 
                     if (!response.StartsWith("#!ihc")) return ParseResponse(response);
 
-                    Authenticate();
-                    return GetResponse(postfix);
+                    return Authenticate() ? GetResponse(postfix) : new Response();
                 }
                 catch (Exception ex)
                 {
