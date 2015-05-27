@@ -20,6 +20,7 @@
 using System;
 using System.Threading;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -43,7 +44,7 @@ namespace FOG.Modules.AutoLogOut
             if (UserHandler.IsUserLoggedIn())
             {
                 //Get task info
-                var taskResponse = Middleware.GetResponse("/service/autologout.php", true);
+                var taskResponse = Communication.GetResponse("/service/autologout.php", true);
 
                 if (taskResponse.Error) return;
                 var timeOut = GetTimeOut(taskResponse);

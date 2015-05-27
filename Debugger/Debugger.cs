@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
@@ -55,7 +56,6 @@ namespace FOG
             LogHandler.Verbose = true;
 
             LogHandler.PaddedHeader("FOG Console");
-            Middleware.GetAndSetServerAddress();
             LogHandler.Log(Name, "Type help for a list of commands");
             LogHandler.NewLine();
 
@@ -89,25 +89,25 @@ namespace FOG
 
             // Check custom commands
             else if (command[0].Equals("authenticate"))
-                Middleware.Authenticate();
+                Authentication.HandShake();
             else if (command[0].Equals("info"))
             {
-                LogHandler.Log(Name, "Server: " + Middleware.ServerAddress);
-                LogHandler.Log(Name, "MAC: " + Middleware.GetMacAddresses());
+                LogHandler.Log(Name, "Server: " + Configuration.ServerAddress);
+                LogHandler.Log(Name, "MAC: " + Configuration.MACAddresses());
             }
 
             else if (command.Length == 3 && command[0].Equals("configure"))
             {
                 if (command[1].Equals("server"))
-                    Middleware.ServerAddress = command[2];
+                    Configuration.ServerAddress = command[2];
                 else if (command[1].Equals("mac"))
-                    Middleware.TestMAC = command[2];
+                    Configuration.TestMAC = command[2];
             }
 
             else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
             {
-                Middleware.ServerAddress = Server;
-                Middleware.TestMAC = MAC;
+                Configuration.ServerAddress = Server;
+                Configuration.TestMAC = MAC;
             }
 
             else if (command.Length == 1 && command[0].Equals("help"))

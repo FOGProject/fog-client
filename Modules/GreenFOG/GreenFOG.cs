@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG
@@ -38,12 +39,12 @@ namespace FOG.Modules.GreenFOG
         protected override void DoWork()
         {
             //Get actions
-            var tasksResponse = Middleware.GetResponse("/service/greenfog.php", true);
+            var response = Communication.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (tasksResponse.Error) return;
-            
-            var tasks = Middleware.ParseDataArray(tasksResponse, "#task", false);
+            if (response.Error) return;
+
+            var tasks = response.GetList("#task", false);
 
             //Filter existing tasks
             tasks = FilterTasks(tasks);

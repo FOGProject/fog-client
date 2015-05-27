@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 using FOG.Modules;
 
@@ -36,7 +37,7 @@ namespace FOG
         public virtual void Start()
         {
             // Only start if a valid server address is present
-            if (string.IsNullOrEmpty(Middleware.ServerAddress)) return;
+            if (string.IsNullOrEmpty(Configuration.ServerAddress)) return;
             _moduleThread.Start();
         }
 

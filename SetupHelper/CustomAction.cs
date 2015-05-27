@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using FOG.Handlers;
 using FOG.Handlers.Data;
+using FOG.Handlers.Middleware;
 using Microsoft.Deployment.WindowsInstaller;
 
 namespace SetupHelper
@@ -24,9 +24,9 @@ namespace SetupHelper
 
             var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            Middleware.ServerAddress = Middleware.ServerAddress.Replace("https://", "http://");
+            Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
             var keyPath = string.Format("{0}ca.cert.der", tempDirectory);
-            var downloaded = Middleware.DownloadFile("/management/other/ca.cert.der", keyPath);
+            var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
             if (!downloaded)
             {
                 DisplayMSIError(session, "Failed to download CA certificate");

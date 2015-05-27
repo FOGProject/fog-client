@@ -30,7 +30,8 @@ namespace FOG.Handlers.Middleware
     public static class Authentication
     {
         private const string LogName = "Middleware::Authentication";
-        private static byte[] Passkey { get; set; }
+        private static byte[] Passkey;
+        public static byte[] TestPassKey;
 
         /// <summary>
         ///     Generate a random AES pass key and securely send it to the server
@@ -125,13 +126,13 @@ namespace FOG.Handlers.Middleware
             if (toDecode.StartsWith(encryptedFlag2))
             {
                 var decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
-                toDecode = Data.AES.Decrypt(decryptedResponse, Passkey);
+                toDecode = Data.AES.Decrypt(decryptedResponse, TestPassKey ?? Passkey);
                 return toDecode;
             }
             if (!toDecode.StartsWith(encryptedFlag)) return toDecode;
 
             var decrypted = toDecode.Substring(encryptedFlag.Length);
-            return Data.AES.Decrypt(decrypted, Passkey);
+            return Data.AES.Decrypt(decrypted, TestPassKey ?? Passkey);
         }
     }
 }

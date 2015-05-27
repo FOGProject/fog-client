@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -37,7 +38,7 @@ namespace FOG.Modules.ClientUpdater
 
         protected override void DoWork()
         {
-            var serverVersion = Middleware.GetRawResponse("/service/getversion.php?client");
+            var serverVersion = Communication.GetRawResponse("/service/getversion.php?client");
             var localVersion = RegistryHandler.GetSystemSetting("Version");
             try
             {
@@ -47,9 +48,9 @@ namespace FOG.Modules.ClientUpdater
                 if (server <= local) return;
 
                 if (File.Exists(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory)))
-                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));     
+                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));
 
-                Middleware.DownloadFile("/client/FOGService.msi",
+                Communication.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
 
                 PrepareUpdateHelpers();

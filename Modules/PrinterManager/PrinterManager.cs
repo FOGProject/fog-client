@@ -22,6 +22,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
+
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 
 
@@ -40,10 +42,10 @@ namespace FOG.Modules.PrinterManager
         protected override void DoWork()
         {
             //Get printers
-            var printerResponse = Middleware.GetResponse("/service/Printer.php", true);
+            var printerResponse = Communication.GetResponse("/service/Printer.php", true);
             if (printerResponse.Error || printerResponse.GetField("mode").Equals("0")) return;
 
-            var printerIDs = Middleware.ParseDataArray(printerResponse, "#printer", false);
+            var printerIDs = printerResponse.GetList("#printer", false);
 
             var printers = CreatePrinters(printerIDs);
 
@@ -76,7 +78,7 @@ namespace FOG.Modules.PrinterManager
             try
             {
                 return printerIDs
-                    .Select(id => Middleware.GetResponse(string.Format("/service/Printer.php?id={0}", id), true))
+                    .Select(id => Communication.GetResponse(string.Format("/service/Printer.php?id={0}", id), true))
                     .Where(printerData => !printerData.Error).Select(PrinterFactory).ToList();
             }
             catch (Exception ex)

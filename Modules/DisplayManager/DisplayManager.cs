@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Management;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 
 
 namespace FOG.Modules.DisplayManager
@@ -45,15 +46,15 @@ namespace FOG.Modules.DisplayManager
             if (_display.PopulatedSettings)
             {
                 //Get task info
-                var taskResponse = Middleware.GetResponse("/service/displaymanager.php", true);
+                var response = Communication.GetResponse("/service/displaymanager.php", true);
 
-                if (taskResponse.Error) return;
+                if (response.Error) return;
 
                 try
                 {
-                    var x = int.Parse(taskResponse.GetField("#x"));
-                    var y = int.Parse(taskResponse.GetField("#y"));
-                    var r = int.Parse(taskResponse.GetField("#r"));
+                    var x = int.Parse(response.GetField("#x"));
+                    var y = int.Parse(response.GetField("#y"));
+                    var r = int.Parse(response.GetField("#r"));
 
                     ChangeResolution(GetDisplays().Count > 0 ? GetDisplays()[0] : "", x, y, r);
                 }

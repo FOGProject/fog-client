@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -80,7 +81,7 @@ namespace FOG.Modules.HostnameChanger
         protected override void DoWork()
         {
             //Get task info
-            var taskResponse = Middleware.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
+            var taskResponse = Communication.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
 
             LogHandler.Debug(Name, "AD Settings");
             LogHandler.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));

@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -41,7 +42,7 @@ namespace FOG.Modules.SnapinClient
             while (true)
             {
                 //Get task info
-                var taskResponse = Middleware.GetResponse("/service/snapins.checkin.php", true);
+                var taskResponse = Communication.GetResponse("/service/snapins.checkin.php", true);
 
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
@@ -58,8 +59,8 @@ namespace FOG.Modules.SnapinClient
 
                 var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
-                var downloaded = Middleware.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
-                    Middleware.GetMacAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
+                var downloaded = Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
+                    Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
 
                 var exitCode = "-1";
 
@@ -70,8 +71,8 @@ namespace FOG.Modules.SnapinClient
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    Middleware.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
-                        Middleware.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
+                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}", 
+                        taskResponse.GetField("JOBTASKID"), exitCode), true);
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                         if (!Power.ShutdownPending)
@@ -81,8 +82,8 @@ namespace FOG.Modules.SnapinClient
                         Power.Restart("Snapin requested shutdown", 30);
                 }
                 else
-                    Middleware.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
-                        Middleware.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
+                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
+                       taskResponse.GetField("JOBTASKID"), exitCode), true);
                 break;
             }
         }
