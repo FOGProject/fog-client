@@ -156,7 +156,7 @@ namespace FOG.Modules.HostnameChanger
                 return;
             }
 
-            if (!response.IsFieldValid("ADDom") && !response.IsFieldValid("ADUser") && !response.IsFieldValid("ADPass"))
+            if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
             {
                 LogHandler.Error(Name, "Required Domain Joining information is missing");
                 return;
