@@ -27,7 +27,7 @@ namespace FOG.Handlers.Data
 {
     public static class RSA
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::RSA";
 
         /// <summary>
         /// Encrypt data using RSA

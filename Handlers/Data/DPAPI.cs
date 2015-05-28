@@ -23,7 +23,7 @@ namespace FOG.Handlers.Data
 {
     public static class DPAPI
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::DPAPI";
 
         /// <summary>
         /// Securly protect bytes by using local windows credentials

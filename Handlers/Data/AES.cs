@@ -26,7 +26,7 @@ namespace FOG.Handlers.Data
 {
     public static class AES
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::AES";
 
         /// <summary>
         ///     AES decrypts a string

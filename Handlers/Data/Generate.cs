@@ -5,6 +5,7 @@ namespace FOG.Handlers.Data
 {
     public static class Generate
     {
+        private const string LogName = "Data::Generate";
 
         /// <summary>
         ///     Securley generates a random number
