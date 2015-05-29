@@ -119,7 +119,10 @@ namespace FOG
             {
                 var sleepTime = int.Parse(response.GetField("#sleep"));
                 if (sleepTime >= DefaultSleepTime)
+                {
+                    RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
                     return sleepTime;
+                }
 
                 Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }

@@ -89,7 +89,7 @@ namespace FOGService.Tests.Handlers
             Assert.AreEqual("bar", response.GetField("#Foo"));
             Assert.IsEmpty(response.GetField("#Empty"));
             Assert.AreEqual("Special", response.GetField("#-X"));
-            Assert.IsEmpty(response.GetField("#NON_EXISTENT"));
+            Assert.IsNull(response.GetField("#NON_EXISTENT"));
         }
 
         [Test]
@@ -104,8 +104,6 @@ namespace FOGService.Tests.Handlers
 
             Assert.AreEqual(phrase, response);
         }
-
-
 
         [Test]
         public void ParseResponse()
@@ -125,7 +123,7 @@ namespace FOGService.Tests.Handlers
             Assert.AreEqual("bar", response.GetField("#Foo"));
             Assert.IsEmpty(response.GetField("#Empty"));
             Assert.AreEqual("Special", response.GetField("#-X"));
-            Assert.IsEmpty(response.GetField("#NON_EXISTENT"));
+            Assert.IsNull(response.GetField("#NON_EXISTENT"));
         }
 
         [Test]
