@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG
@@ -38,12 +39,12 @@ namespace FOG.Modules.GreenFOG
         protected override void DoWork()
         {
             //Get actions
-            var tasksResponse = CommunicationHandler.GetResponse("/service/greenfog.php", true);
+            var response = Communication.GetResponse("/service/greenfog.php", true);
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (tasksResponse.Error) return;
-            
-            var tasks = CommunicationHandler.ParseDataArray(tasksResponse, "#task", false);
+            if (response.Error) return;
+
+            var tasks = response.GetList("#task", false);
 
             //Filter existing tasks
             tasks = FilterTasks(tasks);
@@ -59,13 +60,13 @@ namespace FOG.Modules.GreenFOG
             foreach (var task in existingTasks)
                 if (!newTasks.Contains(task.Name))
                 {
-                    LogHandler.Log(Name, "Delete task " + task.Name);
+                    Log.Entry(Name, "Delete task " + task.Name);
                     taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
                     //If the existing task is not in the new list delete it
                 }
                 else
                 {
-                    LogHandler.Log(Name, "Removing " + task.Name + " from queue");
+                    Log.Entry(Name, "Removing " + task.Name + " from queue");
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
 
@@ -103,12 +104,12 @@ namespace FOG.Modules.GreenFOG
                 try
                 {
                     taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
-                    LogHandler.Log(Name, "Registered task: " + task);
+                    Log.Entry(Name, "Registered task: " + task);
                 }
                 catch (Exception ex)
                 {
-                    LogHandler.Error(Name, "Could not register task: " + task);
-                    LogHandler.Error(Name, ex);
+                    Log.Error(Name, "Could not register task: " + task);
+                    Log.Error(Name, ex);
                 }
             }
         }

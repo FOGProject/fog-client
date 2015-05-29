@@ -18,6 +18,7 @@
  */
 
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 
 
 namespace FOG.Modules
@@ -42,7 +43,7 @@ namespace FOG.Modules
         /// </summary>
         public void Start()
         {
-            LogHandler.Log(Name, "Running...");
+            Log.Entry(Name, "Running...");
             if (IsEnabled())
                 DoWork();
         }
@@ -58,7 +59,7 @@ namespace FOG.Modules
         /// <returns>True if the module is enabled</returns>
         public bool IsEnabled()
         {
-            var moduleActiveResponse = CommunicationHandler.GetResponse(string.Format("{0}?moduleid={1}",
+            var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
                 EnabledURL, Name.ToLower()), true);
             return !moduleActiveResponse.Error;
         }

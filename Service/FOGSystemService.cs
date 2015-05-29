@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.ClientUpdater;
@@ -38,11 +39,11 @@ namespace FOG
 
             _servicePipe.Start();
 
-            LogHandler.NewLine();
-            LogHandler.PaddedHeader("Authentication");
-            LogHandler.Log("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
-            if (!CommunicationHandler.Authenticate()) return;
-            LogHandler.NewLine();
+            Log.NewLine();
+            Log.PaddedHeader("Authentication");
+            Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+            if (!Authentication.HandShake()) return;
+            Log.NewLine();
 
             base.Start();
         }
@@ -110,7 +111,7 @@ namespace FOG
 
         protected override int? GetSleepTime()
         {
-            var response = CommunicationHandler.GetResponse("/management/index.php?node=client&sub=configure");
+            var response = Communication.GetResponse("/management/index.php?node=client&sub=configure");
 
             if (response.Error || response.IsFieldValid("#sleep")) return null;
 
@@ -120,12 +121,12 @@ namespace FOG
                 if (sleepTime >= DefaultSleepTime)
                     return sleepTime;
 
-                LogHandler.Log(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to parse sleep time");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to parse sleep time");
+                Log.Error(Name, ex);
             }
             return null;
         }

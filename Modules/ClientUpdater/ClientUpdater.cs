@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -37,7 +38,7 @@ namespace FOG.Modules.ClientUpdater
 
         protected override void DoWork()
         {
-            var serverVersion = CommunicationHandler.GetRawResponse("/service/getversion.php?client");
+            var serverVersion = Communication.GetRawResponse("/service/getversion.php?client");
             var localVersion = RegistryHandler.GetSystemSetting("Version");
             try
             {
@@ -47,9 +48,9 @@ namespace FOG.Modules.ClientUpdater
                 if (server <= local) return;
 
                 if (File.Exists(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory)))
-                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));     
+                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));
 
-                CommunicationHandler.DownloadFile("/client/FOGService.msi",
+                Communication.DownloadFile("/client/FOGService.msi",
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
 
                 PrepareUpdateHelpers();
@@ -57,8 +58,8 @@ namespace FOG.Modules.ClientUpdater
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to parse versions");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to parse versions");
+                Log.Error(Name, ex);
             }
         }
 
@@ -69,7 +70,7 @@ namespace FOG.Modules.ClientUpdater
             if (!File.Exists(string.Format("{0}\\FOGUpdateHelper.exe", AppDomain.CurrentDomain.BaseDirectory)) &&
                 !File.Exists(string.Format("{0}\\FOGUpdateWaiter.exe", AppDomain.CurrentDomain.BaseDirectory)))
             {
-                LogHandler.Error(Name, "Unable to locate helper files");
+                Log.Error(Name, "Unable to locate helper files");
                 return;
             }
             
@@ -86,8 +87,8 @@ namespace FOG.Modules.ClientUpdater
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to prepare update helpers");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to prepare update helpers");
+                Log.Error(Name, ex);
             }
         }
     }

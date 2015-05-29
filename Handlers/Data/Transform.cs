@@ -47,8 +47,8 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not base64 encode");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not base64 encode");
+                Log.Error(LogName, ex);
             }
             return "";
         }
@@ -67,8 +67,8 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not base64 decode");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not base64 decode");
+                Log.Error(LogName, ex);
             }
             return "";
         }

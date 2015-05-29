@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
 
@@ -41,25 +42,25 @@ namespace FOG.Modules.SnapinClient
             while (true)
             {
                 //Get task info
-                var taskResponse = CommunicationHandler.GetResponse("/service/snapins.checkin.php", true);
+                var taskResponse = Communication.GetResponse("/service/snapins.checkin.php", true);
 
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
-                LogHandler.Log(Name, "Snapin Found:");
-                LogHandler.Log(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
-                LogHandler.Log(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
-                LogHandler.Log(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
-                LogHandler.Log(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
-                LogHandler.Log(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
-                LogHandler.Log(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
-                LogHandler.Log(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
-                LogHandler.Log(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
+                Log.Entry(Name, "Snapin Found:");
+                Log.Entry(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
+                Log.Entry(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
+                Log.Entry(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
+                Log.Entry(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
+                Log.Entry(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
+                Log.Entry(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
+                Log.Entry(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
+                Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
 
                 var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
-                var downloaded = CommunicationHandler.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
-                    CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
+                var downloaded = Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
+                    Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
 
                 var exitCode = "-1";
 
@@ -70,8 +71,8 @@ namespace FOG.Modules.SnapinClient
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    CommunicationHandler.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
-                        CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
+                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}", 
+                        taskResponse.GetField("JOBTASKID"), exitCode), true);
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                         if (!Power.ShutdownPending)
@@ -81,8 +82,8 @@ namespace FOG.Modules.SnapinClient
                         Power.Restart("Snapin requested shutdown", 30);
                 }
                 else
-                    CommunicationHandler.Contact(string.Format("/service/snapins.checkin.php?mac={0}&taskid={1}&exitcode={2}", 
-                        CommunicationHandler.GetMacAddresses(), taskResponse.GetField("JOBTASKID"), exitCode));
+                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
+                       taskResponse.GetField("JOBTASKID"), exitCode), true);
                 break;
             }
         }
@@ -97,11 +98,11 @@ namespace FOG.Modules.SnapinClient
 
             try
             {
-                LogHandler.Log(Name, "Starting snapin...");
+                Log.Entry(Name, "Starting snapin...");
                 process.Start();
                 process.WaitForExit();
-                LogHandler.Log(Name, "Snapin finished");
-                LogHandler.Log(Name, "Return Code: " + process.ExitCode);
+                Log.Entry(Name, "Snapin finished");
+                Log.Entry(Name, "Return Code: " + process.ExitCode);
                 
                 NotificationHandler.Notifications.Add(new Notification(
                     string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
@@ -111,8 +112,8 @@ namespace FOG.Modules.SnapinClient
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Could not start snapin");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Could not start snapin");
+                Log.Error(Name, ex);
             }
 
             return "-1";

@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using FOG.Handlers;
+using FOG.Handlers.Middleware;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
@@ -51,13 +52,12 @@ namespace FOG
  
         public static void Main(string[] args)
         {
-            LogHandler.Output = LogHandler.Mode.Console;
-            LogHandler.Verbose = true;
+            Log.Output = Log.Mode.Console;
+            Log.Verbose = true;
 
-            LogHandler.PaddedHeader("FOG Console");
-            CommunicationHandler.GetAndSetServerAddress();
-            LogHandler.Log(Name, "Type help for a list of commands");
-            LogHandler.NewLine();
+            Log.PaddedHeader("FOG Console");
+            Log.Entry(Name, "Type help for a list of commands");
+            Log.NewLine();
 
             InteractiveShell();
         }
@@ -66,12 +66,12 @@ namespace FOG
         {
             while (true)
             {
-                LogHandler.Write("fog: ");
+                Log.Write("fog: ");
                 var input = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(input)) continue;
                 if (ProcessCommand(input.ToLower().Split(' '))) break;
-                LogHandler.Divider();
+                Log.Divider();
             }
         }
 
@@ -84,47 +84,47 @@ namespace FOG
             if (_modules.ContainsKey(command[0]))
             {
                 _modules[command[0]].Start();
-                LogHandler.NewLine();
+                Log.NewLine();
             }
 
             // Check custom commands
             else if (command[0].Equals("authenticate"))
-                CommunicationHandler.Authenticate();
+                Authentication.HandShake();
             else if (command[0].Equals("info"))
             {
-                LogHandler.Log(Name, "Server: " + CommunicationHandler.ServerAddress);
-                LogHandler.Log(Name, "MAC: " + CommunicationHandler.GetMacAddresses());
+                Log.Entry(Name, "Server: " + Configuration.ServerAddress);
+                Log.Entry(Name, "MAC: " + Configuration.MACAddresses());
             }
 
             else if (command.Length == 3 && command[0].Equals("configure"))
             {
                 if (command[1].Equals("server"))
-                    CommunicationHandler.ServerAddress = command[2];
+                    Configuration.ServerAddress = command[2];
                 else if (command[1].Equals("mac"))
-                    CommunicationHandler.TestMAC = command[2];
+                    Configuration.TestMAC = command[2];
             }
 
             else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
             {
-                CommunicationHandler.ServerAddress = Server;
-                CommunicationHandler.TestMAC = MAC;
+                Configuration.ServerAddress = Server;
+                Configuration.TestMAC = MAC;
             }
 
             else if (command.Length == 1 && command[0].Equals("help"))
             {
-                LogHandler.WriteLine(" authenticate <-- Authenticates the debugger shell");
-                LogHandler.WriteLine(" configue server ____ <-- Sets the server address");
-                LogHandler.WriteLine(" configue mac ____ <-- Sets the mac address");
-                LogHandler.WriteLine(" configue default <-- Sets the default testing mac and server address");
+                Log.WriteLine(" authenticate <-- Authenticates the debugger shell");
+                Log.WriteLine(" configue server ____ <-- Sets the server address");
+                Log.WriteLine(" configue mac ____ <-- Sets the mac address");
+                Log.WriteLine(" configue default <-- Sets the default testing mac and server address");
                 foreach (var module in _modules.Keys)
                 {
-                    LogHandler.WriteLine(" " + module + "<-- Runs this specific module");
+                    Log.WriteLine(" " + module + "<-- Runs this specific module");
                 }
-                LogHandler.WriteLine(" exit <-- Exits the console");
+                Log.WriteLine(" exit <-- Exits the console");
             }
 
             else
-                LogHandler.Log(Name, "Unknown command");
+                Log.Entry(Name, "Unknown command");
 
             return false;
         }

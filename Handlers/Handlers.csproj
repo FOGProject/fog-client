@@ -101,14 +101,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Communication\CommunicationHandler.cs" />
-    <Compile Include="Communication\Response.cs" />
+    <Compile Include="Middleware\Configuration.cs" />
+    <Compile Include="Middleware\Authentication.cs" />
+    <Compile Include="Middleware\Communication.cs" />
+    <Compile Include="Middleware\Response.cs" />
     <Compile Include="Data\DPAPI.cs" />
     <Compile Include="Data\AES.cs" />
     <Compile Include="Data\Generate.cs" />
     <Compile Include="Data\Transform.cs" />
     <Compile Include="Data\RSA.cs" />
-    <Compile Include="Log\LogHandler.cs" />
+    <Compile Include="Log\Log.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Notification\NotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

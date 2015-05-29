@@ -72,8 +72,8 @@ namespace FOG.Handlers.Power
         /// <param name="parameters">The parameters to use</param>
         private static void CreateShutdownCommand(string parameters)
         {
-            LogHandler.Log(LogName, "Creating shutdown request");
-            LogHandler.Log(LogName, string.Format("Parameters: {0}", parameters));
+            Log.Entry(LogName, "Creating shutdown request");
+            Log.Entry(LogName, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
         }
@@ -101,7 +101,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Log off the current user
+        ///     Entry off the current user
         /// </summary>
         public static void LogOffUser()
         {
@@ -138,7 +138,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void RestartService()
         {
-            LogHandler.Log(LogName, "Restarting service");
+            Log.Entry(LogName, "Restarting service");
             ShutdownPending = true;
             var process = new Process
             {
@@ -158,7 +158,7 @@ namespace FOG.Handlers.Power
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(string fileName)
         {
-            LogHandler.Log(LogName, "Spawning update waiter");
+            Log.Entry(LogName, "Spawning update waiter");
 
             var process = new Process
             {
@@ -171,8 +171,8 @@ namespace FOG.Handlers.Power
                 }
             };
 
-            LogHandler.Log(LogName, "Update Waiter args");
-            LogHandler.Log(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
+            Log.Entry(LogName, "Update Waiter args");
+            Log.Entry(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
             process.Start();
         }
     }

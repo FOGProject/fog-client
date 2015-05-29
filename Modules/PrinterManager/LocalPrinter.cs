@@ -17,11 +17,11 @@ namespace FOG.Modules.PrinterManager
 
         public override void Add()
         {
-            LogHandler.Log(LogName, "Attempting to add printer:");
-            LogHandler.Log(LogName, string.Format("--> Name = {0}", Name));
-            LogHandler.Log(LogName, string.Format("--> Port = {0}", Port));
-            LogHandler.Log(LogName, string.Format("--> File = {0}", File));
-            LogHandler.Log(LogName, string.Format("--> Model = {0}", Model));
+            Log.Entry(LogName, "Attempting to add printer:");
+            Log.Entry(LogName, string.Format("--> Name = {0}", Name));
+            Log.Entry(LogName, string.Format("--> Port = {0}", Port));
+            Log.Entry(LogName, string.Format("--> File = {0}", File));
+            Log.Entry(LogName, string.Format("--> Model = {0}", Model));
 
             var proc = Process.Start("rundll32.exe", 
                 string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"", Name, File, Port, Model));

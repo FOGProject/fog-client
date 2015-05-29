@@ -35,12 +35,12 @@ namespace FOG.Handlers
             if (GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null)
             {
                 _root = @"Software\Wow6432Node\FOG\";
-                LogHandler.Log(LogName, "64 bit registry detected");
+                Log.Entry(LogName, "64 bit registry detected");
             }
             else
             {
                 _root = @"Software\FOG\";
-                LogHandler.Log(LogName, "32 bit registry detected");
+                Log.Entry(LogName, "32 bit registry detected");
             }
         }
 
@@ -58,8 +58,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, string.Format("Could not retrieve {0}{1}", keyPath, keyName));
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, string.Format("Could not retrieve {0}{1}", keyPath, keyName));
+                Log.Error(LogName, ex);
             }
             return null;
         }
@@ -77,8 +77,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, string.Format("Could not set {0}{1}", keyPath, keyName));
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, string.Format("Could not set {0}{1}", keyPath, keyName));
+                Log.Error(LogName, ex);
             }
 
             return false;
@@ -97,8 +97,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, string.Format("Could not delete {0}", path));
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, string.Format("Could not delete {0}", path));
+                Log.Error(LogName, ex);
             }
 
             return false;
@@ -117,8 +117,8 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, string.Format("Could not delete {0}", keyPath));
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, string.Format("Could not delete {0}", keyPath));
+                Log.Error(LogName, ex);
             }
 
             return false;

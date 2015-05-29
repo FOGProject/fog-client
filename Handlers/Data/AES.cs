@@ -26,7 +26,7 @@ namespace FOG.Handlers.Data
 {
     public static class AES
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::AES";
 
         /// <summary>
         ///     AES decrypts a string
@@ -49,8 +49,8 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not decrypt AES");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not decrypt AES");
+                Log.Error(LogName, ex);
             }
             return "";
         }
@@ -80,7 +80,7 @@ namespace FOG.Handlers.Data
         /// </summary>
         public static string Decrypt(string toDecode, byte[] key)
         {
-            LogHandler.Log(LogName, toDecode);
+            Log.Entry(LogName, toDecode);
             var iv = Transform.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
             var data = Transform.HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
 

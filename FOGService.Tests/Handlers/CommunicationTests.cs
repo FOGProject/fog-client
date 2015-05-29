@@ -3,6 +3,7 @@ using System.IO;
 using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
+using FOG.Handlers.Middleware;
 
 namespace FOGService.Tests.Handlers
 {
@@ -17,9 +18,9 @@ namespace FOGService.Tests.Handlers
         [SetUp]
         public void Init()
         {
-            LogHandler.Output = LogHandler.Mode.Console;
-            CommunicationHandler.ServerAddress = Server;
-            CommunicationHandler.TestMAC = MAC;
+            Log.Output = Log.Mode.Console;
+            Configuration.ServerAddress = Server;
+            Configuration.TestMAC = MAC;
         }
 
         [Test]
@@ -29,9 +30,9 @@ namespace FOGService.Tests.Handlers
             * Ensure that decrypting AES responses works correct
             */
 
-            CommunicationHandler.TestPassKey = Transform.HexStringToByteArray(PassKeyHex);
-            var response1 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKeyHex));
-            var response2 = CommunicationHandler.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKeyHex));
+            Authentication.TestPassKey = Transform.HexStringToByteArray(PassKeyHex);
+            var response1 = Communication.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKeyHex));
+            var response2 = Communication.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKeyHex));
 
             Assert.IsFalse(response1.Error);
             Assert.AreEqual("Foobar22!", response1.GetField("#data"));
@@ -49,7 +50,7 @@ namespace FOGService.Tests.Handlers
 
             const string phrase = "Foobar22!";
             var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.txt");
-            var success = CommunicationHandler.DownloadFile(URL + "Download", path);
+            var success = Communication.DownloadFile(URL + "Download", path);
 
             Assert.IsTrue(success);
             Assert.IsTrue(File.Exists(path));
@@ -59,7 +60,7 @@ namespace FOGService.Tests.Handlers
 
             // Test a fail download
 
-            success = CommunicationHandler.DownloadFile("/no-exist", path);
+            success = Communication.DownloadFile("/no-exist", path);
 
             Assert.IsFalse(success);
         }
@@ -70,7 +71,7 @@ namespace FOGService.Tests.Handlers
             /**
             * Ensure that responses error codes are handled properely
             */
-            var response = CommunicationHandler.GetResponse(URL + "BadResponse");
+            var response = Communication.GetResponse(URL + "BadResponse");
 
             Assert.IsTrue(response.Error);
             Assert.AreEqual("#!er", response.ReturnCode);
@@ -82,7 +83,7 @@ namespace FOGService.Tests.Handlers
             /**
             * Ensure that responses can be obtained and parsed
             */
-            var response = CommunicationHandler.GetResponse(URL + "Response");
+            var response = Communication.GetResponse(URL + "Response");
 
             Assert.IsFalse(response.Error);
             Assert.AreEqual("bar", response.GetField("#Foo"));
@@ -99,7 +100,7 @@ namespace FOGService.Tests.Handlers
             */
 
             const string phrase = "Foobar22!";
-            var response = CommunicationHandler.GetRawResponse(URL + "RawResponse");
+            var response = Communication.GetRawResponse(URL + "RawResponse");
 
             Assert.AreEqual(phrase, response);
         }
@@ -118,7 +119,7 @@ namespace FOGService.Tests.Handlers
                                "#Empty=\n" +
                                "#-X=Special";
 
-            var response = CommunicationHandler.ParseResponse(msg);
+            var response = new Response(msg);
 
             Assert.IsFalse(response.Error);
             Assert.AreEqual("bar", response.GetField("#Foo"));
@@ -139,8 +140,8 @@ namespace FOGService.Tests.Handlers
                                "#obj1=bar\n" +
                                "#obj2=22!";
 
-            var response = CommunicationHandler.ParseResponse(msg);
-            var objArray = CommunicationHandler.ParseDataArray(response, "#obj", false);
+            var response = new Response(msg);
+            var objArray = response.GetList("#obj", false);
 
             Assert.AreEqual(3, objArray.Count);
             Assert.AreEqual("foo", objArray[0]);
@@ -151,10 +152,10 @@ namespace FOGService.Tests.Handlers
         [Test]
         public void Contact()
         {
-            var success = CommunicationHandler.Contact("/index.php");
+            var success = Communication.Contact("/index.php");
             Assert.IsTrue(success);
 
-            success = CommunicationHandler.Contact("/no-exist");
+            success = Communication.Contact("/no-exist");
             Assert.IsFalse(success);
         }
 
@@ -163,8 +164,8 @@ namespace FOGService.Tests.Handlers
         [Test]
         public void Authenticate()
         {
-            CommunicationHandler.TestPassKey = null;
-            var success = CommunicationHandler.Authenticate();
+            Authentication.TestPassKey = null;
+            var success = Authentication.HandShake();
             Assert.IsTrue(success);
 
         }

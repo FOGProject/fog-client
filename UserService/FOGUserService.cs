@@ -30,8 +30,8 @@ namespace FOG
         //Handle recieving a message
         private void pipeClient_MessageReceived(string message)
         {
-            LogHandler.Debug(Name, "Message recieved from service");
-            LogHandler.Debug(Name, string.Format("MSG: {0}", message));
+            Log.Debug(Name, "Message recieved from service");
+            Log.Debug(Name, string.Format("MSG: {0}", message));
 
             if (!message.Equals("UPD")) return;
 
@@ -65,12 +65,12 @@ namespace FOG
                 if (sleepTime >= DefaultSleepTime)
                     return sleepTime;
 
-                LogHandler.Log(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }
             catch (Exception ex)
             {
-                LogHandler.Error(Name, "Unable to parse sleep time");
-                LogHandler.Error(Name, ex);
+                Log.Error(Name, "Unable to parse sleep time");
+                Log.Error(Name, ex);
             }
 
             return null;

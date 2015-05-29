@@ -27,7 +27,7 @@ namespace FOG.Handlers.Data
 {
     public static class RSA
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::RSA";
 
         /// <summary>
         /// Encrypt data using RSA
@@ -123,8 +123,8 @@ namespace FOG.Handlers.Data
                     if (errors != null && errors.Length > 0)
                         certificateErrorsString = string.Join(", ", errors);
 
-                    LogHandler.Error(LogName, "Certificate validation failed");
-                    LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
+                    Log.Error(LogName, "Certificate validation failed");
+                    Log.Error(LogName, "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
                     return false;
                 }
 
@@ -132,14 +132,14 @@ namespace FOG.Handlers.Data
                 if (chain.ChainElements.Cast<X509ChainElement>().Any(x => x.Certificate.Thumbprint == authority.Thumbprint))
                     return true;
 
-                LogHandler.Error(LogName, "Certificate validation failed");
-                LogHandler.Error(LogName, "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
+                Log.Error(LogName, "Certificate validation failed");
+                Log.Error(LogName, "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
                 return false;
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Could not verify certificate is from CA");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Could not verify certificate is from CA");
+                Log.Error(LogName, ex);
                 return false;
             }
 
@@ -159,7 +159,7 @@ namespace FOG.Handlers.Data
 
                 if (cers.Count > 0)
                 {
-                    LogHandler.Log(LogName, "CA cert found");
+                    Log.Entry(LogName, "CA cert found");
                     CAroot = cers[0];
                 }
                 store.Close();
@@ -168,8 +168,8 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                LogHandler.Error(LogName, "Unable to get CA");
-                LogHandler.Error(LogName, ex);
+                Log.Error(LogName, "Unable to get CA");
+                Log.Error(LogName, ex);
             }
 
             return null;
