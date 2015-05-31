@@ -41,7 +41,6 @@
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
 
-
             <ServiceInstall
               Id="ServiceInstaller"
               Type="ownProcess"

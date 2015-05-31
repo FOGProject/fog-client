@@ -20,14 +20,14 @@
 -->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="FOG Service" Language="1033" Version="0.8.2" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
+  <Product Id="*" Name="FOG Service" Language="1033" Version="0.8.3" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
            Manufacturer="FOG">
     <Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="300" Compressed="yes"
              InstallScope="perMachine" />
     <!-- Remove old versions -->
     <Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">
       <UpgradeVersion OnlyDetect="yes" Minimum="0.0.0" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.8.1" Property="OLDERVERSIONBEINGUPGRADED"
+      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.8.2" Property="OLDERVERSIONBEINGUPGRADED"
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
