@@ -30,6 +30,8 @@ namespace FOG
         }
 
         protected abstract AbstractModule[] GetModules();
+        protected abstract void Load();
+        protected abstract void Unload();
 
         /// <summary>
         /// Start the service
@@ -38,6 +40,7 @@ namespace FOG
         {
             // Only start if a valid server address is present
             if (string.IsNullOrEmpty(Configuration.ServerAddress)) return;
+            Load();
             _moduleThread.Start();
         }
 
@@ -94,6 +97,7 @@ namespace FOG
         {
             Log.Entry(Name, "Stop requested");
             _moduleThread.Abort();
+            Unload();
         }
 
     }

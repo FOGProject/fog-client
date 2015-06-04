@@ -18,7 +18,6 @@ namespace FOG
             //Setup the service pipe client
             _servicePipe = new PipeClient("fog_pipe_service");
             _servicePipe.MessageReceived += pipeClient_MessageReceived;
-            _servicePipe.Connect();
         }
 
         //Handle recieving a message
@@ -40,6 +39,16 @@ namespace FOG
                 new AutoLogOut(), 
                 new DisplayManager()
             };
+        }
+
+        protected override void Load()
+        {
+            _servicePipe.Connect();
+        }
+
+        protected override void Unload()
+        {
+            _servicePipe.Kill();
         }
 
         protected override int? GetSleepTime()

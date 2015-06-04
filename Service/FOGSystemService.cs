@@ -31,7 +31,7 @@ namespace FOG
             _servicePipe = new PipeServer("fog_pipe_service");
         }
 
-        public override void Start()
+        protected override void Load()
         {
             // Start the pipe server
             _notificationPipeThread.Priority = ThreadPriority.Normal;
@@ -44,14 +44,11 @@ namespace FOG
             Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
             if (!Authentication.HandShake()) return;
             Log.NewLine();
-
-            base.Start();
         }
 
-        public override void Stop()
-        {
-            base.Stop();
 
+        protected override void Unload()
+        {
             // Stop the pipe server
             _notificationPipeThread.Abort();
 
@@ -100,6 +97,7 @@ namespace FOG
                 new UserTracker() 
             };
         }
+
 
         protected override void ModuleLooper()
         {
