@@ -21,12 +21,6 @@ namespace FOG
             _servicePipe.Connect();
         }
 
-        public override void Start()
-        {
-            _servicePipe.Connect();
-            base.Start();
-        }
-
         //Handle recieving a message
         private void pipeClient_MessageReceived(string message)
         {
@@ -37,12 +31,6 @@ namespace FOG
 
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.UpdatePending = true;
-        }
-
-        public override void Stop()
-        {
-            _servicePipe.Kill();
-            base.Stop();
         }
 
         protected override AbstractModule[] GetModules()

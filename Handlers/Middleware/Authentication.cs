@@ -53,6 +53,7 @@ namespace FOG.Handlers.Middleware
 
                 if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
+
                 Log.Entry(LogName, "Cert OK");
 
                 var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
