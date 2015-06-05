@@ -14,4 +14,3 @@ START /wait /B cmd /c %~dp0SignCode.cmd %~dp0bin\Microsoft.Win32.TaskScheduler.d
 START /wait /B cmd /c %~dp0SignCode.cmd %~dp0bin\System.Threading.Tasks.NET35.dll
 START /wait /B cmd /c %~dp0SignCode.cmd %~dp0bin\SetupHelper.dll
 START /wait /B cmd /c %~dp0SignCode.cmd %~dp0bin\SetupHelper.CA.dll
-
