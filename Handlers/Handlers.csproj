@@ -113,6 +113,7 @@
     <Compile Include="Log\Log.cs" />
     <Compile Include="Notification\Notification.cs" />
     <Compile Include="Notification\NotificationHandler.cs" />
+    <Compile Include="Bus\Bus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -131,6 +132,16 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
+      <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
+      <Name>PipeClient</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
+      <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
+      <Name>PipeServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

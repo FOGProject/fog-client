@@ -17,11 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Timers;
 
 namespace FOG.Handlers.Power
 {
@@ -31,37 +31,15 @@ namespace FOG.Handlers.Power
     /// </summary>
     public static class Power
     {
-        //List options on how to exit windows
-        [Flags]
-        public enum ExitWindows : uint
-        {
-            LogOff = 0x00,
-            ShutDown = 0x01,
-            Reboot = 0x02,
-            PowerOff = 0x08,
-            RestartApps = 0x40,
-            Force = 0x04,
-            ForceIfHung = 0x10
-        }
-
-        //List all possible shutdown types
-        public enum ShutDownType
-        {
-            LogOff = 0,
-            Shutdown = 1,
-            Reboot = 2,
-            ForcedLogOff = 4,
-            ForcedShutdown = 5,
-            ForcedReboot = 6,
-            PowerOff = 8,
-            ForcedPowerOff = 12
-        }
-
-        private const string LogName = "ShutdownHandler";
-        //Define variables
-
+        private const string LogName = "Power";
         public static bool ShutdownPending { get; private set; }
         public static bool UpdatePending { get; set; }
+
+        // Variables needed for aborting a shutdown
+        private static Timer _timer;
+        private static string pendingCommand = string.Empty;
+        private const int DefaultGracePeriod = 120;
+
         //Load the ability to lock the computer from the native user32 dll
         [DllImport("user32")]
         private static extern void lockWorkStation();
@@ -70,12 +48,28 @@ namespace FOG.Handlers.Power
         ///     Create a shutdown command
         /// </summary>
         /// <param name="parameters">The parameters to use</param>
-        private static void CreateShutdownCommand(string parameters)
+        private static void CreateTask(string parameters)
         {
             Log.Entry(LogName, "Creating shutdown request");
             Log.Entry(LogName, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
+        }
+
+        private static void QueueShutdown(string parameters, int gracePeriod = DefaultGracePeriod)
+        {
+            Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod*1000));
+            pendingCommand = parameters;
+            _timer = new Timer(gracePeriod*1000);
+            _timer.Elapsed += TimerElapsed;
+            _timer.Start();
+        }
+
+        private static void TimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            ShutdownPending = true;
+            CreateTask(pendingCommand);
+            pendingCommand = string.Empty;
         }
 
         /// <summary>
@@ -85,8 +79,7 @@ namespace FOG.Handlers.Power
         /// <param name="seconds">How long to wait before processing the request</param>
         public static void Shutdown(string comment, int seconds)
         {
-            ShutdownPending = true;
-            CreateShutdownCommand(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
+            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -96,8 +89,7 @@ namespace FOG.Handlers.Power
         /// <param name="seconds">How long to wait before processing the request</param>
         public static void Restart(string comment, int seconds)
         {
-            ShutdownPending = true;
-            CreateShutdownCommand(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
+            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
         }
 
         /// <summary>
@@ -105,7 +97,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void LogOffUser()
         {
-            CreateShutdownCommand("/l");
+            CreateTask("/l");
         }
 
         /// <summary>
@@ -113,7 +105,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void Hibernate()
         {
-            CreateShutdownCommand("/h");
+            CreateTask("/h");
         }
 
         /// <summary>
@@ -130,7 +122,8 @@ namespace FOG.Handlers.Power
         public static void AbortShutdown()
         {
             ShutdownPending = false;
-            CreateShutdownCommand("/a");
+            _timer = null;
+            CreateTask("/a");
         }
 
         /// <summary>
