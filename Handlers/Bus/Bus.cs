@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO.Pipes;
-using System.Reflection;
 
 namespace FOG.Handlers
 {
     public static class Bus
     {
-
         public enum Channel
         {
             Foo,
