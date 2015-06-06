@@ -116,7 +116,7 @@ namespace FOG.Handlers
             {
                 var rawChannel = message.Substring(0, message.IndexOf("//"));
                 var channel = (Channel) Enum.Parse(typeof(Channel), rawChannel);
-                var data = message.Remove(rawChannel.Length);
+                var data = message.Remove(rawChannel.Length+2);
                 Emit(channel, data);
             }
             catch (Exception ex)
