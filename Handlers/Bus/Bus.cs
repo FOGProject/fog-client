@@ -10,7 +10,8 @@ namespace FOG.Handlers
             Updating,
             ShuttingDown,
 
-
+            AbortShutdown,
+            ShutdownNow,
         }
 
         private static readonly Dictionary<Channel, LinkedList<Action<string>>> Registrar =
@@ -161,10 +162,11 @@ namespace FOG.Handlers
             {
                 var rawChannel = message.Substring(0, message.IndexOf("//"));
                 var channel = (Channel) Enum.Parse(typeof(Channel), rawChannel);
-                bounce = (message.EndsWith("//bounce//"));
-                var data = message.Remove(rawChannel.Length+2);
-                if (bounce)
-                    data = data.Substring(0, data.LastIndexOf("//bounce//"));
+                bounce = !(message.EndsWith("//private//"));
+                if (!bounce)
+                    message = message.Substring(0, message.LastIndexOf("//private//"));
+
+                var data = message.Remove(rawChannel.Length + 2);
 
                 Emit(channel, data);
             }
