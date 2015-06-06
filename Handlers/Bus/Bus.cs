@@ -7,8 +7,10 @@ namespace FOG.Handlers
     {
         public enum Channel
         {
-            Foo,
-            Bar
+            Updating,
+            ShuttingDown,
+
+
         }
 
         private static readonly Dictionary<Channel, LinkedList<Action<string>>> Registrar =
@@ -127,14 +129,15 @@ namespace FOG.Handlers
 
         /// <summary>
         /// Called when the server pipe recieves a message
-        /// It will replay the message to all other instances, including the original sender
+        /// It will replay the message to all other instances, including the original sender unless told otherwise
         /// </summary>
         /// <param name="client">The instance who initiated the message</param>
         /// <param name="message">The formatted event</param>
         private static void pipe_RecieveMessage(Client client, string message)
         {
-            EmitMessageFromPipe(message);
-            SendMessage(message);
+            var bounce = EmitMessageFromPipe(message);
+            if (bounce)
+                SendMessage(message);
         }
 
         /// <summary>
@@ -150,13 +153,19 @@ namespace FOG.Handlers
         /// Parse a message recieved in the pipe and emit it to channels confined in its instance
         /// </summary>
         /// <param name="message"></param>
-        private static void EmitMessageFromPipe(string message)
+        private static bool EmitMessageFromPipe(string message)
         {
+            var bounce = false;
+
             try
             {
                 var rawChannel = message.Substring(0, message.IndexOf("//"));
                 var channel = (Channel) Enum.Parse(typeof(Channel), rawChannel);
+                bounce = (message.EndsWith("//bounce//"));
                 var data = message.Remove(rawChannel.Length+2);
+                if (bounce)
+                    data = data.Substring(0, data.LastIndexOf("//bounce//"));
+
                 Emit(channel, data);
             }
             catch (Exception ex)
@@ -165,6 +174,8 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
 
             }
+
+            return bounce;
         }
 
     }
