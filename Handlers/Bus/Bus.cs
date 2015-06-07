@@ -119,7 +119,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel">The channel to register within</param>
         /// <param name="action">The action (method) to register</param>
-        public static void Register(Channel channel, Action<string> action)
+        public static void Subscribe(Channel channel, Action<string> action)
         {
             Log.Entry(LogName, string.Format("Registering {0} in channel {1}", action.Method.Name, channel));
 
@@ -135,7 +135,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>
-        public static void UnRegister(Channel channel, Action<string> action)
+        public static void Unsubscribe(Channel channel, Action<string> action)
         {
             Log.Entry(LogName, string.Format("UnRegistering {0} in channel {1}", action.Method.Name, channel));
 

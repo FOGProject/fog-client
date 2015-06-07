@@ -48,7 +48,7 @@ namespace FOG.Handlers.Power
 
         private static bool Initialize()
         {
-            Bus.Register(Bus.Channel.Power, ParseBus);
+            Bus.Subscribe(Bus.Channel.Power, ParseBus);
             return true;
         }
 
