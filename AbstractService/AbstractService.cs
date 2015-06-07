@@ -50,10 +50,10 @@ namespace FOG
         protected virtual void ModuleLooper()
         {
             // Only run the service if there isn't a shutdown or update pending
-            while (!Power.ShutdownPending && !Power.UpdatePending)
+            while (!Power.ShuttingDown && !Power.Updating)
             {
                 // Stop looping as soon as a shutdown or update pending
-                foreach (var module in _modules.TakeWhile(module => !Power.ShutdownPending && !Power.UpdatePending))
+                foreach (var module in _modules.TakeWhile(module => !Power.ShuttingDown && !Power.Updating))
                 {
                     // Entry file formatting
                     Log.NewLine();
@@ -76,7 +76,7 @@ namespace FOG
 
 
                 // Skip checking for sleep time if there is a shutdown or update pending
-                if (Power.ShutdownPending || Power.UpdatePending) break;
+                if (Power.ShuttingDown || Power.Updating) break;
 
                 // Once all modules have been run, sleep for the set time
                 var sleepTime = GetSleepTime() ?? DefaultSleepTime;

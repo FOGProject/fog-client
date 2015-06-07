@@ -63,7 +63,7 @@ namespace FOG
         //This is run by the pipe thread, it will send out notifications to the tray
         private void notificationPipeHandler()
         {
-            while (!Power.ShutdownPending && !Power.UpdatePending)
+            while (!Power.ShuttingDown && !Power.Updating)
             {
                 if (!_notificationPipe.IsRunning())
                     _notificationPipe.Start();
@@ -103,7 +103,7 @@ namespace FOG
         {
             base.ModuleLooper();
 
-            if (Power.UpdatePending)
+            if (Power.Updating)
                 UpdateHandler.BeginUpdate(_servicePipe);
         }
 

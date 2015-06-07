@@ -94,9 +94,9 @@ namespace FOG.Modules.HostnameChanger
             if (taskResponse.Error) return;
 
             RenameComputer(taskResponse);
-            if (!Power.ShutdownPending)
+            if (!Power.ShuttingDown)
                 RegisterComputer(taskResponse);
-            if (!Power.ShutdownPending)
+            if (!Power.ShuttingDown)
                 ActivateComputer(taskResponse);
         }
 

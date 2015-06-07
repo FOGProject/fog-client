@@ -29,7 +29,7 @@ namespace FOG
             if (!message.Equals("UPD")) return;
 
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
-            Power.UpdatePending = true;
+            Power.Updating = true;
         }
 
         protected override AbstractModule[] GetModules()

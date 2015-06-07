@@ -75,7 +75,7 @@ namespace FOG.Modules.SnapinClient
                         taskResponse.GetField("JOBTASKID"), exitCode), true);
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
-                        if (!Power.ShutdownPending)
+                        if (!Power.ShuttingDown)
                             //Rerun this method to check for the next snapin
                             continue;
                     else

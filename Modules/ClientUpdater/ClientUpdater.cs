@@ -54,7 +54,7 @@ namespace FOG.Modules.ClientUpdater
                     AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
 
                 PrepareUpdateHelpers();
-                Power.UpdatePending = true;
+                Power.Updating = true;
             }
             catch (Exception ex)
             {

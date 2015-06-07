@@ -32,17 +32,33 @@ namespace FOG.Handlers.Power
     public static class Power
     {
         private const string LogName = "Power";
-        public static bool ShutdownPending { get; private set; }
-        public static bool UpdatePending { get; set; }
+        public static bool ShuttingDown { get; private set; }
+        public static bool Updating { get; set; }
 
         // Variables needed for aborting a shutdown
         private static Timer _timer;
         private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 120;
+        private static bool _intilized = Initialize();
+
 
         //Load the ability to lock the computer from the native user32 dll
         [DllImport("user32")]
         private static extern void lockWorkStation();
+
+        private static bool Initialize()
+        {
+            Bus.Register(Bus.Channel.Power, ParseBus);
+            return true;
+        }
+
+        private static void ParseBus(string data)
+        {
+            if (data.Equals("AbortShutdown"))
+                AbortShutdown();
+            else if (data.Equals("ShuttingDown"))
+                ShuttingDown = true;
+        }
 
         /// <summary>
         ///     Create a shutdown command
@@ -67,9 +83,11 @@ namespace FOG.Handlers.Power
 
         private static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            ShutdownPending = true;
+            ShuttingDown = true;
             CreateTask(pendingCommand);
             pendingCommand = string.Empty;
+
+            Bus.Emit(Bus.Channel.Power, "ShuttingDown");
         }
 
         /// <summary>
@@ -121,9 +139,8 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void AbortShutdown()
         {
-            ShutdownPending = false;
+            ShuttingDown = false;
             _timer = null;
-            CreateTask("/a");
         }
 
         /// <summary>
@@ -132,7 +149,7 @@ namespace FOG.Handlers.Power
         public static void RestartService()
         {
             Log.Entry(LogName, "Restarting service");
-            ShutdownPending = true;
+            ShuttingDown = true;
             var process = new Process
             {
                 StartInfo =
