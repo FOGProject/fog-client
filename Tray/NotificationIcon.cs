@@ -43,6 +43,8 @@ namespace FOG
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Notification, OnNotification);
+            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
             bool isFirstInstance;
             // Please use a unique name for the mutex to prevent conflicts with other programs
@@ -70,22 +72,6 @@ namespace FOG
 
         public NotificationIcon()
         {
-            // Setup the pipe client
-
-
-            var userNotificationPipe = new PipeClient("fog_pipe_notification_user_" + UserHandler.GetCurrentUser());
-            userNotificationPipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            userNotificationPipe.Connect();
-
-            var systemNotificationPipe = new PipeClient("fog_pipe_notification");
-            systemNotificationPipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            systemNotificationPipe.Connect();
-
-            var servicePipe = new PipeClient("fog_pipe_service");
-            servicePipe.MessageReceived += pipeNotificationClient_MessageReceived;
-            servicePipe.Connect();
-
-
             _notifyIcon = new NotifyIcon();
             var notificationMenu = new ContextMenu(InitializeMenu());
 
@@ -98,48 +84,28 @@ namespace FOG
             _isNotificationReady = false;
         }
 
-        //Called when a message is recieved from the pipe server
-        private void pipeNotificationClient_MessageReceived(string message)
+        private static void OnUpdate(string data)
         {
-            if (message.StartsWith("TLE:"))
-            {
-                message = message.Substring(4);
-                _notification.Title = message;
-            }
-            else if (message.StartsWith("MSG:"))
-            {
-                message = message.Substring(4);
-                _notification.Message = message;
-            }
-            else if (message.StartsWith("DUR:"))
-            {
-                message = message.Substring(4);
-                try
-                {
-                    _notification.Duration = int.Parse(message);
-                }
-                catch
-                {
-                    // ignored
-                }
-                _isNotificationReady = true;
-            }
-            else if (message.Equals("UPD"))
-            {
+            if(data.Equals("start"))
                 Application.Exit();
-            }
-
-            if (_isNotificationReady)
-            {
-                _notifyIcon.BalloonTipTitle = _notification.Title;
-                _notifyIcon.BalloonTipText = _notification.Message;
-                _notifyIcon.ShowBalloonTip(_notification.Duration);
-                _isNotificationReady = false;
-                _notification = new Notification();
-            }
         }
 
-        private MenuItem[] InitializeMenu()
+        //Called when a message is recieved from the bus
+        private static void OnNotification(string data)
+        {
+            //_notification.Title = 
+            //_notification.Message =
+            //_notification.Duration =
+
+ //           if (!_isNotificationReady) return;
+ //           _notifyIcon.BalloonTipTitle = _notification.Title;
+ //           _notifyIcon.BalloonTipText = _notification.Message;
+ //           _notifyIcon.ShowBalloonTip(_notification.Duration);
+ //           _isNotificationReady = false;
+ //           _notification = new Notification();
+        }
+
+        private static MenuItem[] InitializeMenu()
         {
             var menu = new MenuItem[] {};
             return menu;

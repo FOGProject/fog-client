@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 namespace FOG.Handlers
 {
@@ -29,6 +30,7 @@ namespace FOG.Handlers
             Debug,
             Power,
             Notification,
+            Status,
             Update
         }
 
@@ -122,11 +124,23 @@ namespace FOG.Handlers
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
         /// <param name="global">Should the data be sent to other instances</param>
+        public static void Emit(Channel channel, JObject data, bool global = false)
+        {
+            Emit(channel, data.ToString(), global);
+        }
+
+        /// <summary>
+        /// Emit a message to all listeners
+        /// </summary>
+        /// <param name="channel">The channel to emit on</param>
+        /// <param name="data">The data to send</param>
+        /// <param name="global">Should the data be sent to other instances</param>
         public static void Emit(Channel channel, string data, bool global = false)
         {
             if (global)
             {
-                SendMessage(channel + "//" + data);
+                var transport = new JObject {{"channel", channel.ToString()}, {"data", data}};
+                SendMessage(transport.ToString());
 
                 // If this bus instance is a client, wait for the event to be bounced-back before processing
                 if(_client != null)
@@ -199,10 +213,9 @@ namespace FOG.Handlers
         {
             try
             {
-                var rawChannel = message.Substring(0, message.IndexOf("//"));
-                var channel = (Channel) Enum.Parse(typeof(Channel), rawChannel);
-                var data = message.Substring(rawChannel.Length+2, message.Length - rawChannel.Length - 2);
-                Emit(channel, data);
+                var transport = JObject.Parse(message);
+                var channel = (Channel)Enum.Parse(typeof(Channel), transport["channel"].ToString());
+                Emit(channel, transport["data"].ToString());
             }
             catch (Exception ex)
             {

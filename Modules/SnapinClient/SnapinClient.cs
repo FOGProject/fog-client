@@ -91,8 +91,10 @@ namespace FOG.Modules.SnapinClient
         //Execute the snapin once it has been downloaded
         private string StartSnapin(Response taskResponse, string snapinPath)
         {
-            NotificationHandler.Notifications.Add(new Notification(taskResponse.GetField("SNAPINNAME"),
-                string.Format("FOG is installing {0}", taskResponse.GetField("SNAPINNAME")), 10));
+            var notification = new Notification(taskResponse.GetField("SNAPINNAME"),
+                string.Format("FOG is installing {0}", taskResponse.GetField("SNAPINNAME")), 10);
+
+            Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
             var process = GenerateProcess(taskResponse, snapinPath);
 
@@ -103,11 +105,12 @@ namespace FOG.Modules.SnapinClient
                 process.WaitForExit();
                 Log.Entry(Name, "Snapin finished");
                 Log.Entry(Name, "Return Code: " + process.ExitCode);
-                
-                NotificationHandler.Notifications.Add(new Notification(
-                    string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
-                    taskResponse.GetField("SNAPINNAME") + " finished installing", 10));
 
+                notification = new Notification(
+                    string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
+                    taskResponse.GetField("SNAPINNAME") + " finished installing", 10);
+
+                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
                 return process.ExitCode.ToString();
             }
             catch (Exception ex)

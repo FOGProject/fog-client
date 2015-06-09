@@ -79,6 +79,10 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -107,10 +111,6 @@
     <ProjectReference Include="..\Handlers\Handlers.csproj">
       <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
       <Name>Handlers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
-      <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
-      <Name>PipeClient</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Newtonsoft.Json;
+
 namespace FOG.Handlers
 {
     /// <summary>
@@ -42,5 +44,10 @@ namespace FOG.Handlers
         public string Title { get; set; }
         public string Message { get; set; }
         public int Duration { get; set; }
+
+        public string GetJson()
+        {
+            return JsonConvert.SerializeObject(this);
+        }
     }
 }

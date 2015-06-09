@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
@@ -17,28 +16,14 @@ namespace FOG
 {
     class FOGSystemService : AbstractService
     {
-        private readonly PipeServer _notificationPipe;
-        private readonly Thread _notificationPipeThread;
-        private readonly PipeServer _servicePipe;
-
         public FOGSystemService() : base()
         {
             Bus.SetMode(Bus.Mode.Client);
-            //Setup the notification pipe server
-            _notificationPipeThread = new Thread(notificationPipeHandler);
-            _notificationPipe = new PipeServer("fog_pipe_notification");
-
-            //Setup the user-service pipe server, this is only Server -- > Client communication so no need to setup listeners
-            _servicePipe = new PipeServer("fog_pipe_service");
         }
 
         protected override void Load()
         {
-            // Start the pipe server
-            _notificationPipeThread.Priority = ThreadPriority.Normal;
-            _notificationPipeThread.Start();
-
-            _servicePipe.Start();
+            Bus.SetMode(Bus.Mode.Client);
 
             Log.NewLine();
             Log.PaddedHeader("Authentication");
@@ -50,8 +35,8 @@ namespace FOG
 
         protected override void Unload()
         {
-            // Stop the pipe server
-            _notificationPipeThread.Abort();
+            Bus.Emit(Bus.Channel.Status, "unload", true);
+            Bus.Dispose();
 
             // Kill the sub-processes
             foreach (var process in Process.GetProcessesByName("FOGUserService"))
@@ -59,30 +44,6 @@ namespace FOG
 
             foreach (var process in Process.GetProcessesByName("FOGTray"))
                 process.Kill();
-        }
-
-        //This is run by the pipe thread, it will send out notifications to the tray
-        private void notificationPipeHandler()
-        {
-            while (!Power.ShuttingDown && !Power.Updating)
-            {
-                if (!_notificationPipe.IsRunning())
-                    _notificationPipe.Start();
-
-                Thread.Sleep(3000);
-
-                if (NotificationHandler.Notifications.Count <= 0) continue;
-
-                //Split up the notification into 3 messages: Title, Message, and Duration
-                _notificationPipe.SendMessage(string.Format("TLE:{0}", NotificationHandler.Notifications[0].Title));
-                Thread.Sleep(750);
-
-                _notificationPipe.SendMessage(string.Format("MSG:{0}", NotificationHandler.Notifications[0].Message));
-                Thread.Sleep(750);
-
-                _notificationPipe.SendMessage(string.Format("DUR:{0}", NotificationHandler.Notifications[0].Duration));
-                NotificationHandler.Notifications.RemoveAt(0);
-            }
         }
 
         protected override AbstractModule[] GetModules()
@@ -105,7 +66,7 @@ namespace FOG
             base.ModuleLooper();
 
             if (Power.Updating)
-                UpdateHandler.BeginUpdate(_servicePipe);
+                UpdateHandler.BeginUpdate();
         }
 
         protected override int? GetSleepTime()

@@ -132,15 +132,18 @@ namespace FOG.Modules.HostnameChanger
                 RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
                     response.GetField("#hostname"));
 
-                Power.Restart(NotificationHandler.Company + " needs to rename your computer", 10);
+                Power.Restart(RegistryHandler.GetSystemSetting("Company") + " needs to rename your computer", 10);
             }
             else if(!_notifiedUser)
             {
                 Log.Entry(Name, "User is currently logged in, will try again later");
 
-                NotificationHandler.Notifications.Add(new Notification("Please log off",
-                    string.Format("{0} is attemping to service your computer, please log off at the soonest available time", 
-                    NotificationHandler.Company), 120));
+                var notification = new Notification("Please log off",
+                    string.Format(
+                        "{0} is attemping to service your computer, please log off at the soonest available time",
+                        RegistryHandler.GetSystemSetting("Company")), 120);
+
+                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
                 _notifiedUser = true;
             }

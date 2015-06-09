@@ -54,8 +54,12 @@ namespace FOG.Modules.AutoLogOut
                 Log.Entry(Name, string.Format("Inactive for {0} seconds", UserHandler.GetInactivityTime()));
                 
                 if (UserHandler.GetInactivityTime() < timeOut) return;
-                NotificationHandler.Notifications.Add(new Notification("You are about to be logged off",
-                    "Due to inactivity you will be logged off if you remain inactive", 20));
+
+                var notification = new Notification("You are about to be logged off",
+                    "Due to inactivity you will be logged off if you remain inactive", 20);
+
+                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
+
                 
                 //Wait 20 seconds and check if the user is no longer inactive
                 Thread.Sleep(20000);

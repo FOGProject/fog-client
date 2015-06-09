@@ -47,7 +47,7 @@ namespace FOG
             }
         }
 
-        public static void BeginUpdate(PipeServer servicePipe)
+        public static void BeginUpdate()
         {
             try
             {
@@ -58,7 +58,7 @@ namespace FOG
                 Thread.Sleep(1000);
 
                 //Notify all FOG sub processes that an update is about to occu
-                servicePipe.SendMessage("UPD");
+                Bus.Emit(Bus.Channel.Update, "begin", true);
 
                 //Kill any FOG sub processes still running after the notification
                 KillSubProcesses();
