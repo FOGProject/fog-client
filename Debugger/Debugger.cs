@@ -30,6 +30,7 @@ using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -133,7 +134,7 @@ namespace FOG
             }
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
-                Bus.Emit(Bus.Channel.Debug, command[1], true);
+                Bus.Emit(Bus.Channel.Debug, new JObject { "data", command[1] }, true);
             }
             else
                 Log.Entry(Name, "Unknown command");
@@ -141,12 +142,13 @@ namespace FOG
             return false;
         }
 
-        private static void OnMessage(string msg)
+        private static void OnMessage(JObject data)
         {
+            var msg = data.GetValue("data").ToString();
+
             Log.NewLine();
             Log.WriteLine("Message recieved: " + msg);
             Log.Write("fog: ");
-
         }
 
     }

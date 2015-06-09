@@ -40,8 +40,8 @@ namespace FOG.Handlers
             Client
         }
 
-        private static readonly Dictionary<Channel, LinkedList<Action<string>>> Registrar =
-            new Dictionary<Channel, LinkedList<Action<string>>>();
+        private static readonly Dictionary<Channel, LinkedList<Action<JObject>>> Registrar =
+            new Dictionary<Channel, LinkedList<Action<JObject>>>();
 
         private const string LogName = "Bus";
         private static bool _initialized = false;
@@ -55,7 +55,6 @@ namespace FOG.Handlers
             _mode = mode;
             InitializePipe();
         }
-
 
         /// <summary>
         /// Initiate the pipe that connects to all other FOG bus instances
@@ -135,7 +134,7 @@ namespace FOG.Handlers
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
         /// <param name="global">Should the data be sent to other instances</param>
-        public static void Emit(Channel channel, string data, bool global = false)
+        private static void Emit(Channel channel, string data, bool global = false)
         {
             if (global)
             {
@@ -150,9 +149,17 @@ namespace FOG.Handlers
             Log.Entry(LogName, "Emmiting message on channel: " + channel);
 
             if (!Registrar.ContainsKey(channel)) return;
-
-            foreach(var action in Registrar[channel])
-                action.Invoke(data);
+            try
+            {
+                var json = JObject.Parse(data);
+                foreach (var action in Registrar[channel])
+                    action.Invoke(json);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to parse data");
+                Log.Error(LogName, ex);
+            }
         }
 
         /// <summary>
@@ -160,12 +167,12 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel">The channel to register within</param>
         /// <param name="action">The action (method) to register</param>
-        public static void Subscribe(Channel channel, Action<string> action)
+        public static void Subscribe(Channel channel, Action<JObject> action)
         {
             Log.Entry(LogName, string.Format("Registering {0} in channel {1}", action.Method.Name, channel));
 
             if (!Registrar.ContainsKey(channel))
-                Registrar.Add(channel, new LinkedList<Action<string>>());
+                Registrar.Add(channel, new LinkedList<Action<JObject>>());
             if (Registrar[channel].Contains(action)) return;
 
             Registrar[channel].AddLast(action);
@@ -176,7 +183,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>
-        public static void Unsubscribe(Channel channel, Action<string> action)
+        public static void Unsubscribe(Channel channel, Action<JObject> action)
         {
             Log.Entry(LogName, string.Format("UnRegistering {0} in channel {1}", action.Method.Name, channel));
 

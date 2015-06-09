@@ -5,30 +5,22 @@ using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
     class FOGUserService : AbstractService
     {
-
-        private static PipeClient _servicePipe;
-
         public FOGUserService() : base()
         {
             Bus.SetMode(Bus.Mode.Client);
-            //Setup the service pipe client
-            _servicePipe = new PipeClient("fog_pipe_service");
-            _servicePipe.MessageReceived += pipeClient_MessageReceived;
+            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
         }
 
         //Handle recieving a message
-        private void pipeClient_MessageReceived(string message)
+        private void OnUpdate(JObject data)
         {
-            Log.Debug(Name, "Message recieved from service");
-            Log.Debug(Name, string.Format("MSG: {0}", message));
-
-            if (!message.Equals("UPD")) return;
-
+            if (!data.GetValue("action").ToString().Equals("update")) return;
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.Updating = true;
         }
@@ -42,15 +34,8 @@ namespace FOG
             };
         }
 
-        protected override void Load()
-        {
-            _servicePipe.Connect();
-        }
-
-        protected override void Unload()
-        {
-            _servicePipe.Kill();
-        }
+        protected override void Load() { }
+        protected override void Unload() { }
 
         protected override int? GetSleepTime()
         {

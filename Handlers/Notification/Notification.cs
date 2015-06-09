@@ -18,6 +18,7 @@
  */
 
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace FOG.Handlers
 {
@@ -45,9 +46,9 @@ namespace FOG.Handlers
         public string Message { get; set; }
         public int Duration { get; set; }
 
-        public string GetJson()
+        public JObject GetJson()
         {
-            return JsonConvert.SerializeObject(this);
+            return JObject.FromObject(this);
         }
     }
 }

@@ -23,6 +23,7 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Handlers;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -84,14 +85,15 @@ namespace FOG
             _isNotificationReady = false;
         }
 
-        private static void OnUpdate(string data)
+        private static void OnUpdate(JObject data)
         {
-            if(data.Equals("start"))
+            var action = data.GetValue("action").ToString();
+            if (action.Equals("start"))
                 Application.Exit();
         }
 
         //Called when a message is recieved from the bus
-        private static void OnNotification(string data)
+        private static void OnNotification(JObject data)
         {
             //_notification.Title = 
             //_notification.Message =

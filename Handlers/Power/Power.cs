@@ -23,6 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Timers;
+using Newtonsoft.Json.Linq;
 
 namespace FOG.Handlers.Power
 {
@@ -54,13 +55,14 @@ namespace FOG.Handlers.Power
             return true;
         }
 
-        private static void ParseBus(string data)
+        private static void ParseBus(JObject data)
         {
-            if (data.Equals("AbortShutdown"))
+            var action = data.GetValue("action").ToString();
+            if (action.Equals("AbortShutdown"))
                 AbortShutdown();
-            else if (data.Equals("ShuttingDown"))
+            else if (action.Equals("ShuttingDown"))
                 ShuttingDown = true;
-            else if (data.Equals("ShutdownRequested"))
+            else if (action.Equals("ShutdownRequested"))
                 ShutdownNotification();
         }
 
@@ -91,7 +93,7 @@ namespace FOG.Handlers.Power
             CreateTask(pendingCommand);
             pendingCommand = string.Empty;
 
-            Bus.Emit(Bus.Channel.Power, "ShuttingDown");
+            Bus.Emit(Bus.Channel.Power, new JObject { "action", "shuttingdown" });
         }
 
         /// <summary>
@@ -167,7 +169,7 @@ namespace FOG.Handlers.Power
         private static void ProcessNotificationGUI(object sender, EventArgs e)
         {
             if(_notificationProcess.ExitCode == 1)
-                Bus.Emit(Bus.Channel.Power, "AbortShutdown", true);
+                Bus.Emit(Bus.Channel.Power, new JObject { "action", "abort" });
         }
 
         /// <summary>

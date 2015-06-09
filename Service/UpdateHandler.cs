@@ -23,6 +23,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading;
 using FOG.Handlers;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -58,7 +59,7 @@ namespace FOG
                 Thread.Sleep(1000);
 
                 //Notify all FOG sub processes that an update is about to occu
-                Bus.Emit(Bus.Channel.Update, "begin", true);
+                Bus.Emit(Bus.Channel.Update, new JObject{"action","start"}, true);
 
                 //Kill any FOG sub processes still running after the notification
                 KillSubProcesses();

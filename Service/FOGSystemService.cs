@@ -11,6 +11,7 @@ using FOG.Modules.HostnameChanger;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -24,6 +25,7 @@ namespace FOG
         protected override void Load()
         {
             Bus.SetMode(Bus.Mode.Client);
+            Bus.Emit(Bus.Channel.Status, new JObject { "action", "load" }, true);
 
             Log.NewLine();
             Log.PaddedHeader("Authentication");
@@ -35,7 +37,7 @@ namespace FOG
 
         protected override void Unload()
         {
-            Bus.Emit(Bus.Channel.Status, "unload", true);
+            Bus.Emit(Bus.Channel.Status, new JObject { "action", "unload" }, true);
             Bus.Dispose();
 
             // Kill the sub-processes
