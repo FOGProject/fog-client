@@ -26,16 +26,34 @@ namespace FOG.Handlers
     {
         public enum Channel
         {
-            Power
+            Debug,
+            Power,
+            Notification,
+            Update
+        }
+
+        public enum Mode
+        {
+            Server,
+            Client
         }
 
         private static readonly Dictionary<Channel, LinkedList<Action<string>>> Registrar =
             new Dictionary<Channel, LinkedList<Action<string>>>();
 
         private const string LogName = "Bus";
-        private static readonly bool Initialized = InitializePipe();
+        private static bool _initialized = false;
         private static PipeServer _server;
         private static PipeClient _client;
+
+        private static Mode _mode = Mode.Client;
+
+        public static void SetMode(Mode mode)
+        {
+            _mode = mode;
+            InitializePipe();
+        }
+
 
         /// <summary>
         /// Initiate the pipe that connects to all other FOG bus instances
@@ -43,35 +61,43 @@ namespace FOG.Handlers
         /// Do NOT send security relevant data across it
         /// </summary>
         /// <returns></returns>
-        private static bool InitializePipe()
+        private static void InitializePipe()
         {
-            // Attempt to become the pipe server
-            try
-            {
-                _server = new PipeServer("fog-bus");
-                _server.MessageReceived += pipe_RecieveMessage;
-                _server.Start();
-                Log.Entry(LogName, "Became bus server");
 
-                return true;
-            } catch (Exception) {}
-
-            // If someone else is already a pipe server, try and become a pipe client
-            try
+            switch (_mode)
             {
-                _client = new PipeClient("fog-bus");
-                _client.MessageReceived += pipe_RecieveMessage;
-                _client.Connect();
-                Log.Entry(LogName, "Became bus client");
-                return true;
+                case Mode.Server:
+                    // Attempt to become the pipe server
+                    try
+                    {
+                        _server = new PipeServer("fog-bus");
+                        _server.MessageReceived += pipe_RecieveMessage;
+                        _server.Start();
+                        Log.Entry(LogName, "Became bus server");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(LogName, "Could not enter named pipe");
+                        Log.Error(LogName, ex);
+                    }
+                    break;
+                case Mode.Client:
+                    // If someone else is already a pipe server, try and become a pipe client
+                    try
+                    {
+                        _client = new PipeClient("fog-bus");
+                        _client.MessageReceived += pipe_RecieveMessage;
+                        _client.Connect();
+                        Log.Entry(LogName, "Became bus client");
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(LogName, "Could not enter named pipe");
+                        Log.Error(LogName, ex);
+                    }
+                    break;
             }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Could not enter named pipe");
-                Log.Error(LogName, ex);
-            }
-
-            return false;
+            _initialized = true;
         }
 
         /// <summary>
@@ -80,7 +106,8 @@ namespace FOG.Handlers
         /// <param name="msg">The message to send, should follow the define format</param>
         private static void SendMessage(string msg)
         {
-            if (!Initialized) return;
+            if (!_initialized) InitializePipe();
+            if (!_initialized) return;
 
             if(_server != null && _server.IsRunning())
                 _server.SendMessage(msg);
@@ -151,9 +178,8 @@ namespace FOG.Handlers
         /// <param name="message">The formatted event</param>
         private static void pipe_RecieveMessage(Client client, string message)
         {
-            var bounce = EmitMessageFromPipe(message);
-            if (bounce)
-                SendMessage(message);
+            EmitMessageFromPipe(message);
+            SendMessage(message);
         }
 
         /// <summary>
@@ -169,20 +195,13 @@ namespace FOG.Handlers
         /// Parse a message recieved in the pipe and emit it to channels confined in its instance
         /// </summary>
         /// <param name="message"></param>
-        private static bool EmitMessageFromPipe(string message)
+        private static void EmitMessageFromPipe(string message)
         {
-            var bounce = false;
-
             try
             {
                 var rawChannel = message.Substring(0, message.IndexOf("//"));
                 var channel = (Channel) Enum.Parse(typeof(Channel), rawChannel);
-                bounce = !(message.EndsWith("//private//"));
-                if (!bounce)
-                    message = message.Substring(0, message.LastIndexOf("//private//"));
-
-                var data = message.Remove(rawChannel.Length + 2);
-
+                var data = message.Substring(rawChannel.Length+2, message.Length - rawChannel.Length - 2);
                 Emit(channel, data);
             }
             catch (Exception ex)
@@ -191,8 +210,12 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
 
             }
+        }
 
-            return bounce;
+        public static void Dispose()
+        {
+            if(_initialized && _mode == Mode.Client)
+                _client.Kill();
         }
 
     }

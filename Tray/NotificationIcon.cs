@@ -42,7 +42,7 @@ namespace FOG
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
+            Bus.SetMode(Bus.Mode.Client);
 
             bool isFirstInstance;
             // Please use a unique name for the mutex to prevent conflicts with other programs

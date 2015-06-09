@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -40,6 +41,7 @@ namespace FOG.Handlers.Power
         private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 120;
         private static bool _intilized = Initialize();
+        private static Process _notificationProcess;
 
 
         //Load the ability to lock the computer from the native user32 dll
@@ -58,6 +60,8 @@ namespace FOG.Handlers.Power
                 AbortShutdown();
             else if (data.Equals("ShuttingDown"))
                 ShuttingDown = true;
+            else if (data.Equals("ShutdownRequested"))
+                ShutdownNotification();
         }
 
         /// <summary>
@@ -141,6 +145,29 @@ namespace FOG.Handlers.Power
         {
             ShuttingDown = false;
             _timer = null;
+        }
+
+        private static void ShutdownNotification()
+        {
+            Log.Entry(LogName, "Prompting user");
+            _notificationProcess = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                               @"\FOGNotificationGUI.exe"
+                }
+            };
+            _notificationProcess.Start();
+
+            _notificationProcess.Exited += ProcessNotificationGUI;
+        }
+
+        private static void ProcessNotificationGUI(object sender, EventArgs e)
+        {
+            if(_notificationProcess.ExitCode == 1)
+                Bus.Emit(Bus.Channel.Power, "AbortShutdown", true);
         }
 
         /// <summary>

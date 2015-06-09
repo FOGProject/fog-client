@@ -15,6 +15,7 @@ namespace FOG
 
         public FOGUserService() : base()
         {
+            Bus.SetMode(Bus.Mode.Client);
             //Setup the service pipe client
             _servicePipe = new PipeClient("fog_pipe_service");
             _servicePipe.MessageReceived += pipeClient_MessageReceived;

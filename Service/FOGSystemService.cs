@@ -23,6 +23,7 @@ namespace FOG
 
         public FOGSystemService() : base()
         {
+            Bus.SetMode(Bus.Mode.Client);
             //Setup the notification pipe server
             _notificationPipeThread = new Thread(notificationPipeHandler);
             _notificationPipe = new PipeServer("fog_pipe_notification");

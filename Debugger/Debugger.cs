@@ -59,6 +59,7 @@ namespace FOG
             Log.Entry(Name, "Type help for a list of commands");
             Log.NewLine();
 
+            Bus.Subscribe(Bus.Channel.Debug, OnMessage);
             InteractiveShell();
         }
 
@@ -73,6 +74,7 @@ namespace FOG
                 if (ProcessCommand(input.ToLower().Split(' '))) break;
                 Log.Divider();
             }
+            Bus.Dispose();
         }
 
         private static bool ProcessCommand(string[] command)
@@ -122,11 +124,29 @@ namespace FOG
                 }
                 Log.WriteLine(" exit <-- Exits the console");
             }
-
+            else if (command.Length == 3 && command[0].Equals("bus") && command[1].Equals("mode"))
+            {
+                if(command[2].Equals("server"))
+                    Bus.SetMode(Bus.Mode.Server);
+                else if (command[2].Equals("client"))
+                    Bus.SetMode(Bus.Mode.Client);
+            }
+            else if (command.Length >= 2 && command[0].Equals("bus"))
+            {
+                Bus.Emit(Bus.Channel.Debug, command[1], true);
+            }
             else
                 Log.Entry(Name, "Unknown command");
 
             return false;
+        }
+
+        private static void OnMessage(string msg)
+        {
+            Log.NewLine();
+            Log.WriteLine("Message recieved: " + msg);
+            Log.Write("fog: ");
+
         }
 
     }
