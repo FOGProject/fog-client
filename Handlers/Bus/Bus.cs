@@ -44,7 +44,7 @@ namespace FOG.Handlers
             new Dictionary<Channel, LinkedList<Action<dynamic>>>();
 
         private const string LogName = "Bus";
-        private static bool _initialized = false;
+        private static bool _initialized;
         private static PipeServer _server;
         private static PipeClient _client;
 
@@ -64,7 +64,6 @@ namespace FOG.Handlers
         /// <returns></returns>
         private static void InitializePipe()
         {
-
             switch (_mode)
             {
                 case Mode.Server:

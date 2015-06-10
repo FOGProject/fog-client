@@ -31,13 +31,17 @@ namespace FOG.Handlers.Middleware
         private const string LogName = "Middleware::Configuration";
         public static string ServerAddress { get; set; }
         public static string TestMAC { get; set; }
-        private static bool _isAddressSet = GetAndSetServerAddress();
+
+        static Configuration()
+        {
+            GetAndSetServerAddress();
+        }
 
         /// <summary>
         ///     Load the server information from the registry and apply it
         ///     <returns>True if settings were updated</returns>
         /// </summary>
-        private static bool GetAndSetServerAddress()
+        public static bool GetAndSetServerAddress()
         {
 
             if (RegistryHandler.GetSystemSetting("HTTPS") == null || RegistryHandler.GetSystemSetting("WebRoot") == null ||

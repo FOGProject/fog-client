@@ -41,7 +41,6 @@ namespace FOG.Handlers.Power
         private static Timer _timer;
         private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 120;
-        private static bool _intilized = Initialize();
         private static Process _notificationProcess;
 
 
@@ -49,10 +48,9 @@ namespace FOG.Handlers.Power
         [DllImport("user32")]
         private static extern void lockWorkStation();
 
-        private static bool Initialize()
+        static Power()
         {
             Bus.Subscribe(Bus.Channel.Power, ParseBus);
-            return true;
         }
 
         private static void ParseBus(dynamic data)

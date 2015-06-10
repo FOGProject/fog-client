@@ -43,20 +43,17 @@ namespace FOG.Handlers
         private const long DefaultMaxLogSize = 502400;
         private const int HeaderLength = 78;
         private const string LogName = "Log";
-        private static bool _initialized = Initialize();
 
         public static string FilePath { get; set; }
         public static long MaxSize { get; set; }
         public static Mode Output { get; set; }
         public static bool Verbose { get; set; }
 
-        private static bool Initialize()
+        static Log()
         {
             FilePath = @"\fog.log";
             MaxSize = DefaultMaxLogSize;
             Output = Mode.File;
-
-            return true;
         }
 
         /// <summary>
