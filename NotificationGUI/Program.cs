@@ -16,8 +16,9 @@ namespace FOG {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm(args));
-            Eager.Initalize();
 
+		    Log.Output = Log.Mode.Quiet;
+            Eager.Initalize();
 		}
 		
 	}

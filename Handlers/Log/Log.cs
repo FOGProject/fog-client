@@ -37,7 +37,8 @@ namespace FOG.Handlers
         public enum Mode
         {
             File,
-            Console
+            Console,
+            Quiet
         }
 
         private const long DefaultMaxLogSize = 502400;
@@ -161,6 +162,8 @@ namespace FOG.Handlers
         {
             switch (Output)
             {
+                case Mode.Quiet:
+                    break;
                 case Mode.Console:
                     if (level == Level.Error)
                         Console.BackgroundColor = ConsoleColor.Red;
