@@ -30,6 +30,7 @@ namespace FOG
     {
         public static void Main(string[] args)
         {
+            Eager.Initalize();
             var service = new ServiceController("fogservice");
             const string logName = "Update Helper";
 

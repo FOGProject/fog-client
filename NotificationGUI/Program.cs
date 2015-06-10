@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Windows.Forms;
+using FOG.Handlers;
 
 namespace FOG {
 	/// <summary>
@@ -15,6 +16,8 @@ namespace FOG {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm(args));
+            Eager.Initalize();
+
 		}
 		
 	}

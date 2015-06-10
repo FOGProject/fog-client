@@ -22,6 +22,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using FOG.Handlers;
 
 namespace FOG
 {
@@ -29,6 +30,8 @@ namespace FOG
     {
         public static void Main(string[] args)
         {
+            Eager.Initalize();
+
             //Update Line
             //Check if an parameter was passed
             if (args.Length <= 0) return;

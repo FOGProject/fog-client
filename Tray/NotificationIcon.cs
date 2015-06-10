@@ -68,6 +68,7 @@ namespace FOG
 
         public NotificationIcon()
         {
+            Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);

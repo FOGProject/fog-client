@@ -55,6 +55,7 @@ namespace FOG
         {
             Log.Output = Log.Mode.Console;
             Log.Verbose = true;
+            Eager.Initalize();
 
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type help for a list of commands");
