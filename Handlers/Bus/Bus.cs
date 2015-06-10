@@ -40,8 +40,8 @@ namespace FOG.Handlers
             Client
         }
 
-        private static readonly Dictionary<Channel, LinkedList<Action<JObject>>> Registrar =
-            new Dictionary<Channel, LinkedList<Action<JObject>>>();
+        private static readonly Dictionary<Channel, LinkedList<Action<dynamic>>> Registrar =
+            new Dictionary<Channel, LinkedList<Action<dynamic>>>();
 
         private const string LogName = "Bus";
         private static bool _initialized = false;
@@ -139,6 +139,7 @@ namespace FOG.Handlers
             if (global)
             {
                 var transport = new JObject {{"channel", channel.ToString()}, {"data", data}};
+                Log.Entry(LogName, transport.ToString());
                 SendMessage(transport.ToString());
 
                 // If this bus instance is a client, wait for the event to be bounced-back before processing
@@ -167,12 +168,12 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel">The channel to register within</param>
         /// <param name="action">The action (method) to register</param>
-        public static void Subscribe(Channel channel, Action<JObject> action)
+        public static void Subscribe(Channel channel, Action<dynamic> action)
         {
             Log.Entry(LogName, string.Format("Registering {0} in channel {1}", action.Method.Name, channel));
 
             if (!Registrar.ContainsKey(channel))
-                Registrar.Add(channel, new LinkedList<Action<JObject>>());
+                Registrar.Add(channel, new LinkedList<Action<dynamic>>());
             if (Registrar[channel].Contains(action)) return;
 
             Registrar[channel].AddLast(action);
@@ -183,7 +184,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>
-        public static void Unsubscribe(Channel channel, Action<JObject> action)
+        public static void Unsubscribe(Channel channel, Action<dynamic> action)
         {
             Log.Entry(LogName, string.Format("UnRegistering {0} in channel {1}", action.Method.Name, channel));
 

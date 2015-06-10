@@ -23,7 +23,6 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Handlers;
-using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -31,7 +30,6 @@ namespace FOG
     {
         //Define variables
         private readonly NotifyIcon _notifyIcon;
-        private bool _isNotificationReady;
         private Notification _notification;
 
         #region Main - Program entry point
@@ -43,9 +41,6 @@ namespace FOG
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Bus.SetMode(Bus.Mode.Client);
-            Bus.Subscribe(Bus.Channel.Notification, OnNotification);
-            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
             bool isFirstInstance;
             // Please use a unique name for the mutex to prevent conflicts with other programs
@@ -73,6 +68,10 @@ namespace FOG
 
         public NotificationIcon()
         {
+            Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Notification, OnNotification);
+            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
+
             _notifyIcon = new NotifyIcon();
             var notificationMenu = new ContextMenu(InitializeMenu());
 
@@ -82,29 +81,31 @@ namespace FOG
             _notifyIcon.ContextMenu = notificationMenu;
 
             _notification = new Notification();
-            _isNotificationReady = false;
         }
 
-        private static void OnUpdate(JObject data)
+        private static void OnUpdate(dynamic data)
         {
-            var action = data.GetValue("action").ToString();
-            if (action.Equals("start"))
+            if (data.action.Equals("start"))
                 Application.Exit();
         }
 
         //Called when a message is recieved from the bus
-        private static void OnNotification(JObject data)
+        private void OnNotification(dynamic data)
         {
-            //_notification.Title = 
-            //_notification.Message =
-            //_notification.Duration =
+            try
+            {
+                _notification.Title = data.notification;
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
 
- //           if (!_isNotificationReady) return;
- //           _notifyIcon.BalloonTipTitle = _notification.Title;
- //           _notifyIcon.BalloonTipText = _notification.Message;
- //           _notifyIcon.ShowBalloonTip(_notification.Duration);
- //           _isNotificationReady = false;
- //           _notification = new Notification();
+
+            _notifyIcon.BalloonTipTitle = _notification.Title;
+            _notifyIcon.BalloonTipText = _notification.Message;
+            _notifyIcon.ShowBalloonTip(_notification.Duration);
+            _notification = new Notification();
         }
 
         private static MenuItem[] InitializeMenu()

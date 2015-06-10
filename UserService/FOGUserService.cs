@@ -5,7 +5,6 @@ using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
-using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -18,9 +17,9 @@ namespace FOG
         }
 
         //Handle recieving a message
-        private void OnUpdate(JObject data)
+        private static void OnUpdate(dynamic data)
         {
-            if (!data.GetValue("action").ToString().Equals("update")) return;
+            if (!data.action.Equals("update")) return;
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.Updating = true;
         }

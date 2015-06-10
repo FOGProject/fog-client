@@ -55,14 +55,13 @@ namespace FOG.Handlers.Power
             return true;
         }
 
-        private static void ParseBus(JObject data)
+        private static void ParseBus(dynamic data)
         {
-            var action = data.GetValue("action").ToString();
-            if (action.Equals("AbortShutdown"))
+            if (data.action.Equals("AbortShutdown"))
                 AbortShutdown();
-            else if (action.Equals("ShuttingDown"))
+            else if (data.action.Equals("ShuttingDown"))
                 ShuttingDown = true;
-            else if (action.Equals("ShutdownRequested"))
+            else if (data.action.Equals("ShutdownRequested"))
                 ShutdownNotification();
         }
 

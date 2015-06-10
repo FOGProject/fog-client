@@ -60,8 +60,17 @@ namespace FOG
             Log.Entry(Name, "Type help for a list of commands");
             Log.NewLine();
 
-            Bus.Subscribe(Bus.Channel.Debug, OnMessage);
-            InteractiveShell();
+            try
+            {
+                Bus.Subscribe(Bus.Channel.Debug, OnMessage);
+                InteractiveShell();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, ex);
+                Console.ReadLine();
+            }
+
         }
 
         private static void InteractiveShell()
@@ -134,7 +143,8 @@ namespace FOG
             }
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
-                Bus.Emit(Bus.Channel.Debug, new JObject { "data", command[1] }, true);
+
+                Bus.Emit(Bus.Channel.Debug, new JObject(new JProperty("data", command[1])), true);
             }
             else
                 Log.Entry(Name, "Unknown command");
@@ -142,9 +152,9 @@ namespace FOG
             return false;
         }
 
-        private static void OnMessage(JObject data)
+        private static void OnMessage(dynamic data)
         {
-            var msg = data.GetValue("data").ToString();
+            var msg = data.data.ToString();
 
             Log.NewLine();
             Log.WriteLine("Message recieved: " + msg);
