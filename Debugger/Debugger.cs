@@ -144,7 +144,7 @@ namespace FOG
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
 
-                Bus.Emit(Bus.Channel.Debug, new JObject(new JProperty("data", command[1])), true);
+                Bus.Emit(Bus.Channel.Debug, new JObject(new JProperty("content", command[1])), true);
             }
             else
                 Log.Entry(Name, "Unknown command");
@@ -154,10 +154,10 @@ namespace FOG
 
         private static void OnMessage(dynamic data)
         {
-            var msg = data.data.ToString();
+            if (data.content == null) return;
 
             Log.NewLine();
-            Log.WriteLine("Message recieved: " + msg);
+            Log.WriteLine("Message recieved: " + data.content.ToString());
             Log.Write("fog: ");
         }
 

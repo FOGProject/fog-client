@@ -85,6 +85,8 @@ namespace FOG
 
         private static void OnUpdate(dynamic data)
         {
+            if (data.action == null) return;
+
             if (data.action.Equals("start"))
                 Application.Exit();
         }
@@ -92,15 +94,17 @@ namespace FOG
         //Called when a message is recieved from the bus
         private void OnNotification(dynamic data)
         {
+            if (data.title == null || data.message == null || data.duration == null) return;
             try
             {
-                _notification.Title = data.notification;
+                _notification.Title = data.title;
+                _notification.Message = data.message;
+                _notification.Duration = data.duration;
             }
             catch (Exception ex)
             {
                 return;
             }
-
 
             _notifyIcon.BalloonTipTitle = _notification.Title;
             _notifyIcon.BalloonTipText = _notification.Message;

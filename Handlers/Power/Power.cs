@@ -57,6 +57,8 @@ namespace FOG.Handlers.Power
 
         private static void ParseBus(dynamic data)
         {
+            if (data.action == null) return;
+
             if (data.action.Equals("AbortShutdown"))
                 AbortShutdown();
             else if (data.action.Equals("ShuttingDown"))
