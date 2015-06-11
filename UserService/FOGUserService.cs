@@ -14,15 +14,30 @@ namespace FOG
         {
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
+            Bus.Subscribe(Bus.Channel.Power, OnPower);
         }
 
-        //Handle recieving a message
         private static void OnUpdate(dynamic data)
         {
+            if (data.action == null) return;
+
             if (!data.action.Equals("update")) return;
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.Updating = true;
         }
+
+        private static void OnPower(dynamic data)
+        {
+            if (data.action == null || data.period == null) return;
+            Log.Entry("Test", "Got message: " + data.action.ToString());
+            string action = data.action.ToString();
+            string period = data.period.ToString();
+
+            if (action.Trim().Equals("request"))
+                Power.ShutdownNotification(period.Trim());
+        }
+
+
 
         protected override AbstractModule[] GetModules()
         {

@@ -145,7 +145,7 @@ namespace FOG
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
 
-                Bus.Emit(Bus.Channel.Debug, new JObject(new JProperty("content", command[1])), true);
+                Bus.Emit(Bus.Channel.Power, new JObject { { "action", "request" }, { "period", 120 } }, true);
             }
             else
                 Log.Entry(Name, "Unknown command");

@@ -41,6 +41,7 @@ namespace FOG
             //Initialize everything
             Log.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
+            Eager.Initalize();
 
             Log.Entry(LogName, "Initializing");
 

@@ -94,7 +94,7 @@ namespace FOG {
             this.btnNow.Name = "btnNow";
             this.btnNow.Size = new System.Drawing.Size(147, 41);
             this.btnNow.TabIndex = 6;
-            this.btnNow.Text = "Shutdown Now";
+            this.btnNow.Text = "Close Message";
             this.btnNow.UseVisualStyleBackColor = true;
             this.btnNow.Click += new System.EventHandler(this.BtnNowClick);
             // 

@@ -56,13 +56,13 @@ namespace FOG.Handlers.Power
         private static void ParseBus(dynamic data)
         {
             if (data.action == null) return;
+            string action = data.action.ToString();
+            action = action.Trim();
 
-            if (data.action.Equals("AbortShutdown"))
+            if (action.Equals("abort"))
                 AbortShutdown();
-            else if (data.action.Equals("ShuttingDown"))
+            else if (action.Equals("shuttingdown"))
                 ShuttingDown = true;
-            else if (data.action.Equals("ShutdownRequested"))
-                ShutdownNotification();
         }
 
         /// <summary>
@@ -80,6 +80,7 @@ namespace FOG.Handlers.Power
         private static void QueueShutdown(string parameters, int gracePeriod = DefaultGracePeriod)
         {
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod*1000));
+            Bus.Emit(Bus.Channel.Power, new JObject{{ "action", "request" }, {"period", gracePeriod}}, true);
             pendingCommand = parameters;
             _timer = new Timer(gracePeriod*1000);
             _timer.Elapsed += TimerElapsed;
@@ -92,7 +93,7 @@ namespace FOG.Handlers.Power
             CreateTask(pendingCommand);
             pendingCommand = string.Empty;
 
-            Bus.Emit(Bus.Channel.Power, new JObject { "action", "shuttingdown" });
+            Bus.Emit(Bus.Channel.Power, new JObject { "action", "shuttingdown" }, true);
         }
 
         /// <summary>
@@ -148,7 +149,7 @@ namespace FOG.Handlers.Power
             _timer = null;
         }
 
-        private static void ShutdownNotification()
+        public static void ShutdownNotification(string period)
         {
             Log.Entry(LogName, "Prompting user");
             _notificationProcess = new Process
@@ -157,18 +158,11 @@ namespace FOG.Handlers.Power
                 {
                     UseShellExecute = false,
                     FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                               @"\FOGNotificationGUI.exe"
+                               @"\FOGNotificationGUI.exe",
+                    Arguments = "/period " + period
                 }
             };
             _notificationProcess.Start();
-
-            _notificationProcess.Exited += ProcessNotificationGUI;
-        }
-
-        private static void ProcessNotificationGUI(object sender, EventArgs e)
-        {
-            if(_notificationProcess.ExitCode == 1)
-                Bus.Emit(Bus.Channel.Power, new JObject { "action", "abort" });
         }
 
         /// <summary>

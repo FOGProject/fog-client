@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using FOG.Handlers;
+using Newtonsoft.Json.Linq;
 
 namespace FOG {
 	/// <summary>
@@ -13,8 +15,25 @@ namespace FOG {
 		
 		private int _gracePeriod;
 		
-		public MainForm(IEnumerable<string> args) {
-			SetGracePeriod();
+		public MainForm(string[] args) {
+
+            foreach (var arg in args.Where(arg => arg.Contains("noAbort")))
+                btnAbort.Enabled = false;
+
+		    try
+		    {
+		        for (var i = 0; i < args.Length; i++)
+		        {
+		            if (!args[i].Contains("period") || i >= args.Length - 1) continue;
+		            _gracePeriod = int.Parse(args[i + 1]);
+		            break;
+		        }
+		    }
+		    catch (Exception ex)
+		    {
+		    }
+
+
 		    if (_gracePeriod == 0)
 		        Environment.Exit(0);
 		    //
@@ -24,25 +43,11 @@ namespace FOG {
 			
 			
 			//Generate the message
-			var message = "This computer needs to ";
-			var reason = ".";
-			
-			foreach(var arg in args) {
-			    if (arg.Contains("noAbort"))
-			        btnAbort.Enabled = false;
-			    else if (arg.Contains("shutdown"))
-			        btnNow.Text = "Shutdown Now";
-			    else if (arg.Contains("reboot"))
-			        btnNow.Text = "Reboot Now";
-			    else if (arg.Contains("snapin"))
-			        reason = " to apply new software.";
-			    else if (arg.Contains("task"))
-			        reason = " to perform a task.";
-			}
+            var message = "This computer needs to perform maintenance.";
 
-		    message = btnNow.Text.Contains("Shutdown") ? message + "shutdown" : message + "reboot";
 
-		    message = message + reason + " Please save all work and close programs.";
+
+		    message = message + " Please save all work and close programs.";
 
 
 		    if (btnAbort.Enabled)
@@ -55,20 +60,11 @@ namespace FOG {
 			label1.Text = _gracePeriod + " seconds";
 			var workingArea = Screen.GetWorkingArea(this);
 			Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
+
+            Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Power, onAbort);
 		}
-		
-		private void SetGracePeriod() {
-			var regValue = RegistryHandler.GetSystemSetting("NotificationPromptTime");
-			_gracePeriod = 60;
-		    if (regValue == null) return;
-		    
-            try {
-		        _gracePeriod = int.Parse(regValue);
-		    } catch (Exception) {
-		        _gracePeriod = 60;
-		    }
-		}
-		
+
 		//Prevent the window from being moved
 		//http://stackoverflow.com/a/907868
 		protected override void WndProc(ref Message message) {
@@ -100,7 +96,15 @@ namespace FOG {
 		
 		//Abort button
 		void BtnAbortClick(object sender, EventArgs e) {
-			Environment.Exit(2);
+            Bus.Emit(Bus.Channel.Power, new JObject{ "action", "abort" }, true);
+            Environment.Exit(1);
 		}
+
+	    void onAbort(dynamic data)
+	    {
+	        if (data.action == null) return;
+            if(data.action.ToString().Equals("abort"))
+                Environment.Exit(2);
+	    }
 	}
 }

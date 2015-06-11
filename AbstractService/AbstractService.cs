@@ -18,7 +18,6 @@ namespace FOG
 
         protected AbstractService()
         {
-            Eager.Initalize();
             _moduleThread = new Thread(ModuleLooper)
             {
                 Priority = ThreadPriority.Normal,
