@@ -15,17 +15,18 @@ using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
-    class FOGSystemService : AbstractService
+    public class FOGSystemService : AbstractService
     {
         public FOGSystemService() : base()
         {
-            Bus.SetMode(Bus.Mode.Client);
+            Bus.SetMode(Bus.Mode.Server);
         }
 
         protected override void Load()
         {
-            Bus.SetMode(Bus.Mode.Client);
-            Bus.Emit(Bus.Channel.Status, new JObject { "action", "load" }, true);
+            dynamic json = new JObject();
+            json.action = "load";
+            Bus.Emit(Bus.Channel.Status, json, true);
 
             Log.NewLine();
             Log.PaddedHeader("Authentication");
@@ -37,8 +38,9 @@ namespace FOG
 
         protected override void Unload()
         {
-            Bus.Emit(Bus.Channel.Status, new JObject { "action", "unload" }, true);
-            Bus.Dispose();
+            dynamic json = new JObject();
+            json.action = "unload";
+            Bus.Emit(Bus.Channel.Status, json, true); Bus.Dispose();
 
             // Kill the sub-processes
             foreach (var process in Process.GetProcessesByName("FOGUserService"))

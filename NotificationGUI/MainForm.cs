@@ -96,7 +96,10 @@ namespace FOG {
 		
 		//Abort button
 		void BtnAbortClick(object sender, EventArgs e) {
-            Bus.Emit(Bus.Channel.Power, new JObject{ "action", "abort" }, true);
+            dynamic json = new JObject();
+            json.action = "abort";
+
+            Bus.Emit(Bus.Channel.Power, json, true);
             Environment.Exit(1);
 		}
 

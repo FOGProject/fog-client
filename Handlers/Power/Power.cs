@@ -80,7 +80,10 @@ namespace FOG.Handlers.Power
         private static void QueueShutdown(string parameters, int gracePeriod = DefaultGracePeriod)
         {
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod*1000));
-            Bus.Emit(Bus.Channel.Power, new JObject{{ "action", "request" }, {"period", gracePeriod}}, true);
+            dynamic json = new JObject();
+            json.action = "request";
+            json.period = "gracePeriod";
+            Bus.Emit(Bus.Channel.Power, json, true);
             pendingCommand = parameters;
             _timer = new Timer(gracePeriod*1000);
             _timer.Elapsed += TimerElapsed;
@@ -93,7 +96,9 @@ namespace FOG.Handlers.Power
             CreateTask(pendingCommand);
             pendingCommand = string.Empty;
 
-            Bus.Emit(Bus.Channel.Power, new JObject { "action", "shuttingdown" }, true);
+            dynamic json = new JObject();
+            json.action = "shuttingdown";
+            Bus.Emit(Bus.Channel.Power, json, true);
         }
 
         /// <summary>
