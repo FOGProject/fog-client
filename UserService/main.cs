@@ -52,7 +52,7 @@ namespace FOG
                 Environment.Exit(0);
             }
 
-            _fogService = new FOGSystemService();
+            _fogService = new FOGUserService();
             _fogService.Start();
 
             if (RegistryHandler.GetSystemSetting("Tray").Equals("1"))
