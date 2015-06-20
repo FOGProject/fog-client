@@ -21,7 +21,7 @@ namespace FOG
             _moduleThread = new Thread(ModuleLooper)
             {
                 Priority = ThreadPriority.Normal,
-                IsBackground = true,
+                IsBackground = false,
                 Name = "FOGService"
             };
 
