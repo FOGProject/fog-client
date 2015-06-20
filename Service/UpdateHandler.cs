@@ -59,7 +59,11 @@ namespace FOG
                 Thread.Sleep(1000);
 
                 //Notify all FOG sub processes that an update is about to occu
-                Bus.Emit(Bus.Channel.Update, new JObject{"action","start"}, true);
+
+                dynamic json = new JObject();
+                json.action = "start";
+
+                Bus.Emit(Bus.Channel.Update, json, true);
 
                 //Kill any FOG sub processes still running after the notification
                 KillSubProcesses();

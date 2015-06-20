@@ -47,7 +47,11 @@ namespace FOG.Handlers
 
         public JObject GetJson()
         {
-            return JObject.FromObject(this);
+            dynamic json = new JObject();
+            json.title = Title;
+            json.message = Message;
+            json.duration = Duration;
+            return json;
         }
     }
 }

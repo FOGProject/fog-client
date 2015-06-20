@@ -144,8 +144,10 @@ namespace FOG
             }
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
-
-                Bus.Emit(Bus.Channel.Power, new JObject { { "action", "request" }, { "period", 120 } }, true);
+                dynamic json = new JObject();
+                json.action = "request";
+                json.period = 120;
+                Bus.Emit(Bus.Channel.Power, json, true);
             }
             else
                 Log.Entry(Name, "Unknown command");

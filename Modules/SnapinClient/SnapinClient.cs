@@ -71,19 +71,23 @@ namespace FOG.Modules.SnapinClient
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}", 
+                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
                         taskResponse.GetField("JOBTASKID"), exitCode), true);
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
+                    {
                         if (!Power.ShuttingDown)
+                        {
                             //Rerun this method to check for the next snapin
                             continue;
+                        }
+                    }
                     else
                         Power.Restart("Snapin requested shutdown", 30);
                 }
                 else
                     Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
-                       taskResponse.GetField("JOBTASKID"), exitCode), true);
+                        taskResponse.GetField("JOBTASKID"), exitCode), true);
                 break;
             }
         }
