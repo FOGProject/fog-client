@@ -35,9 +35,13 @@
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe" />
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
+            <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe" />
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe" />
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
+            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
+                  Source="..\bin\Newtonsoft.Json.dll" />
+            
 
             <ServiceInstall
               Id="ServiceInstaller"
