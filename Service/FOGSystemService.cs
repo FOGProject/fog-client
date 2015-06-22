@@ -79,6 +79,9 @@ namespace FOG
 
             if (response.Error || response.IsFieldValid("#sleep")) return null;
 
+            // Set the shutdown graceperiod
+            RegistryHandler.SetSystemSetting("gracePeriod", response.GetField("#promptTime"));
+
             try
             {
                 var sleepTime = int.Parse(response.GetField("#sleep"));

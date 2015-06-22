@@ -28,8 +28,8 @@ namespace FOG.Modules.TaskReboot
     /// </summary>
     public class TaskReboot : AbstractModule
     {
+        //This variable is used to detect if the user has been told there is a pending shutdown
         private bool _notifiedUser;
-        //This variable is used to detect if the user has been told their is a pending shutdown
 
         public TaskReboot()
         {
@@ -48,7 +48,7 @@ namespace FOG.Modules.TaskReboot
             Log.Entry(Name, "Restarting computer for task");
 
             if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
-                Power.Restart(Name, 30);
+                Power.Restart(Name);
 
             else if (!response.Error && !_notifiedUser)
             {
