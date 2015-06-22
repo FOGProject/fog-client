@@ -52,6 +52,17 @@ namespace FOG.Modules.GreenFOG
             CreateTasks(tasks);
         }
 
+        new public bool IsEnabled()
+        {
+            var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
+                EnabledURL, Name.ToLower()), true);
+
+            if (moduleActiveResponse.Error)
+                FilterTasks(new List<string>());
+
+            return !moduleActiveResponse.Error;
+        }
+
         private List<string> FilterTasks(List<string> newTasks)
         {
             var taskService = new TaskService();

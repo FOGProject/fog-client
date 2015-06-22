@@ -132,7 +132,7 @@ namespace FOG.Modules.HostnameChanger
                 RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
                     response.GetField("#hostname"));
 
-                Power.Restart(RegistryHandler.GetSystemSetting("Company") + " needs to rename your computer", 10);
+                Power.Restart(RegistryHandler.GetSystemSetting("Company") + " needs to rename your computer");
             }
             else if(!_notifiedUser)
             {
@@ -180,7 +180,7 @@ namespace FOG.Modules.HostnameChanger
                 : "Unknown Return Code: "), returnCode));
 
             if (returnCode.Equals(0))
-                Power.Restart("Host joined to Active Directory, restart required", 20);
+                Power.Restart("Host joined to Active Directory, restart required");
         }
 
         private static int DomainWrapper(Response response, bool ou, JoinOptions options)
@@ -214,7 +214,7 @@ namespace FOG.Modules.HostnameChanger
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
-                    Power.Restart("Host joined to active directory, restart needed", 20);
+                    Power.Restart("Host joined to active directory, restart needed");
             }
             catch (Exception ex)
             {

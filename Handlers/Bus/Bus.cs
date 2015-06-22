@@ -220,9 +220,13 @@ namespace FOG.Handlers
         {
             try
             {
-                var transport = JObject.Parse(message);
-                var channel = (Channel)Enum.Parse(typeof(Channel), transport["channel"].ToString());
-                Emit(channel, transport["data"].ToString());
+                dynamic transport = JObject.Parse(message);
+                var channel = (Channel)Enum.Parse(typeof(Channel), transport.channel);
+
+                if(transport.bounce != null && !transport.bounce)
+                    Emit(channel, transport.data, false);
+                else
+                    Emit(channel, transport.data);
             }
             catch (Exception ex)
             {

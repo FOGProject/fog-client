@@ -29,7 +29,6 @@ namespace FOG
         private static void OnPower(dynamic data)
         {
             if (data.action == null || data.period == null) return;
-            Log.Entry("Test", "Got message: " + data.action.ToString());
             string action = data.action.ToString();
             string period = data.period.ToString();
 

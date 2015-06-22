@@ -40,7 +40,7 @@ namespace FOG.Handlers.Power
         // Variables needed for aborting a shutdown
         private static Timer _timer;
         private static string pendingCommand = string.Empty;
-        private const int DefaultGracePeriod = 120;
+        private const int DefaultGracePeriod = 60;
         private static Process _notificationProcess;
 
 
@@ -77,8 +77,21 @@ namespace FOG.Handlers.Power
             Process.Start("shutdown", parameters);
         }
 
-        private static void QueueShutdown(string parameters, int gracePeriod = DefaultGracePeriod)
+        private static void QueueShutdown(string parameters, int gracePeriod = -1)
         {
+            try
+            {
+                if (gracePeriod == -1)
+                    gracePeriod = (!string.IsNullOrEmpty(RegistryHandler.GetSystemSetting("gracePeriod")))
+                        ? int.Parse(RegistryHandler.GetSystemSetting("gracePeriod"))
+                        : DefaultGracePeriod;
+            }
+            catch (Exception ex)
+            {
+                gracePeriod = DefaultGracePeriod;
+            }
+
+
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
             dynamic json = new JObject();
             json.action = "request";
@@ -106,7 +119,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Shutdown(string comment, int seconds)
+        public static void Shutdown(string comment, int seconds =-1)
         {
             QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
         }
@@ -116,7 +129,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Restart(string comment, int seconds)
+        public static void Restart(string comment, int seconds = -1)
         {
             QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
         }

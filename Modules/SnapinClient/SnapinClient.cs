@@ -83,7 +83,7 @@ namespace FOG.Modules.SnapinClient
                         }
                     }
                     else
-                        Power.Restart("Snapin requested shutdown", 30);
+                        Power.Restart("Snapin requested shutdown");
                 }
                 else
                     Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",

@@ -79,6 +79,14 @@
       <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
       <RefTargetDir>INSTALLFOLDER</RefTargetDir>
     </ProjectReference>
+    <ProjectReference Include="..\Power\Power.csproj">
+      <Name>Power</Name>
+      <Project>{2210f95b-7ba3-40e4-9aae-a2fb0487b3ee}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLFOLDER</RefTargetDir>
+    </ProjectReference>
     <ProjectReference Include="..\Service\Service.csproj">
       <Name>Service</Name>
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
