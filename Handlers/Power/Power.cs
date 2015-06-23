@@ -98,7 +98,7 @@ namespace FOG.Handlers.Power
                         ? int.Parse(RegistryHandler.GetSystemSetting("gracePeriod"))
                         : DefaultGracePeriod;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 gracePeriod = DefaultGracePeriod;
             }

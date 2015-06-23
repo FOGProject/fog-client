@@ -29,7 +29,7 @@ namespace FOG {
 		            break;
 		        }
 		    }
-		    catch (Exception ex)
+		    catch (Exception)
 		    {
 		    }
 
