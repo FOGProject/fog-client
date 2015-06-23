@@ -137,10 +137,6 @@
       <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
       <Name>PipeServer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Power\Power.csproj">
-      <Project>{2210f95b-7ba3-40e4-9aae-a2fb0487b3ee}</Project>
-      <Name>Power</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

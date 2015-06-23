@@ -60,7 +60,6 @@ namespace FOG.Modules.AutoLogOut
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
-                
                 //Wait 20 seconds and check if the user is no longer inactive
                 Thread.Sleep(20000);
                 if (UserHandler.GetInactivityTime() >= timeOut)

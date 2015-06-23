@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace FOG.Handlers
+﻿namespace FOG.Handlers
 {
     public static class Eager
     {

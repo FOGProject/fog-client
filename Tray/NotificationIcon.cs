@@ -102,7 +102,7 @@ namespace FOG
                 _notification.Message = data.message;
                 _notification.Duration = data.duration;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return;
             }
