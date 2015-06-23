@@ -56,13 +56,25 @@ namespace FOG.Handlers.Power
         private static void ParseBus(dynamic data)
         {
             if (data.action == null) return;
-            string action = data.action.ToString();
-            action = action.Trim();
+            data.action = data.action.Trim();
 
-            if (action.Equals("abort"))
+            if (data.action.Equals("abort"))
                 AbortShutdown();
-            else if (action.Equals("shuttingdown"))
+            else if (data.action.Equals("shuttingdown"))
                 ShuttingDown = true;
+            else if (data.action.Equals("help"))
+                HelpShutdown(data);
+        }
+
+        private static void HelpShutdown(dynamic data)
+        {
+            if (data.type == null) return;
+            data.type = data.type.Trim();
+
+            if(data.type.Equals("shutdown"))
+                Shutdown(data.reason ?? "");
+            else if(data.type.Equals("reboot"))
+                Restart(data.reason ?? "");
         }
 
         /// <summary>
