@@ -19,7 +19,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using Microsoft.Win32.TaskScheduler;
@@ -106,10 +109,11 @@ namespace FOG.Modules.GreenFOG
                 taskDefinition.Triggers.Add(trigger);
 
                 //Create task action
+                var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Power.exe";
                 if (taskData[2].Equals("r"))
-                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/r /c \"Green FOG\" /t 0"));
+                    taskDefinition.Actions.Add(new ExecAction(fileName, "reboot \"Green FOG\""));
                 else if (taskData[2].Equals("s"))
-                    taskDefinition.Actions.Add(new ExecAction("shutdown.exe", "/s /c \"Green FOG\" /t 0"));
+                    taskDefinition.Actions.Add(new ExecAction(fileName, "shutdown \"Green FOG\""));
 
                 //Register the task
                 try
