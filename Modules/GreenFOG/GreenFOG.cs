@@ -69,7 +69,15 @@ namespace FOG.Modules.GreenFOG
         private List<string> FilterTasks(List<string> newTasks)
         {
             var taskService = new TaskService();
-            taskService.RootFolder.CreateFolder("FOG");
+            try
+            {
+                taskService.RootFolder.CreateFolder("FOG");
+            }
+            catch (Exception)
+            {
+                
+            }
+
             var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
 
             foreach (var task in existingTasks)
