@@ -80,7 +80,6 @@ namespace FOG.Handlers.Data
         /// </summary>
         public static string Decrypt(string toDecode, byte[] key)
         {
-            Log.Entry(LogName, toDecode);
             var iv = Transform.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));
             var data = Transform.HexStringToByteArray(toDecode.Substring(toDecode.IndexOf("|") + 1));
 
