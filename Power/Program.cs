@@ -32,6 +32,7 @@ namespace FOG
 
             dynamic json = new JObject();
             json.action = "help";
+            json.bounce = false;
 
             if (args[0].Equals("shutdown"))
                 json.type = "shutdown";
