@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using FOG.Handlers;
+using FOG.Handlers.Power;
 using Newtonsoft.Json.Linq;
 
 namespace FOG {
@@ -14,41 +15,63 @@ namespace FOG {
 		
 		private int _gracePeriod;
 	    private int delayTime = 10;
+	    private dynamic data;
 
-		public MainForm(string[] args) {
+		public MainForm(string[] args)
+		{
 
-            foreach (var arg in args.Where(arg => arg.Contains("noAbort")))
-                btnAbort.Enabled = false;
+		    if (args.Length < 0) return;
+
 		    try
 		    {
-		        for (var i = 0; i < args.Length; i++)
-		        {
-		            if (!args[i].Contains("period") || i >= args.Length - 1) continue;
-		            _gracePeriod = int.Parse(args[i + 1]);
-		            break;
-		        }
+		        data = JObject.Parse(args[0]);
 		    }
 		    catch (Exception)
 		    {
+		        return;
+		    }
+
+		    var options = (Power.FormOption) Enum.Parse(typeof (Power.FormOption), data.options.ToString());
+
+		    switch (options)
+		    {
+		        case Power.FormOption.None:
+		            btnAbort.Enabled = false;
+		            break;
+		        case Power.FormOption.Delay:
+                    btnAbort.Text = "Delay " + delayTime + " Minutes";
+		            break;
+		    }
+
+		    var message = "";
+
+		    try
+		    {
+		        if (data.gracePeriod == null) return;
+		        _gracePeriod = (int) data.gracePeriod;
+
+		        message = data.message.ToString();
+		    }
+		    catch (Exception)
+		    {
+                message = "This computer needs to perform maintenance.";
 		    }
 
 		    if (_gracePeriod == 0)
-		        Environment.Exit(0);
+		        return;
 		    //
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//
 			InitializeComponent();
-
-		    foreach (var arg in args.Where(arg => arg.Contains("delay")))
-		        btnAbort.Text = "Delay " + delayTime + " Minutes";
+		        
 
 			//Generate the message
-            var message = "This computer needs to perform maintenance.";
+		    message += " Please save all work and close programs.";
 
-		    message = message + " Please save all work and close programs.";
-
-		    if (btnAbort.Enabled)
-		        message = message + " Press Abort to cancel.";
+		    if (btnAbort.Enabled && btnAbort.Text.Contains("Abort"))
+		        message += " Press Abort to cancel.";
+            else if (btnAbort.Enabled && btnAbort.Text.Contains("Delay"))
+                message += " You may only delay this operation once.";
 
 		    textBox1.Text = message;
 			textBox1.Select(0,0);
