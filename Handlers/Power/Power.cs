@@ -39,6 +39,7 @@ namespace FOG.Handlers.Power
 
         // Variables needed for aborting a shutdown
         private static Timer _timer;
+        private static bool delayed;
         private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 60;
         private static Process _notificationProcess;
@@ -65,6 +66,39 @@ namespace FOG.Handlers.Power
                 ShuttingDown = true;
             else if (action.Equals("help"))
                 HelpShutdown(data);
+            else if (action.Equals("delay"))
+                DelayShutdown(data);
+        }
+
+        private static void DelayShutdown(dynamic data)
+        {
+            if (_timer != null) 
+            {
+                _timer.Stop();
+                _timer.Dispose();
+            }
+
+            if (data.delay == null) return;
+
+            //DelayTime is in minutes
+            var delayTime = -1;
+
+            try
+            {
+                delayTime = (int) data.delay;
+            }
+            catch (Exception)
+            {
+                return;
+            }
+
+            if (delayTime < 1)
+                return;
+
+            Log.Entry(LogName, "Delayed power action by " + delayTime + " minutes");
+            delayed = true;
+            _timer = new Timer(delayTime*1000*60);
+            _timer.Start();
         }
 
         private static void HelpShutdown(dynamic data)
@@ -93,6 +127,12 @@ namespace FOG.Handlers.Power
 
         private static void QueueShutdown(string parameters, int gracePeriod = -1)
         {
+            if (_timer.Enabled)
+            {
+                Log.Entry(LogName, "Power task already in-progress");
+                return;
+            }
+
             try
             {
                 if (gracePeriod == -1)
@@ -119,6 +159,14 @@ namespace FOG.Handlers.Power
 
         private static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
+            if (delayed)
+            {
+                delayed = false;
+                _timer.Dispose();
+                QueueShutdown(pendingCommand);
+                return;
+            }
+
             ShuttingDown = true;
             CreateTask(pendingCommand);
             pendingCommand = string.Empty;
