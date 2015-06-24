@@ -200,7 +200,6 @@ namespace FOG.Handlers
         private static void pipe_RecieveMessage(Client client, string message)
         {
             EmitMessageFromPipe(message);
-            SendMessage(message);
         }
 
         /// <summary>
@@ -221,18 +220,14 @@ namespace FOG.Handlers
             try
             {
                 dynamic transport = JObject.Parse(message);
-                var channel = (Channel)Enum.Parse(typeof(Channel), transport.channel);
 
-                if(transport.bounce != null && !transport.bounce)
-                    Emit(channel, transport.data, false);
-                else
-                    Emit(channel, transport.data);
+                var channel = (Channel)Enum.Parse(typeof(Channel), transport.channel.ToString());
+                Emit(channel, transport.data.ToString(), transport.bounce != null && !transport.bounce);
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, "Could not parse message from pipe");
                 Log.Error(LogName, ex);
-
             }
         }
 
