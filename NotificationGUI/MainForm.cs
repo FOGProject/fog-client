@@ -19,9 +19,6 @@ namespace FOG {
 
             foreach (var arg in args.Where(arg => arg.Contains("noAbort")))
                 btnAbort.Enabled = false;
-
-
-
 		    try
 		    {
 		        for (var i = 0; i < args.Length; i++)
@@ -34,7 +31,6 @@ namespace FOG {
 		    catch (Exception)
 		    {
 		    }
-
 
 		    if (_gracePeriod == 0)
 		        Environment.Exit(0);
@@ -100,6 +96,7 @@ namespace FOG {
 
 		    json.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
 		    json.delay = delayTime;
+		    json.gracePeriod = _gracePeriod;
 
             Bus.Emit(Bus.Channel.Power, json, true);
             Environment.Exit(1);
