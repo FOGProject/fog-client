@@ -40,9 +40,17 @@ namespace FOG.Handlers.Power
         // Variables needed for aborting a shutdown
         private static Timer _timer;
         private static bool delayed;
+        private static int lastDelay = -1;
         private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 60;
         private static Process _notificationProcess;
+
+        public enum FormOption
+        {
+            None,
+            Abort,
+            Delay
+        }
 
 
         //Load the ability to lock the computer from the native user32 dll
@@ -125,7 +133,7 @@ namespace FOG.Handlers.Power
             Process.Start("shutdown", parameters);
         }
 
-        private static void QueueShutdown(string parameters, int gracePeriod = -1)
+        private static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, int gracePeriod = -1)
         {
             if (_timer.Enabled)
             {
@@ -145,11 +153,12 @@ namespace FOG.Handlers.Power
                 gracePeriod = DefaultGracePeriod;
             }
 
-
+            lastDelay = gracePeriod;
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
             dynamic json = new JObject();
             json.action = "request";
             json.period = gracePeriod;
+            json.options = options;
             Bus.Emit(Bus.Channel.Power, json, true);
             pendingCommand = parameters;
             _timer = new Timer(gracePeriod*1000);
@@ -163,7 +172,7 @@ namespace FOG.Handlers.Power
             {
                 delayed = false;
                 _timer.Dispose();
-                QueueShutdown(pendingCommand);
+                QueueShutdown(pendingCommand, FormOption.None, lastDelay);
                 return;
             }
 
@@ -180,20 +189,22 @@ namespace FOG.Handlers.Power
         ///     Shutdown the computer
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
+        /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Shutdown(string comment, int seconds =-1)
+        public static void Shutdown(string comment, FormOption options = FormOption.Abort, int seconds =-1)
         {
-            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds));
+            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options);
         }
 
         /// <summary>
         ///     Restart the computer
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
+        /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Restart(string comment, int seconds = -1)
+        public static void Restart(string comment, FormOption options = FormOption.Abort, int seconds = -1)
         {
-            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds));
+            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options);
         }
 
         /// <summary>
