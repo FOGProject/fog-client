@@ -1,6 +1,5 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -96,11 +95,10 @@ namespace FOG {
 			Environment.Exit(0);
 		}
 		
-		//Abort button
 		void BtnAbortClick(object sender, EventArgs e) {
             dynamic json = new JObject();
 
-		    json.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "action";
+		    json.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
 		    json.delay = delayTime;
 
             Bus.Emit(Bus.Channel.Power, json, true);
