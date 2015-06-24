@@ -5,7 +5,6 @@ using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.ClientUpdater;
-using FOG.Modules.DisplayManager;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.SnapinClient;
@@ -58,7 +57,6 @@ namespace FOG
                 new TaskReboot(), 
                 new HostnameChanger(), 
                 new SnapinClient(), 
-                new DisplayManager(), 
                 new GreenFOG(), 
                 new UserTracker() 
             };

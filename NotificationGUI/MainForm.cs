@@ -14,11 +14,14 @@ namespace FOG {
 	public partial class MainForm : Form {
 		
 		private int _gracePeriod;
-		
+	    private int delayTime = 10;
+
 		public MainForm(string[] args) {
 
             foreach (var arg in args.Where(arg => arg.Contains("noAbort")))
                 btnAbort.Enabled = false;
+
+
 
 		    try
 		    {
@@ -40,15 +43,14 @@ namespace FOG {
 			// The InitializeComponent() call is required for Windows Forms designer support.
 			//
 			InitializeComponent();
-			
-			
+
+		    foreach (var arg in args.Where(arg => arg.Contains("delay")))
+		        btnAbort.Text = "Delay " + delayTime + " Minutes";
+
 			//Generate the message
             var message = "This computer needs to perform maintenance.";
 
-
-
 		    message = message + " Please save all work and close programs.";
-
 
 		    if (btnAbort.Enabled)
 		        message = message + " Press Abort to cancel.";
@@ -97,7 +99,9 @@ namespace FOG {
 		//Abort button
 		void BtnAbortClick(object sender, EventArgs e) {
             dynamic json = new JObject();
-            json.action = "abort";
+
+		    json.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "action";
+		    json.delay = delayTime;
 
             Bus.Emit(Bus.Channel.Power, json, true);
             Environment.Exit(1);
