@@ -40,10 +40,9 @@ namespace FOG.Handlers.Power
         // Variables needed for aborting a shutdown
         private static Timer _timer;
         private static bool delayed;
-        private static int lastDelay = -1;
-        private static string pendingCommand = string.Empty;
         private const int DefaultGracePeriod = 60;
         private static Process _notificationProcess;
+        private static dynamic requestData = new JObject();
 
         public enum FormOption
         {
@@ -127,13 +126,15 @@ namespace FOG.Handlers.Power
         /// <param name="parameters">The parameters to use</param>
         private static void CreateTask(string parameters)
         {
+            requestData = new JObject();
+
             Log.Entry(LogName, "Creating shutdown request");
             Log.Entry(LogName, string.Format("Parameters: {0}", parameters));
 
             Process.Start("shutdown", parameters);
         }
 
-        private static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, int gracePeriod = -1)
+        private static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
         {
             if (_timer.Enabled)
             {
@@ -153,14 +154,16 @@ namespace FOG.Handlers.Power
                 gracePeriod = DefaultGracePeriod;
             }
 
-            lastDelay = gracePeriod;
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
-            dynamic json = new JObject();
-            json.action = "request";
-            json.period = gracePeriod;
-            json.options = options;
-            Bus.Emit(Bus.Channel.Power, json, true);
-            pendingCommand = parameters;
+            
+            requestData = new JObject();
+            requestData.action = "request";
+            requestData.period = gracePeriod;
+            requestData.options = options;
+            requestData.command = parameters;
+            requestData.message = message ?? "This computer needs to perform maintance.";
+
+            Bus.Emit(Bus.Channel.Power, requestData, true);
             _timer = new Timer(gracePeriod*1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
@@ -168,21 +171,34 @@ namespace FOG.Handlers.Power
 
         private static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
-            if (delayed)
+            try
             {
-                delayed = false;
-                _timer.Dispose();
-                QueueShutdown(pendingCommand, FormOption.None, lastDelay);
-                return;
+                if (delayed)
+                {
+                    _timer.Dispose();
+
+                    string message = null;
+
+                    if (requestData.message != null)
+                        message = requestData.message.ToString();
+
+                    QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.gracePeriod);
+                    return;
+                }
+
+                ShuttingDown = true;
+                CreateTask(requestData.command.ToString());
+
+                dynamic json = new JObject();
+                json.action = "shuttingdown";
+                Bus.Emit(Bus.Channel.Power, json, true);
             }
-
-            ShuttingDown = true;
-            CreateTask(pendingCommand);
-            pendingCommand = string.Empty;
-
-            dynamic json = new JObject();
-            json.action = "shuttingdown";
-            Bus.Emit(Bus.Channel.Power, json, true);
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not create shutdown command from request");
+                Log.Error(LogName, ex);
+            }
+            delayed = false;
         }
 
         /// <summary>
@@ -190,10 +206,11 @@ namespace FOG.Handlers.Power
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
         /// <param name="options">The options the user has on the prompt form</param>
+        /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Shutdown(string comment, FormOption options = FormOption.Abort, int seconds =-1)
+        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds =-1)
         {
-            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options);
+            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options, message);
         }
 
         /// <summary>
@@ -201,10 +218,11 @@ namespace FOG.Handlers.Power
         /// </summary>
         /// <param name="comment">The message to append to the request</param>
         /// <param name="options">The options the user has on the prompt form</param>
+        /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Restart(string comment, FormOption options = FormOption.Abort, int seconds = -1)
+        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = -1)
         {
-            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options);
+            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
         }
 
         /// <summary>
