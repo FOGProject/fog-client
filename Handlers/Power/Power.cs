@@ -268,9 +268,8 @@ namespace FOG.Handlers.Power
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                               @"\FOGNotificationGUI.exe",
-                    Arguments = requestData.ToString();
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\FOGNotificationGUI.exe",
+                    Arguments = requestData.ToString()
                 }
             };
             _notificationProcess.Start();
