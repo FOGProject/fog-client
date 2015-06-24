@@ -270,7 +270,7 @@ namespace FOG.Handlers.Power
                     UseShellExecute = false,
                     FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                                @"\FOGNotificationGUI.exe",
-                    Arguments = "/period " + period
+                    Arguments = requestData.ToString();
                 }
             };
             _notificationProcess.Start();
