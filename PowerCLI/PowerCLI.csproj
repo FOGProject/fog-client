@@ -7,7 +7,7 @@
     <ProjectGuid>{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Power</RootNamespace>
+    <RootNamespace>FOG</RootNamespace>
     <AssemblyName>Power</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
