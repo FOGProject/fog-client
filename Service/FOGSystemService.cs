@@ -7,6 +7,7 @@ using FOG.Modules;
 using FOG.Modules.ClientUpdater;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
+using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
@@ -57,8 +58,9 @@ namespace FOG
                 new TaskReboot(), 
                 new HostnameChanger(), 
                 new SnapinClient(), 
+                new PrinterManager(), 
                 new GreenFOG(), 
-                new UserTracker() 
+                new UserTracker()
             };
         }
 
