@@ -42,7 +42,7 @@ namespace FOG.Modules.PrinterManager
         protected override void DoWork()
         {
             //Get printers
-            var printerResponse = Communication.GetResponse("/service/Printer.php", true);
+            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
             if (printerResponse.Error || printerResponse.GetField("mode").Equals("0")) return;
 
             var printerIDs = printerResponse.GetList("#printer", false);
