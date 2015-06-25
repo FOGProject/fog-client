@@ -109,8 +109,9 @@ namespace FOG.Modules.PrinterManager
                 return new LocalPrinter(printerData.GetField("#name"),
                     printerData.GetField("#file"),
                     printerData.GetField("#port"),
+                    printerData.GetField("#ip"),
                     printerData.GetField("#model"),
-                   printerData.GetField("#default").Equals("1"));
+                    printerData.GetField("#default").Equals("1"));
 
             return null;
         }
