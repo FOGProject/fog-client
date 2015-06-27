@@ -28,7 +28,7 @@ namespace FOG
         {
             Log.Output = Log.Mode.Console;
 
-            if (args.Length <= 0) return;
+            if (args.Length < 2) return;
 
             dynamic json = new JObject();
             json.action = "help";
