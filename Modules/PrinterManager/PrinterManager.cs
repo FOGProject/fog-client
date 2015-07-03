@@ -96,12 +96,8 @@ namespace FOG.Modules.PrinterManager
         private static bool PrinterExists(Response printerData )
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-            if (
-                (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
-                    .Contains(printerData.GetField("#name")))
-                return true;
-
-            return false;
+            return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
+                .Contains(printerData.GetField("#name"));
         }
 
         private static Printer PrinterFactory(Response printerData)
