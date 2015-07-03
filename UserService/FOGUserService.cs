@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Reflection;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
+using Newtonsoft.Json;
 
 namespace FOG
 {
@@ -28,12 +32,11 @@ namespace FOG
 
         private static void OnPower(dynamic data)
         {
-            if (data.action == null || data.period == null) return;
+            if (data.action == null) return;
             string action = data.action.ToString();
-            string period = data.period.ToString();
 
             if (action.Trim().Equals("request"))
-                Power.ShutdownNotification(period.Trim());
+                ShutdownNotification(data);
         }
 
 
@@ -68,6 +71,24 @@ namespace FOG
             }
 
             return null;
+        }
+
+        private void ShutdownNotification(dynamic data)
+        {
+            Log.Entry(Name, "Prompting user");
+            string jsonData = JsonConvert.SerializeObject(data);
+
+
+            var notificationProcess = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\FOGNotificationGUI.exe",
+                    Arguments = Transform.EncodeBase64(jsonData.ToString())
+                }
+            };
+            notificationProcess.Start();
         }
     }
 }

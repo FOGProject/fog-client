@@ -73,7 +73,7 @@ namespace FOG.Modules.SnapinClient
 
                     Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
                         taskResponse.GetField("JOBTASKID"), exitCode), true);
-
+                    
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
                         if (!Power.ShuttingDown)
@@ -83,7 +83,10 @@ namespace FOG.Modules.SnapinClient
                         }
                     }
                     else
-                        Power.Restart("Snapin requested shutdown", Power.FormOption.None, "This computer needs to reboot to apply new software.");
+                    {
+                        Power.Restart("Snapin requested shutdown", Power.FormOption.None,
+                            "This computer needs to reboot to apply new software.");
+                    }
                 }
                 else
                     Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",

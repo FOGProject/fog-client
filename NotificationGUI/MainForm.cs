@@ -1,9 +1,9 @@
 ﻿
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Power;
 using Newtonsoft.Json.Linq;
 
@@ -13,76 +13,95 @@ namespace FOG {
 	/// </summary>
 	public partial class MainForm : Form {
 		
-		private int _gracePeriod;
-	    private int delayTime = 10;
-	    private dynamic data;
+		private int _gracePeriod = 60;
+	    private int delayTime = 1;
+	    private readonly string LogName = "Shutdown GUI";
+	    private dynamic transport = new JObject();
 
 		public MainForm(string[] args)
 		{
-
-		    if (args.Length < 0) return;
-
 		    try
 		    {
-		        data = JObject.Parse(args[0]);
+		        Log.FilePath = "ShutdownLog.txt";
+
+		        if (args.Length < 0) Environment.Exit(1);
+		        Log.Entry(LogName, args[0]);
+		        var arg = Transform.DecodeBase64(args[0]);
+
+		        transport = JObject.Parse(arg);
+
+		        Log.Entry(LogName, transport.ToString());
+		        Log.Entry(LogName, transport.command.ToString());
+		        Log.Entry(LogName, "Outputted data");
+
+                InitializeComponent();
+
+
+		        var options = (Power.FormOption) Enum.Parse(typeof (Power.FormOption), transport.options.ToString());
+
+		        switch (options)
+		        {
+		            case Power.FormOption.None:
+		                btnAbort.Enabled = false;
+		                break;
+		            case Power.FormOption.Delay:
+		                btnAbort.Text = "Delay " + delayTime + " Minutes";
+		                break;
+		        }
+
+		        var message = "";
+
+                Log.Entry(LogName, "Step 1");
+		        try
+		        {
+                    if (transport.period == null) return;
+                    _gracePeriod = (int)transport.period;
+
+		            message = transport.message.ToString();
+		        }
+		        catch (Exception)
+		        {
+		            message = "This computer needs to perform maintenance.";
+		        }
+
+                Log.Entry(LogName, _gracePeriod.ToString());
+		        if (_gracePeriod == 0)
+		            throw new Exception("Invaid gracePeriod");
+		        //
+		        // The InitializeComponent() call is required for Windows Forms designer support.
+		        //
+                Log.Entry(LogName, "Step 2");
+
+
+
+		        //Generate the message
+		        message += " Please save all work and close programs.";
+
+		        if (btnAbort.Enabled && btnAbort.Text.Contains("Abort"))
+		            message += " Press Abort to cancel.";
+		        else if (btnAbort.Enabled && btnAbort.Text.Contains("Delay"))
+		            message += " You may only delay this operation once.";
+
+		        textBox1.Text = message;
+		        textBox1.Select(0, 0);
+
+                Log.Entry(LogName, "Step 3");
+
+		        progressBar1.Maximum = _gracePeriod - 1;
+		        label1.Text = _gracePeriod + " seconds";
+		        var workingArea = Screen.GetWorkingArea(this);
+		        Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
+                Log.Entry(LogName, "Step 4");
+
+		        Bus.SetMode(Bus.Mode.Client);
+		        Bus.Subscribe(Bus.Channel.Power, onAbort);
 		    }
-		    catch (Exception)
+            catch (Exception ex)
 		    {
-		        return;
+               Log.Error(LogName, "Unable to start GUI");
+               Log.Error(LogName, ex);
+               Environment.Exit(1);
 		    }
-
-		    var options = (Power.FormOption) Enum.Parse(typeof (Power.FormOption), data.options.ToString());
-
-		    switch (options)
-		    {
-		        case Power.FormOption.None:
-		            btnAbort.Enabled = false;
-		            break;
-		        case Power.FormOption.Delay:
-                    btnAbort.Text = "Delay " + delayTime + " Minutes";
-		            break;
-		    }
-
-		    var message = "";
-
-		    try
-		    {
-		        if (data.gracePeriod == null) return;
-		        _gracePeriod = (int) data.gracePeriod;
-
-		        message = data.message.ToString();
-		    }
-		    catch (Exception)
-		    {
-                message = "This computer needs to perform maintenance.";
-		    }
-
-		    if (_gracePeriod == 0)
-		        return;
-		    //
-			// The InitializeComponent() call is required for Windows Forms designer support.
-			//
-			InitializeComponent();
-		        
-
-			//Generate the message
-		    message += " Please save all work and close programs.";
-
-		    if (btnAbort.Enabled && btnAbort.Text.Contains("Abort"))
-		        message += " Press Abort to cancel.";
-            else if (btnAbort.Enabled && btnAbort.Text.Contains("Delay"))
-                message += " You may only delay this operation once.";
-
-		    textBox1.Text = message;
-			textBox1.Select(0,0);
-
-			progressBar1.Maximum = _gracePeriod-1;		
-			label1.Text = _gracePeriod + " seconds";
-			var workingArea = Screen.GetWorkingArea(this);
-			Location = new Point(workingArea.Right - Size.Width, workingArea.Bottom - Size.Height);
-
-            Bus.SetMode(Bus.Mode.Client);
-            Bus.Subscribe(Bus.Channel.Power, onAbort);
 		}
 
 		//Prevent the window from being moved
@@ -114,14 +133,11 @@ namespace FOG {
 			Environment.Exit(0);
 		}
 		
-		void BtnAbortClick(object sender, EventArgs e) {
-            dynamic json = new JObject();
-
-		    json.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
-		    json.delay = delayTime;
-		    json.gracePeriod = _gracePeriod;
-
-            Bus.Emit(Bus.Channel.Power, json, true);
+		void BtnAbortClick(object sender, EventArgs e)
+		{
+            transport.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
+		    transport.delay = delayTime;
+            Bus.Emit(Bus.Channel.Power, transport, true);
             Environment.Exit(1);
 		}
 

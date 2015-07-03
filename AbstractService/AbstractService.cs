@@ -72,8 +72,16 @@ namespace FOG
                     // Entry file formatting
                     Log.Divider();
                     Log.NewLine();
+
+                    if (Power.Requested)
+                        break;
                 }
 
+                while (Power.Requested)
+                {
+                    Log.Entry(Name, "Power operation being requested, checking back in 30 seconds");
+                    Thread.Sleep(30*1000);
+                }
 
                 // Skip checking for sleep time if there is a shutdown or update pending
                 if (Power.ShuttingDown || Power.Updating) break;
