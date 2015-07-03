@@ -79,9 +79,11 @@ namespace FOG.Modules.PrinterManager
         {
             try
             {
-                return printerIDs
-                    .Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true))
-                    .Where(printerData => !printerData.Error).Select(PrinterFactory).ToList();
+                return (from id in printerIDs 
+                        select Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true) 
+                            into printerData 
+                        where !PrinterExists(printerData)
+                        select PrinterFactory(printerData)).ToList();
             }
             catch (Exception ex)
             {
@@ -91,8 +93,19 @@ namespace FOG.Modules.PrinterManager
 
         }
 
+        private static bool PrinterExists(Response printerData )
+        {
+            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
+            if (
+                (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
+                    .Contains(printerData.GetField("#name")))
+                return true;
+        }
+
         private static Printer PrinterFactory(Response printerData)
         {
+            if (PrinterExists(printerData)) return null;
+
             if(printerData.GetField("#type").Equals("iPrint"))
                 return new iPrintPrinter(printerData.GetField("#name"), 
                     printerData.GetField("#ip"), 
