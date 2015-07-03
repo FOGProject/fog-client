@@ -14,7 +14,7 @@ namespace FOG {
 	public partial class MainForm : Form {
 		
 		private int _gracePeriod = 60;
-	    private int delayTime = 1;
+	    private int delayTime = 10;
 	    private readonly string LogName = "Shutdown GUI";
 	    private dynamic transport = new JObject();
 
