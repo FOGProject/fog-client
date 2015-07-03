@@ -105,6 +105,10 @@ namespace FOG.Handlers.Power
                 return;
 
             Log.Entry(LogName, "Delayed power action by " + delayTime + " minutes");
+
+            var notification = new Notification("Shutdown Delayed", "Shutdown has been delayed for " + delayTime + " minutes", 10);
+            Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
+
             delayed = true;
             _timer = new Timer(delayTime*1000*60);
             _timer.Elapsed += TimerElapsed;
@@ -265,6 +269,9 @@ namespace FOG.Handlers.Power
             _timer.Close();
             _timer = null;
             Requested = false;
+
+            var notification = new Notification("Shutdown Aborted", "Shutdown has been aborted", 10);
+            Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
         }
 
         /// <summary>

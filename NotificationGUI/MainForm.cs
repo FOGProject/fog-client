@@ -144,7 +144,10 @@ namespace FOG {
 	    void onAbort(dynamic data)
 	    {
 	        if (data.action == null) return;
+
             if(data.action.ToString().Equals("abort"))
+                Environment.Exit(2);
+            else if (data.action.ToString().Equals("delay"))
                 Environment.Exit(2);
 	    }
 	}
