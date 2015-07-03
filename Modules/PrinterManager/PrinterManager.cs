@@ -100,6 +100,8 @@ namespace FOG.Modules.PrinterManager
                 (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
                     .Contains(printerData.GetField("#name")))
                 return true;
+
+            return false;
         }
 
         private static Printer PrinterFactory(Response printerData)
