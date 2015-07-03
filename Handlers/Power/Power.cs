@@ -35,13 +35,13 @@ namespace FOG.Handlers.Power
     {
         private const string LogName = "Power";
         public static bool ShuttingDown { get; private set; }
+        public static bool Requested { get; private set; }
         public static bool Updating { get; set; }
 
         // Variables needed for aborting a shutdown
         private static Timer _timer;
         private static bool delayed;
         private const int DefaultGracePeriod = 60;
-        private static Process _notificationProcess;
         private static dynamic requestData = new JObject();
 
         public enum FormOption
@@ -75,6 +75,8 @@ namespace FOG.Handlers.Power
                 HelpShutdown(data);
             else if (action.Equals("delay"))
                 DelayShutdown(data);
+            else if (action.Equals("request"))
+                Requested = true;
         }
 
         private static void DelayShutdown(dynamic data)
@@ -105,6 +107,7 @@ namespace FOG.Handlers.Power
             Log.Entry(LogName, "Delayed power action by " + delayTime + " minutes");
             delayed = true;
             _timer = new Timer(delayTime*1000*60);
+            _timer.Elapsed += TimerElapsed;
             _timer.Start();
         }
 
@@ -136,11 +139,13 @@ namespace FOG.Handlers.Power
 
         private static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
         {
-            if (_timer.Enabled)
+            if (_timer != null && _timer.Enabled)
             {
                 Log.Entry(LogName, "Power task already in-progress");
                 return;
             }
+
+            delayed = false;
 
             try
             {
@@ -182,11 +187,12 @@ namespace FOG.Handlers.Power
                     if (requestData.message != null)
                         message = requestData.message.ToString();
 
-                    QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.gracePeriod);
+                    QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.period);
                     return;
                 }
 
                 ShuttingDown = true;
+                Requested = false;
                 CreateTask(requestData.command.ToString());
 
                 dynamic json = new JObject();
@@ -198,7 +204,6 @@ namespace FOG.Handlers.Power
                 Log.Error(LogName, "Could not create shutdown command from request");
                 Log.Error(LogName, ex);
             }
-            delayed = false;
         }
 
         /// <summary>
@@ -208,7 +213,7 @@ namespace FOG.Handlers.Power
         /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds =-1)
+        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
         {
             QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options, message);
         }
@@ -254,25 +259,12 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void AbortShutdown()
         {
+            Log.Entry(LogName, "Aborting shutdown");
             ShuttingDown = false;
             _timer.Stop();
             _timer.Close();
             _timer = null;
-        }
-
-        public static void ShutdownNotification(string period)
-        {
-            Log.Entry(LogName, "Prompting user");
-            _notificationProcess = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\FOGNotificationGUI.exe",
-                    Arguments = requestData.ToString()
-                }
-            };
-            _notificationProcess.Start();
+            Requested = false;
         }
 
         /// <summary>

@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
+using FOG.Handlers.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
@@ -144,10 +145,7 @@ namespace FOG
             }
             else if (command.Length >= 2 && command[0].Equals("bus"))
             {
-                dynamic json = new JObject();
-                json.action = "request";
-                json.period = 120;
-                Bus.Emit(Bus.Channel.Power, json, true);
+                Power.Restart("Foobar", Power.FormOption.Delay, "Test post, please ignore.", 120);
             }
             else
                 Log.Entry(Name, "Unknown command");

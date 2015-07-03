@@ -169,9 +169,9 @@ namespace FOG.Modules.HostnameChanger
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-            if (returnCode.Equals(2224))
+            if (returnCode == 2224)
                 returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
-            else if (returnCode.Equals(2))
+            else if (returnCode == 2 || returnCode == 50)
                 returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
             // Entry the results
