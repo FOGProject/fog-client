@@ -123,6 +123,11 @@ namespace FOG.Modules.GreenFOG
                 else if (taskData[2].Equals("s"))
                     taskDefinition.Actions.Add(new ExecAction(fileName, "shutdown \"This computer is going to shutdown to save power.\""));
 
+                taskDefinition.Settings.AllowDemandStart = false;
+                taskDefinition.Settings.DisallowStartIfOnBatteries = false;
+                taskDefinition.Settings.DisallowStartOnRemoteAppSession = false;
+                taskDefinition.Settings.StopIfGoingOnBatteries = false;
+
                 //Register the task
                 try
                 {
