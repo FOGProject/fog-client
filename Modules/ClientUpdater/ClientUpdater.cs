@@ -84,6 +84,10 @@ namespace FOG.Modules.ClientUpdater
 
                 File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
                     AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll", true);
+
+                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Newtonsoft.Json.dll",
+                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Newtonsoft.Json.dll", true);
+                
             }
             catch (Exception ex)
             {

@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading;
 using FOG.Handlers;
 using FOG.Handlers.Power;
 
@@ -38,6 +39,7 @@ namespace FOG
 
         public static void Main(string[] args)
         {
+            Thread.Sleep(15*1000);
             //Initialize everything
             Log.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;

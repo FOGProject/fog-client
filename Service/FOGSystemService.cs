@@ -24,6 +24,13 @@ namespace FOG
 
         protected override void Load()
         {
+            // Kill the sub-processes
+            foreach (var process in Process.GetProcessesByName("FOGUserService"))
+                process.Kill();
+
+            foreach (var process in Process.GetProcessesByName("FOGTray"))
+                process.Kill();
+
             dynamic json = new JObject();
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);

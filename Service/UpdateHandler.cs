@@ -38,10 +38,14 @@ namespace FOG
         {
             //If the User Service is still running, wait 120 seconds and kill it
 
-            while (Process.GetProcessesByName("FOGUserService").Length > 0)
+            while (Process.GetProcessesByName("FOGUserService").Length > 0 && Process.GetProcessesByName("FOGTray").Length > 0)
             {
                 Thread.Sleep(12*1000);
                 foreach (var process in Process.GetProcessesByName("FOGUserService"))
+                {
+                    process.Kill();
+                }
+                foreach (var process in Process.GetProcessesByName("FOGTray"))
                 {
                     process.Kill();
                 }
