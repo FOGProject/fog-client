@@ -126,7 +126,6 @@
     </Compile>
     <Compile Include="Registry\RegistryHandler.cs" />
     <Compile Include="Power\Power.cs" />
-    <Compile Include="User\ApplicationLauncher.cs" />
     <Compile Include="User\UserData.cs" />
     <Compile Include="User\UserHandler.cs" />
   </ItemGroup>

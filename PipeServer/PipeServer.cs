@@ -168,7 +168,7 @@ namespace FOG
 
         //Define variables
         [StructLayout(LayoutKind.Sequential)]
-        public struct SecurityAttributes
+        private struct SecurityAttributes
         {
             public int nLength;
             public IntPtr lpSecurityDescriptor;
