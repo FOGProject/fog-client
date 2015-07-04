@@ -66,9 +66,14 @@
               <RegistryValue Name="Tray" Type="string" Value="[USETRAY]" />
             </RegistryKey>
           </Component>
-          <Component Id="CompanyRegister" Guid="95d55abe-d91e-4fc7-a44b-598a7ab4f9a3">
+          <Component Id="CompanyRegistery" Guid="95d55abe-d91e-4fc7-a44b-598a7ab4f9a3">
             <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
               <RegistryValue Name="Company" Type="string" Value="FOG" />
+            </RegistryKey>
+          </Component>
+          <Component Id="GraceRegistry" Guid="95d55abe-d91e-4fc7-a44b-598a7ab4f9a3">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="gracePeriod" Type="string" Value="FOG" />
             </RegistryKey>
           </Component>
           <Component Id="WebRootRegistry" Guid="4d726fa5-f228-4efa-b006-872efa673881">

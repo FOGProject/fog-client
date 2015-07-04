@@ -64,6 +64,10 @@
       <ComponentRef Id="HttpsRegistry" />
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
       <ComponentRef Id="VersionRegistry" />
+      <ComponentRef Id="CompanyRegistery" />
+      <ComponentRef Id="GraceRegistry" />
+
+      
     </Feature>
   </Product>
 </Wix>
