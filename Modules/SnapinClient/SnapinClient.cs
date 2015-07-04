@@ -84,7 +84,7 @@ namespace FOG.Modules.SnapinClient
                     }
                     else
                     {
-                        Power.Restart("Snapin requested shutdown", Power.FormOption.None,
+                        Power.Restart("Snapin requested shutdown", Power.FormOption.Delay,
                             "This computer needs to reboot to apply new software.");
                     }
                 }
