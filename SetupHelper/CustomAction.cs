@@ -4,6 +4,7 @@ using System.Security.Cryptography.X509Certificates;
 using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using Microsoft.Deployment.WindowsInstaller;
+using Microsoft.Win32.TaskScheduler;
 
 namespace SetupHelper
 {
@@ -70,6 +71,18 @@ namespace SetupHelper
                 return ActionResult.Success;
             }
             
+        }
+
+        [CustomAction]
+        public static ActionResult CleanTasks(Session session)
+        {
+            try
+            {
+                var taskService = new TaskService();
+                taskService.RootFolder.DeleteFolder("FOG", false);
+            }
+            catch (Exception ) { }
+            return ActionResult.Success;
         }
     }
 }
