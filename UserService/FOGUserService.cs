@@ -73,11 +73,10 @@ namespace FOG
             return null;
         }
 
-        private void ShutdownNotification(dynamic data)
+        private static void ShutdownNotification(dynamic data)
         {
-            Log.Entry(Name, "Prompting user");
+            Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
-
 
             var notificationProcess = new Process
             {

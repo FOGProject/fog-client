@@ -229,7 +229,7 @@ namespace FOG.Handlers.Power
         /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = -1)
+        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
         {
             QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
         }

@@ -155,10 +155,7 @@ namespace FOG.Modules.HostnameChanger
             Log.Entry(Name, "Registering host with active directory");
 
             if (response.GetField("#AD") != "1")
-            {
-                Log.Error(Name, "Active directory joining disabled for this host");
                 return;
-            }
 
             if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
             {
@@ -228,10 +225,7 @@ namespace FOG.Modules.HostnameChanger
             Log.Entry(Name, "Activing host with product key");
 
             if (!response.IsFieldValid("#Key"))
-            {
-                Log.Error(Name, "Windows activation disabled");
                 return;
-            }
             if (response.GetField("#Key").Length != 29)
             {
                 Log.Error(Name, "Invalid product key");
