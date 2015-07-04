@@ -32,8 +32,8 @@ namespace FOG
             _pipeName = pipeName;
         }
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern SafeFileHandle CreateFile(string pipeName, uint dwDesiredAccess, uint dwShareMode,
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern SafeFileHandle CreateFile(string pipeName, uint dwDesiredAccess, uint dwShareMode,
             IntPtr lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, IntPtr hTemplate);
 
         public event MessageReceivedHandler MessageReceived;

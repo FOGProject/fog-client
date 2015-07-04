@@ -31,19 +31,19 @@ namespace FOG
         }
 
         //Import DLL functions
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern SafeFileHandle CreateNamedPipe(string pipeName, uint dwOpenMode, uint dwPipeMode,
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern SafeFileHandle CreateNamedPipe(string pipeName, uint dwOpenMode, uint dwPipeMode,
             uint nMaxInstances, uint nOutBufferSize, uint nInBufferSize, uint nDefaultTimeOut,
             IntPtr lpSecurityAttributes);
 
-        [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern int ConnectNamedPipe(SafeFileHandle hNamedPipe, IntPtr lpOverlapped);
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern int ConnectNamedPipe(SafeFileHandle hNamedPipe, IntPtr lpOverlapped);
 
-        [DllImport("Advapi32.dll", SetLastError = true)]
-        public static extern bool InitializeSecurityDescriptor(out SecurityDescriptor sd, int dwRevision);
+        [DllImport("Advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool InitializeSecurityDescriptor(out SecurityDescriptor sd, int dwRevision);
 
-        [DllImport("Advapi32.dll", SetLastError = true)]
-        public static extern bool SetSecurityDescriptorDacl(ref SecurityDescriptor sd, bool bDaclPresent, IntPtr dacl,
+        [DllImport("Advapi32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        private static extern bool SetSecurityDescriptorDacl(ref SecurityDescriptor sd, bool bDaclPresent, IntPtr dacl,
             bool bDaclDefaulted);
 
         public event MessageReceivedHandler MessageReceived;
