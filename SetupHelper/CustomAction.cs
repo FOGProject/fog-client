@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
@@ -79,6 +80,11 @@ namespace SetupHelper
             try
             {
                 var taskService = new TaskService();
+                var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
+
+                foreach (var task in existingTasks)
+                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
+
                 taskService.RootFolder.DeleteFolder("FOG", false);
             }
             catch (Exception ) { }
