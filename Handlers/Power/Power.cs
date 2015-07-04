@@ -118,13 +118,14 @@ namespace FOG.Handlers.Power
         private static void HelpShutdown(dynamic data)
         {
             if (data.type == null) return;
+            if (data.reason == null) return;
             string type = data.type.ToString();
             type = type.Trim();
 
             if(type.Equals("shutdown"))
-                Shutdown(data.reason.ToString() ?? "");
+                Shutdown(data.reason.ToString(), FormOption.Abort, data.reason.ToString());
             else if(type.Equals("reboot"))
-                Restart(data.reason.ToString() ?? "");
+                Restart(data.reason.ToString(), FormOption.Abort, data.reason.ToString());
         }
 
         /// <summary>
