@@ -2,5 +2,3 @@ D:\fog-client\bin\PipeClient.dll
 D:\fog-client\PipeClient\obj\Release\ResolveAssemblyReference.cache
 D:\fog-client\PipeClient\obj\Release\PipeClient.dll
 D:\fog\client\PipeClient\bin\x86\Release\PipeClient.dll
-D:\fog\client\bin\PipeClient.dll
-D:\fog\client\PipeClient\obj\Release\PipeClient.dll

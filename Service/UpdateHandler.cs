@@ -62,8 +62,7 @@ namespace FOG
                 //Give time for any sub-processes that may be in the middle of initializing and missed the updating.info file so they can recieve the update pipe notice
                 Thread.Sleep(1000);
 
-                //Notify all FOG sub processes that an update is about to occu
-
+                //Notify all FOG sub processes that an update is about to occur
                 dynamic json = new JObject();
                 json.action = "start";
 

@@ -24,8 +24,10 @@ namespace FOG
         private static void OnUpdate(dynamic data)
         {
             if (data.action == null) return;
+            Log.Entry("User Service", data.ToString());
 
-            if (!data.action.Equals("update")) return;
+            if (!data.action.ToString().Equals("start")) return;
+            Log.Entry("User Service", "Spawning waiter");
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.Updating = true;
             Environment.Exit(0);
