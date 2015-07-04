@@ -66,8 +66,7 @@
       <ComponentRef Id="VersionRegistry" />
       <ComponentRef Id="CompanyRegistery" />
       <ComponentRef Id="GraceRegistry" />
-
-      
+      <ComponentRef Id="SleepRegistry" />
     </Feature>
   </Product>
 </Wix>
