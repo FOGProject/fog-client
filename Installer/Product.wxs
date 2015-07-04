@@ -33,6 +33,8 @@
     <InstallExecuteSequence>
       <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
+      <Custom Action="CleanTasks" After="InstallFiles"></Custom>
+      
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
     <!-- Setup the UI -->

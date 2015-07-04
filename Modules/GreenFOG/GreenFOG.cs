@@ -88,7 +88,7 @@ namespace FOG.Modules.GreenFOG
                 }
                 else
                 {
-                    Log.Entry(Name, "Removing " + task.Name + " from queue");
+                    Log.Entry(Name, task.Name + " already scheduled");
                     newTasks.Remove(task.Name); //Remove the existing task from the queue
                 }
 
@@ -119,9 +119,9 @@ namespace FOG.Modules.GreenFOG
                 //Create task action
                 var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Power.exe";
                 if (taskData[2].Equals("r"))
-                    taskDefinition.Actions.Add(new ExecAction(fileName, "reboot \"Green FOG\""));
+                    taskDefinition.Actions.Add(new ExecAction(fileName, "reboot \"This computer is going to reboot.\""));
                 else if (taskData[2].Equals("s"))
-                    taskDefinition.Actions.Add(new ExecAction(fileName, "shutdown \"Green FOG\""));
+                    taskDefinition.Actions.Add(new ExecAction(fileName, "shutdown \"This computer is going to shutdown to save power.\""));
 
                 //Register the task
                 try

@@ -82,6 +82,7 @@ namespace SetupHelper
                 taskService.RootFolder.DeleteFolder("FOG", false);
             }
             catch (Exception ) { }
+
             return ActionResult.Success;
         }
     }
