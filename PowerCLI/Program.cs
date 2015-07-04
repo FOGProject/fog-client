@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Threading;
 using FOG.Handlers;
 using Newtonsoft.Json.Linq;
 
@@ -43,7 +44,10 @@ namespace FOG
             if (args.Length > 1)
                 json.reason = args[1];
 
+            Bus.SetMode(Bus.Mode.Client);
+            Thread.Sleep(1000*5);
             Bus.Emit(Bus.Channel.Power, json, true);
+            Thread.Sleep(1000 * 5);
             Bus.Dispose();
             Environment.Exit(0);
         }
