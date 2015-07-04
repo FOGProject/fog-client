@@ -234,28 +234,25 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
-                var process = new Process
+                using(var process = new Process { StartInfo = {
+                            FileName = @"cscript",
+                            Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", 
+                                Environment.SystemDirectory, response.GetField("#Key")),
+                            WindowStyle = ProcessWindowStyle.Hidden
+                        }
+                    })
                 {
-                    StartInfo =
-                    {
-                        FileName = @"cscript",
-                        Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", 
-                            Environment.SystemDirectory, response.GetField("#Key")),
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    }
-                };
+                    //Give windows the new key
+                    process.Start();
+                    process.WaitForExit();
+                    process.Close();
 
-                //Give windows the new key
-                process.Start();
-                process.WaitForExit();
-                process.Close();
-
-                //Try and activate the new key
-                process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
-                process.Start();
-                process.WaitForExit();
-                process.Close();
-
+                    //Try and activate the new key
+                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
+                    process.Start();
+                    process.WaitForExit();
+                    process.Close(); 
+                }
             }
             catch (Exception ex)
             {
