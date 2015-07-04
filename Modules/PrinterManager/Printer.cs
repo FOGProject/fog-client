@@ -6,7 +6,7 @@ namespace FOG.Modules.PrinterManager
 {
     public abstract class Printer
     {
-        [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("winspool.drv", CharSet = CharSet.Unicode, SetLastError = true)]
         public static extern bool SetDefaultPrinter(string name);
 
         public enum PrinterType

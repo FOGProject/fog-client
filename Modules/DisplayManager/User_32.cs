@@ -37,7 +37,7 @@ namespace FOG.Modules.DisplayManager
         /// <param name="modeNum"></param>
         /// <param name="settings">The variable to populate the configuration to</param>
         /// <returns></returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         public static extern int EnumDisplaySettings(string deviceName, int modeNum, ref Devmode1 settings);
 
         /// <summary>
