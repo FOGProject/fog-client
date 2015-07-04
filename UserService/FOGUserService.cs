@@ -28,6 +28,7 @@ namespace FOG
             if (!data.action.Equals("update")) return;
             Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
             Power.Updating = true;
+            Environment.Exit(0);
         }
 
         private static void OnPower(dynamic data)
@@ -38,8 +39,6 @@ namespace FOG
             if (action.Trim().Equals("request"))
                 ShutdownNotification(data);
         }
-
-
 
         protected override AbstractModule[] GetModules()
         {
