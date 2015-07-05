@@ -40,7 +40,12 @@
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
                   Source="..\bin\Newtonsoft.Json.dll" />
-            
+            <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
+            <File Id="SuperSocket.Common" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
+            <File Id="SuperSocket.SocketBase" Name="SuperSocket.SocketBase.dll" Source="..\bin\SuperSocket.SocketBase.dll" />
+            <File Id="SuperSocket.SocketEngine" Name="SuperSocket.SocketEngine.dll" Source="..\bin\SuperSocket.SocketEngine.dll" />
+            <File Id="SuperWebSocket" Name="SuperWebSocket.dll" Source="..\bin\SuperWebSocket.dll" />
+
 
             <ServiceInstall
               Id="ServiceInstaller"
