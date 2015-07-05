@@ -81,7 +81,7 @@ namespace FOG.Handlers
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(LogName, "Could not enter named socket");
+                        Log.Error(LogName, "Could not enter socket");
                         Log.Error(LogName, ex);
                     }
                     break;
@@ -96,7 +96,7 @@ namespace FOG.Handlers
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(LogName, "Could not enter named socket");
+                        Log.Error(LogName, "Could not enter socket");
                         Log.Error(LogName, ex);
                     }
                     break;

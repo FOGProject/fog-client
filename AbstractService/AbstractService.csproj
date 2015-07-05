@@ -60,14 +60,6 @@
       <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
       <Name>Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
-      <Project>{8f3f2e0b-f261-4f9c-a592-2062d8a3c2bd}</Project>
-      <Name>PipeClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
-      <Project>{df7c1145-e90c-486b-acec-543b42cf083f}</Project>
-      <Name>PipeServer</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -126,10 +126,6 @@
       <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>
       <Name>Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
-      <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
-      <Name>PipeServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UpdateHelper\UpdateHelper.csproj">
       <Project>{788E1733-937F-415C-A6E9-46A43BB0B019}</Project>
       <Name>UpdateHelper</Name>

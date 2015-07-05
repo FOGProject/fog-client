@@ -127,14 +127,6 @@
       <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>
       <Name>Modules</Name>
     </ProjectReference>
-    <ProjectReference Include="..\PipeClient\PipeClient.csproj">
-      <Project>{8F3F2E0B-F261-4F9C-A592-2062D8A3C2BD}</Project>
-      <Name>PipeClient</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\PipeServer\PipeServer.csproj">
-      <Project>{DF7C1145-E90C-486B-ACEC-543B42CF083F}</Project>
-      <Name>PipeServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Service\Service.csproj">
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
       <Name>Service</Name>
