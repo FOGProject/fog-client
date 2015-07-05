@@ -20,6 +20,8 @@
 using System;
 using System.Collections.Generic;
 using Newtonsoft.Json.Linq;
+using SuperWebSocket;
+using WebSocket4Net;
 
 namespace FOG.Handlers
 {
@@ -45,54 +47,56 @@ namespace FOG.Handlers
 
         private const string LogName = "Bus";
         private static bool _initialized;
-        private static PipeServer _server;
-        private static PipeClient _client;
+        private static BusServer _server;
+        private static BusClient _client;
+
+        private static readonly int port = 1277;
 
         private static Mode _mode = Mode.Client;
 
         public static void SetMode(Mode mode)
         {
             _mode = mode;
-            InitializePipe();
+            Initializesocket();
         }
 
         /// <summary>
-        /// Initiate the pipe that connects to all other FOG bus instances
-        /// It MUST be assumed that this pipe is compromised
+        /// Initiate the socket that connects to all other FOG bus instances
+        /// It MUST be assumed that this socket is compromised
         /// Do NOT send security relevant data across it
         /// </summary>
         /// <returns></returns>
-        private static void InitializePipe()
+        private static void Initializesocket()
         {
             switch (_mode)
             {
                 case Mode.Server:
-                    // Attempt to become the pipe server
+                    // Attempt to become the socket server
                     try
                     {
-                        _server = new PipeServer("fog-bus");
-                        _server.MessageReceived += pipe_RecieveMessage;
+                        _server = new BusServer(port);
+                        _server.Socket.NewMessageReceived += socket_RecieveMessage;
                         _server.Start();
                         Log.Entry(LogName, "Became bus server");
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(LogName, "Could not enter named pipe");
+                        Log.Error(LogName, "Could not enter named socket");
                         Log.Error(LogName, ex);
                     }
                     break;
                 case Mode.Client:
-                    // If someone else is already a pipe server, try and become a pipe client
+                    // If someone else is already a socket server, try and become a socket client
                     try
                     {
-                        _client = new PipeClient("fog-bus");
-                        _client.MessageReceived += pipe_RecieveMessage;
-                        _client.Connect();
+                        _client = new BusClient(port);
+                        _client.Socket.MessageReceived += socket_RecieveMessage;
+                        _client.Start();
                         Log.Entry(LogName, "Became bus client");
                     }
                     catch (Exception ex)
                     {
-                        Log.Error(LogName, "Could not enter named pipe");
+                        Log.Error(LogName, "Could not enter named socket");
                         Log.Error(LogName, ex);
                     }
                     break;
@@ -106,14 +110,13 @@ namespace FOG.Handlers
         /// <param name="msg">The message to send, should follow the define format</param>
         private static void SendMessage(string msg)
         {
-            if (!_initialized) InitializePipe();
+            if (!_initialized) Initializesocket();
             if (!_initialized) return;
 
-            if(_server != null && _server.IsRunning())
-                _server.SendMessage(msg);
-
-            if (_client != null && _client.IsConnected())
-                _client.SendMessage(msg);
+            if(_server != null)
+                _server.Send(msg);
+            else if (_client != null)
+                _client.Send(msg);
         }
 
         /// <summary>
@@ -179,7 +182,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Unregister an action from a pipe
+        /// Unregister an action from a socket
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>
@@ -192,30 +195,30 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Called when the server pipe recieves a message
+        /// Called when the server socket recieves a message
         /// It will replay the message to all other instances, including the original sender unless told otherwise
         /// </summary>
         /// <param name="client">The instance who initiated the message</param>
         /// <param name="message">The formatted event</param>
-        private static void pipe_RecieveMessage(Client client, string message)
+        private static void socket_RecieveMessage(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
         {
-            EmitMessageFromPipe(message);
+            EmitMessageFromSocket(messageReceivedEventArgs.Message);
         }
 
         /// <summary>
-        /// Called when the pipe client recieves a message
+        /// Called when the socket client recieves a message
         /// </summary>
         /// <param name="message"></param>
-        private static void pipe_RecieveMessage(string message)
+        private static void socket_RecieveMessage(WebSocketSession session, string value)
         {
-            EmitMessageFromPipe(message);
+            EmitMessageFromSocket(value);
         }
 
         /// <summary>
-        /// Parse a message recieved in the pipe and emit it to channels confined in its instance
+        /// Parse a message recieved in the socket and emit it to channels confined in its instance
         /// </summary>
         /// <param name="message"></param>
-        private static void EmitMessageFromPipe(string message)
+        private static void EmitMessageFromSocket(string message)
         {
             try
             {
@@ -226,7 +229,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Could not parse message from pipe");
+                Log.Error(LogName, "Could not parse message from socket");
                 Log.Error(LogName, ex);
             }
         }
@@ -234,7 +237,9 @@ namespace FOG.Handlers
         public static void Dispose()
         {
             if(_initialized && _mode == Mode.Client)
-                _client.Kill();
+                _client.Stop();
+            else if(_initialized && _mode == Mode.Server)
+                _server.Stop();
         }
 
     }

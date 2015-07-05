@@ -1,17 +1,16 @@
 ﻿using System;
-using SuperSocket.SocketBase;
+using SuperWebSocket;
 
 namespace FOG.Handlers
 {
     class BusServer
     {
-        public AppServer Socket { get; private set; }
+        public WebSocketServer Socket { get; private set; }
         private const string LogName = "Bus::Server";
 
         public BusServer(int port)
         {
-            Socket = new AppServer();
-
+            Socket = new WebSocketServer();
             if (!Socket.Setup(port))
                Log.Error(LogName, "Could not start server on port " + port);
         }

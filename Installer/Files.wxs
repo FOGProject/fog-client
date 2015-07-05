@@ -30,8 +30,6 @@
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
-            <File Id="PipeClient" Name="PipeClient.dll" Source="..\bin\PipeClient.dll" />
-            <File Id="PipeServer" Name="PipeServer.dll" Source="..\bin\PipeServer.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe" />
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
