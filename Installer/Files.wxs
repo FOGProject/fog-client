@@ -19,23 +19,33 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
-            <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe" />
+            
+            <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe">
+              <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Port="1277" Protocol="tcp" Scope="localSubnet"/>
+            </File>
+            
             <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
-            <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe" />
+
+            <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe">
+              <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Port="1277" Protocol="tcp" Scope="localSubnet"/>
+            </File>
+            
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe" />
-            <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe" />
+            <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">
+              <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Port="1277" Protocol="tcp" Scope="localSubnet"/>
+            </File>
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
