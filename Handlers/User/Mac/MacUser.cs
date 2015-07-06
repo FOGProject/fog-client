@@ -54,8 +54,32 @@ namespace FOG.Handlers.User
 
         public int GetInactivityTime()
         {
-            throw new NotImplementedException();
-        }
+                        var time = "-1";
 
+            using (var process = new Process { StartInfo = new ProcessStartInfo {
+                FileName = @"/usr/sbin/ioreg",
+                Arguments = @"-c IOHIDSystem | /usr/bin/awk '/HIDIdleTime/ {print int($NF/1000000000); exit}'",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+                while (!process.StandardOutput.EndOfStream)
+                    time = process.StandardOutput.ReadLine();
+            }
+
+            try
+            {
+                if (time != null) return int.Parse(time);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Can not detect idle time");
+                Log.Error(LogName, ex);
+            }
+            return -1;
+        }
     }
 }
