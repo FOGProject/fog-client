@@ -7,4 +7,3 @@ D:\fog\client\Tray\bin\x86\Release\FOGTray.exe
 D:\fog\client\Tray\bin\x86\Release\Handlers.dll
 D:\fog\client\Tray\bin\x86\Release\PipeClient.dll
 D:\fog\client\Tray\bin\x86\Release\ManagedOpenSsl.dll
-D:\fog\fog-client\bin\FOGTray.exe.config
