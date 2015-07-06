@@ -43,7 +43,7 @@
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe">
-              <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any"/>
+              <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any"/>
             </File>
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">
               <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Protocol="udp" Scope="any"/>

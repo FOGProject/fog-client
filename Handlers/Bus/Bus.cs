@@ -74,7 +74,7 @@ namespace FOG.Handlers
                     // Attempt to become the socket server
                     try
                     {
-                        _server = new BusServer(port);
+                        _server = new BusServer();
                         _server.Socket.NewMessageReceived += socket_RecieveMessage;
                         _server.Start();
                         Log.Entry(LogName, "Became bus server");

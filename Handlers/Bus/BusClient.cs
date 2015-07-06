@@ -10,7 +10,7 @@ namespace FOG.Handlers
 
         public BusClient(int port)
         {
-            Socket = new WebSocket("ws://localhost:" + port + "/");
+            Socket = new WebSocket("ws://127.0.0.1:" + port + "/");
         }
 
         public void Start()

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using SuperSocket.SocketEngine;
 using SuperWebSocket;
 
 namespace FOG.Handlers
@@ -8,11 +10,12 @@ namespace FOG.Handlers
         public WebSocketServer Socket { get; private set; }
         private const string LogName = "Bus::Server";
 
-        public BusServer(int port)
+        public BusServer()
         {
-            Socket = new WebSocketServer();
-            if (!Socket.Setup(port))
-               Log.Error(LogName, "Could not start server on port " + port);
+            var bootstrap = BootstrapFactory.CreateBootstrap();
+            bootstrap.Initialize();
+            bootstrap.Start();
+            Socket = bootstrap.AppServers.FirstOrDefault() as WebSocketServer;
         }
 
         public bool Start()
