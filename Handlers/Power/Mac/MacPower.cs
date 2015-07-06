@@ -43,12 +43,12 @@ namespace FOG.Handlers.Power
 
         public void Hibernate()
         {
-            throw new NotImplementedException();
+            Process.Start(@"pmset -a hibernatemode 25");
         }
 
         public void LockWorkStation()
         {
-            throw new NotImplementedException();
+            Process.Start(@"/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend");
         }
 
         public void CreateTask(string parameters)
