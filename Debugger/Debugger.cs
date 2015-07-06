@@ -23,10 +23,6 @@ using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
-using FOG.Modules.DisplayManager;
-using FOG.Modules.GreenFOG;
-using FOG.Modules.HostnameChanger;
-using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
@@ -36,16 +32,12 @@ namespace FOG
 {
     internal class Program
     {
-        private const string Server = "https://fog.jbob.io/fog";
+        private const string Server = "http://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string Name = "Console";
         private static readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
         {
             {"autologout", new AutoLogOut()},
-            {"displaymanager", new DisplayManager()},
-            {"greenfog", new GreenFOG()},
-            {"hostnamechanger", new HostnameChanger()},
-            {"printermanager", new PrinterManager()},
             {"snapinclient", new SnapinClient()},
             {"taskreboot", new TaskReboot()},
             {"usertracker", new UserTracker()}
@@ -60,6 +52,9 @@ namespace FOG
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type help for a list of commands");
             Log.NewLine();
+
+            Configuration.ServerAddress = Server;
+            Configuration.TestMAC = MAC;
 
             try
             {

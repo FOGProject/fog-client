@@ -57,11 +57,13 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
                 Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
 
-                var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
+
+                var snapinFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "tmp", taskResponse.GetField("SNAPINFILENAME")).ToString();
 
                 var downloaded = Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
                     Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
 
+                Log.Entry(Name, snapinFilePath);
                 var exitCode = "-1";
 
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
@@ -149,11 +151,8 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.GetField("SNAPINRUNWITHARGS"));
-
-                process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    string.Format("{0} \"{1} \"{2}", taskResponse.GetField("SNAPINRUNWITHARGS"), 
-                        snapinPath, Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))));
+                    string.Format("{0}\"{1}\"{2}", taskResponse.GetField("SNAPINRUNWITHARGS").Trim(), 
+                        snapinPath.Trim(), Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())));
             }
             else
             {
