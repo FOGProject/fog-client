@@ -58,6 +58,12 @@ namespace FOG.Handlers.Power
 
             switch (pid)
             {
+                case PlatformID.MacOSX:
+                    _instance = new MacPower();
+                    break;
+                case PlatformID.Unix:
+                    _instance = new LinuxPower();
+                    break;
                 default:
                     _instance = new WindowsPower();
                     break;

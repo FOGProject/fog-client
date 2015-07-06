@@ -37,6 +37,12 @@ namespace FOG.Handlers
 
             switch (pid)
             {
+                case PlatformID.MacOSX:
+                    _instance = new MacUser();
+                    break;
+                case PlatformID.Unix:
+                    _instance = new LinuxUser();
+                    break;
                 default:
                     _instance = new WindowsUser();
                     break;
