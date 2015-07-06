@@ -19,6 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+
 namespace FOG.Handlers.User
 {
     class LinuxUser : IUser
@@ -28,12 +31,52 @@ namespace FOG.Handlers.User
 
         public List<string> GetUsersLoggedIn()
         {
-            throw new NotImplementedException();
+            var usersInfo = new List<string>();
+
+            using (var process = new Process { StartInfo = new ProcessStartInfo {
+                FileName = "w",
+                Arguments = "-h -s",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+                while (!process.StandardOutput.EndOfStream)
+                    usersInfo.Add(process.StandardOutput.ReadLine());
+            }
+
+            return usersInfo.Select(userInfo => userInfo.Substring(0, userInfo.IndexOf(" "))).ToList();
         }
 
         public int GetInactivityTime()
         {
-            throw new NotImplementedException();
+            var time = "-1";
+
+            using (var process = new Process { StartInfo = new ProcessStartInfo {
+                FileName = "xprintidle",
+                UseShellExecute = false,
+                RedirectStandardOutput = true,
+                CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+                while (!process.StandardOutput.EndOfStream)
+                    time = process.StandardOutput.ReadLine();
+            }
+
+            try
+            {
+                if (time != null) return int.Parse(time);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Can not detect idle time");
+                Log.Error(LogName, ex);
+            }
+            return -1;
         }
     }
 }

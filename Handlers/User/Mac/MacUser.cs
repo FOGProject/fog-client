@@ -19,6 +19,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 
 namespace FOG.Handlers.User
 {
@@ -28,7 +30,26 @@ namespace FOG.Handlers.User
 
         public List<string> GetUsersLoggedIn()
         {
-            throw new NotImplementedException();
+            var usersInfo = new List<string>();
+
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "last",
+                    Arguments = @"grep 'logged in'",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+                while (!process.StandardOutput.EndOfStream)
+                    usersInfo.Add(process.StandardOutput.ReadLine());
+            }
+
+            return usersInfo.Select(userInfo => userInfo.Substring(0, userInfo.IndexOf(" "))).ToList();
         }
 
         public int GetInactivityTime()
