@@ -17,20 +17,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Handlers
-{
-    /// <summary>
-    ///     Hold information about a specific user account
-    /// </summary>
-    public class UserData
-    {
-        public UserData(string name, string sid)
-        {
-            Name = name;
-            SID = sid;
-        }
+using System.Collections.Generic;
 
-        public string Name { get; private set; }
-        public string SID { get; private set; }
+namespace FOG.Handlers.User
+{
+    interface IUser
+    {
+        /// <summary>
+        ///     Get a list of usernames logged in
+        /// </summary>
+        /// <returns>A list of usernames</returns>
+        List<string> GetUsersLoggedIn();
+
+        /// <summary>
+        /// </summary>
+        /// <returns>The inactivity time of the current user in seconds</returns>
+        int GetInactivityTime();
+
+        /// <summary>
+        /// </summary>
+        /// <returns>The current username</returns>
+        string GetCurrentUser();
     }
 }

@@ -21,7 +21,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Timers;
 using Newtonsoft.Json.Linq;
 
@@ -44,6 +43,8 @@ namespace FOG.Handlers.Power
         private const int DefaultGracePeriod = 60;
         private static dynamic requestData = new JObject();
 
+        private static IPower _instance;
+
         public enum FormOption
         {
             None,
@@ -51,13 +52,17 @@ namespace FOG.Handlers.Power
             Delay
         }
 
-
-        //Load the ability to lock the computer from the native user32 dll
-        [DllImport("user32")]
-        private static extern void lockWorkStation();
-
         static Power()
         {
+            var pid = Environment.OSVersion.Platform;
+
+            switch (pid)
+            {
+                default:
+                    _instance = new WindowsPower();
+                    break;
+            }
+
             Bus.Subscribe(Bus.Channel.Power, ParseBus);
         }
 
@@ -132,7 +137,7 @@ namespace FOG.Handlers.Power
         ///     Create a shutdown command
         /// </summary>
         /// <param name="parameters">The parameters to use</param>
-        private static void CreateTask(string parameters)
+        public static void CreateTask(string parameters)
         {
             requestData = new JObject();
 
@@ -142,7 +147,7 @@ namespace FOG.Handlers.Power
             Process.Start("shutdown", parameters);
         }
 
-        private static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
+        public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
         {
             if (_timer != null && _timer.Enabled)
             {
@@ -220,7 +225,7 @@ namespace FOG.Handlers.Power
         /// <param name="seconds">How long to wait before processing the request</param>
         public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
         {
-            QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options, message);
+            _instance.Shutdown(comment, options, message, seconds);
         }
 
         /// <summary>
@@ -232,7 +237,7 @@ namespace FOG.Handlers.Power
         /// <param name="seconds">How long to wait before processing the request</param>
         public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
         {
-            QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
+            _instance.Restart(comment, options, message, seconds);
         }
 
         /// <summary>
@@ -240,7 +245,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void LogOffUser()
         {
-            CreateTask("/l");
+            _instance.LogOffUser();
         }
 
         /// <summary>
@@ -248,7 +253,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void Hibernate()
         {
-            CreateTask("/h");
+           _instance.Hibernate();
         }
 
         /// <summary>
@@ -256,7 +261,7 @@ namespace FOG.Handlers.Power
         /// </summary>
         public static void LockWorkStation()
         {
-            lockWorkStation();
+            _instance.LockWorkStation();
         }
 
         /// <summary>
