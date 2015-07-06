@@ -18,25 +18,27 @@
  */
 
 using System;
+using System.Diagnostics;
 
 namespace FOG.Handlers.Power
 {
     class MacPower : IPower
     {
-
         public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
         {
-            throw new NotImplementedException();
+            var time = DateTime.Now.AddSeconds(seconds);
+            Power.QueueShutdown(string.Format("-h {0} \"{1}\"", time.ToString("hh:mm"), comment), options, message);
         }
 
         public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
         {
-            throw new NotImplementedException();
+            var time = DateTime.Now.AddSeconds(seconds);
+            Power.QueueShutdown(string.Format("-r {0} \"{1}\"", time.ToString("hh:mm"), comment), options, message);
         }
 
         public void LogOffUser()
         {
-            throw new NotImplementedException();
+            Process.Start("logout");
         }
 
         public void Hibernate()
@@ -51,7 +53,7 @@ namespace FOG.Handlers.Power
 
         public void CreateTask(string parameters)
         {
-            throw new NotImplementedException();
+            Process.Start("shutdown", parameters);
         }
     }
 }

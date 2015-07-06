@@ -150,7 +150,7 @@ namespace FOG.Handlers.Power
             Log.Entry(LogName, "Creating shutdown request");
             Log.Entry(LogName, string.Format("Parameters: {0}", parameters));
 
-            Process.Start("shutdown", parameters);
+            _instance.CreateTask(parameters);
         }
 
         public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
