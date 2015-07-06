@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Principal;
 using FOG.Handlers.User;
 
 namespace FOG.Handlers
@@ -64,7 +65,7 @@ namespace FOG.Handlers
         {
             try
             {
-                return _instance.GetCurrentUser();
+                return Environment.UserName;
             }
             catch (Exception ex)
             {

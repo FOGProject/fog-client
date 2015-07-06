@@ -35,10 +35,5 @@ namespace FOG.Handlers.User
         {
             throw new NotImplementedException();
         }
-
-        public string GetCurrentUser()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

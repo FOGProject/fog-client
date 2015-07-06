@@ -33,10 +33,5 @@ namespace FOG.Handlers.User
         /// </summary>
         /// <returns>The inactivity time of the current user in seconds</returns>
         int GetInactivityTime();
-
-        /// <summary>
-        /// </summary>
-        /// <returns>The current username</returns>
-        string GetCurrentUser();
     }
 }

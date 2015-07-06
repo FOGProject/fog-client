@@ -79,15 +79,6 @@ namespace FOG.Handlers.User
             return (int)idleTime / 1000;
         }
 
-        public string GetCurrentUser()
-        {
-            var windowsIdentity = WindowsIdentity.GetCurrent();
-
-            return (windowsIdentity == null)
-                ? null
-                : windowsIdentity.Name;
-        }
-
         /// <summary>
         ///     Get all active session IDs
         /// </summary>
