@@ -19,13 +19,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using FOG.Commands;
+using FOG.Commands.Modules;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
-using FOG.Modules;
-using FOG.Modules.AutoLogOut;
-using FOG.Modules.SnapinClient;
-using FOG.Modules.TaskReboot;
-using FOG.Modules.UserTracker;
 using Newtonsoft.Json.Linq;
 
 namespace FOG
@@ -35,12 +33,10 @@ namespace FOG
         private const string Server = "http://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string Name = "Console";
-        private static readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
+
+        private static readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>
         {
-            {"autologout", new AutoLogOut()},
-            {"snapinclient", new SnapinClient()},
-            {"taskreboot", new TaskReboot()},
-            {"usertracker", new UserTracker()}
+            {"modules", new ModuleCommand()}
         };
  
         public static void Main(string[] args)
@@ -88,11 +84,12 @@ namespace FOG
             if (command.Length == 0) return false;
             if (command.Length == 1 && command[0].Equals("exit")) return true;
 
-            // Check modules
-            if (_modules.ContainsKey(command[0]))
+            if (_commands.ContainsKey(command[0]))
             {
-                _modules[command[0]].Start();
-                Log.NewLine();
+                if (!_commands[command[0]].Process(command.Skip(1).ToArray()))
+                {
+                    Log.Error(Name, "Unknown command");
+                }   
             }
 
             // Check custom commands
