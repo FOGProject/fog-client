@@ -94,9 +94,10 @@ namespace FOG.Modules.HostnameChanger
             if (taskResponse.Error) return;
 
             RenameComputer(taskResponse);
-            if (!Power.ShuttingDown)
+
+            if (!Power.ShuttingDown && !Power.Requested)
                 RegisterComputer(taskResponse);
-            if (!Power.ShuttingDown)
+            if (!Power.ShuttingDown && !Power.Requested)
                 ActivateComputer(taskResponse);
         }
 
@@ -211,7 +212,7 @@ namespace FOG.Modules.HostnameChanger
                     : "Unknown Return Code: "), returnCode));
 
                 if (returnCode.Equals(0))
-                    Power.Restart("Host joined to active directory, restart needed", Power.FormOption.Delay);
+                    Power.Restart("Host left active directory, restart needed", Power.FormOption.Delay);
             }
             catch (Exception ex)
             {
