@@ -43,7 +43,6 @@ namespace FOG
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
-            Log.Verbose = true;
             Eager.Initalize();
 
             Log.PaddedHeader("FOG Console");

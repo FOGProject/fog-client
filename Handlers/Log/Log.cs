@@ -48,7 +48,6 @@ namespace FOG.Handlers
         public static string FilePath { get; set; }
         public static long MaxSize { get; set; }
         public static Mode Output { get; set; }
-        public static bool Verbose { get; set; }
 
         static Log()
         {
@@ -67,7 +66,7 @@ namespace FOG.Handlers
         {
             #if DEBUG
             #else
-            if (level == Level.Debug && !Verbose) return;
+            if (level == Level.Debug) return;
             #endif
 
             var prefix = "";
@@ -101,7 +100,9 @@ namespace FOG.Handlers
 
         public static void Debug(string caller, string message)
         {
-            Entry(Level.Debug, caller, message);
+            #if DEBUG
+                Entry(Level.Debug, caller, message);
+            #endif
         }       
 
         /// <summary>
