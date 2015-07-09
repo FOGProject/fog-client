@@ -34,6 +34,8 @@ namespace FOG.Modules.PrinterManager
             var proc = Process.Start("rundll32.exe", 
                 string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"", Name, File, Port, Model));
             if (proc != null) proc.WaitForExit(120000);
+
+            Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
         private void addIPPort()
