@@ -21,22 +21,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FOG.Commands;
+using FOG.Commands.Core.CBus;
+using FOG.Commands.Core.Middleware;
 using FOG.Commands.Modules;
 using FOG.Handlers;
-using FOG.Handlers.Middleware;
-using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
     internal class Program
     {
-        private const string Server = "http://fog.jbob.io/fog";
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string Name = "Console";
 
         private static readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>
         {
-            {"modules", new ModuleCommand()}
+            {"modules", new ModuleCommand()},
+            {"bus", new BusCommand()},
+            {"configure", new ConfigurationCommand()},
+            {"authentication", new AuthenticationCommand()}
         };
  
         public static void Main(string[] args)
@@ -48,9 +49,6 @@ namespace FOG
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type help for a list of commands");
             Log.NewLine();
-
-            Configuration.ServerAddress = Server;
-            Configuration.TestMAC = MAC;
 
             try
             {
@@ -85,63 +83,10 @@ namespace FOG
             if (command.Length == 1 && command[0].Equals("exit")) return true;
 
             if (_commands.ContainsKey(command[0]))
-            {
-                if (!_commands[command[0]].Process(command.Skip(1).ToArray()))
-                {
-                    Log.Error(Name, "Unknown command");
-                }   
-            }
+                if (_commands[command[0]].Process(command.Skip(1).ToArray()))
+                    return false;
 
-            // Check custom commands
-            else if (command[0].Equals("authenticate"))
-                Authentication.HandShake();
-            else if (command[0].Equals("info"))
-            {
-                Log.Entry(Name, "Server: " + Configuration.ServerAddress);
-                Log.Entry(Name, "MAC: " + Configuration.MACAddresses());
-            }
-
-            else if (command.Length == 3 && command[0].Equals("configure"))
-            {
-                if (command[1].Equals("server"))
-                    Configuration.ServerAddress = command[2];
-                else if (command[1].Equals("mac"))
-                    Configuration.TestMAC = command[2];
-            }
-
-            else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
-            {
-                Configuration.ServerAddress = Server;
-                Configuration.TestMAC = MAC;
-            }
-
-            else if (command.Length == 1 && command[0].Equals("help"))
-            {
-                Log.WriteLine(" authenticate <-- Authenticates the debugger shell");
-                Log.WriteLine(" configue server ____ <-- Sets the server address");
-                Log.WriteLine(" configue mac ____ <-- Sets the mac address");
-                Log.WriteLine(" configue default <-- Sets the default testing mac and server address");
-                foreach (var module in _modules.Keys)
-                {
-                    Log.WriteLine(" " + module + "<-- Runs this specific module");
-                }
-                Log.WriteLine(" exit <-- Exits the console");
-            }
-            else if (command.Length == 3 && command[0].Equals("bus") && command[1].Equals("mode"))
-            {
-                if(command[2].Equals("server"))
-                    Bus.SetMode(Bus.Mode.Server);
-                else if (command[2].Equals("client"))
-                    Bus.SetMode(Bus.Mode.Client);
-            }
-            else if (command.Length >= 2 && command[0].Equals("bus"))
-            {
-                dynamic json = new JObject();
-                json.content = command[1];
-                Bus.Emit(Bus.Channel.Debug, json, true);
-            }
-            else
-                Log.Entry(Name, "Unknown command");
+            Log.Error(Name, "Unknown command");
 
             return false;
         }

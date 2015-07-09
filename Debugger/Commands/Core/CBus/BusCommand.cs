@@ -1,5 +1,4 @@
-﻿using System;
-using FOG.Handlers;
+﻿using FOG.Handlers;
 using Newtonsoft.Json.Linq;
 
 namespace FOG.Commands.Core.CBus

@@ -35,8 +35,6 @@ namespace FOG.Commands.Modules
 
         public bool Process(string[] args)
         {
-            if (args.Length == 0) return false;
-
             if (_modules.ContainsKey(args[0].ToLower()))
             {
                 _modules[args[0]].Start();
