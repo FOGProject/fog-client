@@ -34,6 +34,14 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class PrinterManager : AbstractModule
     {
+
+        private static readonly List<string> _whitelist = new List<string>()
+        {
+            "Fax",
+            "Microsoft XPS Document Writer",
+            "Adobe PDF",
+            "Send To OneNote2013"
+        }; 
         public PrinterManager()
         {
             Name = "PrinterManager";
@@ -66,13 +74,15 @@ namespace FOG.Modules.PrinterManager
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
-            foreach (var name in from ManagementBaseObject printer in printerQuery.Get()
-                    select printer.GetPropertyValue("Name").ToString()
-                    into name
-                    let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
-                    where !safe
-                    select name)
+            foreach (var name in (from ManagementBaseObject printer in printerQuery.Get()
+                select printer.GetPropertyValue("Name").ToString()
+                into name
+                let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
+                where !safe
+                select name).Where(name => !_whitelist.Contains((string) name)))
+            {
                 Printer.Remove(name);
+            }
         }
 
         private List<Printer> CreatePrinters(List<string> printerIDs)
