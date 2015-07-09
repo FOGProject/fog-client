@@ -28,28 +28,35 @@ namespace FOG.Commands.Core.CBus
 
         public bool Process(string[] args)
         {
-            if (args.Length == 2 && args[1].ToLower().Equals("mode"))
+            if (args.Length == 2 && args[0].Equals("mode"))
             {
-                if(args[1].Equals("server"))
+                if (args[1].Equals("server"))
+                {
                     Bus.SetMode(Bus.Mode.Server);
-                else if (args[1].Equals("client"))
+                    return true;
+                }
+                if (args[1].Equals("client"))
+                {
                     Bus.SetMode(Bus.Mode.Client);
+                    return true;
+                }
             }
-            else if (args.Length == 2 && args[1].ToLower().Equals("public"))
+            else if (args.Length == 2 && args[0].Equals("public"))
             {
                 dynamic json = new JObject();
-                json.content = args[2];
+                json.content = args[1];
                 Bus.Emit(Bus.Channel.Debug, json, true);
+                return true;
             }
-            else if (args.Length == 2 && args[1].ToLower().Equals("private"))
+            else if (args.Length == 2 && args[0].Equals("private"))
             {
                 dynamic json = new JObject();
-                json.content = args[2];
+                json.content = args[1];
                 Bus.Emit(Bus.Channel.Debug, json, false);
+                return true;
             }
 
             return false;
         }
-
     }
 }

@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Linq;
 using FOG.Commands;
 using FOG.Commands.Core.CBus;
@@ -46,7 +47,7 @@ namespace FOG
             Eager.Initalize();
 
             Log.PaddedHeader("FOG Console");
-            Log.Entry(Name, "Type help for a list of commands");
+            Log.Entry(Name, "Type ? for a list of commands");
             Log.NewLine();
 
             try
@@ -81,6 +82,13 @@ namespace FOG
             if (command.Length == 0) return false;
             if (command.Length == 1 && command[0].Equals("exit")) return true;
 
+            if (command[0].Equals("?") || command[0].Equals("help"))
+            {
+                Help();
+                return false;            
+            }
+
+
             if (_commands.ContainsKey(command[0]))
                 if (_commands[command[0]].Process(command.Skip(1).ToArray()))
                     return false;
@@ -88,6 +96,15 @@ namespace FOG
             Log.Error(Name, "Unknown command");
 
             return false;
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands (append ? to any command for more information");
+            foreach(var keyword in _commands.Keys)
+            {
+                Log.WriteLine("--> " + keyword);
+            }
         }
 
         private static void OnMessage(dynamic data)
