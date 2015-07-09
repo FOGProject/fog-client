@@ -34,7 +34,7 @@ namespace FOG
 
         private static readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>
         {
-            {"modules", new ModuleCommand()},
+            {"module", new ModuleCommand()},
             {"bus", new BusCommand()},
             {"configure", new ConfigurationCommand()},
             {"authentication", new AuthenticationCommand()}
