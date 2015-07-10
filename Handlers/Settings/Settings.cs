@@ -14,7 +14,16 @@ namespace FOG.Handlers.Settings
 
         static Settings()
         {
-            _data = JObject.Parse(File.ReadAllText(_file));
+            try
+            {
+                _data = JObject.Parse(File.ReadAllText(_file));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to load settings");
+                Log.Error(LogName, ex);
+                _data = new JObject();
+            }
         }
 
         private static bool Save()
@@ -43,6 +52,7 @@ namespace FOG.Handlers.Settings
         public static string Set(string key, JToken value)
         {
             _data.Add(key, value);
+            Save();
         }
     }
 }
