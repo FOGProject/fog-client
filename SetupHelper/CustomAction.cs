@@ -6,7 +6,7 @@ using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
-
+ 
 namespace SetupHelper
 {
     public class CustomActions
