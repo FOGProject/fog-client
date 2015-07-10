@@ -122,7 +122,7 @@ namespace FOG.Modules.PrinterManager
 
         private static Printer PrinterFactory(Response printerData)
         {
-            if (PrinterExists(printerData)) return null;
+            if (PrinterExists(printerData.GetField("#name"))) return null;
 
             if(printerData.GetField("#type").Equals("iPrint"))
                 return new iPrintPrinter(printerData.GetField("#name"), 
