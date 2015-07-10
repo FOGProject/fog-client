@@ -6,6 +6,7 @@ using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
+using Newtonsoft.Json.Linq;
 
 namespace SetupHelper
 {
@@ -50,6 +51,30 @@ namespace SetupHelper
                 DisplayMSIError(session, "Unable to install CA certificate: " + ex.Message);
                 return ActionResult.Failure;
             }
+        }
+
+        [CustomAction]
+        public static ActionResult SaveSettings(Session session)
+        {
+
+            try
+            {
+                var settings = new JObject();
+                settings.Add("HTTPS", settings["HTTPS"]);
+                settings.Add("Tray", settings["USETRAY"]);
+                settings.Add("Server", settings["WEBADDRESS"]);
+                settings.Add("WebRoot", settings["WEBROOT"]);
+                settings.Add("Version", settings["ProductVersion"]);
+                settings.Add("Company", "FOG");
+                File.WriteAllText(session["INSTALLLOCATION"] + @"\settings.json", settings.ToString());
+                return ActionResult.Success;
+            }
+            catch (Exception ex)
+            {
+                DisplayMSIError(session, "Unable to create settings file: " + ex.Message);
+            }
+
+            return ActionResult.Failure;
         }
 
         [CustomAction]

@@ -31,6 +31,8 @@
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
+      
+      <Custom Action="SaveSettings" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
       <Custom Action="CleanTasks" After="InstallFiles"></Custom>
@@ -50,6 +52,7 @@
 
     <Binary Id="SetupHelper.CA.dll" SourceFile="..\bin\SetupHelper.CA.dll" />
     <CustomAction Id="InstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="InstallCert" />
+    <CustomAction Id="SaveSettings" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="SaveSettings" />
     <CustomAction Id="UninstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="UninstallCert" />
     <CustomAction Id="CleanTasks" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="CleanTasks" />
     
@@ -61,15 +64,7 @@
     </Directory>
     <Feature Id="Base" Title="FOG Service" Description="A client for the FOG server" Level="1">
       <ComponentRef Id="StandardComponent" />
-      <ComponentRef Id="ServerRegistry" />
-      <ComponentRef Id="TrayRegistry" />
-      <ComponentRef Id="WebRootRegistry" />
-      <ComponentRef Id="HttpsRegistry" />
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
-      <ComponentRef Id="VersionRegistry" />
-      <ComponentRef Id="CompanyRegistery" />
-      <ComponentRef Id="GraceRegistry" />
-      <ComponentRef Id="SleepRegistry" />
     </Feature>
   </Product>
 </Wix>
