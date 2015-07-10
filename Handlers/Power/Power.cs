@@ -166,8 +166,8 @@ namespace FOG.Handlers.Power
             try
             {
                 if (gracePeriod == -1)
-                    gracePeriod = (!string.IsNullOrEmpty(RegistryHandler.GetSystemSetting("gracePeriod")))
-                        ? int.Parse(RegistryHandler.GetSystemSetting("gracePeriod"))
+                    gracePeriod = (!string.IsNullOrEmpty(Settings.Get("gracePeriod")))
+                        ? int.Parse(Settings.Get("gracePeriod"))
                         : DefaultGracePeriod;
             }
             catch (Exception)

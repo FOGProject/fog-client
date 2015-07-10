@@ -39,7 +39,7 @@ namespace FOG.Modules.ClientUpdater
         protected override void DoWork()
         {
             var serverVersion = Communication.GetRawResponse("/service/getversion.php?client");
-            var localVersion = RegistryHandler.GetSystemSetting("Version");
+            var localVersion = Settings.Get("Version");
             try
             {
                 var server = int.Parse(serverVersion.Replace(".", ""));

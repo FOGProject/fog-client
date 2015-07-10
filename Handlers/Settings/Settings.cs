@@ -3,9 +3,9 @@ using System.IO;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 
-namespace FOG.Handlers.Settings
+namespace FOG.Handlers
 {
-    static class Settings
+    public static class Settings
     {
         private const string LogName = "Settings";
 
@@ -46,10 +46,10 @@ namespace FOG.Handlers.Settings
         {
             var value = _data.GetValue(key);
 
-            return (value == null) ? null : value.ToString();
+            return (value == null) ? "" : value.ToString();
         }
 
-        public static string Set(string key, JToken value)
+        public static void Set(string key, JToken value)
         {
             _data.Add(key, value);
             Save();

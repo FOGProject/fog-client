@@ -37,7 +37,7 @@ namespace FOG
 
             Log.NewLine();
             Log.PaddedHeader("Authentication");
-            Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+            Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
             if (!Authentication.HandShake()) return;
             Log.NewLine();
         }
@@ -87,14 +87,14 @@ namespace FOG
             if (response.Error || response.IsFieldValid("#sleep")) return null;
 
             // Set the shutdown graceperiod
-            RegistryHandler.SetSystemSetting("gracePeriod", response.GetField("#promptTime"));
+            Settings.Set("gracePeriod", response.GetField("#promptTime"));
 
             try
             {
                 var sleepTime = int.Parse(response.GetField("#sleep"));
                 if (sleepTime >= DefaultSleepTime)
                 {
-                    RegistryHandler.SetSystemSetting("Sleep", sleepTime.ToString());
+                    Settings.Set("Sleep", sleepTime.ToString());
                     return sleepTime;
                 }
 

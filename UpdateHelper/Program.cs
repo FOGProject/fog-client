@@ -64,10 +64,10 @@ namespace FOG
         {
             const string logName = "Update Helper";
 
-            var useTray = RegistryHandler.GetSystemSetting("Tray");
-            var https = RegistryHandler.GetSystemSetting("HTTPS");
-            var webRoot = RegistryHandler.GetSystemSetting("WebRoot");
-            var server = RegistryHandler.GetSystemSetting("Server");
+            var useTray = Settings.Get("Tray");
+            var https = Settings.Get("HTTPS");
+            var webRoot = Settings.Get("WebRoot");
+            var server = Settings.Get("Server");
 
             var process = new Process
             {

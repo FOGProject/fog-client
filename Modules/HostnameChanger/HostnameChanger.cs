@@ -132,7 +132,7 @@ namespace FOG.Modules.HostnameChanger
                 RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
                     response.GetField("#hostname"));
 
-                Power.Restart(RegistryHandler.GetSystemSetting("Company") + " needs to rename your computer", Power.FormOption.Delay);
+                Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.FormOption.Delay);
             }
             else if(!_notifiedUser)
             {
@@ -141,7 +141,7 @@ namespace FOG.Modules.HostnameChanger
                 var notification = new Notification("Please log off",
                     string.Format(
                         "{0} is attemping to service your computer, please log off at the soonest available time",
-                        RegistryHandler.GetSystemSetting("Company")), 120);
+                        Settings.Get("Company")), 120);
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 

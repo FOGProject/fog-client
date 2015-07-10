@@ -57,7 +57,7 @@ namespace FOG.Modules.TaskReboot
                 var notification = new Notification("Please log off",
                     string.Format(
                         "{0} is attemping to service your computer, please log off at the soonest available time",
-                        RegistryHandler.GetSystemSetting("Company")), 60);
+                        Settings.Get("Company")), 60);
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
                 _notifiedUser = true;

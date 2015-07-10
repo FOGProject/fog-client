@@ -58,7 +58,7 @@ namespace FOG
                     // Entry file formatting
                     Log.NewLine();
                     Log.PaddedHeader(module.Name);
-                    Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+                    Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
 
                     try
                     {

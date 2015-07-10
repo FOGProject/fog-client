@@ -58,7 +58,7 @@ namespace FOG
         {
             try
             {
-                var sleepTimeStr = RegistryHandler.GetSystemSetting("Sleep");
+                var sleepTimeStr = Settings.Get("Sleep");
                 var sleepTime = int.Parse(sleepTimeStr);
                 if (sleepTime >= DefaultSleepTime)
                     return sleepTime;

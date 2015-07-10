@@ -44,16 +44,16 @@ namespace FOG.Handlers.Middleware
         public static bool GetAndSetServerAddress()
         {
 
-            if (RegistryHandler.GetSystemSetting("HTTPS") == null || RegistryHandler.GetSystemSetting("WebRoot") == null ||
-                string.IsNullOrEmpty(RegistryHandler.GetSystemSetting("Server")))
+            if (Settings.Get("HTTPS") == null || Settings.Get("WebRoot") == null ||
+                string.IsNullOrEmpty(Settings.Get("Server")))
             {
                 Log.Error(LogName, "Invalid parameters");
                 return false;
             }
 
-            ServerAddress = (RegistryHandler.GetSystemSetting("HTTPS").Equals("1") ? "https://" : "http://");
-            ServerAddress += RegistryHandler.GetSystemSetting("Server") +
-                             RegistryHandler.GetSystemSetting("WebRoot");
+            ServerAddress = (Settings.Get("HTTPS").Equals("1") ? "https://" : "http://");
+            ServerAddress += Settings.Get("Server") +
+                             Settings.Get("WebRoot");
             return true;
         }
 
