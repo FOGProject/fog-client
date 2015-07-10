@@ -56,20 +56,24 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Adding printers");
             foreach (var printer in printers)
             {
-                printer.Add();
+                if(!PrinterExists(printer.Name))
+                    printer.Add();
+                else
+                    Log.Entry(Name, printer.Name + " already exists");
+
                 if(printer.Default)
                     printer.SetDefault();
             }
         }
 
-        private static void RemoveExtraPrinters(List<Printer> newPrinters, bool unmanaged = false)
+        private static void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
 
             var managedPrinters = new List<Printer>(newPrinters);
 
-            if (!unmanaged)
+            if (!removeAll)
             {
 
                 var allPrinters = Communication.GetResponse("service/printerlisting.php");
@@ -99,7 +103,6 @@ namespace FOG.Modules.PrinterManager
                 return (from id in printerIDs 
                         select Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true) 
                             into printerData 
-                        where !PrinterExists(printerData)
                         select PrinterFactory(printerData)).ToList();
             }
             catch (Exception ex)
@@ -110,11 +113,11 @@ namespace FOG.Modules.PrinterManager
 
         }
 
-        private static bool PrinterExists(Response printerData )
+        private static bool PrinterExists(string name)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
             return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
-                .Contains(printerData.GetField("#name"));
+                .Contains(name);
         }
 
         private static Printer PrinterFactory(Response printerData)
