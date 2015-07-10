@@ -52,7 +52,8 @@
 
     <Binary Id="SetupHelper.CA.dll" SourceFile="..\bin\SetupHelper.CA.dll" />
     <CustomAction Id="InstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="InstallCert" />
-    <CustomAction Id="SaveSettings" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="SaveSettings" />
+    <CustomAction Id="SaveSettings" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="SaveSettings"  
+                  Value='INSTALLLOCATION=[INSTALLLOCATION];HTTPS=[HTTPS];WEBADDRESS=[WEBADDRESS];WEBROOT=[WEBROOT];USETRAY=[USETRAY]' />
     <CustomAction Id="UninstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="UninstallCert" />
     <CustomAction Id="CleanTasks" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="CleanTasks" />
     
