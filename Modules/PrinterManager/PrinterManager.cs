@@ -34,14 +34,6 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class PrinterManager : AbstractModule
     {
-
-        private static readonly List<string> _whitelist = new List<string>()
-        {
-            "Fax",
-            "Microsoft XPS Document Writer",
-            "Adobe PDF",
-            "Send To OneNote2013"
-        }; 
         public PrinterManager()
         {
             Name = "PrinterManager";
@@ -70,16 +62,31 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        private static void RemoveExtraPrinters(List<Printer> newPrinters)
+        private static void RemoveExtraPrinters(List<Printer> newPrinters, bool unmanaged = false)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
+
+
+            var managedPrinters = new List<Printer>(newPrinters);
+
+            if (!unmanaged)
+            {
+
+                var allPrinters = Communication.GetResponse("service/printerlisting.php");
+                if (!allPrinters.Error)
+                {
+                    var printerNames = allPrinters.GetList("#printer", false);
+
+                    managedPrinters.AddRange(printerNames.Select(name => new iPrintPrinter(name, name, name, false)).Cast<Printer>());
+                }
+            }
 
             foreach (var name in (from ManagementBaseObject printer in printerQuery.Get()
                 select printer.GetPropertyValue("Name").ToString()
                 into name
-                let safe = newPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
+                let safe = managedPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
                 where !safe
-                select name).Where(name => !_whitelist.Contains((string) name)))
+                select name))
             {
                 Printer.Remove(name);
             }
