@@ -7,7 +7,6 @@
 #pragma warning disable 642
             if (Power.Power.Updating) ;
             if (Middleware.Configuration.TestMAC != null) ;
-            if (RegistryHandler.GetRoot() != null) ;
 #pragma warning restore 642
         }
     }

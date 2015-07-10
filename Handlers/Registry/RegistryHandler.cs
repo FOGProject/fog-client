@@ -28,21 +28,6 @@ namespace FOG.Handlers
     public static class RegistryHandler
     {
         private const string LogName = "RegistryHandler";
-        private static string _root = "";
-
-        private static void UpdateRoot()
-        {
-            if (GetRegisitryValue(@"Software\Wow6432Node\FOG\", "Server") != null)
-            {
-                _root = @"Software\Wow6432Node\FOG\";
-                Log.Entry(LogName, "64 bit registry detected");
-            }
-            else
-            {
-                _root = @"Software\FOG\";
-                Log.Entry(LogName, "32 bit registry detected");
-            }
-        }
 
         public static string GetRegisitryValue(string keyPath, string keyName)
         {
@@ -122,44 +107,6 @@ namespace FOG.Handlers
             }
 
             return false;
-        }
-
-        public static string GetRoot()
-        {
-            if (_root.Equals(""))
-                UpdateRoot();
-
-            return _root;
-        }
-
-        public static string GetSystemSetting(string name)
-        {
-            return GetRegisitryValue(GetRoot(), name);
-        }
-
-        public static bool SetSystemSetting(string keyName, string value)
-        {
-            return SetRegistryValue(GetRoot(), keyName, value);
-        }
-
-        public static string GetModuleSetting(string module, string keyName)
-        {
-            return GetRegisitryValue(string.Format("{0}\\{1}", GetRoot(), module), keyName);
-        }
-
-        public static bool SetModuleSetting(string module, string keyName, string value)
-        {
-            return SetRegistryValue(string.Format("{0}\\{1}", GetRoot(), module), keyName, value);
-        }
-
-        public static bool DeleteModuleSetting(string module, string keyName)
-        {
-            return DeleteKey(string.Format("{0}\\{1}", GetRoot(), module), keyName);
-        }
-
-        public static bool DeleteModule(string module)
-        {
-            return DeleteFolder(string.Format("{0}\\{1}", GetRoot(), module));
         }
     }
 }

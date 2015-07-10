@@ -156,6 +156,7 @@
     </Compile>
     <Compile Include="Registry\RegistryHandler.cs" />
     <Compile Include="Power\Power.cs" />
+    <Compile Include="Settings\Settings.cs" />
     <Compile Include="User\IUser.cs" />
     <Compile Include="User\Linux\LinuxUser.cs" />
     <Compile Include="User\Mac\MacUser.cs" />
