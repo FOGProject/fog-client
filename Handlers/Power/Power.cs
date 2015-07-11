@@ -135,6 +135,8 @@ namespace FOG.Handlers.Power
         /// <param name="parameters">The parameters to use</param>
         private static void CreateTask(string parameters)
         {
+            shouldAbortFunc = null;
+
             requestData = new JObject();
 
             Log.Entry(LogName, "Creating shutdown request");
@@ -199,10 +201,17 @@ namespace FOG.Handlers.Power
                     if (requestData.message != null)
                         message = requestData.message.ToString();
 
-                    if (shouldAbortFunc != null && shouldAbortFunc())
-                        return;
-
                     QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.period);
+                    return;
+                }
+
+                if (shouldAbortFunc != null && shouldAbortFunc())
+                {
+                    Log.Entry(LogName, "Shutdown aborted by calling module");
+                    dynamic abortJson = new JObject();
+                    abortJson.action = "abort";
+                    shouldAbortFunc = null;
+                    Bus.Emit(Bus.Channel.Power, abortJson, true);
                     return;
                 }
 
