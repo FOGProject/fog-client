@@ -51,8 +51,14 @@ namespace FOG.Handlers
 
         static Log()
         {
-            FilePath = @"\fog.log";
+            FilePath = AppDomain.CurrentDomain.BaseDirectory + "fog.log";
             MaxSize = DefaultMaxLogSize;
+            Output = Mode.Quiet;
+            
+            var rootPath = Settings.Get("RootLog");
+            if (!string.IsNullOrEmpty(rootPath) && rootPath.Trim().Equals("1"))
+                FilePath = @"\fog.log";
+
             Output = Mode.File;
         }
 

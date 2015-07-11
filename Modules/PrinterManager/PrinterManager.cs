@@ -34,9 +34,12 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class PrinterManager : AbstractModule
     {
+        private static string LogName;
+
         public PrinterManager()
         {
             Name = "PrinterManager";
+            LogName = Name;
         }
 
         protected override void DoWork()
@@ -50,8 +53,7 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Creating printer objects");
             var printers = CreatePrinters(printerIDs);
 
-            if (printerResponse.GetField("#mode").Equals("ar"))
-                RemoveExtraPrinters(printers);
+            RemoveExtraPrinters(printers, printerResponse.GetField("#mode").Equals("ar"));
 
             Log.Entry(Name, "Adding printers");
             foreach (var printer in printers)
@@ -60,70 +62,66 @@ namespace FOG.Modules.PrinterManager
                     printer.Add();
                 else
                     Log.Entry(Name, printer.Name + " already exists");
-
-                if(printer.Default)
-                    printer.SetDefault();
             }
         }
 
-        private static void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
+        private void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
         {
+            Log.Debug(Name, "Removing extra printers...");
+
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
+            Log.Debug(Name, "Stripping printer data");
 
-            var managedPrinters = new List<Printer>(newPrinters);
+            var managedPrinters = new List<string>();
+            foreach (var printer in newPrinters.Where(printer => printer != null))
+            {
+                Log.Debug(Name, "Stripping " + printer.Name);
+                managedPrinters.Add(printer.Name);
+            }
 
             if (!removeAll)
             {
 
-                var allPrinters = Communication.GetResponse("service/printerlisting.php");
-                if (!allPrinters.Error)
-                {
-                    var printerNames = allPrinters.GetList("#printer", false);
+                var allPrinters = Communication.GetResponse("/service/printerlisting.php");
 
-                    managedPrinters.AddRange(printerNames.Select(name => new iPrintPrinter(name, name, name, false)).Cast<Printer>());
-                }
+                if (allPrinters.Error) return;
+                var printerNames = allPrinters.GetList("#printer", false);
+                foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
+                    Printer.Remove(name);
             }
-
-            foreach (var name in (from ManagementBaseObject printer in printerQuery.Get()
-                select printer.GetPropertyValue("Name").ToString()
-                into name
-                let safe = managedPrinters.Any(newPrinter => newPrinter.Name.Equals(name))
-                where !safe
-                select name))
+            else
             {
-                Printer.Remove(name);
+                foreach (var printer in printerQuery.Get().Cast<ManagementBaseObject>().Where(printer => !managedPrinters.Contains(printer.GetPropertyValue("Name").ToString().Trim())))
+                {
+                    Printer.Remove(printer.GetPropertyValue("Name").ToString());
+                }
             }
         }
 
-        private List<Printer> CreatePrinters(List<string> printerIDs)
+        public static List<Printer> CreatePrinters(List<string> printerIDs)
         {
             try
             {
-                return (from id in printerIDs 
-                        select Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true) 
-                            into printerData 
-                        select PrinterFactory(printerData)).ToList();
+                return printerIDs.Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true)).Select(PrinterFactory).Where(printer => printer != null).ToList();
             }
             catch (Exception ex)
             {
-                Log.Error(Name, ex);
+                Log.Error(LogName, ex);
                 return new List<Printer>();
             }
 
         }
 
-        private static bool PrinterExists(string name)
+        public static bool PrinterExists(string name)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
             return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
                 .Contains(name);
         }
 
-        private static Printer PrinterFactory(Response printerData)
+        public static Printer PrinterFactory(Response printerData)
         {
-            if (PrinterExists(printerData.GetField("#name"))) return null;
-
             if(printerData.GetField("#type").Equals("iPrint"))
                 return new iPrintPrinter(printerData.GetField("#name"), 
                     printerData.GetField("#ip"), 

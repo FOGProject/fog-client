@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -43,6 +42,7 @@ namespace FOG.Handlers.Power
         private static bool delayed;
         private const int DefaultGracePeriod = 60;
         private static dynamic requestData = new JObject();
+        private static Func<bool> shouldAbortFunc; 
 
         private static IPower _instance;
 
@@ -146,6 +146,8 @@ namespace FOG.Handlers.Power
         /// <param name="parameters">The parameters to use</param>
         public static void CreateTask(string parameters)
         {
+            shouldAbortFunc = null;
+
             requestData = new JObject();
 
             Log.Entry(LogName, "Creating shutdown request");
@@ -197,6 +199,18 @@ namespace FOG.Handlers.Power
             _timer.Start();
         }
 
+        private static bool ShouldAbort()
+        {
+            if (shouldAbortFunc == null || !shouldAbortFunc()) return false;
+            Log.Entry(LogName, "Shutdown aborted by calling module");
+
+            dynamic abortJson = new JObject();
+            abortJson.action = "abort";
+            shouldAbortFunc = null;
+            Bus.Emit(Bus.Channel.Power, abortJson, true);
+            return true;
+        }
+
         private static void TimerElapsed(object sender, ElapsedEventArgs e)
         {
             try
@@ -210,9 +224,13 @@ namespace FOG.Handlers.Power
                     if (requestData.message != null)
                         message = requestData.message.ToString();
 
+                    if (ShouldAbort()) return;
+
                     QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.period);
                     return;
                 }
+
+                if (ShouldAbort()) return;
 
                 ShuttingDown = true;
                 Requested = false;
@@ -253,6 +271,20 @@ namespace FOG.Handlers.Power
             _instance.Restart(comment, options, message, seconds);
         }
 
+        public static void Shutdown(string comment, Func<bool> abortCheckFunc, FormOption options = FormOption.Abort,
+            string message = null, int seconds = 0)
+        {
+            shouldAbortFunc = abortCheckFunc;
+            Shutdown(comment, options, message, seconds);
+        }
+
+        public static void Restart(string comment, Func<bool> abortCheckFunc, FormOption options = FormOption.Abort,
+            string message = null, int seconds = 0)
+        {
+            shouldAbortFunc = abortCheckFunc;
+            Restart(comment, options, message, seconds);
+        }
+
         /// <summary>
         ///     Entry off the current user
         /// </summary>
@@ -284,10 +316,13 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Aborting shutdown");
             ShuttingDown = false;
+            Requested = false;
+
+            if (_timer == null) return;
+
             _timer.Stop();
             _timer.Close();
             _timer = null;
-            Requested = false;
 
             var notification = new Notification("Shutdown Aborted", "Shutdown has been aborted", 10);
             Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);

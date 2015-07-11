@@ -1,17 +1,17 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
  * Copyright (C) 2014-2015 FOG Project
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -29,12 +29,42 @@ namespace FOG.Handlers.User
     class WindowsUser : IUser
     {
         private const string LogName = "UserHandler";
+        [DllImport("user32.dll")]
+        private static extern bool GetLastInputInfo(ref Lastinputinfo plii);
 
-        private enum WtsInfoClass
+        [DllImport("Wtsapi32.dll")]
+        private static extern bool WTSQuerySessionInformation(IntPtr hServer, int sessionId, WtsInfoClass wtsInfoClass, out System.IntPtr ppBuffer, out int pBytesReturned);
+        [DllImport("Wtsapi32.dll")]
+        private static extern void WTSFreeMemory(IntPtr pointer);
+
+        public enum WtsInfoClass
         {
+            WTSInitialProgram,
+            WTSApplicationName,
+            WTSWorkingDirectory,
+            WTSOEMId,
+            WTSSessionId,
             WTSUserName,
-            WTSDomainName
-        };
+            WTSWinStationName,
+            WTSDomainName,
+            WTSConnectState,
+            WTSClientBuildNumber,
+            WTSClientName,
+            WTSClientDirectory,
+            WTSClientProductId,
+            WTSClientHardwareId,
+            WTSClientAddress,
+            WTSClientDisplay,
+            WTSClientProtocolType,
+            WTSIdleTime,
+            WTSLogonTime,
+            WTSIncomingBytes,
+            WTSOutgoingBytes,
+            WTSIncomingFrames,
+            WTSOutgoingFrames,
+            WTSClientInfo,
+            WTSSessionInfo,
+        }
 
         internal struct Lastinputinfo
         {
@@ -42,26 +72,9 @@ namespace FOG.Handlers.User
             public uint DwTime;
         }
 
-        [DllImport("user32.dll")]
-        private static extern bool GetLastInputInfo(ref Lastinputinfo plii);
-
-        [DllImport("Wtsapi32.dll")]
-        private static extern bool WTSQuerySessionInformation(IntPtr hServer, int sessionId, WtsInfoClass wtsInfoClass,
-            out IntPtr ppBuffer, out int pBytesReturned);
-
-        [DllImport("Wtsapi32.dll")]
-        private static extern void WTSFreeMemory(IntPtr pointer);
-
-        public List<string> GetUsersLoggedIn()
-        {
-            var sessionIds = GetSessionIds();
-
-            return (from sessionId in sessionIds
-                    where !GetUserNameFromSessionId(sessionId, false)
-                        .Equals("SYSTEM")
-                    select GetUserNameFromSessionId(sessionId, false)).ToList();
-        }
-
+        /// <summary>
+        /// </summary>
+        /// <returns>The inactivity time of the current user in seconds</returns>
         public int GetInactivityTime()
         {
             var lastInputInfo = new Lastinputinfo();
@@ -77,6 +90,20 @@ namespace FOG.Handlers.User
             var idleTime = envTicks - lastInputTick;
 
             return (int)idleTime / 1000;
+        }
+
+        /// <summary>
+        ///     Get a list of usernames logged in
+        /// </summary>
+        /// <returns>A list of usernames</returns>
+        public List<string> GetUsersLoggedIn()
+        {
+            var sessionIds = GetSessionIds();
+
+            return (from sessionId in sessionIds
+                    where !GetUserNameFromSessionId(sessionId, false)
+                        .Equals("SYSTEM")
+                    select GetUserNameFromSessionId(sessionId, false)).ToList();
         }
 
         /// <summary>
@@ -107,6 +134,7 @@ namespace FOG.Handlers.User
 
             return sessionIds;
         }
+
         /// <summary>
         ///     Convert a session ID to its correlating username
         /// </summary>
@@ -119,22 +147,17 @@ namespace FOG.Handlers.User
             IntPtr buffer;
             int strLen;
             var username = "SYSTEM";
-            if (!WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSUserName, out buffer, out strLen) || strLen <= 1)
-                return username;
-
+            if (!WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSUserName, out buffer, out strLen) ||
+                strLen <= 1) return username;
             username = Marshal.PtrToStringAnsi(buffer);
             WTSFreeMemory(buffer);
-
-            if (!WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSDomainName, out buffer, out strLen) || strLen <= 1)
-                return username;
-
-            if (prependDomain)
-                username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
-
-
+            if (!prependDomain) return username;
+            if (
+                !WTSQuerySessionInformation(IntPtr.Zero, sessionId, WtsInfoClass.WTSDomainName, out buffer, out strLen) ||
+                strLen <= 1) return username;
+            username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
             WTSFreeMemory(buffer);
             return username;
         }
-
     }
 }

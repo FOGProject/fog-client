@@ -8,12 +8,12 @@
  modify it under the terms of the GNU General Public License
  as published by the Free Software Foundation; either version 3
  of the License, or (at your option) any later version.
- 
+
  This program is distributed in the hope that it will be useful,
  but WITHOUT ANY WARRANTY; without even the implied warranty of
  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  GNU General Public License for more details.
-  
+
  You should have received a copy of the GNU General Public License
  along with this program; if not, write to the Free Software
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -25,11 +25,11 @@
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
-            
+
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe">
               <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any"/>
             </File>
-            
+
             <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
@@ -39,7 +39,7 @@
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe">
               <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any"/>
             </File>
-            
+
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe">
@@ -72,7 +72,6 @@
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
           </Component>
-
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
