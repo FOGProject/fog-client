@@ -20,16 +20,28 @@
 using System;
 using System.IO;
 using System.Reflection;
+using FOG.Handlers.User;
 using Newtonsoft.Json.Linq;
 
 namespace FOG.Handlers
 {
     public static class Settings
     {
+        public enum OSType
+        {
+            All,
+            Windows,
+            Nix,
+            Mac,
+            Linux
+        }
+
+
         private const string LogName = "Settings";
 
         private static readonly string _file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\settings.json";
         private static JObject _data;
+        public static OSType OS { get; private set; }
 
         static Settings()
         {
@@ -43,6 +55,35 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
                 _data = new JObject();
             }
+
+            var pid = Environment.OSVersion.Platform;
+
+            switch (pid)
+            {
+                case PlatformID.MacOSX:
+                    OS = OSType.Mac;
+                    break;
+                case PlatformID.Unix:
+                    OS = OSType.Linux;
+                    break;
+                default:
+                    OS = OSType.Windows;
+                    break;
+            }
+        }
+
+        public static bool IsCompatible(OSType type)
+        {
+            if (type == OSType.All)
+                return true;
+
+            if (type == OS)
+                return true;
+
+            if (type == OSType.Linux || type == OSType.Mac && OS == OSType.Nix)
+                return true;
+
+            return false;
         }
 
         private static bool Save()
