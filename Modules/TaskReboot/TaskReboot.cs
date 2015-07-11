@@ -28,13 +28,9 @@ namespace FOG.Modules.TaskReboot
     /// </summary>
     public class TaskReboot : AbstractModule
     {
-        //This variable is used to detect if the user has been told there is a pending shutdown
-        private bool _notifiedUser;
-
         public TaskReboot()
         {
             Name = "TaskReboot";
-            _notifiedUser = false;
         }
 
         protected override void DoWork()
@@ -47,21 +43,13 @@ namespace FOG.Modules.TaskReboot
             
             Log.Entry(Name, "Restarting computer for task");
 
-            if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
-                Power.Restart(Name, Power.FormOption.Delay);
+            Power.Restart(Name, ShouldAbort, Power.FormOption.Delay);
+        }
 
-            else if (!response.Error && !_notifiedUser)
-            {
-                Log.Entry(Name, "User is currently logged in, will try again later");
-
-                var notification = new Notification("Please log off",
-                    string.Format(
-                        "{0} is attemping to service your computer, please log off at the soonest available time",
-                        RegistryHandler.GetSystemSetting("Company")), 60);
-
-                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
-                _notifiedUser = true;
-            }
+        public bool ShouldAbort()
+        {
+            var response = Communication.GetResponse("/service/jobs.php", true);
+            return (response.Error);
         }
     }
 }

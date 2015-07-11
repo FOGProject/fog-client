@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -44,6 +43,7 @@ namespace FOG.Handlers.Power
         private static bool delayed;
         private const int DefaultGracePeriod = 60;
         private static dynamic requestData = new JObject();
+        private static Func<bool> shouldAbortFunc; 
 
         public enum FormOption
         {
@@ -199,6 +199,9 @@ namespace FOG.Handlers.Power
                     if (requestData.message != null)
                         message = requestData.message.ToString();
 
+                    if (shouldAbortFunc != null && shouldAbortFunc())
+                        return;
+
                     QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.period);
                     return;
                 }
@@ -240,6 +243,20 @@ namespace FOG.Handlers.Power
         public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
         {
             QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
+        }
+
+        public static void Shutdown(string comment, Func<bool> abortCheckFunc, FormOption options = FormOption.Abort,
+            string message = null, int seconds = 0)
+        {
+            shouldAbortFunc = abortCheckFunc;
+            Shutdown(comment, options, message, seconds);
+        }
+
+        public static void Restart(string comment, Func<bool> abortCheckFunc, FormOption options = FormOption.Abort,
+            string message = null, int seconds = 0)
+        {
+            shouldAbortFunc = abortCheckFunc;
+            Restart(comment, options, message, seconds);
         }
 
         /// <summary>
