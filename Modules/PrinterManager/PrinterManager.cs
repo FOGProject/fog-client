@@ -34,9 +34,12 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class PrinterManager : AbstractModule
     {
+        private static string LogName;
+
         public PrinterManager()
         {
             Name = "PrinterManager";
+            LogName = Name;
         }
 
         protected override void DoWork()
@@ -96,7 +99,7 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        private List<Printer> CreatePrinters(List<string> printerIDs)
+        public static List<Printer> CreatePrinters(List<string> printerIDs)
         {
             try
             {
@@ -104,20 +107,20 @@ namespace FOG.Modules.PrinterManager
             }
             catch (Exception ex)
             {
-                Log.Error(Name, ex);
+                Log.Error(LogName, ex);
                 return new List<Printer>();
             }
 
         }
 
-        private static bool PrinterExists(string name)
+        public static bool PrinterExists(string name)
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
             return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
                 .Contains(name);
         }
 
-        private static Printer PrinterFactory(Response printerData)
+        public static Printer PrinterFactory(Response printerData)
         {
             if(printerData.GetField("#type").Equals("iPrint"))
                 return new iPrintPrinter(printerData.GetField("#name"), 

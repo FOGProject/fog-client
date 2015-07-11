@@ -48,52 +48,13 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Creating list of printers");
             var printerIDs = printerResponse.GetList("#printer", false);
             Log.Entry(Name, "Creating printer objects");
-            var printers = CreatePrinters(printerIDs);
+            var printers = PrinterManager.CreatePrinters(printerIDs);
 
             Log.Entry(Name, "Checking defaults");
             foreach (var printer in printers.Where(printer => printer.Default))
             {
                 printer.SetDefault();
             }
-        }
-
-        private List<Printer> CreatePrinters(List<string> printerIDs)
-        {
-            try
-            {
-                return printerIDs.Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true)).Select(PrinterFactory).Where(printer => printer != null).ToList();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, ex);
-                return new List<Printer>();
-            }
-
-        }
-
-        private static Printer PrinterFactory(Response printerData)
-        {
-            if(printerData.GetField("#type").Equals("iPrint"))
-                return new iPrintPrinter(printerData.GetField("#name"), 
-                    printerData.GetField("#ip"), 
-                    printerData.GetField("#port"),
-                    printerData.GetField("#default").Equals("1"));
-
-            if (printerData.GetField("#type").Equals("Network"))
-                return new NetworkPrinter(printerData.GetField("#name"),
-                    printerData.GetField("#ip"),
-                    printerData.GetField("#port"),
-                    printerData.GetField("#default").Equals("1"));
-
-            if (printerData.GetField("#type").Equals("Local"))
-                return new LocalPrinter(printerData.GetField("#name"),
-                    printerData.GetField("#file"),
-                    printerData.GetField("#port"),
-                    printerData.GetField("#ip"),
-                    printerData.GetField("#model"),
-                    printerData.GetField("#default").Equals("1"));
-
-            return null;
         }
     }
 }
