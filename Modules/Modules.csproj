@@ -109,9 +109,13 @@
     <Compile Include="AbstractModule.cs" />
     <Compile Include="AutoLogOut\AutoLogOut.cs" />
     <Compile Include="ClientUpdater\ClientUpdater.cs" />
-    <Compile Include="DisplayManager\Display.cs" />
+    <Compile Include="DisplayManager\Linux\LinuxDisplay.cs" />
+    <Compile Include="DisplayManager\Mac\MacDisplay.cs" />
+    <Compile Include="DisplayManager\Windows\Display.cs" />
     <Compile Include="DisplayManager\DisplayManager.cs" />
-    <Compile Include="DisplayManager\User_32.cs" />
+    <Compile Include="DisplayManager\IDisplay.cs" />
+    <Compile Include="DisplayManager\Windows\User_32.cs" />
+    <Compile Include="DisplayManager\Windows\WindowsDisplay.cs" />
     <Compile Include="GreenFOG\GreenFOG.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
     <Compile Include="PrinterManager\LocalPrinter.cs" />

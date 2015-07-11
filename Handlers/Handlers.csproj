@@ -161,6 +161,7 @@
     <Compile Include="User\Linux\LinuxUser.cs" />
     <Compile Include="User\Mac\MacUser.cs" />
     <Compile Include="User\UserHandler.cs" />
+    <Compile Include="User\Windows\MacDisplay.cs" />
     <Compile Include="User\Windows\WindowsUser.cs" />
   </ItemGroup>
   <ItemGroup>
