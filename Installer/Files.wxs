@@ -97,7 +97,13 @@
               <RegistryValue Name="Version" Type="string" Value="[ProductVersion]" />
             </RegistryKey>
           </Component>
+          <Component Id="LogRootRegistry" Guid="f775111d-9db9-45f7-9284-6e9ae8e98b4a">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="RootLog" Type="string" Value="[ROOTLOG]" />
+            </RegistryKey>
+          </Component>
           
+
 
 
         </Directory>

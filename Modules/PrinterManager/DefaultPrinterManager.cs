@@ -32,11 +32,11 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class PrinterManager : AbstractModule
+    public class DefaultPrinterManager : AbstractModule
     {
-        public PrinterManager()
+        public DefaultPrinterManager()
         {
-            Name = "PrinterManager";
+            Name = "DefaultPrinterManager";
         }
 
         protected override void DoWork()
@@ -50,49 +50,10 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Creating printer objects");
             var printers = CreatePrinters(printerIDs);
 
-            RemoveExtraPrinters(printers, printerResponse.GetField("#mode").Equals("ar"));
-
-            Log.Entry(Name, "Adding printers");
-            foreach (var printer in printers)
+            Log.Entry(Name, "Checking defaults");
+            foreach (var printer in printers.Where(printer => printer.Default))
             {
-                if(!PrinterExists(printer.Name))
-                    printer.Add();
-                else
-                    Log.Entry(Name, printer.Name + " already exists");
-            }
-        }
-
-        private void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
-        {
-            Log.Debug(Name, "Removing extra printers...");
-
-            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-
-            Log.Debug(Name, "Stripping printer data");
-
-            var managedPrinters = new List<string>();
-            foreach (var printer in newPrinters.Where(printer => printer != null))
-            {
-                Log.Debug(Name, "Stripping " + printer.Name);
-                managedPrinters.Add(printer.Name);
-            }
-
-            if (!removeAll)
-            {
-
-                var allPrinters = Communication.GetResponse("/service/printerlisting.php");
-
-                if (allPrinters.Error) return;
-                var printerNames = allPrinters.GetList("#printer", false);
-                foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
-                    Printer.Remove(name);
-            }
-            else
-            {
-                foreach (var printer in printerQuery.Get().Cast<ManagementBaseObject>().Where(printer => !managedPrinters.Contains(printer.GetPropertyValue("Name").ToString().Trim())))
-                {
-                    Printer.Remove(printer.GetPropertyValue("Name").ToString());
-                }
+                printer.SetDefault();
             }
         }
 
@@ -108,13 +69,6 @@ namespace FOG.Modules.PrinterManager
                 return new List<Printer>();
             }
 
-        }
-
-        private static bool PrinterExists(string name)
-        {
-            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-            return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
-                .Contains(name);
         }
 
         private static Printer PrinterFactory(Response printerData)

@@ -44,6 +44,7 @@
     <Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
     <Property Id="USETRAY" Value="1" />
     <Property Id="WEBROOT" Value="/fog" />
+    <Property Id="ROOTLOG" Value="1" />
     <Property Id="WEBADDRESS" Value="fog-server" />
     <Property Id="HTTPS" Value="0" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
@@ -69,6 +70,7 @@
       <ComponentRef Id="VersionRegistry" />
       <ComponentRef Id="CompanyRegistery" />
       <ComponentRef Id="GraceRegistry" />
+      <ComponentRef Id="LogRootRegistry" />
       <ComponentRef Id="SleepRegistry" />
     </Feature>
   </Product>
