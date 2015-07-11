@@ -33,6 +33,7 @@ namespace FOG.Modules.PrinterManager
             };
             proc.Start();
             proc.WaitForExit(120000);
+            Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
     }
 }

@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Configuration;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
@@ -155,6 +156,12 @@ namespace FOG.Handlers.Power
 
         public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
         {
+            if (!UserHandler.IsUserLoggedIn())
+            {
+                CreateTask(parameters);
+                return;
+            }
+
             if (_timer != null && _timer.Enabled)
             {
                 Log.Entry(LogName, "Power task already in-progress");
@@ -229,7 +236,7 @@ namespace FOG.Handlers.Power
         /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
+        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
         {
             _instance.Shutdown(comment, options, message, seconds);
         }
@@ -241,7 +248,7 @@ namespace FOG.Handlers.Power
         /// <param name="options">The options the user has on the prompt form</param>
         /// <param name="message">The message to show in the shutdown gui</param>
         /// <param name="seconds">How long to wait before processing the request</param>
-        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 30)
+        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
         {
             _instance.Restart(comment, options, message, seconds);
         }

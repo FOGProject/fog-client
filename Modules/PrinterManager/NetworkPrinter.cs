@@ -74,9 +74,12 @@ namespace FOG.Modules.PrinterManager
             // Add per machine printer connection
             var proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /ga /n " + Name);
             if (proc != null) proc.WaitForExit(120000);
+            Log.Entry(LogName, "Return code " + proc.ExitCode);
             // Add printer network connection, download the drivers from the print server
             proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /in /n " + Name);
             if (proc != null) proc.WaitForExit(120000);
+            Log.Entry(LogName, "Return code " + proc.ExitCode);
+
         }
     }
 }

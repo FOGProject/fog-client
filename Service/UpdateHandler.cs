@@ -36,11 +36,9 @@ namespace FOG
 
         private static void KillSubProcesses()
         {
-            //If the User Service is still running, wait 120 seconds and kill it
-
-            while (Process.GetProcessesByName("FOGUserService").Length > 0 && Process.GetProcessesByName("FOGTray").Length > 0)
+            try
             {
-                Thread.Sleep(12*1000);
+                Thread.Sleep(5 * 1000);
                 foreach (var process in Process.GetProcessesByName("FOGUserService"))
                 {
                     process.Kill();
@@ -49,7 +47,14 @@ namespace FOG
                 {
                     process.Kill();
                 }
+                Thread.Sleep(5 * 1000);
             }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not stop sub processes");
+                Log.Error(LogName, ex);
+            }
+
         }
 
         public static void BeginUpdate()

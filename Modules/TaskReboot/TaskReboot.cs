@@ -48,7 +48,7 @@ namespace FOG.Modules.TaskReboot
             Log.Entry(Name, "Restarting computer for task");
 
             if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
-                Power.Restart(Name);
+                Power.Restart(Name, Power.FormOption.Delay);
 
             else if (!response.Error && !_notifiedUser)
             {
