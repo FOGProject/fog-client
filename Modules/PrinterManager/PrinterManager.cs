@@ -40,6 +40,7 @@ namespace FOG.Modules.PrinterManager
         {
             Name = "PrinterManager";
             LogName = Name;
+            Compatiblity = Settings.OSType.Windows;
         }
 
         protected override void DoWork()

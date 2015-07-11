@@ -33,8 +33,6 @@ namespace FOG.Modules.HostnameChanger
     /// </summary>
     public class HostnameChanger : AbstractModule
     {
-        private bool _notifiedUser;
-
         private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
         {
             {0, "Success"},
@@ -75,7 +73,7 @@ namespace FOG.Modules.HostnameChanger
         public HostnameChanger()
         {
             Name = "HostnameChanger";
-            _notifiedUser = false;
+            Compatiblity = Settings.OSType.Windows;
         }
 
         protected override void DoWork()
@@ -117,37 +115,21 @@ namespace FOG.Modules.HostnameChanger
             }
             
             Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
+            Log.Entry(Name, "Unregistering computer");
+            
+            //First unjoin it from active directory
+            UnRegisterComputer(response);
 
-            if (!UserHandler.IsUserLoggedIn() || response.GetField("#force").Equals("1"))
-            {
-                Log.Entry(Name, "Unregistering computer");
-                //First unjoin it from active directory
-                UnRegisterComputer(response);
+            Log.Entry(Name, "Updating registry");
 
-                Log.Entry(Name, "Updating registry");
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
+                response.GetField("#hostname"));
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName",
+                response.GetField("#hostname"));
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
+                response.GetField("#hostname"));
 
-                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
-                    response.GetField("#hostname"));
-                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName",
-                    response.GetField("#hostname"));
-                RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
-                    response.GetField("#hostname"));
-
-                Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.FormOption.Delay);
-            }
-            else if(!_notifiedUser)
-            {
-                Log.Entry(Name, "User is currently logged in, will try again later");
-
-                var notification = new Notification("Please log off",
-                    string.Format(
-                        "{0} is attemping to service your computer, please log off at the soonest available time",
-                        Settings.Get("Company")), 120);
-
-                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
-
-                _notifiedUser = true;
-            }
+            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.FormOption.Delay);
         }
 
         //Add a host to active directory

@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
 using FOG.Handlers.User;
 
 namespace FOG.Handlers
@@ -34,14 +33,12 @@ namespace FOG.Handlers
 
         static UserHandler()
         {
-            var pid = Environment.OSVersion.Platform;
-
-            switch (pid)
+            switch (Settings.OS)
             {
-                case PlatformID.MacOSX:
+                case Settings.OSType.Mac:
                     _instance = new MacUser();
                     break;
-                case PlatformID.Unix:
+                case Settings.OSType.Linux:
                     _instance = new LinuxUser();
                     break;
                 default:

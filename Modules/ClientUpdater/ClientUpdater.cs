@@ -34,6 +34,7 @@ namespace FOG.Modules.ClientUpdater
         public ClientUpdater()
         {
             Name = "ClientUpdater";
+            Compatiblity = Settings.OSType.Windows;
         }
 
         protected override void DoWork()

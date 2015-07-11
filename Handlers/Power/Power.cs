@@ -55,14 +55,12 @@ namespace FOG.Handlers.Power
 
         static Power()
         {
-            var pid = Environment.OSVersion.Platform;
-
-            switch (pid)
+            switch (Settings.OS)
             {
-                case PlatformID.MacOSX:
+                case Settings.OSType.Mac:
                     _instance = new MacPower();
                     break;
-                case PlatformID.Unix:
+                case Settings.OSType.Linux:
                     _instance = new LinuxPower();
                     break;
                 default:

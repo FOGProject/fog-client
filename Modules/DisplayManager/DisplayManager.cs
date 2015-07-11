@@ -19,10 +19,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Management;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
+using FOG.Modules.DisplayManager.Linux;
+using FOG.Modules.DisplayManager.Mac;
+using FOG.Modules.DisplayManager.Windows;
 
 
 namespace FOG.Modules.DisplayManager
@@ -32,73 +33,76 @@ namespace FOG.Modules.DisplayManager
     /// </summary>
     public class DisplayManager : AbstractModule
     {
-        private readonly Display _display;
+        private IDisplay _instance;
 
         public DisplayManager()
         {
             Name = "DisplayManager";
-            _display = new Display();
+            Compatiblity = Settings.OSType.Windows;
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacDisplay();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxDisplay();
+                    break;
+                default:
+                    _instance = new WindowsDisplay();
+                    break;
+            }
         }
 
         protected override void DoWork()
         {
-            _display.LoadDisplaySettings();
-            if (_display.PopulatedSettings)
+            //Get task info
+            var response = Communication.GetResponse("/service/displaymanager.php", true);
+
+            if (response.Error) return;
+
+            try
             {
-                //Get task info
-                var response = Communication.GetResponse("/service/displaymanager.php", true);
+                var x = int.Parse(response.GetField("#x"));
+                var y = int.Parse(response.GetField("#y"));
+                var r = int.Parse(response.GetField("#r"));
 
-                if (response.Error) return;
-
-                try
-                {
-                    var x = int.Parse(response.GetField("#x"));
-                    var y = int.Parse(response.GetField("#y"));
-                    var r = int.Parse(response.GetField("#r"));
-
-                    ChangeResolution(GetDisplays().Count > 0 ? GetDisplays()[0] : "", x, y, r);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(Name, ex);
-                }
+                ChangeResolution(GetDisplays().Count > 0 ? GetDisplays()[0] : "", x, y, r);
             }
-            else
-                Log.Error(Name, "Settings are not populated; will not attempt to change resolution");
+            catch (Exception ex)
+            {
+                Log.Error(Name, ex);
+            }
         }
 
         //Change the resolution of the screen
         private void ChangeResolution(string device, int width, int height, int refresh)
         {
-
-            if (!width.Equals(_display.Configuration.dmPelsWidth) && 
-                !height.Equals(_display.Configuration.dmPelsHeight) &&
-                !refresh.Equals(_display.Configuration.dmDisplayFrequency))
-            {
-                Log.Entry(Name, "Resolution is already configured correctly");
-                return;
-            }
-
             try
             {
-                Log.Entry(Name, string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth, _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
-                Log.Entry(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
-                Log.Entry(Name, "Display name: " + device);
+                _instance.ChangeResolution(device, width, height, refresh);
 
-                _display.ChangeResolution(device, width, height, refresh);
             }
             catch (Exception ex)
             {
+                Log.Error(Name, "Could not change resolution");
                 Log.Error(Name, ex);
-
             }
         }
 
-        private static List<string> GetDisplays()
+        private List<string> GetDisplays()
         {
-            var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
+            try
+            {
+                return _instance.GetDisplays();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Could not get displays");
+                Log.Error(Name, ex);
+            }
 
-            return (from ManagementBaseObject monitor in monitorSearcher.Get() select monitor["Name"].ToString()).ToList();
+            return new List<string>();
         }
     }
 }
