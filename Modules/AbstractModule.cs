@@ -37,6 +37,7 @@ namespace FOG.Modules
         {
             Name = "Generic Module";
             EnabledURL = "/service/servicemodule-active.php";
+            Compatiblity = Settings.OSType.All;
         }
 
         /// <summary>
@@ -44,6 +45,12 @@ namespace FOG.Modules
         /// </summary>
         public void Start()
         {
+            if (!Settings.IsCompatible(Compatiblity))
+            {
+                Log.Entry(Name, "Module is not compatible with " + Settings.OS.ToString());
+                return;
+            }
+
             Log.Entry(Name, "Running...");
             if (IsEnabled())
                 DoWork();

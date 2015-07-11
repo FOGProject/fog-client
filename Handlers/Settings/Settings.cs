@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using FOG.Handlers.User;
 using Newtonsoft.Json.Linq;
 
 namespace FOG.Handlers
@@ -35,7 +34,6 @@ namespace FOG.Handlers
             Mac,
             Linux
         }
-
 
         private const string LogName = "Settings";
 
