@@ -36,7 +36,7 @@ namespace FOG.Modules.PrinterManager
     {
         public DefaultPrinterManager()
         {
-            Name = "DefaultPrinterManager";
+            Name = "PrinterManager";
         }
 
         protected override void DoWork()
