@@ -39,7 +39,7 @@ namespace FOG
 
         public static void Main(string[] args)
         {
-            Thread.Sleep(15*1000);
+            Thread.Sleep(7*1000);
             //Initialize everything
             Log.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;

@@ -88,11 +88,20 @@ namespace FOG.Handlers.Middleware
         /// </summary>
         public List<string> GetList(string identifier, bool base64Decode)
         {
-            return Data.Keys.Where(key => key.Contains(identifier)).Select(key =>
+            Log.Debug(LogName, "Parsing List...");
+
+            var items =  Data.Keys.Where(key => key.Contains(identifier)).Select(key =>
                 base64Decode
                 ? Handlers.Data.Transform.DecodeBase64(GetField(key))
                 : GetField(key))
                 .ToList();
+
+            foreach (var value in items)
+            {
+                Log.Debug(LogName, "--> " + value);
+            }
+
+            return items;
         }
 
         public Response(bool error, Dictionary<string, string> data, string returnCode)
