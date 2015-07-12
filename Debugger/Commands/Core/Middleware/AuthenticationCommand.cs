@@ -33,6 +33,12 @@ namespace FOG.Commands.Core.Middleware
 
         public bool Process(string[] args)
         {
+            if (args[0].Equals("?") || args[0].Equals("help"))
+            {
+                Help();
+                return true;
+            }
+
             if (args[0].Equals("handshake"))
             {
                 Authentication.HandShake();
@@ -65,6 +71,13 @@ namespace FOG.Commands.Core.Middleware
             }
 
             return false;
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands");
+            Log.WriteLine("--> handshake");
+            Log.WriteLine("--> pin");
         }
 
     }

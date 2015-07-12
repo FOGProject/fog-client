@@ -28,6 +28,12 @@ namespace FOG.Commands.Core.Middleware
 
         public bool Process(string[] args)
         {
+            if (args[0].Equals("?") || args[0].Equals("help"))
+            {
+                Help();
+                return true;
+            }
+
             if (args.Length < 2) return false;
             
             if (args[0].Equals("contact"))
@@ -76,6 +82,17 @@ namespace FOG.Commands.Core.Middleware
             }
 
             return false;
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands");
+            Log.WriteLine("--> contact            [postfix]");
+            Log.WriteLine("--> download           [postfix] [download_path]");
+            Log.WriteLine("--> download-external  [url]     [download_path]");
+            Log.WriteLine("--> response           [postfix]");
+            Log.WriteLine("--> raw-response       [postfix]");
+            Log.WriteLine("--> post               [postfix] [parameters]");
         }
     }
 }

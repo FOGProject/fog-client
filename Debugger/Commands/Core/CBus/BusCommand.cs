@@ -28,6 +28,12 @@ namespace FOG.Commands.Core.CBus
 
         public bool Process(string[] args)
         {
+            if (args[0].Equals("?") || args[0].Equals("help"))
+            {
+                Help();
+                return true;
+            }
+
             if (args.Length == 2 && args[0].Equals("mode"))
             {
                 if (args[1].Equals("server"))
@@ -57,6 +63,14 @@ namespace FOG.Commands.Core.CBus
             }
 
             return false;
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands");
+            Log.WriteLine("--> mode    [server/client]");
+            Log.WriteLine("--> public  [message]");
+            Log.WriteLine("--> private [message]");
         }
     }
 }

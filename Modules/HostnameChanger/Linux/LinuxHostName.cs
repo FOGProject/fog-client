@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
@@ -87,13 +88,15 @@ namespace FOG.Modules.HostnameChanger.Linux
 
                 for (var i = 0; i < lines.Length; i++)
                 {
-                    if (!lines[i].Trim().StartsWith("127.0.0.1") && !lines[i].Trim().StartsWith("127.0.1.1")) continue;
+                    var ip = "127.0.1.1";
 
-                    var tmpLine = lines[i].Trim().Substring(9);
-                    tmpLine.Replace(currentHostName, hostname);
-                    lines[i] = lines[i].Trim().Substring(0, 9) + tmpLine;
+                    if (!lines[i].Contains(ip)) continue;
+
+                    lines[i] = ip + "   " + hostname;
+
                 }
 
+                File.WriteAllLines(file, lines);
                 Log.Entry(Name, "--> Success " + file);
             }
             catch (Exception ex)
@@ -138,6 +141,7 @@ namespace FOG.Modules.HostnameChanger.Linux
                     lines[i] = parts[0] + "=" + parts[1];
                 }
 
+                File.WriteAllLines(file, lines);
                 Log.Entry(Name, "--> Success " + file);
             }
             catch (Exception ex)

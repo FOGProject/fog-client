@@ -34,7 +34,7 @@ namespace FOG
 
         private static readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>
         {
-            {"module", new ModuleCommand()},
+            {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
             {"middleware", new MiddlewareCommand()}
         };
@@ -98,7 +98,7 @@ namespace FOG
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands (append ? to any command for more information");
+            Log.WriteLine("Avaible commands (append ? to any command for more information)");
             foreach(var keyword in _commands.Keys)
             {
                 Log.WriteLine("--> " + keyword);

@@ -30,6 +30,12 @@ namespace FOG.Commands.Core.Middleware
 
         public bool Process(string[] args)
         {
+            if (args[0].Equals("?") || args[0].Equals("help"))
+            {
+                Help();
+                return true;
+            }
+
             if (args[0].Equals("info"))
             {
                 Log.Entry(LogName, "Server: " + Configuration.ServerAddress);
@@ -56,6 +62,15 @@ namespace FOG.Commands.Core.Middleware
                 return true;
             }
             return false;
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands");
+            Log.WriteLine("--> info");
+            Log.WriteLine("--> default");
+            Log.WriteLine("--> server  [SERVER_ADDRESS]");
+            Log.WriteLine("--> mac     [MAC_ADDRESS]");
         }
     }
 }

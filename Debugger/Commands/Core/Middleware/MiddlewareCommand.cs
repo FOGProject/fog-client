@@ -19,6 +19,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using FOG.Handlers;
+
 namespace FOG.Commands.Core.Middleware
 {
     class MiddlewareCommand : ICommand
@@ -34,7 +36,22 @@ namespace FOG.Commands.Core.Middleware
 
         public bool Process(string[] args)
         {
+            if (args[0].Equals("?") || args[0].Equals("help"))
+            {
+                Help();
+                return true;
+            }
+
             return _commands.ContainsKey(args[0]) && _commands[args[0]].Process(args.Skip(1).ToArray());
+        }
+
+        private static void Help()
+        {
+            Log.WriteLine("Avaible commands (append ? to any command for more information)");
+            foreach (var keyword in _commands.Keys)
+            {
+                Log.WriteLine("--> " + keyword);
+            }
         }
     }
 }

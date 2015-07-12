@@ -238,6 +238,11 @@ namespace FOG.Handlers.Middleware
             // classes throw exceptions upon error
             try
             {
+                if (!Directory.Exists(Path.GetDirectoryName(filePath)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                }
+
                 // Create a request for the specified remote file name
                 var request = WebRequest.Create(url);
                 if (request != null)
@@ -288,7 +293,7 @@ namespace FOG.Handlers.Middleware
                 if (localStream != null) localStream.Close();
             }
 
-            return err && File.Exists(filePath);
+            return !err && File.Exists(filePath);
         }
     }
 }
