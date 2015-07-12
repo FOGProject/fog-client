@@ -129,7 +129,7 @@ namespace FOG.Handlers.Middleware
         /// <returns>The value stored at key ID, if the ID is not present, return null</returns>
         public string GetField(string id)
         {
-            return Data.ContainsKey(id) ? Data[id] : null;
+            return Data.ContainsKey(id) ? Data[id] : "";
         }
 
         public bool IsFieldValid(string id)

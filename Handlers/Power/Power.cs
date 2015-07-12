@@ -338,8 +338,10 @@ namespace FOG.Handlers.Power
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                               @"\RestartFOGService.exe"
+                    FileName = (Settings.OS != Settings.OSType.Windows)
+                    ? "mono "
+                    : ""
+                    + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "RestartFOGService.exe")
                 }
             };
             process.Start();
@@ -358,8 +360,10 @@ namespace FOG.Handlers.Power
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                               @"\tmp\FOGUpdateWaiter.exe",
+                    FileName = (Settings.OS != Settings.OSType.Windows)
+                    ? "mono "
+                    : ""
+                    + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "FOGUpdateWaiter.exe"),
                     Arguments = string.Format("\"{0}\"", fileName)
                 }
             };

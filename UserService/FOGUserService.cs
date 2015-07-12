@@ -86,7 +86,10 @@ namespace FOG
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\FOGNotificationGUI.exe",
+                    FileName = (Settings.OS != Settings.OSType.Windows) 
+                        ? "mono " 
+                        : "" 
+                        + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGNotificationGUI.exe"),
                     Arguments = Transform.EncodeBase64(jsonData.ToString())
                 }
             };

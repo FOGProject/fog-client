@@ -41,13 +41,15 @@ namespace FOG
         {
             Thread.Sleep(7*1000);
             //Initialize everything
-            Log.FilePath = (Environment.ExpandEnvironmentVariables("%userprofile%") + @"\fog_user.log");
+            Log.FilePath =
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "fog_user.log");
+
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
             Eager.Initalize();
 
             Log.Entry(LogName, "Initializing");
 
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
+            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "updating.info")))
             {
                 Log.Entry(LogName, "Update.info found, exiting program");
                 Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
@@ -68,7 +70,10 @@ namespace FOG
                 StartInfo =
                 {
                     UseShellExecute = false,
-                    FileName = string.Format("{0}\\FOGTray.exe", Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location))
+                    FileName = (Settings.OS != Settings.OSType.Windows)
+                        ? "mono "
+                        : ""
+                        + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGTray.exe")
                 }
             };
             process.Start();
