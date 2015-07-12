@@ -26,14 +26,18 @@ namespace FOG.Handlers.Power
     {
         public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
         {
-            var time = DateTime.Now.AddSeconds(seconds);
-            Power.QueueShutdown(string.Format("-h {0} \"{1}\"", time.ToString("hh:mm"), comment), options, message);
+            var minutes = ((double)seconds) / 60.0;
+            var timeDelay = (int)Math.Round(minutes);
+
+            Power.QueueShutdown(string.Format("-h +{0} \"{1}\"", timeDelay, comment), options, message);
         }
 
         public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
         {
-            var time = DateTime.Now.AddSeconds(seconds);
-            Power.QueueShutdown(string.Format("-r {0} \"{1}\"", time.ToString("hh:mm"), comment), options, message);
+            var minutes = ((double)seconds) / 60.0;
+            var timeDelay = (int)Math.Round(minutes);
+
+            Power.QueueShutdown(string.Format("-r +{0} \"{1}\"", timeDelay, comment), options, message);
         }
 
         public void LogOffUser()
