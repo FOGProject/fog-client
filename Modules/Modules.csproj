@@ -118,6 +118,10 @@
     <Compile Include="DisplayManager\Windows\WindowsDisplay.cs" />
     <Compile Include="GreenFOG\GreenFOG.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
+    <Compile Include="HostnameChanger\IHostName.cs" />
+    <Compile Include="HostnameChanger\Linux\LinuxHostName.cs" />
+    <Compile Include="HostnameChanger\Mac\MacHostName.cs" />
+    <Compile Include="HostnameChanger\Windows\WindowsHostName.cs" />
     <Compile Include="PrinterManager\LocalPrinter.cs" />
     <Compile Include="PrinterManager\iPrintPrinter.cs" />
     <Compile Include="PrinterManager\NetworkPrinter.cs" />
@@ -139,6 +143,7 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -18,12 +18,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
+using FOG.Modules.HostnameChanger.Linux;
+using FOG.Modules.HostnameChanger.Mac;
+using FOG.Modules.HostnameChanger.Windows;
 
 
 namespace FOG.Modules.HostnameChanger
@@ -33,47 +33,26 @@ namespace FOG.Modules.HostnameChanger
     /// </summary>
     public class HostnameChanger : AbstractModule
     {
-        private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
-        {
-            {0, "Success"},
-            {2, "The OU parameter is not set properly or not working with this current setup"},
-            {5, "Access Denied"},
-            {87, "The parameter is incorrect"},
-            {110, "The system cannot open the specified object"},
-            {1326, "Logon failure: unknown username or bad password"},
-            {1355, "The specified domain either does not exist or could not be contacted"},
-            {2103, "The server could not be located"},
-            {2105, "A network resource shortage occured"},
-            {2691, "The machine is already joined to the domain"},
-            {2692, "The machine is not currently joined to a domain"}
-        };
-            
-        [Flags]
-        private enum UnJoinOptions
-        {
-            NetsetupAccountDelete = 0x00000004
-        }
-
-        [Flags]
-        private enum JoinOptions
-        {
-            NetsetupJoinDomain = 0x00000001,
-            NetsetupAcctCreate = 0x00000002,
-        }
-
-        //Import dll methods
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
-            string lpAccount, string lpPassword, JoinOptions nameType);
-
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
-            UnJoinOptions fUnjoinOptions);
+        private IHostName _instance;
 
         public HostnameChanger()
         {
             Name = "HostnameChanger";
+
             Compatiblity = Settings.OSType.Windows;
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacHostName();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxHostName();
+                    break;
+                default:
+                    _instance = new WindowsHostName();
+                    break;
+            }
         }
 
         protected override void DoWork()
@@ -114,20 +93,19 @@ namespace FOG.Modules.HostnameChanger
                 return;
             }
             
-            Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
-            Log.Entry(Name, "Unregistering computer");
-            
             //First unjoin it from active directory
             UnRegisterComputer(response);
 
-            Log.Entry(Name, "Updating registry");
-
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
-                response.GetField("#hostname"));
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName",
-                response.GetField("#hostname"));
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName",
-                response.GetField("#hostname"));
+            Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
+            
+            try
+            {
+                _instance.RenameComputer(response.GetField("#hostname"));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, ex);
+            }
 
             Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.FormOption.Delay);
         }
@@ -146,31 +124,16 @@ namespace FOG.Modules.HostnameChanger
                 return;
             }
 
-            // Attempt to join the domain
-            var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            try
+            {
+                if (_instance.RegisterComputer(response))
+                    Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, ex);
+            }
 
-            if (returnCode == 2224)
-                returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
-            else if (returnCode == 2 || returnCode == 50)
-                returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
-
-            // Entry the results
-            Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                : "Unknown Return Code: "), returnCode));
-
-            if (returnCode.Equals(0))
-                Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);
-        }
-
-        private static int DomainWrapper(Response response, bool ou, JoinOptions options)
-        {
-            return NetJoinDomain(null,
-                response.GetField("#ADDom"),
-                ou ? response.GetField("#ADOU") :  null,
-                response.GetField("#ADUser"),
-                response.GetField("#ADPass"),
-                options);           
         }
 
         //Remove the host from active directory
@@ -186,15 +149,7 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
-                var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"), 
-                    response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
-
-                Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                    ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                    : "Unknown Return Code: "), returnCode));
-
-                if (returnCode.Equals(0))
-                    Power.Restart("Host left active directory, restart needed", Power.FormOption.Delay);
+                _instance.UnRegisterComputer(response);
             }
             catch (Exception ex)
             {
@@ -205,41 +160,18 @@ namespace FOG.Modules.HostnameChanger
         //Active a computer with a product key
         private void ActivateComputer(Response response)
         {
-            Log.Entry(Name, "Activing host with product key");
-
             if (!response.IsFieldValid("#Key"))
                 return;
-            if (response.GetField("#Key").Length != 29)
-            {
-                Log.Error(Name, "Invalid product key");
-                return;
-            }
 
+            Log.Entry(Name, "Activing host with product key");
+            
             try
             {
-                using(var process = new Process { StartInfo = {
-                            FileName = @"cscript",
-                            Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", 
-                                Environment.SystemDirectory, response.GetField("#Key")),
-                            WindowStyle = ProcessWindowStyle.Hidden
-                        }
-                    })
-                {
-                    //Give windows the new key
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
-
-                    //Try and activate the new key
-                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close(); 
-                }
+                _instance.ActivateComputer(response.GetField("#Key"));
             }
             catch (Exception ex)
             {
-                Log.Error(Name, ex);
+              Log.Error(Name, ex);
             }
         }
     }
