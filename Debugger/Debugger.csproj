@@ -110,7 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\Core\CBus\BusCommand.cs" />
+    <Compile Include="Commands\Core\Middleware\MiddlewareCommand.cs" />
     <Compile Include="Commands\Core\Middleware\AuthenticationCommand.cs" />
+    <Compile Include="Commands\Core\Middleware\CommunicationCommand.cs" />
     <Compile Include="Commands\Core\Middleware\ConfigurationCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\Modules\ModuleCommand.cs" />

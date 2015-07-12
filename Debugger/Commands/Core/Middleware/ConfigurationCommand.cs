@@ -24,7 +24,7 @@ namespace FOG.Commands.Core.Middleware
 {
     class ConfigurationCommand : ICommand
     {
-        private const string LogName = "Console::Configuration";
+        private const string LogName = "Console::Middleware::Configuration";
         private const string Server = "http://fog.jbob.io/fog";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
 

@@ -38,9 +38,8 @@ namespace FOG.Modules.HostnameChanger
         public HostnameChanger()
         {
             Name = "HostnameChanger";
-
-            Compatiblity = Settings.OSType.Windows;
-
+            Compatiblity = Settings.OSType.All;
+            
             switch (Settings.OS)
             {
                 case Settings.OSType.Mac:

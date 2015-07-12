@@ -53,16 +53,6 @@ namespace FOG.Handlers.Middleware
 
                 var certificate = new X509Certificate2(keyPath);
 
-                if (certificate == null)
-                {
-                    Log.Debug(LogName, "Public cert is null!");
-                }
-                else
-                {
-                    Log.Debug(LogName, "Public cert hash: " + certificate.GetCertHash());
-
-                }
-
                 if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
 

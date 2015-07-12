@@ -247,7 +247,7 @@ namespace FOG.Handlers
         {
             try
             {
-                logFile.Delete();
+                //logFile.Delete();
             }
             catch (Exception ex)
             {

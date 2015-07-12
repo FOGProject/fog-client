@@ -136,5 +136,14 @@ namespace FOG.Handlers.Middleware
         {
             return !string.IsNullOrEmpty(GetField(id));
         }
+
+        public void PrettyPrint()
+        {
+            Log.Entry(LogName, "Printing values...");
+            foreach (var key in Data.Keys)
+            {
+                Log.Entry(LogName, "--> " + key + " = " + Data[key]);
+            }
+        }
     }
 }

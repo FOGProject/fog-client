@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
 using System.Linq;
 using FOG.Commands;
 using FOG.Commands.Core.CBus;
@@ -37,8 +36,7 @@ namespace FOG
         {
             {"module", new ModuleCommand()},
             {"bus", new BusCommand()},
-            {"configure", new ConfigurationCommand()},
-            {"authentication", new AuthenticationCommand()}
+            {"middleware", new MiddlewareCommand()}
         };
  
         public static void Main(string[] args)

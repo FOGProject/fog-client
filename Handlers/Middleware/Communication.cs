@@ -21,6 +21,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 
 // ReSharper disable InconsistentNaming
 
@@ -38,40 +39,38 @@ namespace FOG.Handlers.Middleware
         public static Response GetResponse(string postfix)
         {
             //ID the service as the new one
-            postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
+            var newPostfix = postfix + ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            Log.Entry(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
+            Log.Entry(LogName, string.Format("URL: {0} -- {1}", Configuration.ServerAddress, newPostfix));
 
-            using (var webClient = new WebClient())
+            try
             {
-                try
+                var rawResponse = GetRawResponse(newPostfix);
+                rawResponse = Authentication.Decrypt(rawResponse);
+
+                //See if the return code is known
+                var messageFound = false;
+                foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
-                    var rawResponse = webClient.DownloadString(Configuration.ServerAddress + postfix);
-                    rawResponse = Authentication.Decrypt(rawResponse);
-
-                    //See if the return code is known
-                    var messageFound = false;
-                    foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
-                    {
-                        messageFound = true;
-                        Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
-                        break;
-                    }
-
-                    if (!messageFound)
-                        Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
-
-
-                    if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse);
-
-                    return Authentication.HandShake() ? GetResponse(postfix) : new Response();
+                    messageFound = true;
+                    Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                    break;
                 }
-                catch (Exception ex)
-                {
-                    Log.Error(LogName, "Could not contact FOG server");
-                    Log.Error(LogName, ex);
-                }                
+
+                if (!messageFound)
+                    Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+
+
+                if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse);
+
+                return Authentication.HandShake() ? GetResponse(postfix) : new Response();
             }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not contact FOG server");
+                Log.Error(LogName, ex);
+            }           
+     
             return new Response();
         }
 
@@ -101,50 +100,67 @@ namespace FOG.Handlers.Middleware
 
             Log.Entry(LogName, "URL: " + Configuration.ServerAddress + postfix);
 
-            using (var webClient = new WebClient())
-            {
-                try
-                {
-                    var response = webClient.DownloadString(Configuration.ServerAddress + postfix);
-                    return response;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(LogName, "Could not contact FOG server");
-                    Log.Error(LogName, ex);
-                }               
-            }
+            var webRequest = WebRequest.Create(Configuration.ServerAddress + postfix);
 
-            return "";
+            using (var response = webRequest.GetResponse())
+            using (var content = response.GetResponseStream())
+            using (var reader = new StreamReader(content))
+            {
+                var result = reader.ReadToEnd();
+                return result;
+            }
         }
 
         public static Response Post(string postfix, string param)
         {
             Log.Entry(LogName, "POST URL: " + Configuration.ServerAddress + postfix);
+
             try
             {
-                using (var webClient = new WebClient())
+                // Create a request using a URL that can receive a post. 
+                var request = WebRequest.Create(Configuration.ServerAddress + postfix);
+                request.Method = "POST";
+
+                // Create POST data and convert it to a byte array.
+                var byteArray = Encoding.UTF8.GetBytes(param);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+
+                // Get the request stream.
+                var dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                dataStream.Close();
+
+                // Get the response.
+                var response = request.GetResponse();
+                Log.Debug(LogName, "Post response = " + ((HttpWebResponse)response).StatusDescription);
+                dataStream = response.GetResponseStream();
+
+                // Open the stream using a StreamReader for easy access.
+                var reader = new StreamReader(dataStream);
+                var rawResponse = reader.ReadToEnd();
+
+                // Clean up the streams.
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+
+                Log.Debug(LogName, rawResponse);
+
+                rawResponse = Authentication.Decrypt(rawResponse);
+
+                var messageFound = false;
+                foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
-                    webClient.Headers[HttpRequestHeader.ContentType] = "application/x-www-form-urlencoded";
-
-                    var rawResponse = webClient.UploadString(Configuration.ServerAddress + postfix, param);
-                    Log.Debug(LogName, rawResponse);
-
-                    rawResponse = Authentication.Decrypt(rawResponse);
-
-                    var messageFound = false;
-                    foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
-                    {
-                        messageFound = true;
-                        Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
-                        break;
-                    }
-
-                    if (!messageFound)
-                        Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
-
-                    return new Response(rawResponse);
+                    messageFound = true;
+                    Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                    break;
                 }
+
+                if (!messageFound)
+                    Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+
+                return new Response(rawResponse);
             }
             catch (Exception ex)
             {
@@ -152,7 +168,7 @@ namespace FOG.Handlers.Middleware
                 Log.Error(LogName, ex);
             }
 
-            return null;
+            return new Response();
         }
 
         /// <summary>
@@ -166,21 +182,18 @@ namespace FOG.Handlers.Middleware
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
             Log.Entry(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
-           
-            using (var webClient = new WebClient())
-            {
-                try
-                {
-                    webClient.DownloadString(Configuration.ServerAddress + postfix);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(LogName, "Could not contact FOG server");
-                    Log.Error(LogName, ex);
-                }               
-            }
 
+            try
+            {
+                GetRawResponse(postfix);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not contact FOG server");
+                Log.Error(LogName, ex);
+            }               
+  
             return false;
         }
 
@@ -206,35 +219,76 @@ namespace FOG.Handlers.Middleware
         public static bool DownloadExternalFile(string url, string filePath)
         {
             Log.Entry(LogName, string.Format("URL: {0}", url));
-            
+
             if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(filePath))
             {
                 Log.Error(LogName, "Invalid parameters");
                 return false;
             }
 
-            using (var webClient = new WebClient())
-            {
-                try
-                {
-                    //Create the directory that the file will go in if it doesn't already exist
-                    if (!Directory.Exists(Path.GetDirectoryName(filePath)))
-                    {
-                        Directory.CreateDirectory(Path.GetDirectoryName(filePath));
-                    }
-                    webClient.DownloadFile(url, filePath);
+            // Assign values to these objects here so that they can
+            // be referenced in the finally block
+            Stream remoteStream = null;
+            Stream localStream = null;
+            WebResponse response = null;
 
-                    if (File.Exists(filePath))
-                        return true;
-                }
-                catch (Exception ex)
+            var err = false;
+
+            // Use a try/catch/finally block as both the WebRequest and Stream
+            // classes throw exceptions upon error
+            try
+            {
+                // Create a request for the specified remote file name
+                var request = WebRequest.Create(url);
+                if (request != null)
                 {
-                    Log.Error(LogName, "Could not download file");
-                    Log.Error(LogName, ex);
-                }             
+                    // Send the request to the server and retrieve the
+                    // WebResponse object 
+                    response = request.GetResponse();
+                    if (response != null)
+                    {
+                        // Once the WebResponse object has been retrieved,
+                        // get the stream object associated with the response's data
+                        remoteStream = response.GetResponseStream();
+
+                        // Create the local file
+                        localStream = File.Create(filePath);
+
+                        // Allocate a 1k buffer
+                        var buffer = new byte[1024];
+                        int bytesRead;
+
+                        // Simple do/while loop to read from stream until
+                        // no bytes are returned
+                        do
+                        {
+                            // Read data (up to 1k) from the stream
+                            bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
+
+                            // Write the data to the local file
+                            localStream.Write(buffer, 0, bytesRead);
+
+                        } while (bytesRead > 0);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not download file");
+                Log.Error(LogName, ex);
+                err = true;
+            }
+            finally
+            {
+                // Close the response and streams objects here 
+                // to make sure they're closed even if an exception
+                // is thrown at some point
+                if (response != null) response.Close();
+                if (remoteStream != null) remoteStream.Close();
+                if (localStream != null) localStream.Close();
             }
 
-            return false;
+            return err && File.Exists(filePath);
         }
     }
 }

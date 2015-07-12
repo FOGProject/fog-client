@@ -17,8 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
-using System.Net;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
@@ -45,13 +45,13 @@ namespace FOG.Modules.UserTracker
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in
                 if (!_usernames.Contains(username))
-                    Communication.Contact(string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Dns.GetHostName(), username), true);
+                    Communication.Contact(string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Environment.MachineName, username), true);
                 else
                     _usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
             foreach (var username in _usernames)
-                Communication.Contact(string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Dns.GetHostName(), username), true);
+                Communication.Contact(string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Environment.MachineName, username), true);
 
             _usernames = newUsernames;
         }

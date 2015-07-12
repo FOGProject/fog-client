@@ -29,7 +29,7 @@ namespace FOG.Commands.Core.Middleware
 {
     class AuthenticationCommand : ICommand
     {
-        private const string LogName = "Console::Authentication";
+        private const string LogName = "Console::Middleware::Authentication";
 
         public bool Process(string[] args)
         {
