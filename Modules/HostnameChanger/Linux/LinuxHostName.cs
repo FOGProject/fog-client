@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Diagnostics;
+using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Linux
 {
     class LinuxHostName : IHostName
     {
+        private string Name = "HostnameChanger";
+
         public void RenameComputer(string hostname)
         {
-            throw new NotImplementedException();
         }
 
         public bool RegisterComputer(Response response)
