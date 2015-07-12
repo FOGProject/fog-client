@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
@@ -14,41 +13,13 @@ namespace FOG.Modules.HostnameChanger.Linux
         public void RenameComputer(string hostname)
         {
             currentHostName = Environment.MachineName;
-
-            int returnCode;
-
-            using (var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "hostnamectl",
-                    Arguments = "set-hostname " + hostname + " --static",
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            })
-            {
-                process.Start();
-                process.WaitForExit();
-                returnCode = process.ExitCode;
-                if (process.ExitCode == 0)
-                    return;
-            }
             
-            Log.Entry(Name, "Return code = " + returnCode);
-
-            Log.Entry(Name,
-                (returnCode == 127
-                    ? "hostnamectl not found" 
-                    : "hostnamectl failed") 
-                    + ", brute forcing hostname change...");
-
             BruteForce(hostname);
         }
 
         private void BruteForce(string hostname)
         {
+            Log.Entry(Name, "Brute forcing hostname change...");
             UpdateHostname(hostname);
             UpdateHOSTNAME(hostname);
             UpdateHosts(hostname);
