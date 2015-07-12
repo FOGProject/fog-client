@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -41,15 +42,26 @@ namespace FOG.Handlers.Middleware
         {
             try
             {
-                var keyPath = string.Format("{0}tmp\\public.cer", AppDomain.CurrentDomain.BaseDirectory);
+                var keyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "public.cer");
                 Communication.DownloadFile("/management/other/ssl/srvpublic.crt", keyPath);
                 
+                Log.Debug(LogName, "KeyPath = " + keyPath);
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
                 Passkey = aes.Key;
                 var token = GetSecurityToken("token.dat");
 
                 var certificate = new X509Certificate2(keyPath);
+
+                if (certificate == null)
+                {
+                    Log.Debug(LogName, "Public cert is null!");
+                }
+                else
+                {
+                    Log.Debug(LogName, "Public cert hash: " + certificate.GetCertHash());
+
+                }
 
                 if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");

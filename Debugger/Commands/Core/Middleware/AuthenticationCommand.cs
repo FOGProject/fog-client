@@ -17,6 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+using System.IO;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 
 namespace FOG.Commands.Core.Middleware
@@ -33,7 +39,33 @@ namespace FOG.Commands.Core.Middleware
                 return true;
             }
 
+            if (args[0].Equals("pin"))
+            {
+                try
+                {
+                    var keyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "fog.ca.crt");
+                    var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
+
+                    if (!downloaded)
+                    {
+                        Log.Error(LogName, "Failed to download CA cert");
+                        return true;
+                    }
+
+                    var caCert = new X509Certificate2(keyPath);
+                    RSA.InsertCACertificate(caCert);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(LogName, ex);
+                }
+
+
+                return true;
+            }
+
             return false;
         }
+
     }
 }

@@ -37,7 +37,7 @@ namespace FOG.Handlers
 
         private const string LogName = "Settings";
 
-        private static readonly string _file = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\settings.json";
+        private static readonly string _file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json");
         private static JObject _data;
         public static OSType OS { get; private set; }
 
@@ -46,6 +46,7 @@ namespace FOG.Handlers
             try
             {
                 _data = JObject.Parse(File.ReadAllText(_file));
+                Log.Entry(LogName, _data.ToString());
             }
             catch (Exception ex)
             {
@@ -103,7 +104,7 @@ namespace FOG.Handlers
         public static string Get(string key)
         {
             var value = _data.GetValue(key);
-
+            Log.Entry(LogName, "Retrieived " + key + " = " + value);
             return (value == null) ? "" : value.ToString();
         }
 

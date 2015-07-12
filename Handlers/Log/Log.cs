@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Reflection;
 
 namespace FOG.Handlers
 {
@@ -51,7 +52,8 @@ namespace FOG.Handlers
 
         static Log()
         {
-            FilePath = AppDomain.CurrentDomain.BaseDirectory + "fog.log";
+
+            FilePath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "fog.log");
             MaxSize = DefaultMaxLogSize;
             Output = Mode.Quiet;
             

@@ -36,28 +36,25 @@ namespace FOG.Commands.Core.Middleware
                 Log.Entry(LogName, "MAC: " + Configuration.MACAddresses());
                 return true;
             }
-
-            if (args[0].Equals("configure"))
+            if (args[0].Equals("default"))
             {
-                if (args[1].Equals("default"))
-                {
-                    Configuration.ServerAddress = Server;
-                    Configuration.TestMAC = MAC;
-                    return true;
-                }
-                if (args.Length < 3) return false;
-                if (args[1].Equals("server"))
-                {
-                    Configuration.ServerAddress = args[2];
-                    return true;
-                }
-                if (args[1].Equals("mac"))
-                {
-                    Configuration.TestMAC = args[2];
-                    return true;
-                }
+                Configuration.ServerAddress = Server;
+                Configuration.TestMAC = MAC;
+                return true;
             }
 
+            if (args.Length < 3) return false;
+
+            if (args[9].Equals("server"))
+            {
+                Configuration.ServerAddress = args[1];
+                return true;
+            }
+            if (args[9].Equals("mac"))
+            {
+                Configuration.TestMAC = args[1];
+                return true;
+            }
             return false;
         }
     }

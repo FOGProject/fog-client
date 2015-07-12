@@ -94,6 +94,11 @@ namespace FOG.Handlers.Data
         /// <returns>True if the certificate came from the authority</returns>
         public static bool IsFromCA(X509Certificate2 authority, X509Certificate2 certificate)
         {
+            Log.Debug(LogName, "Attempting to verify authenticity of certificate...");
+            Log.Debug(LogName, "Authority: " + authority);
+            Log.Debug(LogName, "Cert: " + certificate);
+
+
             try
             {
                 var chain = new X509Chain
@@ -150,6 +155,7 @@ namespace FOG.Handlers.Data
         /// <returns>The FOG CA root certificate</returns>
         public static X509Certificate2 GetCACertificate()
         {
+            Log.Entry(LogName, "Attempting to load CA cert...");
             try
             {
                 X509Certificate2 CAroot = null;
@@ -173,6 +179,23 @@ namespace FOG.Handlers.Data
             }
 
             return null;
+        }
+
+        public static void InsertCACertificate(X509Certificate2 caCert)
+        {
+            Log.Entry(LogName, "Attempting to insert CA cert...");
+            try
+            {
+                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadWrite);
+                store.Add(caCert);
+                store.Close();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to add CA");
+                Log.Error(LogName, ex);
+            }
         }
     }
 }
