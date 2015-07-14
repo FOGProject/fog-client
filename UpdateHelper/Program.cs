@@ -68,14 +68,16 @@ namespace FOG
             var https = RegistryHandler.GetSystemSetting("HTTPS");
             var webRoot = RegistryHandler.GetSystemSetting("WebRoot");
             var server = RegistryHandler.GetSystemSetting("Server");
+            var logRoot = RegistryHandler.GetSystemSetting("RootLog");
+
 
             var process = new Process
             {
                 StartInfo =
                 {
-                    Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\"", 
+                    Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"", 
                         (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi"), 
-                        useTray, https, server, webRoot)
+                        useTray, https, server, webRoot, logRoot)
                 }
             };
             process.StartInfo.CreateNoWindow = true;
