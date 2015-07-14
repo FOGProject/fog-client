@@ -47,7 +47,15 @@ namespace FOG.Modules.PrinterManager
         {
             //Get printers
             var printerResponse = Communication.GetResponse("/service/Printers.php", true);
-            if (printerResponse.Error || printerResponse.GetField("#mode").Equals("0")) return;
+
+            if (printerResponse.GetField("#mode").Equals("0")) return;
+
+            if (printerResponse.Error && printerResponse.ReturnCode.Equals("#!np"))
+            {
+                RemoveExtraPrinters(new List<Printer>(), printerResponse.GetField("#mode").Equals("ar"));
+                return;
+            }
+            if (printerResponse.Error) return;
 
             Log.Entry(Name, "Creating list of printers");
             var printerIDs = printerResponse.GetList("#printer", false);
