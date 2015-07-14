@@ -86,7 +86,6 @@ namespace FOG.Modules.HostnameChanger
             Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
             Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
             Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
-            Log.Debug(Name, "   ADPass:" + taskResponse.GetField("#ADPass").Substring(0, 3) + "************");
 
             if (taskResponse.Error) return;
 
