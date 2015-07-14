@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using FOG.Handlers;
@@ -81,19 +80,9 @@ namespace FOG
             Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
 
-            var notificationProcess = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = (Settings.OS != Settings.OSType.Windows) 
-                        ? "mono " 
-                        : "" 
-                        + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGNotificationGUI.exe"),
-                    Arguments = Transform.EncodeBase64(jsonData.ToString())
-                }
-            };
-            notificationProcess.Start();
+            ProcessHandler.RunEXE(
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGNotificationGUI.exe"),
+                Transform.EncodeBase64(jsonData.ToString()), false);
         }
     }
 }

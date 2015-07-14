@@ -62,7 +62,7 @@ namespace FOG
             try
             {
                 //Create updating.info which will warn any sub-processes currently initializing that they should halt
-                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + @"\tmp\updating.info", "");
+                File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "updating.info"), "");
 
                 //Give time for any sub-processes that may be in the middle of initializing and missed the updating.info file so they can recieve the update pipe notice
                 Thread.Sleep(1000);
@@ -79,16 +79,9 @@ namespace FOG
                 //Launch the updater
                 Log.Entry(LogName, "Spawning update helper");
 
-                var process = new Process
-                {
-                    StartInfo =
-                    {
-                        UseShellExecute = false,
-                        FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                                   @"\tmp\FOGUpdateHelper.exe"
-                    }
-                };
-                process.Start();
+                ProcessHandler.RunEXE(
+                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp",
+                        "FOGUpdateHelperexe"), "", false);
             }
             catch (Exception ex)
             {

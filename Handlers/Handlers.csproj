@@ -148,6 +148,7 @@
     <Compile Include="Power\Linux\LinuxPower.cs" />
     <Compile Include="Power\Mac\MacPower.cs" />
     <Compile Include="Power\Windows\WindowsPower.cs" />
+    <Compile Include="Process\ProcessHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>

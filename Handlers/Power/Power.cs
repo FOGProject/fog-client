@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Timers;
@@ -333,18 +332,10 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Restarting service");
             ShuttingDown = true;
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = (Settings.OS != Settings.OSType.Windows)
-                    ? "mono "
-                    : ""
-                    + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "RestartFOGService.exe")
-                }
-            };
-            process.Start();
+
+            ProcessHandler.RunEXE(
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "RestartFOGService.exe"),
+                "", false);
         }
 
         /// <summary>
@@ -355,22 +346,10 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Spawning update waiter");
 
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = (Settings.OS != Settings.OSType.Windows)
-                    ? "mono "
-                    : ""
-                    + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "FOGUpdateWaiter.exe"),
-                    Arguments = string.Format("\"{0}\"", fileName)
-                }
-            };
-
-            Log.Entry(LogName, "Update Waiter args");
-            Log.Entry(LogName, string.Format("{0} {1}", process.StartInfo.FileName, process.StartInfo.Arguments));
-            process.Start();
+            ProcessHandler.RunEXE(
+                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp",
+                    "FOGUpdateWaiter.exe"),
+                string.Format("\"{0}\"", fileName), false);
         }
     }
 }

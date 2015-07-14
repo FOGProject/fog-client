@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Threading;
@@ -65,18 +64,7 @@ namespace FOG
 
         private static void StartTray()
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = (Settings.OS != Settings.OSType.Windows)
-                        ? "mono "
-                        : ""
-                        + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGTray.exe")
-                }
-            };
-            process.Start();
+            ProcessHandler.RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGTray.exe"), "", false);
         }
     }
 }
