@@ -1,5 +1,9 @@
 #!/bin/bash
-[ "$#" -eq 1 ] || {echo "1 argument required, $# provided"; exit 1;}
+die () {
+    echo >&2 "$@"
+    exit 1
+}
+[ "$#" -eq 1 ] || die "1 argument required, $# provided"
 
 critical_commands=(mono mono-service unzip wget);
 optional_commands=(xprintidle);
