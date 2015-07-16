@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.IO;
-using System.Reflection;
 using System.Timers;
 using Newtonsoft.Json.Linq;
 
