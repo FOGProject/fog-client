@@ -69,5 +69,25 @@ namespace FOG.Handlers
             Log.Entry(LogName, "Return code = " + returnCode);
             return returnCode;
         }
+
+        public static void KillAll(string name)
+        {
+            
+        }
+
+        public static void KillAllEXE(string name)
+        {
+            
+        }
+
+        public static void Kill(string name)
+        {
+            
+        }
+
+        public static void KillEXE(string name)
+        {
+            
+        }
     }
 }
