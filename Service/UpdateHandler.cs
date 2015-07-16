@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using FOG.Handlers;
 using Newtonsoft.Json.Linq;
@@ -79,9 +78,7 @@ namespace FOG
                 //Launch the updater
                 Log.Entry(LogName, "Spawning update helper");
 
-                ProcessHandler.RunEXE(
-                    Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp",
-                        "FOGUpdateHelperexe"), "", false);
+                ProcessHandler.RunClientEXE(Path.Combine("tmp","FOGUpdateHelperexe"), "", false);
             }
             catch (Exception ex)
             {

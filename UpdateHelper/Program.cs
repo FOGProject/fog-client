@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.ServiceProcess;
 using FOG.Handlers;
 
 
@@ -28,66 +27,51 @@ namespace FOG
 {
     internal class Program
     {
+        const string LogName = "UpdateHelper";
+        private static IUpdate _instance;
+
         public static void Main(string[] args)
         {
             Eager.Initalize();
-            var service = new ServiceController("fogservice");
-            const string logName = "Update Helper";
-
-            Log.Entry(logName, "Shutting down service...");
-            //Stop the service
-            if (service.Status == ServiceControllerStatus.Running)
-                service.Stop();
-
-            service.WaitForStatus(ServiceControllerStatus.Stopped);
-
-            Log.Entry(logName, "Killing remaining FOG processes...");
-            if (Process.GetProcessesByName("FOGService").Length > 0)
-                foreach (var process in Process.GetProcessesByName("FOGService"))
-                    process.Kill();
-
-            Log.Entry(logName, "Applying MSI...");
-            ApplyUpdates();
-
-            //Start the service
-
-            Log.Entry(logName, "Starting service...");
-            service.Start();
-            service.WaitForStatus(ServiceControllerStatus.Running);
-            service.Dispose();
-
-            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info")))
-                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info"));
-        }
-
-        private static void ApplyUpdates()
-        {
-            const string logName = "Update Helper";
-
-            var useTray = Settings.Get("Tray");
-            var https = Settings.Get("HTTPS");
-            var webRoot = Settings.Get("WebRoot");
-            var server = Settings.Get("Server");
-            var logRoot = Settings.Get("RootLog");
-
-            var process = new Process
+            switch (Settings.OS)
             {
-                StartInfo =
-                {
-                    Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"", 
-                        (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi"), 
-                        useTray, https, server, webRoot, logRoot)
-                }
-            };
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                case Settings.OSType.Mac:
+                    _instance = new MacUpdate();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxUpdate();
+                    break;
+                default:
+                    _instance = new WindowsUpdate();
+                    break;
+            }
 
-            process.StartInfo.FileName = "msiexec";
+            try
+            {
+                Log.Entry(LogName, "Shutting down service...");
+                _instance.StopService();
 
-            Log.Entry(logName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
-            process.Start();
-            process.WaitForExit();
+                Log.Entry(LogName, "Killing remaining FOG processes...");
+                if (Process.GetProcessesByName("FOGService").Length > 0)
+                    foreach (var process in Process.GetProcessesByName("FOGService"))
+                        process.Kill();
+
+                Log.Entry(LogName, "Applying installer...");
+                _instance.ApplyUpdate();
+
+                //Start the service
+
+                Log.Entry(LogName, "Starting service...");
+                _instance.StartService();
+
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info")))
+                    File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info"));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not perform update!");
+                Log.Error(LogName, ex);
+            }
         }
     }
 }
