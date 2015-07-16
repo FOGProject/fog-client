@@ -94,17 +94,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            try
-            {
-                var processes = GetMonoProcesses(name);
-                foreach (var process in processes)
-                    process.Kill();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Unable to kill all exes named " + name);
-                Log.Error(LogName, ex);
-            }
+            Run("pkill", "-f " + name);
         }
 
         public static void Kill(string name)
@@ -132,38 +122,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            try
-            {
-                var processes = GetMonoProcesses(name);
-                if (processes.Count > 0)
-                    processes[0].Kill();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Unable to kill exe named " + name);
-                Log.Error(LogName, ex);
-            }
-        }
-
-        private static List<Process> GetMonoProcesses(string name)
-        {
-            var processes = new List<Process>();
-
-            try
-            {
-                var monoProcesses = Process.GetProcessesByName("mono");
-                foreach (var process in monoProcesses)
-                {
-                    //TODO: Get PID of each process and use /proc/PID/cmdline to retrieve EXE name
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Unable to get mono processes called " + name);
-                Log.Error(LogName, ex);
-            }
-
-            return processes;
+            Log.Error(LogName, "Killing 1 exe is not supported in mono");
         }
     }
 }
