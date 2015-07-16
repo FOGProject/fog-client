@@ -72,17 +72,40 @@ namespace FOG.Handlers
 
         public static void KillAll(string name)
         {
-            
+            try
+            {
+                foreach (var process in Process.GetProcessesByName(name))
+                {
+                    process.Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not kill all processes named " + name);
+                Log.Error(LogName, ex);
+            }
         }
 
         public static void KillAllEXE(string name)
         {
-            
+
         }
 
         public static void Kill(string name)
         {
-            
+            try
+            {
+                var processes = Process.GetProcessesByName(name);
+                if (processes.Length > 0)
+                {
+                    processes[0].Kill();
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to kill process " + name);
+                Log.Error(LogName, ex);
+            }
         }
 
         public static void KillEXE(string name)
