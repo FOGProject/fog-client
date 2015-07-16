@@ -121,7 +121,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            Log.Error(LogName, "Killing 1 exe is not supported in mono");
+            Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", "");
         }
     }
 }

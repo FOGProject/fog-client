@@ -13,7 +13,7 @@ if [ "$(id -u)" != "0" ]; then
 fi
 [ "$#" -eq 1 ] || die "1 argument required, $# provided"
 
-critical_commands=(mono mono-service unzip curl pkill);
+critical_commands=(mono mono-service unzip curl pkill pgrep);
 optional_commands=(xprintidle);
 
 echo "Checking required dependencies..."
