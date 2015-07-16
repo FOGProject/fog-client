@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
+//TODO: Look into possible memory leaks caused by un-dispossed processes
 namespace FOG.Handlers
 {
     public static class ProcessHandler
@@ -75,9 +77,7 @@ namespace FOG.Handlers
             try
             {
                 foreach (var process in Process.GetProcessesByName(name))
-                {
                     process.Kill();
-                }
             }
             catch (Exception ex)
             {
@@ -92,6 +92,18 @@ namespace FOG.Handlers
             {
                 KillAll(name);
                 return;
+            }
+
+            try
+            {
+                var processes = GetMonoProcesses(name);
+                foreach (var process in processes)
+                    process.Kill();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to kill all exes named " + name);
+                Log.Error(LogName, ex);
             }
         }
 
@@ -119,6 +131,39 @@ namespace FOG.Handlers
                 Kill(name);
                 return;
             }
+
+            try
+            {
+                var processes = GetMonoProcesses(name);
+                if (processes.Count > 0)
+                    processes[0].Kill();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to kill exe named " + name);
+                Log.Error(LogName, ex);
+            }
+        }
+
+        private static List<Process> GetMonoProcesses(string name)
+        {
+            var processes = new List<Process>();
+
+            try
+            {
+                var monoProcesses = Process.GetProcessesByName("mono");
+                foreach (var process in monoProcesses)
+                {
+                    //TODO: Get PID of each process and use /proc/PID/cmdline to retrieve EXE name
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to get mono processes called " + name);
+                Log.Error(LogName, ex);
+            }
+
+            return processes;
         }
     }
 }
