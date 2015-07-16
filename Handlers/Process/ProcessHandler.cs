@@ -88,7 +88,11 @@ namespace FOG.Handlers
 
         public static void KillAllEXE(string name)
         {
-
+            if (Settings.OS == Settings.OSType.Windows)
+            {
+                KillAll(name);
+                return;
+            }
         }
 
         public static void Kill(string name)
@@ -110,7 +114,11 @@ namespace FOG.Handlers
 
         public static void KillEXE(string name)
         {
-            
+            if (Settings.OS == Settings.OSType.Windows)
+            {
+                Kill(name);
+                return;
+            }
         }
     }
 }
