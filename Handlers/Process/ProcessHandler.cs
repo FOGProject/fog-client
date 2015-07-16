@@ -1,11 +1,19 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 
 namespace FOG.Handlers
 {
     public static class ProcessHandler
     {
         private const string LogName = "Process";
+
+
+        public static int RunClientEXE(string filePath, string param, bool wait = true)
+        {
+            return RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),filePath), param, wait);    
+        }
 
         public static int RunEXE(string filePath, string param, bool wait = true)
         {
@@ -58,6 +66,7 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
             }
 
+            Log.Entry(LogName, "Return code = " + returnCode);
             return returnCode;
         }
     }

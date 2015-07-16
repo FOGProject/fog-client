@@ -56,8 +56,8 @@ namespace FOG
             service.WaitForStatus(ServiceControllerStatus.Running);
             service.Dispose();
 
-            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info"))
-                File.Delete(AppDomain.CurrentDomain.BaseDirectory + @"\updating.info");
+            if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info")))
+                File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info"));
         }
 
         private static void ApplyUpdates()
@@ -68,6 +68,7 @@ namespace FOG
             var https = Settings.Get("HTTPS");
             var webRoot = Settings.Get("WebRoot");
             var server = Settings.Get("Server");
+            var logRoot = Settings.Get("RootLog");
 
             var process = new Process
             {
@@ -83,7 +84,6 @@ namespace FOG
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             process.StartInfo.FileName = "msiexec";
-
 
             Log.Entry(logName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
             process.Start();

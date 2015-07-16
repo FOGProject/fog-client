@@ -64,7 +64,7 @@ namespace FOG
 
         private static void StartTray()
         {
-            ProcessHandler.RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "FOGTray.exe"), "", false);
+            ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
         }
     }
 }

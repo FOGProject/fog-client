@@ -333,9 +333,7 @@ namespace FOG.Handlers.Power
             Log.Entry(LogName, "Restarting service");
             ShuttingDown = true;
 
-            ProcessHandler.RunEXE(
-                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "RestartFOGService.exe"),
-                "", false);
+            ProcessHandler.RunClientEXE("RestartFOGService.exe", "", false);
         }
 
         /// <summary>
@@ -346,10 +344,7 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Spawning update waiter");
 
-            ProcessHandler.RunEXE(
-                Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp",
-                    "FOGUpdateWaiter.exe"),
-                string.Format("\"{0}\"", fileName), false);
+            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", string.Format("\"{0}\"", fileName), false);
         }
     }
 }
