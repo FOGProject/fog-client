@@ -117,6 +117,10 @@
     <Compile Include="DisplayManager\Windows\User_32.cs" />
     <Compile Include="DisplayManager\Windows\WindowsDisplay.cs" />
     <Compile Include="GreenFOG\GreenFOG.cs" />
+    <Compile Include="GreenFOG\IGreen.cs" />
+    <Compile Include="GreenFOG\Linux\LinuxGreen.cs" />
+    <Compile Include="GreenFOG\Mac\MacGreen.cs" />
+    <Compile Include="GreenFOG\Windows\WindowsGreen.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
     <Compile Include="HostnameChanger\IHostName.cs" />
     <Compile Include="HostnameChanger\Linux\LinuxHostName.cs" />

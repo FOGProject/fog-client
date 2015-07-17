@@ -19,12 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
-using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG
 {
@@ -33,6 +29,8 @@ namespace FOG.Modules.GreenFOG
     /// </summary>
     public class GreenFOG : AbstractModule
     {
+        private IGreen _instance;
+
         public GreenFOG()
         {
             Name = "GreenFOG";
@@ -66,73 +64,29 @@ namespace FOG.Modules.GreenFOG
             return !moduleActiveResponse.Error;
         }
 
-        private List<string> FilterTasks(List<string> newTasks)
+        private List<string> FilterTasks(List<string> tasks)
         {
-            var taskService = new TaskService();
             try
             {
-                taskService.RootFolder.CreateFolder("FOG");
+                tasks = _instance.FilterTasks(tasks);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                
+                Log.Error(Name, "Could not filter tasks");
+                Log.Error(Name, ex);
             }
-
-            var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
-
-            foreach (var task in existingTasks)
-                if (!newTasks.Contains(task.Name))
-                {
-                    Log.Entry(Name, "Delete task " + task.Name);
-                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
-                    //If the existing task is not in the new list delete it
-                }
-                else
-                {
-                    Log.Entry(Name, task.Name + " already scheduled");
-                    newTasks.Remove(task.Name); //Remove the existing task from the queue
-                }
-
-            return newTasks;
+            return tasks;
         }
 
         private void CreateTasks(IEnumerable<string> tasks)
         {
-            var taskService = new TaskService();
-
             foreach (var task in tasks)
             {
                 var taskData = task.Split('@');
-
-                //Create task definition
-                var taskDefinition = taskService.NewTask();
-                taskDefinition.RegistrationInfo.Description = task;
-                taskDefinition.Principal.UserId = "SYSTEM";
-
-                var trigger = new DailyTrigger()
-                {
-                    StartBoundary = DateTime.Today + TimeSpan.FromHours(int.Parse(taskData[0])) +
-                                    TimeSpan.FromMinutes(int.Parse(taskData[1]))
-                };
-
-                taskDefinition.Triggers.Add(trigger);
-
-                //Create task action
-                var fileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\Power.exe";
-                if (taskData[2].Equals("r"))
-                    taskDefinition.Actions.Add(new ExecAction(fileName, "reboot \"This computer is going to reboot.\""));
-                else if (taskData[2].Equals("s"))
-                    taskDefinition.Actions.Add(new ExecAction(fileName, "shutdown \"This computer is going to shutdown to save power.\""));
-
-                taskDefinition.Settings.AllowDemandStart = false;
-                taskDefinition.Settings.DisallowStartIfOnBatteries = false;
-                taskDefinition.Settings.DisallowStartOnRemoteAppSession = false;
-                taskDefinition.Settings.StopIfGoingOnBatteries = false;
-
-                //Register the task
+                if (taskData.Length != 3) return;
                 try
                 {
-                    taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + task, taskDefinition);
+                    _instance.AddTask(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"));
                     Log.Entry(Name, "Registered task: " + task);
                 }
                 catch (Exception ex)
