@@ -106,8 +106,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Linux\LinuxUpdate.cs" />
+    <Compile Include="Mac\MacUpdate.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Windows\WindowsUpdate.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
