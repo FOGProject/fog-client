@@ -23,7 +23,7 @@ case "$1" in
         start)
                 if [ -z "${PID}" ]; then
                         echo "starting ${NAME}"
-                        ${DAEMON} ${WORKINGDIR}${FOGSERVICE} -d:${WORKINGDIR} -o:${WORKINGDIR}${LOCK}
+                        ${DAEMON} ${WORKINGDIR}${FOGSERVICE} -d:${WORKINGDIR} -l:${WORKINGDIR}${LOCK}
                         echo "${NAME} started"
                 else
                         echo "${NAME} is running"
