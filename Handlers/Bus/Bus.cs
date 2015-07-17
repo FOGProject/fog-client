@@ -50,7 +50,7 @@ namespace FOG.Handlers
         private static BusServer _server;
         private static BusClient _client;
 
-        private static readonly int port = 1277;
+        private const int Port = 1277;
 
         private static Mode _mode = Mode.Client;
 
@@ -89,7 +89,7 @@ namespace FOG.Handlers
                     // If someone else is already a socket server, try and become a socket client
                     try
                     {
-                        _client = new BusClient(port);
+                        _client = new BusClient(Port);
                         _client.Socket.MessageReceived += socket_RecieveMessage;
                         _client.Start();
                         Log.Entry(LogName, "Became bus client");
@@ -198,8 +198,6 @@ namespace FOG.Handlers
         /// Called when the server socket recieves a message
         /// It will replay the message to all other instances, including the original sender unless told otherwise
         /// </summary>
-        /// <param name="client">The instance who initiated the message</param>
-        /// <param name="message">The formatted event</param>
         private static void socket_RecieveMessage(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
         {
             EmitMessageFromSocket(messageReceivedEventArgs.Message);
@@ -208,7 +206,6 @@ namespace FOG.Handlers
         /// <summary>
         /// Called when the socket client recieves a message
         /// </summary>
-        /// <param name="message"></param>
         private static void socket_RecieveMessage(WebSocketSession session, string value)
         {
             EmitMessageFromSocket(value);

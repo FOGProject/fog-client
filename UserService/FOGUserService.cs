@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Reflection;
 using FOG.Handlers;
 using FOG.Handlers.Data;

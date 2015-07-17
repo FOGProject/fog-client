@@ -155,7 +155,6 @@ namespace FOG.Handlers.Data
         /// <returns>The FOG CA root certificate</returns>
         public static X509Certificate2 GetCACertificate()
         {
-            Log.Entry(LogName, "Attempting to load CA cert...");
             try
             {
                 X509Certificate2 CAroot = null;

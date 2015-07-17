@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
@@ -25,11 +24,8 @@ namespace FOG
         protected override void Load()
         {
             // Kill the sub-processes
-            foreach (var process in Process.GetProcessesByName("FOGUserService"))
-                process.Kill();
-
-            foreach (var process in Process.GetProcessesByName("FOGTray"))
-                process.Kill();
+            ProcessHandler.KillAllEXE("FOGUserService");
+            ProcessHandler.KillAllEXE("FOGTray");
 
             dynamic json = new JObject();
             json.action = "load";
@@ -50,11 +46,8 @@ namespace FOG
             Bus.Emit(Bus.Channel.Status, json, true); Bus.Dispose();
 
             // Kill the sub-processes
-            foreach (var process in Process.GetProcessesByName("FOGUserService"))
-                process.Kill();
-
-            foreach (var process in Process.GetProcessesByName("FOGTray"))
-                process.Kill();
+            ProcessHandler.KillAllEXE("FOGUserService");
+            ProcessHandler.KillAllEXE("FOGTray");
         }
 
         protected override AbstractModule[] GetModules()
@@ -70,7 +63,6 @@ namespace FOG
                 new UserTracker()
             };
         }
-
 
         protected override void ModuleLooper()
         {
