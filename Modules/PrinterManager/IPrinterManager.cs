@@ -23,8 +23,6 @@ namespace FOG.Modules.PrinterManager
 {
     interface IPrinterManager
     {
-        void AddPrinter(Printer printer);
-        void RemovePrinter(string name);
         List<string> GetPrinters();
     }
 }

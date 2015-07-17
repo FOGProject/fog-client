@@ -5,16 +5,6 @@ namespace FOG.Modules.PrinterManager
 {
     class MacPrinterManager : IPrinterManager
     {
-        public void AddPrinter(Printer printer)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemovePrinter(string name)
-        {
-            throw new NotImplementedException();
-        }
-
         public List<string> GetPrinters()
         {
             throw new NotImplementedException();
