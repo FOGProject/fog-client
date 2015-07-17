@@ -19,6 +19,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using FOG.Handlers;
 
 namespace FOG.Modules.GreenFOG
 {
@@ -26,9 +29,18 @@ namespace FOG.Modules.GreenFOG
     {
         public void AddTask(int min, int hour, bool restart)
         {
-            throw new NotImplementedException();
-        }
+            var filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Power.exe");
+            var command = "";
 
+            command = string.Format("crontab -l | {{ cat; echo \"{0} {1} * * mono {2} {3}\"; }} | crontab -", min, hour, filepath, 
+                restart 
+                ? "reboot \"This computer is going to reboot.\"" 
+                : "shutdown \"This computer is going to shutdown to save power.\"");
+
+            ProcessHandler.Run(command, "", true);
+            
+        }
+        
         public void RemoveTask(int min, int hour, bool restart)
         {
             throw new NotImplementedException();
