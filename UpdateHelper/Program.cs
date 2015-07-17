@@ -50,7 +50,7 @@ namespace FOG
                 Log.Entry(LogName, "Shutting down service...");
                 _instance.StopService();
 
-                Log.Entry(LogName, "Killing remaining FOG processes...")
+                Log.Entry(LogName, "Killing remaining FOG processes...");
                 ProcessHandler.KillAllEXE("FOGService");
                 Log.Entry(LogName, "Applying installer...");
                 _instance.ApplyUpdate();

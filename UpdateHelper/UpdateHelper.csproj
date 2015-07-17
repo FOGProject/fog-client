@@ -106,6 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IUpdate.cs" />
     <Compile Include="Linux\LinuxUpdate.cs" />
     <Compile Include="Mac\MacUpdate.cs" />
     <Compile Include="Program.cs" />
