@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -60,17 +59,23 @@ namespace FOG.Modules.GreenFOG
             taskDefinition.Settings.StopIfGoingOnBatteries = false;
 
             taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + taskDefinition.RegistrationInfo.Description, taskDefinition);
+            taskService.Dispose();
         }
 
         public void RemoveTask(int min, int hour, bool restart)
         {
-            throw new NotImplementedException();
+            var taskService = new TaskService();
+            var task = min +"@" + hour + "@" + ((restart) ? "r" : "s");
+            taskService.RootFolder.DeleteTask(@"FOG\" + task);
+            taskService.Dispose();
         }
 
-        public List<string> FilterTasks(List<string> tasks)
+        public void Reload() { }
+
+        public void ClearAll()
         {
             var taskService = new TaskService();
-            
+
             try
             {
                 taskService.RootFolder.CreateFolder("FOG");
@@ -83,19 +88,12 @@ namespace FOG.Modules.GreenFOG
             var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
 
             foreach (var task in existingTasks)
-                if (!tasks.Contains(task.Name))
-                {
-                    Log.Entry(LogName, "Delete task " + task.Name);
-                    taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
-                    //If the existing task is not in the new list delete it
-                }
-                else
-                {
-                    Log.Entry(LogName, task.Name + " already scheduled");
-                    tasks.Remove(task.Name); //Remove the existing task from the queue
-                }
+            {
+                Log.Debug(LogName, "Delete task " + task.Name);
+                taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);   
+            }
 
-            return tasks;
+            taskService.Dispose();
         }
     }
 }

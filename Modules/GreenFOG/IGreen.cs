@@ -17,14 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections.Generic;
-
 namespace FOG.Modules.GreenFOG
 {
     interface IGreen
     {
         void AddTask(int min, int hour, bool restart);
         void RemoveTask(int min, int hour, bool restart);
-        List<string> FilterTasks(List<string> tasks);
+        void Reload();
+        void ClearAll();
     }
 }

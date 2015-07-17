@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using FOG.Handlers;
 
@@ -27,27 +28,62 @@ namespace FOG.Modules.GreenFOG
 {
     class LinuxGreen : IGreen
     {
+        private const string Cronpath = @"/etc/cron.d/fog";
+        private const string LogName = "GreenFOG";
+
         public void AddTask(int min, int hour, bool restart)
+        {
+            if (!File.Exists(Cronpath)) CreateCron();
+
+            var lines = File.ReadLines(Cronpath).ToList();
+
+            lines.Add(GenerateCommand(min, hour, restart));
+            
+            File.WriteAllLines(Cronpath, lines);
+        }
+
+        private void CreateCron()
+        {
+            var lines = new List<string>
+            {
+                "SHELL=/bin/bash",
+                "PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin"
+            };
+            File.WriteAllLines(Cronpath, lines);
+        }
+
+        private string GenerateCommand(int min, int hour, bool restart)
         {
             var filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Power.exe");
             var command = "";
 
-            command = string.Format("crontab -l | {{ cat; echo \"{0} {1} * * mono {2} {3}\"; }} | crontab -", min, hour, filepath, 
-                restart 
-                ? "reboot \"This computer is going to reboot.\"" 
+            command = string.Format("{0} {1} * * * root mono {2} {3}", min, hour, filepath,
+                restart
+                ? "reboot \"This computer is going to reboot.\""
                 : "shutdown \"This computer is going to shutdown to save power.\"");
 
-            ProcessHandler.Run(command, "", true);
-        }
-        
-        public void RemoveTask(int min, int hour, bool restart)
-        {
-            throw new NotImplementedException();
+            return command;
         }
 
-        public List<string> FilterTasks(List<string> tasks)
+        public void Reload()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/etc/init.d/cron", "reload", true);
+        }
+
+        public void ClearAll()
+        {
+            CreateCron();
+        }
+
+        public void RemoveTask(int min, int hour, bool restart)
+        {
+            if (!File.Exists(Cronpath)) CreateCron();
+
+            var lines = File.ReadLines(Cronpath).ToList();
+
+            lines.Remove(GenerateCommand(min, hour, restart));
+
+            File.WriteAllLines(Cronpath, lines);
         }
     }
 }

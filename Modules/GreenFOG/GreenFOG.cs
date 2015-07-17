@@ -60,10 +60,22 @@ namespace FOG.Modules.GreenFOG
 
             var tasks = response.GetList("#task", false);
 
-            //Filter existing tasks
-            tasks = FilterTasks(tasks);
+            ClearAll();
             //Add new tasks
             CreateTasks(tasks);
+        }
+
+        private void ClearAll()
+        {
+            try
+            {
+                _instance.ClearAll();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Could not clear all tasks");
+                Log.Error(Name, ex);
+            }
         }
 
         new public bool IsEnabled()
@@ -71,24 +83,7 @@ namespace FOG.Modules.GreenFOG
             var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
                 EnabledURL, Name.ToLower()), true);
 
-            if (moduleActiveResponse.Error)
-                FilterTasks(new List<string>());
-
             return !moduleActiveResponse.Error;
-        }
-
-        private List<string> FilterTasks(List<string> tasks)
-        {
-            try
-            {
-                tasks = _instance.FilterTasks(tasks);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Could not filter tasks");
-                Log.Error(Name, ex);
-            }
-            return tasks;
         }
 
         private void CreateTasks(IEnumerable<string> tasks)
