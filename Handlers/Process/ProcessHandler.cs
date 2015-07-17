@@ -93,7 +93,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            Run("pkill", "-f " + name);
+            Run("pkill", "-f " + name, true);
         }
 
         public static void Kill(string name)
@@ -121,7 +121,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", "");
+            Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", "", true);
         }
     }
 }

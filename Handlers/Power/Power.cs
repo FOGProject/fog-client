@@ -120,6 +120,10 @@ namespace FOG.Handlers.Power
             _timer = new Timer(delayTime*1000*60);
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
+
+            if (Settings.OS == Settings.OSType.Windows) return;
+
+            ProcessHandler.Run("wall", "-n <<< \"Shutdown has been delayed by " + delayTime + " minutes\"");
         }
 
         private static void HelpShutdown(dynamic data)
@@ -192,6 +196,10 @@ namespace FOG.Handlers.Power
             _timer = new Timer(gracePeriod*1000);
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
+
+            if (Settings.OS == Settings.OSType.Windows) return;
+
+            ProcessHandler.Run("wall", "-n <<< \"FOG: Shutdown will occur in " + gracePeriod + " seconds\"");
         }
 
         private static bool ShouldAbort()

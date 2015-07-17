@@ -38,14 +38,8 @@ namespace FOG
             try
             {
                 Thread.Sleep(5 * 1000);
-                foreach (var process in Process.GetProcessesByName("FOGUserService"))
-                {
-                    process.Kill();
-                }
-                foreach (var process in Process.GetProcessesByName("FOGTray"))
-                {
-                    process.Kill();
-                }
+                ProcessHandler.KillAllEXE("FOGUserService");
+                ProcessHandler.KillAllEXE("FOGTray");
                 Thread.Sleep(5 * 1000);
             }
             catch (Exception ex)

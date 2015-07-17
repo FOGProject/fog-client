@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
 
@@ -51,11 +50,8 @@ namespace FOG
                 Log.Entry(LogName, "Shutting down service...");
                 _instance.StopService();
 
-                Log.Entry(LogName, "Killing remaining FOG processes...");
-                if (Process.GetProcessesByName("FOGService").Length > 0)
-                    foreach (var process in Process.GetProcessesByName("FOGService"))
-                        process.Kill();
-
+                Log.Entry(LogName, "Killing remaining FOG processes...")
+                ProcessHandler.KillAllEXE("FOGService");
                 Log.Entry(LogName, "Applying installer...");
                 _instance.ApplyUpdate();
 
