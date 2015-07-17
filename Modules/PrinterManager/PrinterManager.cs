@@ -20,12 +20,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Management;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
-
 
 namespace FOG.Modules.PrinterManager
 {
@@ -35,12 +33,26 @@ namespace FOG.Modules.PrinterManager
     public class PrinterManager : AbstractModule
     {
         private static string LogName;
+        private IPrinterManager _instance;
 
         public PrinterManager()
         {
             Name = "PrinterManager";
             LogName = Name;
             Compatiblity = Settings.OSType.Windows;
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacPrinterManager();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxPrinterManager();
+                    break;
+                default:
+                    _instance = new WindowsPrinterManager();
+                    break;
+            }
         }
 
         protected override void DoWork()
@@ -78,7 +90,6 @@ namespace FOG.Modules.PrinterManager
         {
             Log.Debug(Name, "Removing extra printers...");
 
-            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
 
             Log.Debug(Name, "Stripping printer data");
 
@@ -101,18 +112,35 @@ namespace FOG.Modules.PrinterManager
             }
             else
             {
-                foreach (var printer in printerQuery.Get().Cast<ManagementBaseObject>().Where(printer => !managedPrinters.Contains(printer.GetPropertyValue("Name").ToString().Trim())))
-                {
-                    Printer.Remove(printer.GetPropertyValue("Name").ToString());
-                }
+                var printerNames = _instance.GetPrinters();
+                foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name)))
+                    Printer.Remove(name);
             }
+        }
+
+        private bool PrinterExists(string name)
+        {
+            try
+            {
+                return _instance.GetPrinters().Contains(name);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Could not detect if printer exists");
+                Log.Error(Name, ex);
+            }
+
+            return false;
         }
 
         public static List<Printer> CreatePrinters(List<string> printerIDs)
         {
             try
             {
-                return printerIDs.Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true)).Select(PrinterFactory).Where(printer => printer != null).ToList();
+                return printerIDs.Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true))
+                    .Select(PrinterFactory)
+                    .Where(printer => printer != null)
+                    .ToList();
             }
             catch (Exception ex)
             {
@@ -120,13 +148,6 @@ namespace FOG.Modules.PrinterManager
                 return new List<Printer>();
             }
 
-        }
-
-        public static bool PrinterExists(string name)
-        {
-            var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-            return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("Name"))
-                .Contains(name);
         }
 
         public static Printer PrinterFactory(Response printerData)

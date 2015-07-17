@@ -38,7 +38,6 @@ namespace FOG.Modules.GreenFOG
                 : "shutdown \"This computer is going to shutdown to save power.\"");
 
             ProcessHandler.Run(command, "", true);
-            
         }
         
         public void RemoveTask(int min, int hour, bool restart)

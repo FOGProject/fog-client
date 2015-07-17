@@ -35,6 +35,19 @@ namespace FOG.Modules.GreenFOG
         {
             Name = "GreenFOG";
             Compatiblity = Settings.OSType.Windows;
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacGreen();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxGreen();
+                    break;
+                default:
+                    _instance = new WindowsGreen();
+                    break;
+            }
         }
 
         protected override void DoWork()
