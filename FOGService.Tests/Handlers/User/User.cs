@@ -41,7 +41,7 @@ namespace FOGService.Tests.Handlers.User
         [Test]
         public void GetInactivityTime()
         {
-            if(Settings.OS == Settings.OSType.Windows)
+            if (FOG.Handlers.Settings.OS == FOG.Handlers.Settings.OSType.Windows)
                 Assert.IsTrue(UserHandler.GetInactivityTime() != -1);
             else
                 Assert.IsTrue(UserHandler.GetInactivityTime() == -1);

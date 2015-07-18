@@ -26,7 +26,7 @@ namespace FOGService.Tests.Handlers.Middleware
     [TestFixture]
     public class ResponseTests
     {
-        private const string Server = "http://fog.jbob.io/fog";
+        private const string Server = "http://fog.jbob.io";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string URL = "/service/Test.php?unit=";
 

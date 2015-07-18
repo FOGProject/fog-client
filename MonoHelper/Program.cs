@@ -70,15 +70,15 @@ namespace FOG
             try
             {
                 var settings = new JObject
-            {
-                {"HTTPS", https},
-                {"Tray", usetray},
-                {"Server", webaddress},
-                {"WebRoot", webroot},
-                {"Version", version},
-                {"Company", company},
-                {"RootLog", rootlog}
-            };
+                {
+                    {"HTTPS", https},
+                    {"Tray", usetray},
+                    {"Server", webaddress},
+                    {"WebRoot", webroot},
+                    {"Version", version},
+                    {"Company", company},
+                    {"RootLog", rootlog}
+                };
 
                 File.WriteAllText(Path.Combine(location, "settings.json"), settings.ToString());
             }

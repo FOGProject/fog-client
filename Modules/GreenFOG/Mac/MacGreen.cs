@@ -34,6 +34,16 @@ namespace FOG.Modules.GreenFOG
             throw new NotImplementedException();
         }
 
+        public void Reload()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearAll()
+        {
+            throw new NotImplementedException();
+        }
+
         public List<string> FilterTasks(List<string> tasks)
         {
             throw new NotImplementedException();

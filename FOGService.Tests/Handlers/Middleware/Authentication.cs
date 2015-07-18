@@ -27,7 +27,7 @@ namespace FOGService.Tests.Handlers.Middleware
     [TestFixture]
     public class AuthenticationTests
     {
-        private const string Server = "http://fog.jbob.io/fog";
+        private const string Server = "http://fog.jbob.io";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string URL = "/service/Test.php?unit=";
         private const string PassKeyHex = "66733579595144305635386865727967316e746236395a6c6d48355a39313863";

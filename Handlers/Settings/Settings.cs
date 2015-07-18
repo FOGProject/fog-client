@@ -37,7 +37,7 @@ namespace FOG.Handlers
 
         private const string LogName = "Settings";
 
-        private static readonly string _file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json");
+        private static string _file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json");
         private static JObject _data;
         public static OSType OS { get; private set; }
 
@@ -85,6 +85,17 @@ namespace FOG.Handlers
             return false;
         }
 
+        public static void SetPath(string path)
+        {
+            _file = path;
+            Reload();
+        }
+
+        public static void Reload()
+        {
+            _data = JObject.Parse(File.ReadAllText(_file));
+        }
+
         private static bool Save()
         {
             try
@@ -105,7 +116,7 @@ namespace FOG.Handlers
         {
             var value = _data.GetValue(key);
             Log.Entry(LogName, "Retrieived " + key + " = " + value);
-            return (value == null) ? "" : value.ToString();
+            return (string.IsNullOrEmpty(value.ToString().Trim())) ? "" : value.ToString().Trim();
         }
 
         public static void Set(string key, JToken value)

@@ -88,6 +88,7 @@
     <Compile Include="Handlers\Middleware\Authentication.cs" />
     <Compile Include="Handlers\Middleware\Configuration.cs" />
     <Compile Include="Handlers\Middleware\Response.cs" />
+    <Compile Include="Handlers\Settings\Settings.cs" />
     <Compile Include="Handlers\User\User.cs" />
     <Compile Include="Handlers\Data\Transform.cs" />
     <Compile Include="Handlers\Data\Generate.cs" />
