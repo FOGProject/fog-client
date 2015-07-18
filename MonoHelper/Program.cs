@@ -23,10 +23,9 @@ namespace FOG
                 var cert = RSA.GetCACertificate();
                 if (cert != null) return false;
 
-                var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
 
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
-                var keyPath = string.Format("{0}ca.cert.der", tempDirectory);
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
                 if (!downloaded)
                     return false;

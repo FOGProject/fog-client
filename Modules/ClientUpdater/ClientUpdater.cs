@@ -48,11 +48,11 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                if (File.Exists(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory)))
-                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));
+                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi")))
+                    File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi"));
 
                 Communication.DownloadFile("/client/FOGService.msi",
-                    AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi"));
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;
@@ -67,27 +67,26 @@ namespace FOG.Modules.ClientUpdater
         //Prepare the downloaded update
         private void PrepareUpdateHelpers()
         {
-
-            if (!File.Exists(string.Format("{0}\\FOGUpdateHelper.exe", AppDomain.CurrentDomain.BaseDirectory)) &&
-                !File.Exists(string.Format("{0}\\FOGUpdateWaiter.exe", AppDomain.CurrentDomain.BaseDirectory)))
+            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateHelper.exe")) &&
+                !File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateWaiter.exe")))
             {
                 Log.Error(Name, "Unable to locate helper files");
                 return;
             }
             
             try
-            {                         
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateHelper.exe",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateHelper.exe", true);
+            {
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateHelper.exe"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGUpdateHelper.exe"), true);
 
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\FOGUpdateWaiter.exe",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\FOGUpdateWaiter.exe", true);
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateWaiter.exe"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGUpdateWaiter.exe"), true);
 
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Handlers.dll",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Handlers.dll", true);
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Handlers.dll"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "Handlers.dll"), true);
 
-                File.Copy(AppDomain.CurrentDomain.BaseDirectory + @"\Newtonsoft.Json.dll",
-                    AppDomain.CurrentDomain.BaseDirectory + @"tmp\Newtonsoft.Json.dll", true);
+                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Newtonsoft.Json.dll"),
+                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "Newtonsoft.Json.dll"), true);
                 
             }
             catch (Exception ex)

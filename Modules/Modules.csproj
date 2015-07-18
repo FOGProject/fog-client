@@ -120,6 +120,7 @@
     <Compile Include="GreenFOG\IGreen.cs" />
     <Compile Include="GreenFOG\Linux\LinuxGreen.cs" />
     <Compile Include="GreenFOG\Mac\MacGreen.cs" />
+    <Compile Include="GreenFOG\Task.cs" />
     <Compile Include="GreenFOG\Windows\WindowsGreen.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
     <Compile Include="HostnameChanger\IHostName.cs" />

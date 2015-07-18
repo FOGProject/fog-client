@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
@@ -58,11 +60,26 @@ namespace FOG.Modules.GreenFOG
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (response.Error) return;
 
-            var tasks = response.GetList("#task", false);
+            var rawTasks = response.GetList("#task", false);
 
             ClearAll();
             //Add new tasks
+            var tasks = CastTasks(rawTasks);
             CreateTasks(tasks);
+        }
+
+        private List<Task> CastTasks(List<string> rawTasks)
+        {
+            var tasks = new List<Task>();
+
+            foreach(var task in rawTasks)
+            {
+                var taskData = task.Split('@');
+                if (taskData.Length != 3) continue;
+                tasks.Add(new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r")));
+            }
+
+            return tasks;
         }
 
         private void ClearAll()
@@ -86,15 +103,13 @@ namespace FOG.Modules.GreenFOG
             return !moduleActiveResponse.Error;
         }
 
-        private void CreateTasks(IEnumerable<string> tasks)
+        private void CreateTasks(IEnumerable<Task> tasks)
         {
             foreach (var task in tasks)
             {
-                var taskData = task.Split('@');
-                if (taskData.Length != 3) return;
                 try
                 {
-                    _instance.AddTask(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"));
+                    _instance.AddTask(task.Minutes, task.Hours, task.Reboot);
                     Log.Entry(Name, "Registered task: " + task);
                 }
                 catch (Exception ex)
