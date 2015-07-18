@@ -85,6 +85,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="Handlers\UserTests.cs" />
     <Compile Include="Handlers\Data\Transform.cs" />
     <Compile Include="Handlers\Data\Generate.cs" />
     <Compile Include="Handlers\Data\DPAPI.cs" />

@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupHelper", "SetupHelper\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerCLI", "PowerCLI\PowerCLI.csproj", "{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MonoHelper", "MonoHelper\MonoHelper.csproj", "{C83C7025-7FD0-4419-B848-3B42D9DED51F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -205,6 +207,16 @@ Global
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|Mixed Platforms.Build.0 = Release|x86
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|x86.ActiveCfg = Release|x86
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|x86.Build.0 = Release|x86
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{C83C7025-7FD0-4419-B848-3B42D9DED51F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
