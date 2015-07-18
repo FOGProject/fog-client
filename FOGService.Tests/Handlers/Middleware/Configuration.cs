@@ -17,35 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Text;
 using NUnit.Framework;
 using FOG.Handlers;
-using FOG.Handlers.Data;
+using FOG.Handlers.Middleware;
 
-namespace FOGService.Tests.Handlers.Data
+namespace FOGService.Tests.Handlers.Middleware
 {
     [TestFixture]
-    public class DPAPITests
+    public class ConfigurationTests
     {
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
 
         [SetUp]
         public void Init()
         {
             Log.Output = Log.Mode.Console;
+            Configuration.TestMAC = MAC;
         }
 
         [Test]
-        public void RoundTrip_Protect()
+        public void MacAddresses()
         {
-            // Roundtrip a message using DPAPI protection
+            Assert.AreEqual(MAC, Configuration.MACAddresses());
+        }
 
-            const string message = "The dog jumped over the fence #@//\\\\$";
-            var messageBytes = Encoding.ASCII.GetBytes(message);
-
-            var protectedBytes = DPAPI.ProtectData(messageBytes, true);
-            var unProtectedBytes = DPAPI.UnProtectData(protectedBytes, true);
-
-            Assert.AreEqual(messageBytes, unProtectedBytes);
+        [Test]
+        public void IPAddress()
+        {
+            Assert.IsNotNullOrEmpty(Configuration.IPAddress());
         }
     }
 }

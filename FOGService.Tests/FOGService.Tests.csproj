@@ -85,13 +85,16 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
-    <Compile Include="Handlers\UserTests.cs" />
+    <Compile Include="Handlers\Middleware\Authentication.cs" />
+    <Compile Include="Handlers\Middleware\Configuration.cs" />
+    <Compile Include="Handlers\Middleware\Response.cs" />
+    <Compile Include="Handlers\User\User.cs" />
     <Compile Include="Handlers\Data\Transform.cs" />
     <Compile Include="Handlers\Data\Generate.cs" />
     <Compile Include="Handlers\Data\DPAPI.cs" />
     <Compile Include="Handlers\Data\RSA.cs" />
     <Compile Include="Handlers\Data\AES.cs" />
-    <Compile Include="Handlers\CommunicationTests.cs" />
+    <Compile Include="Handlers\Middleware\Communication.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
