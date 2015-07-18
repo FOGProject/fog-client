@@ -1,58 +1,38 @@
 #!/bin/bash
-die () {
-    echo >&2 "$@"
-    exit 1
-}
 
 ########################
-# Check Dependencies
+# Variables
 ########################
-
-if [ "$(id -u)" != "0" ]; then
-   die "This script must be run as root"
-fi
-[ "$#" -eq 1 ] || die "1 argument required, $# provided"
-
-critical_commands=(mono mono-service unzip curl pkill pgrep wall);
-optional_commands=(xprintidle);
-
-echo "Checking required dependencies..."
-
-for i in ${critical_commands[@]}; do
-        if [ '$(hash $i)' != '' ]; then
-			printf "%-20s %-30s" $i "Failed";
-			exit 1;
-		else
-			printf "%-20s %-30s" $i "Success";
-		fi
-		echo "";
-done
-
-echo ""	
-echo "Checking optional dependencies..."
-for i in ${optional_commands[@]}; do
-        if [ '$(hash $i)' != ''  ]; then
-			printf "%-20s %-30s" $i "Failed";
-		else
-			printf "%-20s %-30s" $i "Success";
-		fi
-		echo "";
-done
-
+# $1 fogURL $2 useTray $3 https(not required)
+$version="0.9.9"
 ########################
 # Perform Installation
 ########################
 
-echo ""
+echo "Checking for existing installations...."
+if [ -f /opt/fog-service/FOGService.exe ]; then
+    echo "Existing installation found, now performing uninstallation...."
+    find /opt/fog-service -maxdepth 1 -type f -exec rm {} \;
+    echo "Done!"
+    
+else
+	if [ -d /opt/fog-service ]; then
+		echo "Creating Required Directories...."
+		mkdir -p /opt/fog-service
+		echo "Done!"
+	fi
+fi
 echo "Downloading files..."
 curl -o /opt/FOGService.zip $1client/download.php?newclientzip
 echo "Extracting files..."
-unzip /opt/FOGService.zip /opt/fog-service
+unzip -o /opt/FOGService.zip /opt/fog-service
 echo "Adjusting permissions..."
 touch /opt/fog-service/fog.log
 chmod 775 /opt/fog-service/fog.log
 
-mono /opt/fog-service/SetupHelper.exe $1
+#sent variables fogURL useTray version company rootlog https
+
+mono /opt/fog-service/SetupHelper.exe $1 $2 $version "FOG" "0" $3
 
 ########################
 # Clean Up
