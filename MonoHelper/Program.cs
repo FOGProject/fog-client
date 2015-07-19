@@ -61,7 +61,7 @@ namespace FOG
             {
                 Log.Error(LogName, "Could not pin CA");
                 Log.Error(LogName, ex);
-                throw;
+                return false;
             }
         }
 
@@ -81,12 +81,13 @@ namespace FOG
                 };
 
                 File.WriteAllText(Path.Combine(location, "settings.json"), settings.ToString());
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, "Could not save settings");
                 Log.Error(LogName, ex);
-                throw;
+                return false;
             }
 
         }
@@ -102,12 +103,13 @@ namespace FOG
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);
                 store.Close();
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, "Could unpin CA cert");
                 Log.Error(LogName, ex);
-                throw;
+                return false;
             }
         }
     }
