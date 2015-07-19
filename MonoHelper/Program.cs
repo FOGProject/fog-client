@@ -103,7 +103,7 @@ namespace FOG
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);
                 store.Close();
-                return true;
+                return true; 
             }
             catch (Exception ex)
             {
