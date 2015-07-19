@@ -35,6 +35,7 @@ namespace FOG.Handlers.Middleware
         static Configuration()
         {
             GetAndSetServerAddress();
+            ServerAddress = "";
         }
 
         /// <summary>
@@ -44,7 +45,7 @@ namespace FOG.Handlers.Middleware
         public static bool GetAndSetServerAddress()
         {
 
-            if (Settings.Get("HTTPS") == null || Settings.Get("WebRoot") == null ||
+            if (string.IsNullOrEmpty(Settings.Get("HTTPS")) || Settings.Get("WebRoot") == null ||
                 string.IsNullOrEmpty(Settings.Get("Server")))
             {
                 Log.Error(LogName, "Invalid parameters");

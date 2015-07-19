@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.IO;
 using System.Reflection;
 using NUnit.Framework;
@@ -39,15 +40,15 @@ namespace FOGService.Tests.Handlers.Settings
         [SetUp]
         public void Init()
         {
-            Log.Output = Log.Mode.Console;
             WriteSettings();
-            FOG.Handlers.Settings.Reload();
+            Log.Output = Log.Mode.Console;
+            FOG.Handlers.Settings.SetPath("settings.json");
         }
 
         [TearDown]
         public void Dispose()
         {
-            File.Delete(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json"));
+            File.Delete("settings.json");
         }
 
         private void WriteSettings()
@@ -63,7 +64,7 @@ namespace FOGService.Tests.Handlers.Settings
                     {"RootLog", Rootlog}
                 };
 
-            File.WriteAllText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json"), settings.ToString());
+            File.WriteAllText("settings.json", settings.ToString());
         }
 
         [Test]
@@ -81,8 +82,8 @@ namespace FOGService.Tests.Handlers.Settings
         [Test]
         public void BadGet()
         {
-            Assert.IsNotNullOrEmpty(FOG.Handlers.Settings.Get("NO_EXIST"));
-            Assert.IsNotNullOrEmpty(FOG.Handlers.Settings.Get("https"));
+            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("NO_EXIST"));
+            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("https"));
         }
 
         [Test]

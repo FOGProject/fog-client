@@ -38,7 +38,7 @@ namespace FOG.Handlers
         private const string LogName = "Settings";
 
         private static string _file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json");
-        private static JObject _data;
+        private static JObject _data = new JObject();
         public static OSType OS { get; private set; }
 
         static Settings()
@@ -50,9 +50,9 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
+                _data = new JObject();
                 Log.Error(LogName, "Unable to load settings");
                 Log.Error(LogName, ex);
-                _data = new JObject();
             }
 
             var pid = Environment.OSVersion.Platform;
@@ -114,13 +114,25 @@ namespace FOG.Handlers
 
         public static string Get(string key)
         {
-            var value = _data.GetValue(key);
-            Log.Entry(LogName, "Retrieived " + key + " = " + value);
-            return (string.IsNullOrEmpty(value.ToString().Trim())) ? "" : value.ToString().Trim();
+            if (_data == null) return string.Empty;
+
+            try
+            {
+                var value = _data.GetValue(key);
+                Log.Entry(LogName, "Retrieived " + key + " = " + value);
+                return string.IsNullOrEmpty(value.ToString().Trim()) ? string.Empty : value.ToString().Trim();
+            }
+            catch (Exception)
+            {
+            }
+
+            return string.Empty;
         }
 
         public static void Set(string key, JToken value)
         {
+            if (_data == null) _data = new JObject();
+
             _data.Add(key, value);
             Save();
         }
