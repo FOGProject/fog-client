@@ -34,8 +34,8 @@ namespace FOG.Handlers.Middleware
 
         static Configuration()
         {
-            GetAndSetServerAddress();
             ServerAddress = "";
+            GetAndSetServerAddress();
         }
 
         /// <summary>
