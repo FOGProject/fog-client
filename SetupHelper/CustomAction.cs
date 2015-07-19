@@ -18,15 +18,10 @@
  */
 
 using System;
-using System.IO;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
-using System.Security.Cryptography.X509Certificates;
 using FOG;
-using FOG.Handlers.Data;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
-using Newtonsoft.Json.Linq;
 
 namespace SetupHelper
 {
