@@ -1,4 +1,4 @@
-if [ -z "$(pgrep FOGUserService)" ]; then
+if [ ! -f "~/.fog_user_service.lock" ]; then
     mono /opt/fog-service/FOGUserService.exe &
     echo "$!" > ~/.fog_user_service.lock
 fi
