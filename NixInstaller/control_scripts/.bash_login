@@ -1,0 +1,4 @@
+if [ -z "$(pgrep FOGUserService)" ]; then
+    mono /opt/fog-service/FOGUserService.exe &
+    cat "$?" > ~/.fog_user_service.lock
+fi
