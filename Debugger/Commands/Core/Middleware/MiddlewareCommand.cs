@@ -42,7 +42,7 @@ namespace FOG.Commands.Core.Middleware
                 return true;
             }
 
-            return _commands.ContainsKey(args[0]) && _commands[args[0]].Process(args.Skip(1).ToArray());
+            return _commands.Count > 1 && _commands.ContainsKey(args[0]) && _commands[args[0]].Process(args.Skip(1).ToArray());
         }
 
         private static void Help()

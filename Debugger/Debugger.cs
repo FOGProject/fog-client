@@ -23,6 +23,7 @@ using System.Linq;
 using FOG.Commands;
 using FOG.Commands.Core.CBus;
 using FOG.Commands.Core.Middleware;
+using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
 using FOG.Handlers;
 
@@ -36,7 +37,8 @@ namespace FOG
         {
             {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
-            {"middleware", new MiddlewareCommand()}
+            {"middleware", new MiddlewareCommand()},
+            {"user", new UserCommand()}
         };
  
         public static void Main(string[] args)
@@ -86,8 +88,7 @@ namespace FOG
                 return false;            
             }
 
-
-            if (_commands.ContainsKey(command[0]))
+            if (command.Length > 1 && _commands.ContainsKey(command[0]))
                 if (_commands[command[0]].Process(command.Skip(1).ToArray()))
                     return false;
 

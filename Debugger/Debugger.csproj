@@ -114,6 +114,7 @@
     <Compile Include="Commands\Core\Middleware\AuthenticationCommand.cs" />
     <Compile Include="Commands\Core\Middleware\CommunicationCommand.cs" />
     <Compile Include="Commands\Core\Middleware\ConfigurationCommand.cs" />
+    <Compile Include="Commands\Core\User\UserCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
     <Compile Include="Commands\Modules\ModuleCommand.cs" />
     <Compile Include="Debugger.cs" />
