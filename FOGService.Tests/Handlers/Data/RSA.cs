@@ -21,7 +21,7 @@ using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
 
-namespace FOGService.Tests.Handlers
+namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
     public class RSATests
