@@ -1,5 +1,8 @@
 language: csharp
 solution: FOGService.sln
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y xprintidle
 install:
   - nuget restore FOGService.sln
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
