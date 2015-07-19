@@ -119,7 +119,6 @@ namespace FOG.Handlers
             try
             {
                 var value = _data.GetValue(key);
-                Log.Entry(LogName, "Retrieived " + key + " = " + value);
                 return string.IsNullOrEmpty(value.ToString().Trim()) ? string.Empty : value.ToString().Trim();
             }
             catch (Exception)

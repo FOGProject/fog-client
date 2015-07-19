@@ -23,6 +23,7 @@ using System.Linq;
 using FOG.Commands;
 using FOG.Commands.Core.CBus;
 using FOG.Commands.Core.Middleware;
+using FOG.Commands.Core.Settings;
 using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
 using FOG.Handlers;
@@ -38,6 +39,7 @@ namespace FOG
             {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
             {"middleware", new MiddlewareCommand()},
+            {"settings", new SettingsCommand()},
             {"user", new UserCommand()}
         };
  
