@@ -31,7 +31,6 @@
   <ItemGroup>
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
-    <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AbstractService\AbstractService.csproj">
