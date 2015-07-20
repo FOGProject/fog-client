@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using System.Threading;
 using FOG.Handlers;
 using FOG.Handlers.Power;
 
@@ -38,10 +37,10 @@ namespace FOG
 
         public static void Main(string[] args)
         {
-            Thread.Sleep(7*1000);
+            //Thread.Sleep(7*1000);
             //Initialize everything
-            Log.FilePath =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "fog_user.log");
+
+            Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "fog_user.log");
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
             Eager.Initalize();
@@ -64,7 +63,7 @@ namespace FOG
 
         private static void StartTray()
         {
-            //ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
+            ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
         }
     }
 }

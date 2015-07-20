@@ -24,7 +24,7 @@ namespace FOG.Handlers
 
             param = (Settings.OS == Settings.OSType.Windows)
                 ? param
-                : ("\"" + filePath + "\" " + param);
+                : filePath + " " + param;
 
             return Run(filePath, param, wait);
         }
