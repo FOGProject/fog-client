@@ -18,13 +18,8 @@ namespace FOG.Handlers
 
         public static int RunEXE(string filePath, string param, bool wait = true)
         {
-            filePath = (Settings.OS == Settings.OSType.Windows)
-                ? filePath
-                : "mono";
-
-            param = (Settings.OS == Settings.OSType.Windows)
-                ? param
-                : filePath + " " + param;
+            if (Settings.OS == Settings.OSType.Windows)
+                filePath = "mono " + filePath;
 
             return Run(filePath, param, wait);
         }
