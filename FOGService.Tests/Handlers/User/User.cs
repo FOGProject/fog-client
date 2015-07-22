@@ -39,6 +39,7 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
+        [Ignore("Ignore due to CI server configuration")]
         public void GetInactivityTime()
         {
             if (FOG.Handlers.Settings.OS == FOG.Handlers.Settings.OSType.Windows)
