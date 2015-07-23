@@ -67,7 +67,8 @@ namespace FOG.Modules.GreenFOG
 
         public void Reload()
         {
-            ProcessHandler.Run("/etc/init.d/cron", "reload", true);
+            ProcessHandler.WaitDispose(
+                ProcessHandler.Run("/etc/init.d/cron", "reload"));
         }
 
         public void ClearAll()

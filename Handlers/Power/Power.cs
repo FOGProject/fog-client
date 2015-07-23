@@ -339,7 +339,8 @@ namespace FOG.Handlers.Power
             Log.Entry(LogName, "Restarting service");
             ShuttingDown = true;
 
-            ProcessHandler.RunClientEXE("RestartFOGService.exe", "", false);
+            ProcessHandler.DisposeOnExit(
+                ProcessHandler.RunClientEXE("RestartFOGService.exe", ""));
         }
 
         /// <summary>
@@ -350,7 +351,7 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Spawning update waiter");
 
-            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", string.Format("\"{0}\"", fileName), false);
+            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", string.Format("\"{0}\"", fileName));
         }
     }
 }

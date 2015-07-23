@@ -18,4 +18,3 @@ D:\fog\client\Debugger\bin\x86\Debug\Modules.pdb
 D:\fog\client\Debugger\bin\x86\Debug\Newtonsoft.Json.xml
 D:\fog\client\Debugger\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\Debugger\bin\x86\Debug\PipeClient.pdb
-D:\fog\client\bin\Debugger.exe.config

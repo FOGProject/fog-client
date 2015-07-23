@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using FOG.Handlers;
 
@@ -25,13 +26,24 @@ namespace FOG
         {
             while (_running)
             {
-                foreach (var user in UserHandler.GetUsersLoggedIn())
+                var users = UserHandler.GetUsersLoggedIn();
+
+                foreach (var user in users)
                 {
                     if (Processes.ContainsKey(user)) continue;
 
-                    var proc = ProcessHandler.ImpersonateClientEXEHandle("FOGUserService.exe", "", name);
+                    var proc = ProcessHandler.ImpersonateClientEXEHandle("FOGUserService.exe", "", user);
                     Processes.Add(user, proc);
                 }
+
+                var loggedOff = users.Except(Processes.Keys);
+                foreach (var user in loggedOff)
+                {
+                    Processes[user].Kill();
+                    Processes[user].Dispose();
+                    Processes.Remove(user);
+                }
+
             }
         }
 
@@ -48,8 +60,11 @@ namespace FOG
 
         public static void KillAll()
         {
-            foreach(var proc in Processes.Values)
+            foreach (var proc in Processes.Values)
+            {
                 proc.Kill();
+                proc.Dispose();
+            }
 
             Processes.Clear();
         }

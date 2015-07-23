@@ -3,34 +3,49 @@ using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
-//TODO: Look into possible memory leaks caused by un-dispossed processes
 namespace FOG.Handlers
 {
     public static class ProcessHandler
     {
         private const string LogName = "Process";
 
-
-        public static int RunClientEXE(string filePath, string param, bool wait = true)
+        public static int WaitDispose(Process process)
         {
-            return RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),filePath), param, wait);    
+            process.WaitForExit();
+            var code = process.ExitCode;
+            process.Dispose();
+            return code;
         }
 
-        public static int RunEXE(string filePath, string param, bool wait = true)
+        public static void DisposeOnExit(Process process)
         {
-            if (Settings.OS == Settings.OSType.Windows)
+            process.Exited += OnExit;
+        }
+
+        private static void OnExit(object sender, EventArgs e)
+        {
+            var proc = sender as Process;
+            if (proc != null) proc.Dispose();
+        }
+
+        public static Process RunClientEXE(string filePath, string param)
+        {
+            return RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),filePath), param);    
+        }
+
+        public static Process RunEXE(string filePath, string param)
+        {
+            if (Settings.OS != Settings.OSType.Windows)
                 filePath = "mono " + filePath;
 
-            return Run(filePath, param, wait);
+            return Run(filePath, param);
         }
 
-        public static int Run(string filePath, string param, bool wait = false)
+        public static Process Run(string filePath, string param)
         {
             Log.Debug(LogName, "Running process...");
             Log.Debug(LogName, "--> Filepath:   " + filePath);
             Log.Debug(LogName, "--> Parameters: " + param);
-            Log.Debug(LogName, "--> Wait:       " + wait);
-            var returnCode = -1;
 
             try
             {
@@ -39,21 +54,14 @@ namespace FOG.Handlers
                     StartInfo =
                     {
                         UseShellExecute = false,
-                        FileName = (Settings.OS == Settings.OSType.Windows)
-                            ? filePath
-                            : "mono",
-                        Arguments = (Settings.OS == Settings.OSType.Windows)
-                            ? param
-                            : ("\"" + filePath + "\" " + param)
+                        FileName = filePath,
+                        Arguments = param
                     }
 
                 })
                 {
                     process.Start();
-                    if (!wait) return returnCode;
-
-                    process.WaitForExit();
-                    returnCode = process.ExitCode;
+                    return process;
                 }
             }
             catch (Exception ex)
@@ -62,40 +70,19 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
             }
 
-            Log.Entry(LogName, "Return code = " + returnCode);
-            return returnCode;
+            return null;
         }
 
         public static Process ImpersonateClientEXEHandle(string filePath, string param, string user)
         {
-            Log.Debug(LogName, "Impersonating process...");
-            Log.Debug(LogName, "--> Filepath:   " + filePath);
-            Log.Debug(LogName, "--> Parameters: " + param);
-            Log.Debug(LogName, "--> User: " + user);
 
+            var fileName = "su";
+            var arguments = string.Format(" - {0} -c {1} {2}", 
+                user, 
+                "mono " + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath),
+                param);
 
-            try
-            {
-                var process = new Process
-                {
-                    StartInfo =
-                    {
-                        UseShellExecute = false,
-                        FileName = "su",
-                        Arguments = string.Format(" - {0} -c {1} {2}", user, "mono " + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath), param)
-                    }
-
-                };
-                process.Start();
-                return process;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Unable to run process");
-                Log.Error(LogName, ex);
-            }
-
-            return null;
+            return Run(fileName, arguments);
         }
 
         public static void KillAll(string name)
@@ -120,7 +107,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            Run("pkill", "-f " + name, true);
+            WaitDispose(Run("pkill", "-f " + name));
         }
 
         public static void Kill(string name)
@@ -148,7 +135,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", "", true);
+            WaitDispose(Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", ""));
         }
     }
 }
