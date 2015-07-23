@@ -31,6 +31,10 @@ namespace FOG
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);
 
+            // Start the UserServiceSpawner
+            if(Settings.OS == Settings.OSType.Linux)
+                UserServiceSpawner.Start();
+
             Log.NewLine();
             Log.PaddedHeader("Authentication");
             Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
@@ -41,11 +45,14 @@ namespace FOG
 
         protected override void Unload()
         {
+            UserServiceSpawner.Stop();
+
             dynamic json = new JObject();
             json.action = "unload";
             Bus.Emit(Bus.Channel.Status, json, true); Bus.Dispose();
 
             // Kill the sub-processes
+            UserServiceSpawner.KillAll();
             ProcessHandler.KillAllEXE("FOGUserService");
             ProcessHandler.KillAllEXE("FOGTray");
         }

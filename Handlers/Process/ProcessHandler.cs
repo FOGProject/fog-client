@@ -66,6 +66,40 @@ namespace FOG.Handlers
             return returnCode;
         }
 
+        public static Process RunClientEXEHandle(string filePath, string param)
+        {
+            Log.Debug(LogName, "Running process...");
+            Log.Debug(LogName, "--> Filepath:   " + filePath);
+            Log.Debug(LogName, "--> Parameters: " + param);
+
+            try
+            {
+                var process = new Process
+                {
+                    StartInfo =
+                    {
+                        UseShellExecute = false,
+                        FileName = (Settings.OS == Settings.OSType.Windows)
+                            ? filePath
+                            : "mono",
+                        Arguments = (Settings.OS == Settings.OSType.Windows)
+                            ? param
+                            : ("\"" + filePath + "\" " + param)
+                    }
+
+                };
+                process.Start();
+                return process;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to run process");
+                Log.Error(LogName, ex);
+            }
+
+            return null;
+        }
+
         public static void KillAll(string name)
         {
             try

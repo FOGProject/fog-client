@@ -124,6 +124,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="UpdateHandler.cs" />
+    <Compile Include="UserServiceSpawner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
