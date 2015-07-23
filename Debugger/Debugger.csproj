@@ -124,6 +124,7 @@
     <Compile Include="Commands\Core\Middleware\AuthenticationCommand.cs" />
     <Compile Include="Commands\Core\Middleware\CommunicationCommand.cs" />
     <Compile Include="Commands\Core\Middleware\ConfigurationCommand.cs" />
+    <Compile Include="Commands\Core\Process\ProcessCommand.cs" />
     <Compile Include="Commands\Core\Settings\SettingsCommand.cs" />
     <Compile Include="Commands\Core\User\UserCommand.cs" />
     <Compile Include="Commands\ICommand.cs" />
