@@ -29,7 +29,7 @@ namespace FOG
                 {
                     if (Processes.ContainsKey(user)) continue;
 
-                    var proc = ProcessHandler.RunClientEXEHandle("FOGUserService.exe", "");
+                    var proc = ProcessHandler.RunClientEXEHandle("FOGUserService.exe", "", name);
                     Processes.Add(user, proc);
                 }
             }

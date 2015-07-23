@@ -66,11 +66,13 @@ namespace FOG.Handlers
             return returnCode;
         }
 
-        public static Process RunClientEXEHandle(string filePath, string param)
+        public static Process ImpersonateClientEXEHandle(string filePath, string param, string user)
         {
-            Log.Debug(LogName, "Running process...");
+            Log.Debug(LogName, "Impersonating process...");
             Log.Debug(LogName, "--> Filepath:   " + filePath);
             Log.Debug(LogName, "--> Parameters: " + param);
+            Log.Debug(LogName, "--> User: " + user);
+
 
             try
             {
@@ -79,12 +81,8 @@ namespace FOG.Handlers
                     StartInfo =
                     {
                         UseShellExecute = false,
-                        FileName = (Settings.OS == Settings.OSType.Windows)
-                            ? filePath
-                            : "mono",
-                        Arguments = (Settings.OS == Settings.OSType.Windows)
-                            ? param
-                            : ("\"" + filePath + "\" " + param)
+                        FileName = "su",
+                        Arguments = string.Format(" - {0} -c {1} {2}", user, "mono " + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath), param)
                     }
 
                 };
