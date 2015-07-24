@@ -18,9 +18,8 @@
  */
 
 using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.Linq;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
@@ -70,16 +69,11 @@ namespace FOG.Modules.GreenFOG
 
         private List<Task> CastTasks(List<string> rawTasks)
         {
-            var tasks = new List<Task>();
-
-            foreach(var task in rawTasks)
-            {
-                var taskData = task.Split('@');
-                if (taskData.Length != 3) continue;
-                tasks.Add(new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r")));
-            }
-
-            return tasks;
+            return (from task in rawTasks 
+                    select task.Split('@') 
+                    into taskData 
+                    where taskData.Length == 3 
+                    select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
         }
 
         private void ClearAll()

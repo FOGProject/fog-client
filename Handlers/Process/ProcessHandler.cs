@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace FOG.Handlers
 {
@@ -30,7 +29,7 @@ namespace FOG.Handlers
 
         public static Process RunClientEXE(string filePath, string param)
         {
-            return RunEXE(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),filePath), param);    
+            return RunEXE(Path.Combine(Settings.Location, filePath), param);    
         }
 
         public static Process RunEXE(string filePath, string param)
@@ -78,8 +77,8 @@ namespace FOG.Handlers
 
             var fileName = "su";
             var arguments = string.Format(" - {0} -c {1} {2}", 
-                user, 
-                "mono " + Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), filePath),
+                user,
+                "mono " + Path.Combine(Settings.Location, filePath),
                 param);
 
             return Run(fileName, arguments);

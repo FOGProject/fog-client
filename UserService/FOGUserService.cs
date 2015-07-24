@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using FOG.Handlers;
 using FOG.Handlers.Data;
 using FOG.Handlers.Power;
@@ -27,7 +26,7 @@ namespace FOG
 
             if (!data.action.ToString().Equals("start")) return;
             Log.Entry("User Service", "Spawning waiter");
-            Power.SpawnUpdateWaiter(Assembly.GetExecutingAssembly().Location);
+            Power.SpawnUpdateWaiter(Settings.Location);
             Power.Updating = true;
             Environment.Exit(0);
         }

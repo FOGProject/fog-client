@@ -37,12 +37,15 @@ namespace FOG.Handlers
 
         private const string LogName = "Settings";
 
-        private static string _file = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "settings.json");
+        private static string _file;
         private static JObject _data = new JObject();
         public static OSType OS { get; private set; }
+        public static string Location { get; private set; }
 
         static Settings()
         {
+            Location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            _file = Path.Combine(Location, "settings.json");
             try
             {
                 _data = JObject.Parse(File.ReadAllText(_file));

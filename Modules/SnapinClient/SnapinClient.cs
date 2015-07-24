@@ -58,7 +58,7 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
 
 
-                var snapinFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "tmp", taskResponse.GetField("SNAPINFILENAME")).ToString();
+                var snapinFilePath = Path.Combine(Settings.Location, "tmp", taskResponse.GetField("SNAPINFILENAME"));
 
                 var downloaded = Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
                     Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);

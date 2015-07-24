@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Net;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 
@@ -42,7 +41,7 @@ namespace FOG.Handlers.Middleware
         {
             try
             {
-                var keyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "public.cer");
+                var keyPath = Path.Combine(Settings.Location, "tmp", "public.cer");
                 Communication.DownloadFile("/management/other/ssl/srvpublic.crt", keyPath);
                 
                 Log.Debug(LogName, "KeyPath = " + keyPath);
