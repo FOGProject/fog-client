@@ -35,7 +35,7 @@ namespace FOG
         {
         }
 
-        public static bool PinCert()
+        public static bool PinCert(string location)
         {
             try
             {
@@ -43,7 +43,8 @@ namespace FOG
                 if (cert != null) return false;
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
-
+                Settings.SetPath(Path.Combine(location + "settings.json"));
+                Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
                 if (!downloaded)

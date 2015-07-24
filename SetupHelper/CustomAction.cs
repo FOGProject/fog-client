@@ -39,7 +39,7 @@ namespace SetupHelper
         {
             try
             {
-                return MonoHelper.PinCert() ? ActionResult.Success : ActionResult.Failure;
+                return MonoHelper.PinCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
             }
             catch (Exception ex)
             {
