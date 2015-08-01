@@ -27,3 +27,5 @@ D:\fog\client\Service\bin\x86\Debug\Modules.pdb
 D:\fog\client\Service\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\Service\bin\x86\Debug\FOGUpdateHelper.pdb
 D:\fog\client\Service\bin\x86\Debug\FOGUpdateWaiter.pdb
+D:\fog\client\bin\FOGService.exe.config
+E:\fog-client\bin\FOGService.exe.config

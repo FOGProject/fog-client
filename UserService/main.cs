@@ -62,7 +62,7 @@ namespace FOG
 
         private static void StartTray()
         {
-            ProcessHandler.DisposeOnExit(ProcessHandler.RunClientEXE("FOGTray.exe", ""));
+            ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
         }
     }
 }

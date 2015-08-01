@@ -19,11 +19,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using FOG.Commands;
 using FOG.Commands.Core.CBus;
 using FOG.Commands.Core.Middleware;
+using FOG.Commands.Core.Process;
 using FOG.Commands.Core.Settings;
 using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
@@ -40,6 +40,7 @@ namespace FOG
             {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
             {"middleware", new MiddlewareCommand()},
+            {"process", new ProcessCommand() },
             {"settings", new SettingsCommand()},
             {"user", new UserCommand()}
         };
@@ -74,7 +75,7 @@ namespace FOG
                 var input = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(input)) continue;
-                if (ProcessCommand(input.ToLower().Split(' '))) break;
+                if (ProcessCommand(input.Split(' '))) break;
                 Log.Divider();
             }
             Bus.Dispose();

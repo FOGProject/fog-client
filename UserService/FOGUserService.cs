@@ -78,8 +78,7 @@ namespace FOG
             Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
 
-            ProcessHandler.DisposeOnExit(
-                ProcessHandler.RunClientEXE("FOGNotificationGUI.exe",Transform.EncodeBase64(jsonData.ToString())));
+            ProcessHandler.RunClientEXE("FOGNotificationGUI.exe",Transform.EncodeBase64(jsonData.ToString()), false);
         }
     }
 }

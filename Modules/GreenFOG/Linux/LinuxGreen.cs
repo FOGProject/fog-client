@@ -57,18 +57,15 @@ namespace FOG.Modules.GreenFOG
             var filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Power.exe");
             var command = "";
 
-            command = string.Format("{0} {1} * * * root mono {2} {3}", min, hour, filepath,
-                restart
-                ? "reboot \"This computer is going to reboot.\""
-                : "shutdown \"This computer is going to shutdown to save power.\"");
+            command =
+                $"{min} {hour} * * * root mono {filepath} {(restart ? "reboot \"This computer is going to reboot.\"" : "shutdown \"This computer is going to shutdown to save power.\"")}";
 
             return command;
         }
 
         public void Reload()
         {
-            ProcessHandler.WaitDispose(
-                ProcessHandler.Run("/etc/init.d/cron", "reload"));
+            ProcessHandler.Run("/etc/init.d/cron", "reload");
         }
 
         public void ClearAll()

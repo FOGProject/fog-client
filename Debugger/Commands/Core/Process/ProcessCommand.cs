@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Linq;
 using FOG.Handlers;
 
 namespace FOG.Commands.Core.Process
@@ -34,6 +35,84 @@ namespace FOG.Commands.Core.Process
                 return true;
             }
 
+            if (args[0].Equals("run") && args.Length > 1)
+            {
+                var app = args[1];
+
+                var param = "";
+
+                if(args.Length > 2)
+                    param = string.Join(" ", args.Skip(2));
+
+                var code = ProcessHandler.Run(app, param);
+                Log.Entry(LogName, "--> Return code = " + code);
+
+                return true;
+            }
+
+            if (args[0].Equals("runexe") && args.Length > 1)
+            {
+                var app = args[1];
+
+                var param = "";
+
+                if (args.Length > 2)
+                    param = string.Join(" ", args.Skip(2));
+
+                ProcessHandler.RunEXE(app, param);
+                return true;
+            }
+
+            if (args[0].Equals("runexe") && args.Length > 1)
+            {
+                var app = args[1];
+
+                var param = "";
+
+                if (args.Length > 2)
+                    param = string.Join(" ", args.Skip(2));
+
+                ProcessHandler.RunEXE(app, param);
+                return true;
+            }
+
+            if (args[0].Equals("runclient") && args.Length > 1)
+            {
+                var app = args[1];
+
+                var param = "";
+
+                if (args.Length > 2)
+                    param = string.Join(" ", args.Skip(2));
+
+                ProcessHandler.RunClientEXE(app, param);
+                return true;
+            }
+
+            if (args[0].Equals("kill") && args.Length > 1)
+            {
+                ProcessHandler.Kill(args[1]);
+                return true;
+            }
+
+            if (args[0].Equals("killexe") && args.Length > 1)
+            {
+                ProcessHandler.KillEXE(args[1]);
+                return true;
+            }
+
+            if (args[0].Equals("killall") && args.Length > 1)
+            {
+                ProcessHandler.KillAll(args[1]);
+                return true;
+            }
+
+            if (args[0].Equals("killallexe") && args.Length > 1)
+            {
+                ProcessHandler.KillAllEXE(args[1]);
+                return true;
+            }
+
             return false;
         }
 
@@ -45,6 +124,9 @@ namespace FOG.Commands.Core.Process
             Log.WriteLine("--> runclient [NAME] [Param ...]");
             Log.WriteLine("--> kill [NAME]");
             Log.WriteLine("--> killexe [NAME]");
+            Log.WriteLine("--> killall [NAME]");
+            Log.WriteLine("--> killallexe [NAME]");
+
         }
     }
 }

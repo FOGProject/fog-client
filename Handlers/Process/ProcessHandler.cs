@@ -8,39 +8,20 @@ namespace FOG.Handlers
     {
         private const string LogName = "Process";
 
-        public static int WaitDispose(Process process)
+        public static int RunClientEXE(string filePath, string param, bool wait = true)
         {
-            process.WaitForExit();
-            var code = process.ExitCode;
-            process.Dispose();
-            return code;
+            return RunEXE(Path.Combine(Settings.Location, filePath), param, wait);    
         }
 
-        public static void DisposeOnExit(Process process)
-        {
-            process.Exited += OnExit;
-        }
-
-        private static void OnExit(object sender, EventArgs e)
-        {
-            var proc = sender as Process;
-            if (proc != null) proc.Dispose();
-        }
-
-        public static Process RunClientEXE(string filePath, string param)
-        {
-            return RunEXE(Path.Combine(Settings.Location, filePath), param);    
-        }
-
-        public static Process RunEXE(string filePath, string param)
+        public static int RunEXE(string filePath, string param, bool wait = true)
         {
             if (Settings.OS != Settings.OSType.Windows)
                 filePath = "mono " + filePath;
 
-            return Run(filePath, param);
+            return Run(filePath, param, wait);
         }
 
-        public static Process Run(string filePath, string param)
+        public static int Run(string filePath, string param,  bool wait = true)
         {
             Log.Debug(LogName, "Running process...");
             Log.Debug(LogName, "--> Filepath:   " + filePath);
@@ -60,7 +41,11 @@ namespace FOG.Handlers
                 })
                 {
                     process.Start();
-                    return process;
+                    if (wait)
+                        process.WaitForExit();
+                    
+                    Log.Debug(LogName, $"--> Exit Code = {process.ExitCode}");
+                    return process.ExitCode;
                 }
             }
             catch (Exception ex)
@@ -69,19 +54,15 @@ namespace FOG.Handlers
                 Log.Error(LogName, ex);
             }
 
-            return null;
+            return -1;
         }
 
-        public static Process ImpersonateClientEXEHandle(string filePath, string param, string user)
+        public static int ImpersonateClientEXEHandle(string filePath, string param, string user, bool wait = true)
         {
-
             var fileName = "su";
-            var arguments = string.Format(" - {0} -c {1} {2}", 
-                user,
-                "mono " + Path.Combine(Settings.Location, filePath),
-                param);
+            var arguments = $" - {user} -c {"mono " + Path.Combine(Settings.Location, filePath)} {param}";
 
-            return Run(fileName, arguments);
+            return Run(fileName, arguments, wait);
         }
 
         public static void KillAll(string name)
@@ -106,7 +87,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            WaitDispose(Run("pkill", "-f " + name));
+            Run("pkill", "-f " + name);
         }
 
         public static void Kill(string name)
@@ -134,7 +115,7 @@ namespace FOG.Handlers
                 return;
             }
 
-            WaitDispose(Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", ""));
+            Run("pgrep " + name + " | while read -r line; do kill $line; exit; done", "");
         }
     }
 }

@@ -28,6 +28,7 @@ namespace FOG
     {
         static void Main(string[] args)
         {
+            if (args.Length == 0) Environment.Exit(1);
             Log.Output = Log.Mode.Console;
 
             if (args.Length < 2) return;
