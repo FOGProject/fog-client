@@ -51,8 +51,9 @@ namespace FOG
                 {
                     if (Processes.ContainsKey(user)) continue;
 
-                    var proc = ProcessHandler.ImpersonateClientEXEHandle("FOGUserService.exe", "", user, false);
-                    //Processes.Add(user, proc);
+                    var proc = ProcessHandler.CreateImpersonatedClientEXE("FOGUserService.exe", "", user);
+                    proc.Start();
+                    Processes.Add(user, proc);
                 }
 
                 var loggedOff = users.Except(Processes.Keys);

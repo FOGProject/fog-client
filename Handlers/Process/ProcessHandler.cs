@@ -63,12 +63,25 @@ namespace FOG.Handlers
             return -1;
         }
 
-        public static int ImpersonateClientEXEHandle(string filePath, string param, string user, bool wait = true)
+        public static Process CreateImpersonatedClientEXE(string filePath, string param, string user)
         {
             var fileName = "su";
             var arguments = $" - {user} -c {"mono " + Path.Combine(Settings.Location, filePath)} {param}";
 
-            return Run(fileName, arguments, wait);
+            Log.Debug(LogName, "Creating impersonated process...");
+            Log.Debug(LogName, "--> Filepath:   " + fileName);
+            Log.Debug(LogName, "--> Parameters: " + arguments);
+
+            var proc = new Process
+            {
+                StartInfo =
+                {
+                    FileName = fileName,
+                    Arguments = arguments
+                }
+            };
+
+            return proc;
         }
 
         public static void KillAll(string name)
