@@ -17,7 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
+using System.IO;
+using FOG.Handlers;
+using FOG.Handlers.Middleware;
 
 namespace FOG
 {
@@ -27,17 +29,17 @@ namespace FOG
 
         public void ApplyUpdate()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/bin/bash", string.Format("-c {0} {1}", Path.Combine(Settings.Location, "core.sh"), Configuration.ServerAddress));
         }
 
         public void StartService()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service start");
         }
 
         public void StopService()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service stop");
         }
     }
 }

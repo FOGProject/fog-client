@@ -19,6 +19,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.ServiceProcess;
 using FOG.Handlers;
 
@@ -41,7 +42,7 @@ namespace FOG
                 StartInfo =
                 {
                     Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"", 
-                        (AppDomain.CurrentDomain.BaseDirectory + "FOGService.msi"), 
+                        Path.Combine(Settings.Location, "FOGService.msi"), 
                         useTray, https, server, webRoot, logRoot)
                 }
             };

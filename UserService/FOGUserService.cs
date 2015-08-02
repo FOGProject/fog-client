@@ -25,8 +25,13 @@ namespace FOG
             Log.Entry("User Service", data.ToString());
 
             if (!data.action.ToString().Equals("start")) return;
-            Log.Entry("User Service", "Spawning waiter");
-            Power.SpawnUpdateWaiter(Settings.Location);
+
+            if (Settings.OS != Settings.OSType.Linux)
+            {
+                Log.Entry("User Service", "Spawning waiter");
+                Power.SpawnUpdateWaiter(Settings.Location);
+            }
+
             Power.Updating = true;
             Environment.Exit(0);
         }

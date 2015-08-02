@@ -57,15 +57,7 @@ namespace FOG
 
         private static void SpawnParentProgram(string fileName)
         {
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    UseShellExecute = false,
-                    FileName = fileName
-                }
-            };
-            process.Start();
+            ProcessHandler.RunEXE(fileName, "", false);
         }
     }
 }

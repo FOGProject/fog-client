@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
@@ -48,11 +49,16 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi")))
-                    File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi"));
+                var updater = "FOGService.msi";
 
-                Communication.DownloadFile("/client/FOGService.msi",
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi"));
+                if (Settings.OS != Settings.OSType.Windows)
+                    updater = "core.sh";
+
+                if (File.Exists(Path.Combine(Settings.Location, "tmp", updater)))
+                    File.Delete(Path.Combine(Settings.Location, "tmp", updater));
+
+                Communication.DownloadFile("/client/" + updater,
+                    Path.Combine(Settings.Location, "tmp", updater));
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;
@@ -67,32 +73,20 @@ namespace FOG.Modules.ClientUpdater
         //Prepare the downloaded update
         private void PrepareUpdateHelpers()
         {
-            if (!File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateHelper.exe")) &&
-                !File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateWaiter.exe")))
-            {
-                Log.Error(Name, "Unable to locate helper files");
-                return;
-            }
-            
-            try
-            {
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateHelper.exe"),
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGUpdateHelper.exe"), true);
+            var files = new List<string> { "FOGUpdateHelper.exe", "FOGUpdateWaiter.exe", "Handlers.dll", "Newtonsoft.Json.dll", "settings.json", "token.dat" };
 
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "FOGUpdateWaiter.exe"),
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGUpdateWaiter.exe"), true);
-
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Handlers.dll"),
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "Handlers.dll"), true);
-
-                File.Copy(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Newtonsoft.Json.dll"),
-                    Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "Newtonsoft.Json.dll"), true);
-                
-            }
-            catch (Exception ex)
+            foreach (var file in files)
             {
-                Log.Error(Name, "Unable to prepare update helpers");
-                Log.Error(Name, ex);
+                try
+                {
+                    File.Copy(Path.Combine(Settings.Location, file),
+                        Path.Combine(Settings.Location, "tmp", file), true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Name, "Unable to prepare file:" + file);
+                    Log.Error(Name, ex);
+                }
             }
         }
     }
