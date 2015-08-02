@@ -7,6 +7,7 @@ depends="unzip curl pkill pgrep wall";
 mono="mono-complete"
 systemctl="no"
 fogServer="$1"
+fogPath="/";
 useHTTPS="$2"
 fogTray="$3"
 
@@ -16,11 +17,11 @@ installFOGService()
 {
     echo "Installing the FOG Service...."
     echo -n "Downloading FOGService Installation Script from $fogServer...."
-	curl -o /tmp/core.sh $fogServer/client/core.sh >/dev/null 2>&1;
+	curl -o /tmp/core.sh http://$fogServer$fogPath/client/core.sh >/dev/null 2>&1;
 	chmod +x /tmp/core.sh 
     echo "OK"
     echo -n "Executing FOGService Script...."
-	/tmp/./core.sh $fogServer $fogTray $useHTTPS >/dev/null 2>&1;
+	/tmp/./core.sh $fogServer$fogPath $fogTray $useHTTPS;
 	rm /tmp/core.sh
     echo "OK"
     echo -n "Installing the FOGService Daemon...."
@@ -160,13 +161,7 @@ getUserInput()
 {
 	echo -n Enter in your FOG Server address:
 	read fogServer
-	test=`echo "$fogServer" | grep "^[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}$"`;
-	if [ "$test" != "$fogServer" ]
-	then
-		ipaddress="";
-		echo "  Invalid IP address!";
-		exit 1;
-	fi
+	
 	echo -n Do you want to use HTTPS for communication?[y/n]:
 	read useHTTPSTemp
     if [ "${useHTTPSTemp,,}" == "y" ]; then
@@ -181,7 +176,10 @@ getUserInput()
     else
         fogTray="0"  
     fi
-	echo -n Are you sure you want to install the FOGService?[y/n]:
+	echo -n Enter in the FOG directory used [example: /fog]:
+	read fogPath
+    
+    echo -n Are you sure you want to install the FOGService?[y/n]:
 	read doInstall
 	
 	if [ "${doInstall,,}" == "y" ]; then

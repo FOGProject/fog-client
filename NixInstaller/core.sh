@@ -3,7 +3,7 @@
 ########################
 # Variables
 ########################
-# $1 fogURL $2 useTray $3 https(not required)
+# $1 fogURL/with folder $2 useTray $3 https(not required)
 $version="0.9.9"
 ########################
 # Perform Installation
@@ -17,15 +17,17 @@ if [ -f /opt/fog-service/FOGService.exe ]; then
     
 else
 	if [ -d /opt/fog-service ]; then
-		echo "Creating Required Directories...."
+		echo "Directories already present...."
+    else
+        echo "Creating Required Directories...."
 		mkdir -p /opt/fog-service
 		echo "Done!"
 	fi
 fi
 echo "Downloading files..."
-curl -o /opt/FOGService.zip $1client/FOGService.zip
+curl -o /opt/FOGService.zip http://$1/client/FOGService.zip
 echo "Extracting files..."
-unzip -o /opt/FOGService.zip /opt/fog-service
+unzip -o /opt/FOGService.zip -d /opt/fog-service
 echo "Adjusting permissions..."
 touch /opt/fog-service/fog.log
 chmod 775 /opt/fog-service/fog.log
