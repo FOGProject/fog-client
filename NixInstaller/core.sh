@@ -23,7 +23,7 @@ else
 	fi
 fi
 echo "Downloading files..."
-curl -o /opt/FOGService.zip $1client/download.php?newclientzip
+curl -o /opt/FOGService.zip $1client/FOGService.zip
 echo "Extracting files..."
 unzip -o /opt/FOGService.zip /opt/fog-service
 echo "Adjusting permissions..."
