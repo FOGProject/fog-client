@@ -44,7 +44,8 @@ namespace FOG.Handlers
 
         static Settings()
         {
-            Location = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            Location = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            Log.Debug(LogName, "Location --> " + Location);
             _file = Path.Combine(Location, "settings.json");
             try
             {

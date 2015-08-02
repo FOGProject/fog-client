@@ -43,7 +43,7 @@ namespace FOG
 
         private static void UserChecker()
         {
-            while (_running)
+            while (true)
             {
                 var users = UserHandler.GetUsersLoggedIn();
 
@@ -63,6 +63,8 @@ namespace FOG
                     Processes[user].Dispose();
                     Processes.Remove(user);
                 }
+
+                Thread.Sleep(5*1000);
 
             }
         }

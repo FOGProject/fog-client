@@ -17,10 +17,32 @@ namespace FOG.Handlers
         {
             if (Settings.OS != Settings.OSType.Windows)
             {
-                param = filePath + " " + param;
+                param = "mono " + filePath + " " + param;
                 param = param.Trim();
 
-                filePath = "mono";
+                var proc = new Process();
+                var info = new ProcessStartInfo
+                {
+                    FileName = "/bin/bash",
+                    RedirectStandardInput = true,
+                    UseShellExecute = false
+                };
+
+                proc.StartInfo = info;
+                proc.Start();
+
+                using (var sw = proc.StandardInput)
+                {
+                    if (sw.BaseStream.CanWrite)
+                    {
+                        sw.WriteLine("export DISPLAY=:0;"+ param);
+                    }
+                }
+
+
+                if (!proc.HasExited) return -1;
+                return proc.ExitCode;
+
             }
 
 
@@ -49,7 +71,9 @@ namespace FOG.Handlers
                     process.Start();
                     if (wait)
                         process.WaitForExit();
-                    
+
+                    if (!process.HasExited) return -1;
+
                     Log.Debug(LogName, $"--> Exit Code = {process.ExitCode}");
                     return process.ExitCode;
                 }
@@ -66,7 +90,10 @@ namespace FOG.Handlers
         public static Process CreateImpersonatedClientEXE(string filePath, string param, string user)
         {
             var fileName = "su";
-            var arguments = $" - {user} -c {"mono " + Path.Combine(Settings.Location, filePath)} {param}";
+            var arguments = "- " + user + " -c \"mono " + Path.Combine(Settings.Location, filePath) + " " + param;
+            arguments = arguments.Trim();
+            arguments = arguments + "\"";
+
 
             Log.Debug(LogName, "Creating impersonated process...");
             Log.Debug(LogName, "--> Filepath:   " + fileName);

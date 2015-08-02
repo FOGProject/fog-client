@@ -51,10 +51,10 @@ namespace FOG.Handlers
 
         static Log()
         {
+            Output = Mode.Quiet;
 
             FilePath = Path.Combine(Settings.Location, "fog.log");
             MaxSize = DefaultMaxLogSize;
-            Output = Mode.Quiet;
             
             var rootPath = Settings.Get("RootLog");
             if (!string.IsNullOrEmpty(rootPath) && rootPath.Trim().Equals("1"))
