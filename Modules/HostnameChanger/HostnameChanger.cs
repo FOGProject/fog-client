@@ -117,8 +117,9 @@ namespace FOG.Modules.HostnameChanger
             Log.Entry(Name, "Unregistering computer");
             //First unjoin it from active directory
             UnRegisterComputer(response);
+            if (Power.ShuttingDown || Power.Requested) return;
 
-            Log.Entry(Name, "Updating registry");
+           Log.Entry(Name, "Updating registry");
 
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
                 response.GetField("#hostname"));
