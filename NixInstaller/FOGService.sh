@@ -7,9 +7,9 @@ depends="unzip curl pkill pgrep wall";
 mono="mono-complete"
 systemctl="no"
 fogServer="$1"
-fogPath="/";
-useHTTPS="$2"
-fogTray="$3"
+fogPath="$2";
+useHTTPS="$3"
+fogTray="$4"
 
 
 
@@ -66,7 +66,7 @@ case \"\$1\" in
         ;; 
         stop) 
                 if [ -n \"\${PID}\" ]; then 
-                        \${DAEMON} kill \${PID} 
+                        \${DAEMON} kill -15 \${PID}
                         echo \"\${NAME} stopped\" 
                 else 
                         echo \"\${NAME} is not running\" 
@@ -286,7 +286,7 @@ displayBanner() {
 #####################################
 displayBanner
 warnRoot
-if [ "$fpgServer" == "" ] || [ "$useHTTPS" == "" ] || [ "$fogTray" == "" ]; then
+if [ "$fpgServer" == "" ] || [ "$useHTTPS" == "" ] || [ "$fogTray" == "" ] | [ "$fogPath" == "" ]; then
 	getUserInput
 fi
 getOSVersion >/dev/null 2>&1

@@ -4,7 +4,7 @@
 # Variables
 ########################
 # $1 fogURL/with folder $2 useTray $3 https(not required)
-$version="0.9.9"
+version="0.9.9"
 ########################
 # Perform Installation
 ########################
