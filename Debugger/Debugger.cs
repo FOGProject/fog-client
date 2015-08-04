@@ -35,7 +35,7 @@ namespace FOG
     {
         private const string Name = "Console";
 
-        private static readonly Dictionary<string, ICommand> _commands = new Dictionary<string, ICommand>
+        private static readonly Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>
         {
             {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
@@ -92,8 +92,8 @@ namespace FOG
                 return false;            
             }
 
-            if (command.Length > 1 && _commands.ContainsKey(command[0]))
-                if (_commands[command[0]].Process(command.Skip(1).ToArray()))
+            if (command.Length > 1 && Commands.ContainsKey(command[0]))
+                if (Commands[command[0]].Process(command.Skip(1).ToArray()))
                     return false;
 
             Log.Error(Name, "Unknown command");
@@ -104,7 +104,7 @@ namespace FOG
         private static void Help()
         {
             Log.WriteLine("Avaible commands (append ? to any command for more information)");
-            foreach(var keyword in _commands.Keys)
+            foreach(var keyword in Commands.Keys)
             {
                 Log.WriteLine("--> " + keyword);
             }

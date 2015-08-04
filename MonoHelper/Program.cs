@@ -30,9 +30,24 @@ namespace FOG
     public static class MonoHelper
     {
         private const string LogName = "Installer";
+        private const string Location = "/opt/fog-service";
 
         static void Main(string[] args)
         {
+            if (args.Length != 6) return;
+
+            var url = args[0];
+            var tray = args[1];
+            var version = args[2];
+            var company = args[3];
+            var rootLog = args[4];
+            var https = args[5];
+
+            var baseURL = url.Substring(0, url.IndexOf("/"));
+            var webRoot = url.Substring(url.IndexOf("/"));
+
+            SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
+            PinCert(Location);
         }
 
         public static bool PinCert(string location)
@@ -66,7 +81,7 @@ namespace FOG
             }
         }
 
-        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot, string version, string company, string location, string rootlog)
+        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot, string version, string company, string rootLog, string location)
         {
             try
             {
@@ -78,7 +93,7 @@ namespace FOG
                     {"WebRoot", webroot},
                     {"Version", version},
                     {"Company", company},
-                    {"RootLog", rootlog}
+                    {"RootLog", rootLog}
                 };
 
                 File.WriteAllText(Path.Combine(location, "settings.json"), settings.ToString());
