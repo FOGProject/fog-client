@@ -76,7 +76,7 @@ esac
 
 exit 0"
 echo "$initScript" > $initdpath/FOGService
-chmod 755 $initdPath/FOGService
+chmod 755 $initdpath/FOGService
 if [ "$systemctl" == "yes" ]; then
 	systemctl enable FOGService >/dev/null 2>&1;
 else

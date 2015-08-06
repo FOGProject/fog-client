@@ -34,7 +34,7 @@ chmod 775 /opt/fog-service/fog.log
 
 #sent variables fogURL useTray version company rootlog https
 
-mono /opt/fog-service/SetupHelper.exe $1 $2 $version "FOG" "0" $3
+mono /opt/fog-service/MonoHelper.exe $1 $2 $version "FOG" "0" $3
 
 ########################
 # Clean Up
