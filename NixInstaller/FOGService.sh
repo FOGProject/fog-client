@@ -24,7 +24,7 @@ installFOGService()
 	/tmp/./core.sh $fogServer$fogPath $fogTray $useHTTPS;
 	rm /tmp/core.sh
     echo "OK"
-    echo -n "Installing the FOGService Daemon...."
+    echo -n "Installing the FOGService Daemon to $initdpath...."
 	installInitScript
     echo "OK"
     echo  "The installtion has finished!!!"
@@ -66,7 +66,7 @@ case \"\$1\" in
         ;; 
         stop) 
                 if [ -n \"\${PID}\" ]; then 
-                        \${DAEMON} kill -15 \${PID}
+                        kill -15 \${PID}
                         echo \"\${NAME} stopped\" 
                 else 
                         echo \"\${NAME} is not running\" 
@@ -75,8 +75,8 @@ case \"\$1\" in
 esac 
 
 exit 0"
-echo "$initScript" > $initdPath/FOGService
-chmod 755 $initdPath/FOGService
+echo "$initScript" > $initdpath/FOGService
+chmod 755 $initdpath/FOGService
 if [ "$systemctl" == "yes" ]; then
 	systemctl enable FOGService >/dev/null 2>&1;
 else
