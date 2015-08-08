@@ -55,7 +55,7 @@ namespace FOG
             _fogService = new FOGUserService();
             _fogService.Start();
 
-            if (Settings.Get("Tray").Equals("1"))
+            if (Settings.Get("Tray").Equals("1") && Settings.OS == Settings.OSType.Windows)
                 StartTray();
         }
 

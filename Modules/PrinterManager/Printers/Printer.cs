@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Management;
 using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
@@ -27,45 +24,32 @@ namespace FOG.Modules.PrinterManager
         public PrinterType Type { get; protected set; }
         public static string LogName { get; protected set; }
 
-        public abstract void Add();
+        public abstract void Add(PrintManagerBridge instance);
 
-        public static void Remove(string name)
+        public void Remove(PrintManagerBridge instance)
         {
             try
             {
-                Log.Entry("Printer", "Removing printer: " + name);
-                var proc = name.StartsWith("\\\\")
-                    ? Process.Start("rundll32.exe", string.Format(" printui.dll,PrintUIEntry /gd /q /n \"{0}\"", name))
-                    : Process.Start("rundll32.exe", string.Format(" printui.dll,PrintUIEntry /dl /q /n \"{0}\"", name));
-
-                if (proc == null) return;
-                proc.Start();
-                proc.WaitForExit(120000);
+                instance.Remove(Name);
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, "Could not remove");
                 Log.Error(LogName, ex);
             }
-
         }
 
-        public void Remove()
-        {
-            Remove(Name);
-        }
-
-        public void SetDefault()
+        public void SetDefault(PrintManagerBridge instance)
         {
             Log.Entry("Printer", "Setting default: " + Name);
-
-            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer");
-
-            var collection = searcher.Get();
-
-
-            foreach (var currentObject in collection.Cast<ManagementObject>().Where(currentObject => currentObject["name"].ToString().Equals(Name)))
-                currentObject.InvokeMethod("SetDefaultPrinter", new object[] {Name});
+            try
+            {
+                instance.Default(Name);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Printer", ex);
+            }
         }
     }
 }

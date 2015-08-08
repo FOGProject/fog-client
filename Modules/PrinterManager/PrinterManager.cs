@@ -33,24 +33,20 @@ namespace FOG.Modules.PrinterManager
     public class PrinterManager : AbstractModule
     {
         private static string LogName;
-        private IPrinterManager _instance;
+        private PrintManagerBridge _instance;
 
         public PrinterManager()
         {
             Name = "PrinterManager";
             LogName = Name;
-            Compatiblity = Settings.OSType.Windows;
 
             switch (Settings.OS)
             {
-                case Settings.OSType.Mac:
-                    _instance = new MacPrinterManager();
-                    break;
-                case Settings.OSType.Linux:
-                    _instance = new LinuxPrinterManager();
+                case Settings.OSType.Windows:
+                    _instance = new WindowsPrinterManager();
                     break;
                 default:
-                    _instance = new WindowsPrinterManager();
+                    _instance = new UnixPrinterManager();
                     break;
             }
         }
@@ -80,7 +76,7 @@ namespace FOG.Modules.PrinterManager
             foreach (var printer in printers)
             {
                 if(!PrinterExists(printer.Name))
-                    printer.Add();
+                    printer.Add(_instance);
                 else
                     Log.Entry(Name, printer.Name + " already exists");
             }
@@ -108,13 +104,13 @@ namespace FOG.Modules.PrinterManager
                 if (allPrinters.Error) return;
                 var printerNames = allPrinters.GetList("#printer", false);
                 foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
-                    Printer.Remove(name);
+                    _instance.Remove(name);
             }
             else
             {
                 var printerNames = _instance.GetPrinters();
                 foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name)))
-                    Printer.Remove(name);
+                    _instance.Remove(name);
             }
         }
 

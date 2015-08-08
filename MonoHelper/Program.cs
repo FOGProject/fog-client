@@ -43,8 +43,21 @@ namespace FOG
             var rootLog = args[4];
             var https = args[5];
 
-            var baseURL = url.Substring(0, url.IndexOf("/"));
-            var webRoot = url.Substring(url.IndexOf("/"));
+            var baseURL = url;
+            var webRoot = "";
+
+            try
+            {
+                if (url.Contains("/"))
+                {
+                    baseURL = url.Substring(0, url.IndexOf("/"));
+                    webRoot = url.Substring(url.IndexOf("/"));
+                }
+            }
+            catch (Exception)
+            {
+            }
+
 
             SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
             PinCert(Location);

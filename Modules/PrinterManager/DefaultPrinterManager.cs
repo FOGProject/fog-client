@@ -31,10 +31,21 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class DefaultPrinterManager : AbstractModule
     {
+        private PrintManagerBridge _instance;
+
         public DefaultPrinterManager()
         {
             Name = "PrinterManager";
-            Compatiblity = Settings.OSType.Windows;
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Windows:
+                    _instance = new WindowsPrinterManager();
+                    break;
+                default:
+                    _instance = new UnixPrinterManager();
+                    break;
+            }
         }
 
         protected override void DoWork()
@@ -50,9 +61,7 @@ namespace FOG.Modules.PrinterManager
 
             Log.Entry(Name, "Checking defaults");
             foreach (var printer in printers.Where(printer => printer.Default))
-            {
-                printer.SetDefault();
-            }
+                printer.SetDefault(_instance);
         }
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-using System.Management;
-using FOG.Handlers;
+﻿using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {
-    class NetworkPrinter : Printer
+    public class NetworkPrinter : Printer
     {
         public NetworkPrinter(string name, string ip, string port, bool defaulted)
         {
@@ -15,7 +13,7 @@ namespace FOG.Modules.PrinterManager
             LogName = "NetworkPrinter";
         }
 
-        public override void Add()
+        public override void Add(PrintManagerBridge instance)
         {
             Log.Entry(LogName, "Attempting to add printer:");
             Log.Entry(LogName, string.Format("--> Name = {0}", Name));
@@ -24,62 +22,7 @@ namespace FOG.Modules.PrinterManager
 
             if (string.IsNullOrEmpty(IP) || !Name.StartsWith("\\\\")) return;
 
-            if (IP.Contains(":"))
-            {
-                var arIP = IP.Split(':');
-                if (arIP.Length == 2)
-                {
-                    IP = arIP[0];
-                    Port = arIP[1];
-                }
-            }
-
-            var conn = new ConnectionOptions
-            {
-                EnablePrivileges = true,
-                Impersonation = ImpersonationLevel.Impersonate
-            };
-
-            var mPath = new ManagementPath("Win32_TCPIPPrinterPort");
-
-            var mScope = new ManagementScope(@"\\.\root\cimv2", conn)
-            {
-                Options =
-                {
-                    EnablePrivileges = true,
-                    Impersonation = ImpersonationLevel.Impersonate
-                }
-            };
-
-            var mPort = new ManagementClass(mScope, mPath, null).CreateInstance();
-
-            if (mPort != null)
-            {
-                mPort.SetPropertyValue("Name", "IP_" + IP);
-                mPort.SetPropertyValue("Protocol", 1);
-                mPort.SetPropertyValue("HostAddress", IP);
-                mPort.SetPropertyValue("PortNumber", Port);
-                mPort.SetPropertyValue("SNMPEnabled", false);
-
-                var put = new PutOptions
-                {
-                    UseAmendedQualifiers = true,
-                    Type = PutType.UpdateOrCreate
-                };
-                mPort.Put(put);
-            }
-
-            if (!Name.StartsWith("\\\\")) return;
-
-            // Add per machine printer connection
-            var proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /ga /n " + Name);
-            if (proc != null) proc.WaitForExit(120000);
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
-            // Add printer network connection, download the drivers from the print server
-            proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /in /n " + Name);
-            if (proc != null) proc.WaitForExit(120000);
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
-
+            instance.Add(this);
         }
     }
 }

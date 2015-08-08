@@ -1,10 +1,9 @@
-﻿using System.Diagnostics;
-using FOG.Handlers;
+﻿using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {
     // ReSharper disable once InconsistentNaming
-    class iPrintPrinter : Printer
+    public class iPrintPrinter : Printer
     {
         public iPrintPrinter(string name, string ip, string port, bool defaulted)
         {
@@ -15,25 +14,13 @@ namespace FOG.Modules.PrinterManager
             LogName = "iPrinter";
         }
 
-        public override void Add()
+        public override void Add(PrintManagerBridge instance)
         {
             Log.Entry(LogName, "Attempting to add printer:");
             Log.Entry(LogName, string.Format("--> Name = {0}", Name));
             Log.Entry(LogName, string.Format("--> Port = {0}", Port));
 
-            var proc = new Process
-            {
-                StartInfo =
-                {
-                    FileName = @"c:\windows\system32\iprntcmd.exe",
-                    Arguments = " -a no-gui \"" + Port + "\"",
-                    CreateNoWindow = true,
-                    WindowStyle = ProcessWindowStyle.Hidden
-                }
-            };
-            proc.Start();
-            proc.WaitForExit(120000);
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
+            instance.Add(this);
         }
     }
 }
