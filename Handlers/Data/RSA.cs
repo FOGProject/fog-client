@@ -177,6 +177,10 @@ namespace FOG.Handlers.Data
             return null;
         }
 
+        /// <summary>
+        /// Add a CA certificate to the machine store
+        /// </summary>
+        /// <param name="caCert">The certificate to add</param>
         public static void InsertCACertificate(X509Certificate2 caCert)
         {
             Log.Entry(LogName, "Attempting to insert CA cert...");
