@@ -23,9 +23,6 @@ using FOG.Handlers.User;
 
 namespace FOG.Handlers
 {
-    /// <summary>
-    ///     Detect the current user
-    /// </summary>
     public static class UserHandler
     {
         private const string LogName = "UserHandler";
