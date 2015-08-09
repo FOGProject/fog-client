@@ -31,6 +31,7 @@ namespace FOG.Handlers
 
         public BusServer()
         {
+            // Load the server configuration from app.config
             var bootstrap = BootstrapFactory.CreateBootstrap();
             bootstrap.Initialize();
             bootstrap.Start();
@@ -48,6 +49,10 @@ namespace FOG.Handlers
             Socket.Dispose();
         }
 
+        /// <summary>
+        /// Send a message to all bus clients
+        /// </summary>
+        /// <param name="message">The message to emit</param>
         public void Send(string message)
         {
             foreach (var session in Socket.GetAllSessions())

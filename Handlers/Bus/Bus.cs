@@ -25,8 +25,14 @@ using WebSocket4Net;
 
 namespace FOG.Handlers
 {
+    /// <summary>
+    /// An event driven IPC interface. Can also be used to send event only within the running process.
+    /// </summary>
     public static class Bus
     {
+        /// <summary>
+        /// Channels are used to categorize events. 
+        /// </summary>
         public enum Channel
         {
             Debug,
@@ -36,6 +42,9 @@ namespace FOG.Handlers
             Update
         }
 
+        /// <summary>
+        /// The role of this bus instance. This is only needed for IPC. Note that the Server bus must be initialized before a client bus.
+        /// </summary>
         public enum Mode
         {
             Server,
@@ -54,6 +63,10 @@ namespace FOG.Handlers
 
         private static Mode _mode = Mode.Client;
 
+        /// <summary>
+        /// Set the mode of the bus instance. Upon calling this method, the IPC interface will initialize.
+        /// </summary>
+        /// <param name="mode"></param>
         public static void SetMode(Mode mode)
         {
             _mode = mode;
@@ -86,7 +99,6 @@ namespace FOG.Handlers
                     }
                     break;
                 case Mode.Client:
-                    // If someone else is already a socket server, try and become a socket client
                     try
                     {
                         _client = new BusClient(Port);
@@ -107,7 +119,7 @@ namespace FOG.Handlers
         /// <summary>
         /// Send a message to other bus instances
         /// </summary>
-        /// <param name="msg">The message to send, should follow the define format</param>
+        /// <param name="msg">The message to send, should be in json format</param>
         private static void SendMessage(string msg)
         {
             if (!_initialized) Initializesocket();
@@ -124,7 +136,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
-        /// <param name="global">Should the data be sent to other instances</param>
+        /// <param name="global">Should the data be sent to other processes</param>
         public static void Emit(Channel channel, JObject data, bool global = false)
         {
             Emit(channel, data.ToString(), global);
@@ -135,7 +147,7 @@ namespace FOG.Handlers
         /// </summary>
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
-        /// <param name="global">Should the data be sent to other instances</param>
+        /// <param name="global">Should the data be sent to other processes</param>
         private static void Emit(Channel channel, string data, bool global = false)
         {
             if (global)
@@ -166,7 +178,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Register an action with a channel
+        /// Register an action with a channel. When a message is recieved on this channel, the method will be called.
         /// </summary>
         /// <param name="channel">The channel to register within</param>
         /// <param name="action">The action (method) to register</param>
@@ -182,7 +194,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Unregister an action from a socket
+        /// Unregister an action from a channel
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>

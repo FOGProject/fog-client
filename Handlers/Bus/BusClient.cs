@@ -43,6 +43,10 @@ namespace FOG.Handlers
             Socket.Dispose();
         }
 
+        /// <summary>
+        /// Send a message to the bus server
+        /// </summary>
+        /// <param name="message">The message to emit</param>
         public void Send(string message)
         {
             try
