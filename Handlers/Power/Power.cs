@@ -126,6 +126,10 @@ namespace FOG.Handlers.Power
             ProcessHandler.Run("wall", "-n <<< \"Shutdown has been delayed by " + delayTime + " minutes\"");
         }
 
+        /// <summary>
+        /// Called when a shutdown is requested via the Bus
+        /// </summary>
+        /// <param name="data">The shutdown data to use</param>
         private static void HelpShutdown(dynamic data)
         {
             if (data.type == null) return;
@@ -157,12 +161,14 @@ namespace FOG.Handlers.Power
 
         public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
         {
+            // If no user is logged in, skip trying to notify users
             if (!UserHandler.IsUserLoggedIn())
             {
                 CreateTask(parameters);
                 return;
             }
 
+            // Check if a task is already in progress
             if (_timer != null && _timer.Enabled)
             {
                 Log.Entry(LogName, "Power task already in-progress");
@@ -171,6 +177,7 @@ namespace FOG.Handlers.Power
 
             delayed = false;
 
+            // Load the grace period from Settings or use the default one
             try
             {
                 if (gracePeriod == -1)
@@ -183,6 +190,7 @@ namespace FOG.Handlers.Power
                 gracePeriod = DefaultGracePeriod;
             }
 
+            // Generate the request data
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
             
             requestData = new JObject();
@@ -197,6 +205,7 @@ namespace FOG.Handlers.Power
             _timer.Elapsed += TimerElapsed;
             _timer.Start();
 
+            // Notify all open consoles about the shutdown (for ssh users)
             if (Settings.OS == Settings.OSType.Windows) return;
 
             ProcessHandler.Run("wall", "-n <<< \"FOG: Shutdown will occur in " + gracePeriod + " seconds\"");
@@ -250,25 +259,11 @@ namespace FOG.Handlers.Power
             }
         }
 
-        /// <summary>
-        ///     Shutdown the computer
-        /// </summary>
-        /// <param name="comment">The message to append to the request</param>
-        /// <param name="options">The options the user has on the prompt form</param>
-        /// <param name="message">The message to show in the shutdown gui</param>
-        /// <param name="seconds">How long to wait before processing the request</param>
         public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
         {
             _instance.Shutdown(comment, options, message, seconds);
         }
 
-        /// <summary>
-        ///     Restart the computer
-        /// </summary>
-        /// <param name="comment">The message to append to the request</param>
-        /// <param name="options">The options the user has on the prompt form</param>
-        /// <param name="message">The message to show in the shutdown gui</param>
-        /// <param name="seconds">How long to wait before processing the request</param>
         public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
         {
             _instance.Restart(comment, options, message, seconds);
