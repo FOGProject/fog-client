@@ -53,6 +53,10 @@ namespace FOG.Handlers.Middleware
             {"#!er", "General error"}
         };
 
+        public bool Error { get; set; }
+        public Dictionary<string, string> Data { get; set; }
+        public string ReturnCode { get; set; }
+
         public Response(string rawData)
         {
             var data = rawData.Split('\n'); //Split the response at every new line
@@ -80,6 +84,20 @@ namespace FOG.Handlers.Middleware
             }
         }
 
+        public Response(bool error, Dictionary<string, string> data, string returnCode)
+        {
+            Error = error;
+            Data = data;
+            ReturnCode = returnCode;
+        }
+
+        public Response()
+        {
+            Error = true;
+            Data = new Dictionary<string, string>();
+            ReturnCode = "";
+        }
+
         /// <summary>
         ///     Parse a Response for an array of objects
         ///     <param name="identifier">The string identifier infront of the elements</param>
@@ -104,24 +122,6 @@ namespace FOG.Handlers.Middleware
             return items;
         }
 
-        public Response(bool error, Dictionary<string, string> data, string returnCode)
-        {
-            Error = error;
-            Data = data;
-            ReturnCode = returnCode;
-        }
-
-        public Response()
-        {
-            Error = true;
-            Data = new Dictionary<string, string>();
-            ReturnCode = "";
-        }
-
-        public bool Error { get; set; }
-        public Dictionary<string, string> Data { get; set; }
-        public string ReturnCode { get; set; }
-
         /// <summary>
         ///     Return the value stored at a specified key
         /// </summary>
@@ -132,11 +132,19 @@ namespace FOG.Handlers.Middleware
             return Data.ContainsKey(id) ? Data[id] : "";
         }
 
+        /// <summary>
+        ///     Check if a field is not null or empty
+        /// </summary>
+        /// <param name="id">The field to check</param>
+        /// <returns></returns>
         public bool IsFieldValid(string id)
         {
             return !string.IsNullOrEmpty(GetField(id));
         }
 
+        /// <summary>
+        ///     Print out all ids and values 
+        /// </summary>
         public void PrettyPrint()
         {
             Log.Entry(LogName, "Printing values...");

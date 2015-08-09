@@ -27,6 +27,9 @@ namespace FOG.Handlers
     /// </summary>
     public static class Log
     {
+        /// <summary>
+        /// The level of logging that should be recorded
+        /// </summary>
         public enum Level
         {
             Normal,
@@ -34,6 +37,9 @@ namespace FOG.Handlers
             Error
         }
 
+        /// <summary>
+        /// Where to output the log to
+        /// </summary>
         public enum Mode
         {
             File,

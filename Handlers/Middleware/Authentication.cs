@@ -41,29 +41,34 @@ namespace FOG.Handlers.Middleware
         {
             try
             {
+                // Obtain a public key from the server
                 var keyPath = Path.Combine(Settings.Location, "tmp", "public.cer");
                 Communication.DownloadFile("/management/other/ssl/srvpublic.crt", keyPath);
-                
                 Log.Debug(LogName, "KeyPath = " + keyPath);
+                var certificate = new X509Certificate2(keyPath);
+
+                // Ensure the public key came from the pinned server
+                if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
+                    throw new Exception("Certificate is not from FOG CA");
+                Log.Entry(LogName, "Cert OK");
+
+                // Generate a random AES key
                 var aes = new AesCryptoServiceProvider();
                 aes.GenerateKey();
                 Passkey = aes.Key;
+
+                // Get the security token from the last handshake
                 var token = GetSecurityToken("token.dat");
 
-                var certificate = new X509Certificate2(keyPath);
-
-                if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
-                    throw new Exception("Certificate is not from FOG CA");
-
-                Log.Entry(LogName, "Cert OK");
-
+                // Encrypt the security token and AES key using the public key
                 var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
                 var enToken = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, token));
 
+                // Send the encrypted data to the server and get the response
                 var response = Communication.Post("/management/index.php?sub=authorize", 
                     string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, Configuration.MACAddresses()));
    
-
+                // If the server accepted the token and AES key, save the new token
                 if (!response.Error)
                 {
                     Log.Entry(LogName, "Authenticated");
@@ -71,6 +76,7 @@ namespace FOG.Handlers.Middleware
                     return true;
                 } 
                 
+                // If the server does not recognize the host, register it
                 if (response.ReturnCode.Equals("#!ih"))
                     Communication.Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
 
@@ -84,6 +90,10 @@ namespace FOG.Handlers.Middleware
             return false;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="filePath">The path to the file where the security token is stored</param>
+        /// <returns>The decrypted security token</returns>
         private static byte[] GetSecurityToken(string filePath)
         {
             try
@@ -101,6 +111,11 @@ namespace FOG.Handlers.Middleware
             return new byte[0];
         }
 
+        /// <summary>
+        /// Encrypt and save a security token
+        /// </summary>
+        /// <param name="filePath">The path to the file where the security token should be stored</param>
+        /// <param name="token">The security token to encrypt and save</param>
         private static void SetSecurityToken(string filePath, byte[] token)
         {
             try
@@ -118,7 +133,6 @@ namespace FOG.Handlers.Middleware
         /// <summary>
         ///     Decrypts a response using AES, filtering out encryption flags
         ///     <param name="toDecode">The string to decrypt</param>
-        ///     <param name="passKey">The AES pass key to use</param>
         ///     <returns>True if the server was contacted successfully</returns>
         /// </summary>
         public static string Decrypt(string toDecode)

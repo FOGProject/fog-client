@@ -111,6 +111,12 @@ namespace FOG.Handlers.Middleware
             }
         }
 
+        /// <summary>
+        ///     POST data to a URL
+        /// </summary>
+        /// <param name="postfix">The text to append to the URL</param>
+        /// <param name="param">The params to post</param>
+        /// <returns>The response of the server</returns>
         public static Response Post(string postfix, string param)
         {
             Log.Entry(LogName, "POST URL: " + Configuration.ServerAddress + postfix);
@@ -172,7 +178,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Notify the server of something but don't check for a response
+        ///     GET a URL but don't check for a response
         ///     <param name="postfix">The postfix to attach to the server address</param>
         ///     <returns>True if the server was contacted successfully</returns>
         /// </summary>
@@ -197,6 +203,12 @@ namespace FOG.Handlers.Middleware
             return false;
         }
 
+        /// <summary>
+        ///     GET a URL but don't check for a response
+        /// </summary>
+        /// <param name="postfix">The text to append to the url</param>
+        /// <param name="appendMAC">Should the MAC be appended</param>
+        /// <returns>True if successful</returns>
         public static bool Contact(string postfix, bool appendMAC)
         {
             if (appendMAC)
@@ -216,6 +228,12 @@ namespace FOG.Handlers.Middleware
             return DownloadExternalFile(Configuration.ServerAddress + postfix, filePath);
         }
 
+        /// <summary>
+        ///     Download a file from an external server
+        /// </summary>
+        /// <param name="url">The URL to download from</param>
+        /// <param name="filePath">The path to save the file to</param>
+        /// <returns>True if successful</returns>
         public static bool DownloadExternalFile(string url, string filePath)
         {
             Log.Entry(LogName, string.Format("URL: {0}", url));
