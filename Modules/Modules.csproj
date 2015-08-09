@@ -133,6 +133,7 @@
     <Compile Include="HostnameChanger\Linux\LinuxHostName.cs" />
     <Compile Include="HostnameChanger\Mac\MacHostName.cs" />
     <Compile Include="HostnameChanger\Windows\WindowsHostName.cs" />
+    <Compile Include="PrinterManager\Printers\CUPSPrinter.cs" />
     <Compile Include="PrinterManager\PrintManagerBridge.cs" />
     <Compile Include="PrinterManager\Printers\LocalPrinter.cs" />
     <Compile Include="PrinterManager\Printers\iPrintPrinter.cs" />

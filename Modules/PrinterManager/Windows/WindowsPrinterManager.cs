@@ -60,6 +60,11 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
+        protected override void AddCUPS(CUPSPrinter printer)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Remove(string name)
         {
             Log.Entry("Printer", "Removing printer: " + name);

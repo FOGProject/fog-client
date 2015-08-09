@@ -25,6 +25,11 @@ namespace FOG.Modules.PrinterManager
             throw new NotImplementedException();
         }
 
+        protected override void AddCUPS(CUPSPrinter printer)
+        {
+            throw new NotImplementedException();
+        }
+
         public override void Remove(string name)
         {
             throw new NotImplementedException();

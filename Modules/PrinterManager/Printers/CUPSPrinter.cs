@@ -1,18 +1,15 @@
-﻿using FOG.Handlers;
-
+﻿
 namespace FOG.Modules.PrinterManager
 {
-    public class LocalPrinter : Printer
+    public class CUPSPrinter : Printer
     {
-        public LocalPrinter(string name, string file, string port, string ip, string model, bool defaulted)
+        public CUPSPrinter(string name, string file, string ip, bool defaulted)
         {
             Name = name;
-            Port = port;
             File = file;
-            Model = model;
             Default = defaulted;
             IP = ip;
-            LogName = "LocalPrinter";
+            LogName = "CUPSPrinter";
         }
 
         public override void Add(PrintManagerBridge instance)

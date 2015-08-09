@@ -15,11 +15,6 @@ namespace FOG.Modules.PrinterManager
 
         public override void Add(PrintManagerBridge instance)
         {
-            Log.Entry(LogName, "Attempting to add printer:");
-            Log.Entry(LogName, string.Format("--> Name = {0}", Name));
-            Log.Entry(LogName, string.Format("--> IP = {0}", IP));
-            Log.Entry(LogName, string.Format("--> Port = {0}", Port));
-
             if (string.IsNullOrEmpty(IP) || !Name.StartsWith("\\\\")) return;
 
             instance.Add(this);

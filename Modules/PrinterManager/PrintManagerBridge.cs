@@ -25,10 +25,25 @@ namespace FOG.Modules.PrinterManager
 {
     public abstract class PrintManagerBridge
     {
+        private const string LogName = "Printer";
+
         public abstract List<string> GetPrinters();
 
         public void Add(Printer printer)
         {
+            Log.Entry(LogName, "Attempting to add printer:");
+
+            if (printer.Name != null)
+                Log.Entry(LogName, string.Format("--> Name = {0}", printer.Name));
+            if (printer.IP != null)
+                Log.Entry(LogName, string.Format("--> IP = {0}", printer.IP));
+            if (printer.Port != null)
+                Log.Entry(LogName, string.Format("--> Port = {0}", printer.Port));
+            if (printer.File != null)
+                Log.Entry(LogName, string.Format("--> File = {0}", printer.File));
+            if (printer.Model != null)
+                Log.Entry(LogName, string.Format("--> Model = {0}", printer.Model));
+
             try
             {
                 if (printer is iPrintPrinter)
@@ -40,14 +55,15 @@ namespace FOG.Modules.PrinterManager
             }
             catch (Exception ex)
             {
-                Log.Error("Printer", "Could not add");
-                Log.Error("Printer", ex);
+                Log.Error(LogName, "Could not add");
+                Log.Error(LogName, ex);
             }
         }
 
         protected abstract void AddiPrint(iPrintPrinter printer);
         protected abstract void AddLocal(LocalPrinter printer);
         protected abstract void AddNetwork(NetworkPrinter printer);
+        protected abstract void AddCUPS(CUPSPrinter printer);
 
         public abstract void Remove(string name);
         public abstract void Default(string name);
