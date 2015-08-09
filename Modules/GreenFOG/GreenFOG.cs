@@ -35,7 +35,6 @@ namespace FOG.Modules.GreenFOG
         public GreenFOG()
         {
             Name = "GreenFOG";
-            Compatiblity = Settings.OSType.Windows;
 
             switch (Settings.OS)
             {
