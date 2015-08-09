@@ -233,11 +233,17 @@ namespace FOG.Handlers
 
         public static void Dispose()
         {
-            if(_initialized && _mode == Mode.Client)
-                _client.Stop();
-            else if(_initialized && _mode == Mode.Server)
-                _server.Stop();
-        }
+            if (!_initialized) return;
 
+            switch (_mode)
+            {
+                case Mode.Client:
+                    _client.Stop();
+                    break;
+                case Mode.Server:
+                    _server.Stop();
+                    break;
+            }
+        }
     }
 }

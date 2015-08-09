@@ -42,7 +42,7 @@ namespace FOG.Modules.DisplayManager
             PopulatedSettings = LoadDisplaySettings();
         }
 
-        public bool PopulatedSettings { get; private set; }
+        public bool PopulatedSettings { get; }
 
         /// <summary>
         ///     Load the current display settings

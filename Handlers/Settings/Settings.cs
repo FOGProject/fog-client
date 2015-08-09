@@ -39,8 +39,8 @@ namespace FOG.Handlers
 
         private static string _file;
         private static JObject _data = new JObject();
-        public static OSType OS { get; private set; }
-        public static string Location { get; private set; }
+        public static OSType OS { get; }
+        public static string Location { get; }
 
         static Settings()
         {

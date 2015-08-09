@@ -60,7 +60,8 @@ namespace FOG.Handlers.Middleware
                 var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
                 var enToken = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, token));
 
-                var response = Communication.Post("/management/index.php?sub=authorize", string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, Configuration.MACAddresses()));
+                var response = Communication.Post("/management/index.php?sub=authorize", 
+                    string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, Configuration.MACAddresses()));
    
 
                 if (!response.Error)

@@ -63,11 +63,8 @@ namespace FOG.Handlers.Data
         /// <returns>A byte array of the encrypted data</returns>
         public static byte[] Encrypt(X509Certificate2 cert, byte[] data)
         {
-            if (cert == null)
-                return null;
-
-            var rsa = (RSACryptoServiceProvider)cert.PublicKey.Key;
-            return rsa.Encrypt(data, false);
+            var rsa = (RSACryptoServiceProvider) cert?.PublicKey.Key;
+            return rsa?.Encrypt(data, false);
         }
 
         /// <summary>
@@ -125,7 +122,7 @@ namespace FOG.Handlers.Data
                         .ToArray();
                     var certificateErrorsString = "Unknown errors.";
 
-                    if (errors != null && errors.Length > 0)
+                    if (errors.Length > 0)
                         certificateErrorsString = string.Join(", ", errors);
 
                     Log.Error(LogName, "Certificate validation failed");

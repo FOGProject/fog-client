@@ -47,7 +47,7 @@ namespace FOG.Handlers.Power
 
         public void Hibernate()
         {
-            Process.Start(@"pmset -a hibernatemode 25");
+            Process.Start("pmset -a hibernatemode 25");
         }
 
         public void LockWorkStation()

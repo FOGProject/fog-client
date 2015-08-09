@@ -245,36 +245,32 @@ namespace FOG.Handlers.Middleware
 
                 // Create a request for the specified remote file name
                 var request = WebRequest.Create(url);
-                if (request != null)
+                // Send the request to the server and retrieve the
+                // WebResponse object 
+                response = request.GetResponse();
                 {
-                    // Send the request to the server and retrieve the
-                    // WebResponse object 
-                    response = request.GetResponse();
-                    if (response != null)
+                    // Once the WebResponse object has been retrieved,
+                    // get the stream object associated with the response's data
+                    remoteStream = response.GetResponseStream();
+
+                    // Create the local file
+                    localStream = File.Create(filePath);
+
+                    // Allocate a 1k buffer
+                    var buffer = new byte[1024];
+                    int bytesRead;
+
+                    // Simple do/while loop to read from stream until
+                    // no bytes are returned
+                    do
                     {
-                        // Once the WebResponse object has been retrieved,
-                        // get the stream object associated with the response's data
-                        remoteStream = response.GetResponseStream();
+                        // Read data (up to 1k) from the stream
+                        bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
 
-                        // Create the local file
-                        localStream = File.Create(filePath);
+                        // Write the data to the local file
+                        localStream.Write(buffer, 0, bytesRead);
 
-                        // Allocate a 1k buffer
-                        var buffer = new byte[1024];
-                        int bytesRead;
-
-                        // Simple do/while loop to read from stream until
-                        // no bytes are returned
-                        do
-                        {
-                            // Read data (up to 1k) from the stream
-                            bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-                            // Write the data to the local file
-                            localStream.Write(buffer, 0, bytesRead);
-
-                        } while (bytesRead > 0);
-                    }
+                    } while (bytesRead > 0);
                 }
             }
             catch (Exception ex)
@@ -288,9 +284,9 @@ namespace FOG.Handlers.Middleware
                 // Close the response and streams objects here 
                 // to make sure they're closed even if an exception
                 // is thrown at some point
-                if (response != null) response.Close();
-                if (remoteStream != null) remoteStream.Close();
-                if (localStream != null) localStream.Close();
+                response?.Close();
+                remoteStream?.Close();
+                localStream?.Close();
             }
 
             return !err && File.Exists(filePath);
