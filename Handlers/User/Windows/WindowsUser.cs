@@ -71,9 +71,6 @@ namespace FOG.Handlers.User
             public uint DwTime;
         }
 
-        /// <summary>
-        /// </summary>
-        /// <returns>The inactivity time of the current user in seconds</returns>
         public int GetInactivityTime()
         {
             var lastInputInfo = new Lastinputinfo();
@@ -91,10 +88,6 @@ namespace FOG.Handlers.User
             return (int)idleTime / 1000;
         }
 
-        /// <summary>
-        ///     Get a list of usernames logged in
-        /// </summary>
-        /// <returns>A list of usernames</returns>
         public List<string> GetUsersLoggedIn()
         {
             var sessionIds = GetSessionIds();
@@ -106,7 +99,7 @@ namespace FOG.Handlers.User
         }
 
         /// <summary>
-        ///     Get all active session IDs
+        /// Get all active session IDs
         /// </summary>
         /// <returns>A list of session IDs</returns>
         private static List<int> GetSessionIds()
@@ -135,7 +128,7 @@ namespace FOG.Handlers.User
         }
 
         /// <summary>
-        ///     Convert a session ID to its correlating username
+        /// Convert a session ID to its correlating username
         /// </summary>
         /// <param name="sessionId">The session ID to use</param>
         /// <param name="prependDomain">If the user's domain should be prepended</param>

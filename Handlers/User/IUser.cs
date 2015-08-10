@@ -23,15 +23,7 @@ namespace FOG.Handlers.User
 {
     interface IUser
     {
-        /// <summary>
-        ///     Get a list of usernames logged in
-        /// </summary>
-        /// <returns>A list of usernames</returns>
         List<string> GetUsersLoggedIn();
-
-        /// <summary>
-        /// </summary>
-        /// <returns>The inactivity time of the current user in seconds</returns>
         int GetInactivityTime();
     }
 }

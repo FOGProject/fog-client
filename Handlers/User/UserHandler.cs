@@ -89,7 +89,6 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Get a list of usernames logged in
         /// </summary>
         /// <returns>A list of usernames</returns>
         public static List<string> GetUsersLoggedIn()
