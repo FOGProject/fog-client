@@ -38,14 +38,11 @@ namespace FOG.Modules.GreenFOG
 
             switch (Settings.OS)
             {
-                case Settings.OSType.Mac:
-                    _instance = new MacGreen();
-                    break;
-                case Settings.OSType.Linux:
-                    _instance = new LinuxGreen();
+                case Settings.OSType.Windows:
+                    _instance = new WindowsGreen();
                     break;
                 default:
-                    _instance = new WindowsGreen();
+                    _instance = new UnixGreen();
                     break;
             }
         }

@@ -25,7 +25,7 @@ using FOG.Handlers;
 
 namespace FOG.Modules.GreenFOG
 {
-    internal class LinuxGreen : IGreen
+    internal class UnixGreen : IGreen
     {
         private const string Cronpath = @"/etc/cron.d/fog";
         private const string LogName = "GreenFOG";
