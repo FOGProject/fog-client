@@ -37,7 +37,7 @@ namespace FOG.Handlers
             Socket = bootstrap.AppServers.FirstOrDefault() as WebSocketServer;
         }
 
-        public WebSocketServer Socket { get; private set; }
+        public WebSocketServer Socket { get; }
 
         public bool Start()
         {

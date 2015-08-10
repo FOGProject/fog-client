@@ -72,8 +72,8 @@ namespace FOG.Handlers
             }
         }
 
-        public static OSType OS { get; private set; }
-        public static string Location { get; private set; }
+        public static OSType OS { get; }
+        public static string Location { get; }
 
         /// <summary>
         ///     Check if the current OS is compatible with the given type
