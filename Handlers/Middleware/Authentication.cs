@@ -22,6 +22,8 @@ using System.IO;
 using System.Net;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using FOG.Handlers.Data;
+using RSA = FOG.Handlers.Data.RSA;
 
 // ReSharper disable InconsistentNaming
 
@@ -34,7 +36,7 @@ namespace FOG.Handlers.Middleware
         public static byte[] TestPassKey;
 
         /// <summary>
-        /// Generate a random AES pass key and securely send it to the server
+        ///     Generate a random AES pass key and securely send it to the server
         /// </summary>
         /// <returns>True if successfully authenticated</returns>
         public static bool HandShake()
@@ -48,7 +50,7 @@ namespace FOG.Handlers.Middleware
                 var certificate = new X509Certificate2(keyPath);
 
                 // Ensure the public key came from the pinned server
-                if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
+                if (!RSA.IsFromCA(RSA.GetCACertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
                 Log.Entry(LogName, "Cert OK");
 
@@ -61,25 +63,24 @@ namespace FOG.Handlers.Middleware
                 var token = GetSecurityToken("token.dat");
 
                 // Encrypt the security token and AES key using the public key
-                var enKey = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, Passkey));
-                var enToken = Data.Transform.ByteArrayToHexString(Data.RSA.Encrypt(certificate, token));
+                var enKey = Transform.ByteArrayToHexString(RSA.Encrypt(certificate, Passkey));
+                var enToken = Transform.ByteArrayToHexString(RSA.Encrypt(certificate, token));
 
                 // Send the encrypted data to the server and get the response
-                var response = Communication.Post("/management/index.php?sub=authorize", 
+                var response = Communication.Post("/management/index.php?sub=authorize",
                     string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, Configuration.MACAddresses()));
-   
+
                 // If the server accepted the token and AES key, save the new token
                 if (!response.Error)
                 {
                     Log.Entry(LogName, "Authenticated");
-                    SetSecurityToken("token.dat", Data.Transform.HexStringToByteArray(response.GetField("#token")));
+                    SetSecurityToken("token.dat", Transform.HexStringToByteArray(response.GetField("#token")));
                     return true;
-                } 
-                
+                }
+
                 // If the server does not recognize the host, register it
                 if (response.ReturnCode.Equals("#!ih"))
                     Communication.Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
-
             }
             catch (Exception ex)
             {
@@ -99,7 +100,7 @@ namespace FOG.Handlers.Middleware
             try
             {
                 var token = File.ReadAllBytes(filePath);
-                token = Data.DPAPI.UnProtectData(token, true);
+                token = DPAPI.UnProtectData(token, true);
                 return token;
             }
             catch (Exception ex)
@@ -112,7 +113,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Encrypt and save a security token
+        ///     Encrypt and save a security token
         /// </summary>
         /// <param name="filePath">The path to the file where the security token should be stored</param>
         /// <param name="token">The security token to encrypt and save</param>
@@ -120,8 +121,8 @@ namespace FOG.Handlers.Middleware
         {
             try
             {
-                token = Data.DPAPI.ProtectData(token, true);
-                File.WriteAllBytes(filePath, token);    
+                token = DPAPI.ProtectData(token, true);
+                File.WriteAllBytes(filePath, token);
             }
             catch (Exception ex)
             {
@@ -131,7 +132,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Decrypts a response using AES, filtering out encryption flags
+        ///     Decrypts a response using AES, filtering out encryption flags
         /// </summary>
         /// <param name="toDecode">The string to decrypt</param>
         /// <returns>True if the server was contacted successfully</returns>
@@ -143,13 +144,13 @@ namespace FOG.Handlers.Middleware
             if (toDecode.StartsWith(encryptedFlag2))
             {
                 var decryptedResponse = toDecode.Substring(encryptedFlag2.Length);
-                toDecode = Data.AES.Decrypt(decryptedResponse, TestPassKey ?? Passkey);
+                toDecode = AES.Decrypt(decryptedResponse, TestPassKey ?? Passkey);
                 return toDecode;
             }
             if (!toDecode.StartsWith(encryptedFlag)) return toDecode;
 
             var decrypted = toDecode.Substring(encryptedFlag.Length);
-            return Data.AES.Decrypt(decrypted, TestPassKey ?? Passkey);
+            return AES.Decrypt(decrypted, TestPassKey ?? Passkey);
         }
     }
 }

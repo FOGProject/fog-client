@@ -27,7 +27,7 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::Generate";
 
         /// <summary>
-        /// Securely generates a random number
+        ///     Securely generates a random number
         /// </summary>
         /// <param name="rngProvider">The RNG crypto provider used</param>
         /// <param name="min">The minimum value of the random number</param>
@@ -38,15 +38,15 @@ namespace FOG.Handlers.Data
             if (rngProvider == null) throw new ArgumentNullException(nameof(rngProvider));
             if (min > max) throw new ArgumentException("Min is greater than max");
 
-            var b = new byte[sizeof(uint)];
+            var b = new byte[sizeof (uint)];
             rngProvider.GetBytes(b);
-            var d = BitConverter.ToUInt32(b, 0) / (double)uint.MaxValue;
+            var d = BitConverter.ToUInt32(b, 0)/(double) uint.MaxValue;
 
-            return min + (int)((max - min) * d);
+            return min + (int) ((max - min)*d);
         }
 
         /// <summary>
-        /// Securely generates an alpha-numerical password
+        ///     Securely generates an alpha-numerical password
         /// </summary>
         /// <param name="length">The number of characters the password should contain</param>
         /// <returns>A randomly generated password</returns>

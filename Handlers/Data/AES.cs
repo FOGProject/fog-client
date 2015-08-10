@@ -29,7 +29,7 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::AES";
 
         /// <summary>
-        /// AES decrypts a string
+        ///     AES decrypts a string
         /// </summary>
         /// <param name="toDecode">The string to be decrypted</param>
         /// <param name="key">The AES pass key</param>
@@ -39,9 +39,18 @@ namespace FOG.Handlers.Data
         {
             try
             {
-                using (var rijndaelManaged = new RijndaelManaged { Key = key, IV = iv, Mode = CipherMode.CBC, Padding = PaddingMode.Zeros })
+                using (
+                    var rijndaelManaged = new RijndaelManaged
+                    {
+                        Key = key,
+                        IV = iv,
+                        Mode = CipherMode.CBC,
+                        Padding = PaddingMode.Zeros
+                    })
                 using (var memoryStream = new MemoryStream(toDecode))
-                using (var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(), CryptoStreamMode.Read))
+                using (
+                    var cryptoStream = new CryptoStream(memoryStream, rijndaelManaged.CreateDecryptor(),
+                        CryptoStreamMode.Read))
                 {
                     //Return the  stream, but trim null bytes due to reading too far
                     return new StreamReader(cryptoStream).ReadToEnd().Replace("\0", string.Empty).Trim();
@@ -56,7 +65,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// AES decrypts a string
+        ///     AES decrypts a string
         /// </summary>
         /// <param name="toDecode">The hex-code string to be decrypted</param>
         /// <param name="passKey">The AES pass key</param>
@@ -73,7 +82,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Decrypts a string using AES, and automatically extracts the initialization vector
+        ///     Decrypts a string using AES, and automatically extracts the initialization vector
         /// </summary>
         /// <param name="toDecode">The string to be decrypted</param>
         /// <param name="key">The AES pass key to use</param>

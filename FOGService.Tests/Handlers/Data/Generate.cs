@@ -19,16 +19,15 @@
 
 using System;
 using System.Security.Cryptography;
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
     public class GenerateTests
     {
-
         [SetUp]
         public void Init()
         {
@@ -65,6 +64,5 @@ namespace FOGService.Tests.Handlers.Data
             Assert.Throws<ArgumentNullException>(() => Generate.Random(null, min, max));
             Assert.Throws<ArgumentException>(() => Generate.Random(rng, max, min));
         }
-
     }
 }

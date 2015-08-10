@@ -21,7 +21,7 @@ using System.Collections.Generic;
 
 namespace FOG.Handlers.User
 {
-    interface IUser
+    internal interface IUser
     {
         List<string> GetUsersLoggedIn();
         int GetInactivityTime();

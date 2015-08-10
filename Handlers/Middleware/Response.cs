@@ -20,16 +20,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using FOG.Handlers.Data;
 
 namespace FOG.Handlers.Middleware
 {
     /// <summary>
-    /// Contains the information that the FOG Server responds with
+    ///     Contains the information that the FOG Server responds with
     /// </summary>
     public class Response
     {
         private const string LogName = "Middleware::Response";
         public const string SuccessCode = "#!ok";
+
         public static readonly Dictionary<string, string> Codes = new Dictionary<string, string>
         {
             {SuccessCode, "Success"},
@@ -52,10 +54,6 @@ namespace FOG.Handlers.Middleware
             {"#!ist", "Invalid security token"},
             {"#!er", "General error"}
         };
-
-        public bool Error { get; set; }
-        public Dictionary<string, string> Data { get; set; }
-        public string ReturnCode { get; set; }
 
         public Response(string rawData)
         {
@@ -98,8 +96,12 @@ namespace FOG.Handlers.Middleware
             ReturnCode = "";
         }
 
+        public bool Error { get; set; }
+        public Dictionary<string, string> Data { get; set; }
+        public string ReturnCode { get; set; }
+
         /// <summary>
-        /// Parse a Response for an array of objects
+        ///     Parse a Response for an array of objects
         /// </summary>
         /// <param name="identifier">The string identifier infront of the elements</param>
         /// <param name="base64Decode">Whether the elements should be base64 decoded</param>
@@ -108,10 +110,10 @@ namespace FOG.Handlers.Middleware
         {
             Log.Debug(LogName, "Parsing List...");
 
-            var items =  Data.Keys.Where(key => key.Contains(identifier)).Select(key =>
+            var items = Data.Keys.Where(key => key.Contains(identifier)).Select(key =>
                 base64Decode
-                ? Handlers.Data.Transform.DecodeBase64(GetField(key))
-                : GetField(key))
+                    ? Transform.DecodeBase64(GetField(key))
+                    : GetField(key))
                 .ToList();
 
             foreach (var value in items)
@@ -123,7 +125,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Return the value stored at a specified key
+        ///     Return the value stored at a specified key
         /// </summary>
         /// <param name="id">The ID to return</param>
         /// <returns>The value stored at key ID, if the ID is not present, return null</returns>
@@ -133,7 +135,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Check if a field is not null or empty
+        ///     Check if a field is not null or empty
         /// </summary>
         /// <param name="id">The field to check</param>
         /// <returns></returns>
@@ -143,7 +145,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Print out all ids and values 
+        ///     Print out all ids and values
         /// </summary>
         public void PrettyPrint()
         {

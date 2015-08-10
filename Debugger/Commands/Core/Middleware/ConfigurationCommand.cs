@@ -22,7 +22,7 @@ using FOG.Handlers.Middleware;
 
 namespace FOG.Commands.Core.Middleware
 {
-    class ConfigurationCommand : ICommand
+    internal class ConfigurationCommand : ICommand
     {
         private const string LogName = "Console::Middleware::Configuration";
         private const string Server = "http://fog.jbob.io/fog";

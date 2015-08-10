@@ -40,11 +40,11 @@ namespace FOG
             {"modules", new ModuleCommand()},
             {"bus", new BusCommand()},
             {"middleware", new MiddlewareCommand()},
-            {"process", new ProcessCommand() },
+            {"process", new ProcessCommand()},
             {"settings", new SettingsCommand()},
             {"user", new UserCommand()}
         };
- 
+
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
@@ -64,7 +64,6 @@ namespace FOG
                 Log.Error(Name, ex);
                 Console.ReadLine();
             }
-
         }
 
         private static void InteractiveShell()
@@ -89,7 +88,7 @@ namespace FOG
             if (command[0].Equals("?") || command[0].Equals("help"))
             {
                 Help();
-                return false;            
+                return false;
             }
 
             if (command.Length > 1 && Commands.ContainsKey(command[0]))
@@ -104,7 +103,7 @@ namespace FOG
         private static void Help()
         {
             Log.WriteLine("Avaible commands (append ? to any command for more information)");
-            foreach(var keyword in Commands.Keys)
+            foreach (var keyword in Commands.Keys)
             {
                 Log.WriteLine("--> " + keyword);
             }
@@ -118,6 +117,5 @@ namespace FOG
             Log.WriteLine("Message recieved: " + data.content.ToString());
             Log.Write("fog: ");
         }
-
     }
 }

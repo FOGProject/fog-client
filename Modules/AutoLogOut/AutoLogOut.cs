@@ -23,7 +23,6 @@ using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
-
 namespace FOG.Modules.AutoLogOut
 {
     /// <summary>
@@ -52,7 +51,7 @@ namespace FOG.Modules.AutoLogOut
 
                 Log.Entry(Name, string.Format("Time set to {0} seconds", timeOut));
                 Log.Entry(Name, string.Format("Inactive for {0} seconds", UserHandler.GetInactivityTime()));
-                
+
                 if (UserHandler.GetInactivityTime() < timeOut) return;
 
                 var notification = new Notification("You are about to be logged off",

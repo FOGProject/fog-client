@@ -17,20 +17,35 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
     public class RSATests
     {
-
         [SetUp]
         public void Init()
         {
             Log.Output = Log.Mode.Console;
+        }
+
+        [Test]
+        public void GeneratePassword()
+        {
+            /**
+            * Generate 2 random passwords, ensure they are the correct length, and that they are not equal
+            */
+            const int length = 64;
+
+            var pw1 = Generate.Password(length);
+            var pw2 = Generate.Password(length);
+
+            Assert.AreEqual(length, pw1.Length);
+            Assert.AreEqual(length, pw2.Length);
+            Assert.AreNotEqual(pw1, pw2);
         }
 
         [Test]
@@ -64,25 +79,5 @@ namespace FOGService.Tests.Handlers.Data
 
             Assert.AreEqual(message, decoded);
         }
-
-        [Test]
-        public void GeneratePassword()
-        {
-
-            /**
-            * Generate 2 random passwords, ensure they are the correct length, and that they are not equal
-            */
-            const int length = 64;
-
-            var pw1 = Generate.Password(length);
-            var pw2 = Generate.Password(length);
-
-            Assert.AreEqual(length, pw1.Length);
-            Assert.AreEqual(length, pw2.Length);
-            Assert.AreNotEqual(pw1, pw2);
-        }
-
-
-
     }
 }

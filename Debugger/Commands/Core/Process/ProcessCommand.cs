@@ -22,7 +22,7 @@ using FOG.Handlers;
 
 namespace FOG.Commands.Core.Process
 {
-    class ProcessCommand : ICommand
+    internal class ProcessCommand : ICommand
     {
         private const string LogName = "Console::ProcessHandler";
 
@@ -40,7 +40,7 @@ namespace FOG.Commands.Core.Process
 
                 var param = "";
 
-                if(args.Length > 2)
+                if (args.Length > 2)
                     param = string.Join(" ", args.Skip(2));
 
                 var code = ProcessHandler.Run(app, param);
@@ -125,7 +125,6 @@ namespace FOG.Commands.Core.Process
             Log.WriteLine("--> killexe [NAME]");
             Log.WriteLine("--> killall [NAME]");
             Log.WriteLine("--> killallexe [NAME]");
-
         }
     }
 }

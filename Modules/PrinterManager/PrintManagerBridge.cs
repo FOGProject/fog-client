@@ -26,7 +26,6 @@ namespace FOG.Modules.PrinterManager
     public abstract class PrintManagerBridge
     {
         private const string LogName = "Printer";
-
         public abstract List<string> GetPrinters();
 
         public void Add(Printer printer)
@@ -47,11 +46,11 @@ namespace FOG.Modules.PrinterManager
             try
             {
                 if (printer is iPrintPrinter)
-                    AddiPrint((iPrintPrinter)printer);
+                    AddiPrint((iPrintPrinter) printer);
                 else if (printer is LocalPrinter)
-                    AddLocal((LocalPrinter)printer);
+                    AddLocal((LocalPrinter) printer);
                 else if (printer is NetworkPrinter)
-                    AddNetwork((NetworkPrinter)printer);
+                    AddNetwork((NetworkPrinter) printer);
             }
             catch (Exception ex)
             {
@@ -64,7 +63,6 @@ namespace FOG.Modules.PrinterManager
         protected abstract void AddLocal(LocalPrinter printer);
         protected abstract void AddNetwork(NetworkPrinter printer);
         protected abstract void AddCUPS(CUPSPrinter printer);
-
         public abstract void Remove(string name);
         public abstract void Default(string name);
     }

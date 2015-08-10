@@ -36,7 +36,7 @@ namespace FOG
 {
     public class FOGSystemService : AbstractService
     {
-        public FOGSystemService() : base()
+        public FOGSystemService()
         {
             Bus.SetMode(Bus.Mode.Server);
         }
@@ -52,7 +52,7 @@ namespace FOG
             Bus.Emit(Bus.Channel.Status, json, true);
 
             // Start the UserServiceSpawner
-            if(Settings.OS == Settings.OSType.Linux)
+            if (Settings.OS == Settings.OSType.Linux)
                 UserServiceSpawner.Start();
 
             Log.NewLine();
@@ -62,14 +62,14 @@ namespace FOG
             Log.NewLine();
         }
 
-
         protected override void Unload()
         {
             UserServiceSpawner.Stop();
 
             dynamic json = new JObject();
             json.action = "unload";
-            Bus.Emit(Bus.Channel.Status, json, true); Bus.Dispose();
+            Bus.Emit(Bus.Channel.Status, json, true);
+            Bus.Dispose();
 
             // Kill the sub-processes
             UserServiceSpawner.KillAll();
@@ -81,12 +81,12 @@ namespace FOG
         {
             return new AbstractModule[]
             {
-                new ClientUpdater(), 
-                new TaskReboot(), 
-                new HostnameChanger(), 
-                new SnapinClient(), 
-                new PrinterManager(), 
-                new GreenFOG(), 
+                new ClientUpdater(),
+                new TaskReboot(),
+                new HostnameChanger(),
+                new SnapinClient(),
+                new PrinterManager(),
+                new GreenFOG(),
                 new UserTracker()
             };
         }
@@ -117,7 +117,8 @@ namespace FOG
                     return sleepTime;
                 }
 
-                Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                Log.Entry(Name,
+                    string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }
             catch (Exception ex)
             {

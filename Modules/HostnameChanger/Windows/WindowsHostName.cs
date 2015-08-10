@@ -27,10 +27,8 @@ using FOG.Handlers.Power;
 
 namespace FOG.Modules.HostnameChanger.Windows
 {
-    class WindowsHostName : IHostName
+    internal class WindowsHostName : IHostName
     {
-        private string Name = "HostnameChanger";
-
         private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
         {
             {0, "Success"},
@@ -46,40 +44,23 @@ namespace FOG.Modules.HostnameChanger.Windows
             {2692, "The machine is not currently joined to a domain"}
         };
 
-        [Flags]
-        private enum UnJoinOptions
-        {
-            NetsetupAccountDelete = 0x00000004
-        }
-
-        [Flags]
-        private enum JoinOptions
-        {
-            NetsetupJoinDomain = 0x00000001,
-            NetsetupAcctCreate = 0x00000002,
-        }
-
-        //Import dll methods
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
-            string lpAccount, string lpPassword, JoinOptions nameType);
-
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
-            UnJoinOptions fUnjoinOptions);
-
+        private readonly string Name = "HostnameChanger";
 
         public void RenameComputer(string hostname)
         {
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "NV Hostname", hostname);
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName", "ComputerName", hostname);
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName", "ComputerName", hostname);
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "NV Hostname",
+                hostname);
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName",
+                "ComputerName", hostname);
+            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
+                "ComputerName", hostname);
         }
 
         public bool RegisterComputer(Response response)
         {
             // Attempt to join the domain
-            var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            var returnCode = DomainWrapper(response, true,
+                (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
             switch (returnCode)
             {
@@ -88,7 +69,8 @@ namespace FOG.Modules.HostnameChanger.Windows
                     break;
                 case 2:
                 case 50:
-                    returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                    returnCode = DomainWrapper(response, false,
+                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
                     break;
             }
 
@@ -147,7 +129,8 @@ namespace FOG.Modules.HostnameChanger.Windows
                     process.Close();
 
                     //Try and activate the new key
-                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
+                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato",
+                        Environment.SystemDirectory);
                     process.Start();
                     process.WaitForExit();
                     process.Close();
@@ -159,6 +142,14 @@ namespace FOG.Modules.HostnameChanger.Windows
             }
         }
 
+        //Import dll methods
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
+            string lpAccount, string lpPassword, JoinOptions nameType);
+
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
+            UnJoinOptions fUnjoinOptions);
 
         private static int DomainWrapper(Response response, bool ou, JoinOptions options)
         {
@@ -170,5 +161,17 @@ namespace FOG.Modules.HostnameChanger.Windows
                 options);
         }
 
+        [Flags]
+        private enum UnJoinOptions
+        {
+            NetsetupAccountDelete = 0x00000004
+        }
+
+        [Flags]
+        private enum JoinOptions
+        {
+            NetsetupJoinDomain = 0x00000001,
+            NetsetupAcctCreate = 0x00000002
+        }
     }
 }

@@ -65,7 +65,6 @@ namespace FOG
                 }
 
                 Thread.Sleep(5*1000);
-
             }
         }
 

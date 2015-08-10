@@ -26,14 +26,16 @@ using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {
-    class WindowsPrinterManager : PrintManagerBridge
+    internal class WindowsPrinterManager : PrintManagerBridge
     {
         private const string LogName = "PrinterManager";
 
         public override List<string> GetPrinters()
         {
             var printerQuery = new ManagementObjectSearcher("SELECT * from Win32_Printer");
-            return (from ManagementBaseObject printer in printerQuery.Get() select printer.GetPropertyValue("name").ToString()).ToList();
+            return
+                (from ManagementBaseObject printer in printerQuery.Get()
+                    select printer.GetPropertyValue("name").ToString()).ToList();
         }
 
         protected override void AddiPrint(iPrintPrinter printer)
@@ -59,7 +61,8 @@ namespace FOG.Modules.PrinterManager
                 AddIPPort(printer, "9100");
 
             var proc = Process.Start("rundll32.exe",
-                string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"", printer.Name, printer.File, printer.Port, printer.Model));
+                string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"",
+                    printer.Name, printer.File, printer.Port, printer.Model));
             proc?.WaitForExit(120000);
 
             Log.Entry(LogName, "Return code " + proc.ExitCode);
@@ -101,13 +104,15 @@ namespace FOG.Modules.PrinterManager
             var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer");
             var collection = searcher.Get();
 
-            foreach (var currentObject in collection.Cast<ManagementObject>().Where(currentObject => currentObject["name"].ToString().Equals(name)))
-                currentObject.InvokeMethod("SetDefaultPrinter", new object[] { name });
+            foreach (
+                var currentObject in
+                    collection.Cast<ManagementObject>()
+                        .Where(currentObject => currentObject["name"].ToString().Equals(name)))
+                currentObject.InvokeMethod("SetDefaultPrinter", new object[] {name});
         }
 
         private void AddIPPort(Printer printer, string remotePort)
         {
-
             var conn = new ConnectionOptions
             {
                 EnablePrivileges = true,

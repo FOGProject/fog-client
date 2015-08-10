@@ -30,7 +30,7 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::RSA";
 
         /// <summary>
-        /// Encrypt data using RSA
+        ///     Encrypt data using RSA
         /// </summary>
         /// <param name="cert">The X509 certificate to use</param>
         /// <param name="data">The data to encrypt</param>
@@ -43,7 +43,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Decrypt data using RSA
+        ///     Decrypt data using RSA
         /// </summary>
         /// <param name="cert">The X509 certificate to use</param>
         /// <param name="data">The data to decrypt</param>
@@ -56,7 +56,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Encrypt data using RSA
+        ///     Encrypt data using RSA
         /// </summary>
         /// <param name="cert">The X509 certificate to use</param>
         /// <param name="data">The data to encrypt</param>
@@ -68,7 +68,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Decrypt data using RSA
+        ///     Decrypt data using RSA
         /// </summary>
         /// <param name="cert">The X509 certificate to use</param>
         /// <param name="data">The data to decrypt</param>
@@ -78,13 +78,13 @@ namespace FOG.Handlers.Data
             if (cert == null || !cert.HasPrivateKey)
                 return null;
 
-            var rsa = (RSACryptoServiceProvider)cert.PrivateKey;
+            var rsa = (RSACryptoServiceProvider) cert.PrivateKey;
             return rsa.Decrypt(data, false);
         }
 
         /// <summary>
-        /// Validate that certificate came from a specific CA
-        /// http://stackoverflow.com/a/17225510/4732290
+        ///     Validate that certificate came from a specific CA
+        ///     http://stackoverflow.com/a/17225510/4732290
         /// </summary>
         /// <param name="authority">The CA certificate</param>
         /// <param name="certificate">The certificate to validate</param>
@@ -126,16 +126,20 @@ namespace FOG.Handlers.Data
                         certificateErrorsString = string.Join(", ", errors);
 
                     Log.Error(LogName, "Certificate validation failed");
-                    Log.Error(LogName, "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
+                    Log.Error(LogName,
+                        "Trust chain did not complete to the known authority anchor. Errors: " + certificateErrorsString);
                     return false;
                 }
 
                 // This piece makes sure it actually matches your known root
-                if (chain.ChainElements.Cast<X509ChainElement>().Any(x => x.Certificate.Thumbprint == authority.Thumbprint))
+                if (
+                    chain.ChainElements.Cast<X509ChainElement>()
+                        .Any(x => x.Certificate.Thumbprint == authority.Thumbprint))
                     return true;
 
                 Log.Error(LogName, "Certificate validation failed");
-                Log.Error(LogName, "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
+                Log.Error(LogName,
+                    "Trust chain did not complete to the known authority anchor. Thumbprints did not match.");
                 return false;
             }
             catch (Exception ex)
@@ -144,7 +148,6 @@ namespace FOG.Handlers.Data
                 Log.Error(LogName, ex);
                 return false;
             }
-
         }
 
         /// <summary>
@@ -178,7 +181,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Add a CA certificate to the machine store
+        ///     Add a CA certificate to the machine store
         /// </summary>
         /// <param name="caCert">The certificate to add</param>
         public static void InsertCACertificate(X509Certificate2 caCert)

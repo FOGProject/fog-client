@@ -26,7 +26,7 @@ namespace FOG.Handlers
     public static class UserHandler
     {
         private const string LogName = "UserHandler";
-        private static IUser _instance;
+        private static readonly IUser _instance;
 
         static UserHandler()
         {
@@ -105,6 +105,5 @@ namespace FOG.Handlers
 
             return new List<string>();
         }
-
     }
 }

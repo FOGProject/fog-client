@@ -24,21 +24,23 @@ using System.Linq;
 
 namespace FOG.Handlers.User
 {
-    class LinuxUser : IUser
+    internal class LinuxUser : IUser
     {
         private const string LogName = "UserHandler";
-
 
         public List<string> GetUsersLoggedIn()
         {
             var usersInfo = new List<string>();
 
-            using (var process = new Process { StartInfo = new ProcessStartInfo {
-                FileName = "w",
-                Arguments = "-h -s",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "w",
+                    Arguments = "-h -s",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
             })
             {
@@ -54,11 +56,14 @@ namespace FOG.Handlers.User
         {
             var time = "-1";
 
-            using (var process = new Process { StartInfo = new ProcessStartInfo {
-                FileName = "xprintidle",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "xprintidle",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
             })
             {

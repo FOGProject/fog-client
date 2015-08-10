@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
+
 <!--
  FOG Service : A computer management client for the FOG Project
  Copyright (C) 2014-2015 FOG Project
@@ -18,22 +19,26 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Fragment>
-        <UI>
-            <Dialog Id="Dialog_Config" Width="370" Height="270" Title="Configure">
-                <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next" />
-                <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
-                    <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
-                </Control>
-                <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back" />
-                <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-                <Control Property="USETRAY" Type="CheckBox" Id="UseTray" Width="83" Height="17" X="11" Y="75" Text="Enable FOG Tray" Default="yes" CheckBoxValue="1" TabSkip="yes" />
-                <Control Property="WEBADDRESS" Type="Edit" Id="ServerIP" Width="287" Height="15" X="71" Y="22" Text="fog-server" />
-                <Control Type="Text" Id="ServerIPLabel" Width="60" Height="12" X="8" Y="22" Text="Server Adress:" />
-                <Control Type="Text" Id="WEBROOTText" Width="50" Height="17" X="8" Y="49" Text="Web Root:" />
-                <Control Property="WEBROOT" Type="Edit" Id="WEBROOTTextBox" Width="287" Height="15" X="71" Y="45" Text="/fog" />
-                <Control Property="ROOTLOG" Type="CheckBox" Id="LogFile" Width="247" Height="20" X="11" Y="94" Text="Put Log File in Root (Otherwise will be in Installation Directory)" CheckBoxValue="1" TabSkip="yes" />
-            </Dialog>
-        </UI>
-    </Fragment>
+  <Fragment>
+    <UI>
+      <Dialog Id="Dialog_Config" Width="370" Height="270" Title="Configure">
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Text="Next" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="Cancel">
+          <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
+        </Control>
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Text="Back" />
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Property="USETRAY" Type="CheckBox" Id="UseTray" Width="83" Height="17" X="11" Y="75"
+                 Text="Enable FOG Tray" Default="yes" CheckBoxValue="1" TabSkip="yes" />
+        <Control Property="WEBADDRESS" Type="Edit" Id="ServerIP" Width="287" Height="15" X="71" Y="22"
+                 Text="fog-server" />
+        <Control Type="Text" Id="ServerIPLabel" Width="60" Height="12" X="8" Y="22" Text="Server Adress:" />
+        <Control Type="Text" Id="WEBROOTText" Width="50" Height="17" X="8" Y="49" Text="Web Root:" />
+        <Control Property="WEBROOT" Type="Edit" Id="WEBROOTTextBox" Width="287" Height="15" X="71" Y="45" Text="/fog" />
+        <Control Property="ROOTLOG" Type="CheckBox" Id="LogFile" Width="247" Height="20" X="11" Y="94"
+                 Text="Put Log File in Root (Otherwise will be in Installation Directory)" CheckBoxValue="1"
+                 TabSkip="yes" />
+      </Dialog>
+    </UI>
+  </Fragment>
 </Wix>

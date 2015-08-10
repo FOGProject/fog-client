@@ -21,9 +21,9 @@ using System;
 
 namespace FOG
 {
-    class MacUpdate : IUpdate
+    internal class MacUpdate : IUpdate
     {
-        const string LogName = "UpdateHelper";
+        private const string LogName = "UpdateHelper";
 
         public void ApplyUpdate()
         {

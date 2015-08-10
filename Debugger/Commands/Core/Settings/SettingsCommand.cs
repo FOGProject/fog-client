@@ -21,7 +21,7 @@ using FOG.Handlers;
 
 namespace FOG.Commands.Core.Settings
 {
-    class SettingsCommand : ICommand
+    internal class SettingsCommand : ICommand
     {
         private const string LogName = "Console::Settings";
 
@@ -83,7 +83,6 @@ namespace FOG.Commands.Core.Settings
             Log.WriteLine("--> set [SETTING] [VALUE]");
             Log.WriteLine("--> path [PATH]");
             Log.WriteLine("--> reload");
-
         }
     }
 }

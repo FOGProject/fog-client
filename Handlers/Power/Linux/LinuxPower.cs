@@ -22,9 +22,10 @@ using System.Diagnostics;
 
 namespace FOG.Handlers.Power
 {
-    class LinuxPower : IPower
+    internal class LinuxPower : IPower
     {
-        public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
+        public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
+            int seconds = 30)
         {
             var minutes = seconds/60.0;
             var timeDelay = (int) Math.Round(minutes);
@@ -32,10 +33,11 @@ namespace FOG.Handlers.Power
             Power.QueueShutdown(string.Format("-h +{0} \"{1}\"", timeDelay, comment), options, message);
         }
 
-        public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
+        public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
+            int seconds = 30)
         {
-            var minutes = seconds / 60.0;
-            var timeDelay = (int)Math.Round(minutes);
+            var minutes = seconds/60.0;
+            var timeDelay = (int) Math.Round(minutes);
 
             Power.QueueShutdown(string.Format("-r +{0} \"{1}\"", timeDelay, comment), options, message);
         }

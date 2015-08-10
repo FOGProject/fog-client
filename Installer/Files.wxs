@@ -27,7 +27,7 @@
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
 
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe">
-              <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any"/>
+              <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any" />
             </File>
 
             <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
@@ -37,17 +37,17 @@
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
 
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe">
-              <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any"/>
+              <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any" />
             </File>
 
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="MonoHelper" Name="MonoHelper.exe" Source="..\bin\MonoHelper.exe" />
             <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe">
-              <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any"/>
+              <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any" />
             </File>
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">
-              <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Protocol="udp" Scope="any"/>
+              <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Protocol="udp" Scope="any" />
             </File>
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
@@ -55,8 +55,10 @@
                   Source="..\bin\Newtonsoft.Json.dll" />
             <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
             <File Id="SuperSocket.Common" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
-            <File Id="SuperSocket.SocketBase" Name="SuperSocket.SocketBase.dll" Source="..\bin\SuperSocket.SocketBase.dll" />
-            <File Id="SuperSocket.SocketEngine" Name="SuperSocket.SocketEngine.dll" Source="..\bin\SuperSocket.SocketEngine.dll" />
+            <File Id="SuperSocket.SocketBase" Name="SuperSocket.SocketBase.dll"
+                  Source="..\bin\SuperSocket.SocketBase.dll" />
+            <File Id="SuperSocket.SocketEngine" Name="SuperSocket.SocketEngine.dll"
+                  Source="..\bin\SuperSocket.SocketEngine.dll" />
             <File Id="SuperWebSocket" Name="SuperWebSocket.dll" Source="..\bin\SuperWebSocket.dll" />
             <File Id="WebSocket4Net" Name="WebSocket4Net.dll" Source="..\bin\WebSocket4Net.dll" />
 

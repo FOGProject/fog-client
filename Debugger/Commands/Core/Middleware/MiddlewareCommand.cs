@@ -23,7 +23,7 @@ using FOG.Handlers;
 
 namespace FOG.Commands.Core.Middleware
 {
-    class MiddlewareCommand : ICommand
+    internal class MiddlewareCommand : ICommand
     {
         private const string LogName = "Console::Middleware";
 
@@ -42,7 +42,8 @@ namespace FOG.Commands.Core.Middleware
                 return true;
             }
 
-            return _commands.Count > 1 && _commands.ContainsKey(args[0]) && _commands[args[0]].Process(args.Skip(1).ToArray());
+            return _commands.Count > 1 && _commands.ContainsKey(args[0]) &&
+                   _commands[args[0]].Process(args.Skip(1).ToArray());
         }
 
         private static void Help()

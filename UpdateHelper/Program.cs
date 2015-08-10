@@ -21,12 +21,11 @@ using System;
 using System.IO;
 using FOG.Handlers;
 
-
 namespace FOG
 {
     internal class Program
     {
-        const string LogName = "UpdateHelper";
+        private const string LogName = "UpdateHelper";
         private static IUpdate _instance;
 
         public static void Main(string[] args)
@@ -58,7 +57,8 @@ namespace FOG
                 var parentDir = Directory.GetParent(Settings.Location).ToString();
 
                 if (File.Exists(Path.Combine(Settings.Location, "settings.json")))
-                    File.Copy(Path.Combine(Settings.Location, "settings.json"), Path.Combine(parentDir, "settings.json"), true);
+                    File.Copy(Path.Combine(Settings.Location, "settings.json"), Path.Combine(parentDir, "settings.json"),
+                        true);
 
                 if (File.Exists(Path.Combine(Settings.Location, "token.dat")))
                     File.Copy(Path.Combine(Settings.Location, "token.dat"), Path.Combine(parentDir, "token.dat"), true);

@@ -24,31 +24,26 @@ using Newtonsoft.Json.Linq;
 namespace FOG.Handlers.Power
 {
     /// <summary>
-    /// Handle all shutdown requests
-    /// The windows shutdown command is used instead of the win32 api because it notifies the user prior
+    ///     Handle all shutdown requests
+    ///     The windows shutdown command is used instead of the win32 api because it notifies the user prior
     /// </summary>
     public static class Power
     {
-        private const string LogName = "Power";
-        public static bool ShuttingDown { get; private set; }
-        public static bool Requested { get; private set; }
-        public static bool Updating { get; set; }
-
-        // Variables needed for aborting a shutdown
-        private static Timer _timer;
-        private static bool delayed;
-        private const int DefaultGracePeriod = 60;
-        private static dynamic requestData = new JObject();
-        private static Func<bool> shouldAbortFunc; 
-
-        private static IPower _instance;
-
         public enum FormOption
         {
             None,
             Abort,
             Delay
         }
+
+        private const string LogName = "Power";
+        private const int DefaultGracePeriod = 60;
+        // Variables needed for aborting a shutdown
+        private static Timer _timer;
+        private static bool delayed;
+        private static dynamic requestData = new JObject();
+        private static Func<bool> shouldAbortFunc;
+        private static readonly IPower _instance;
 
         static Power()
         {
@@ -67,6 +62,10 @@ namespace FOG.Handlers.Power
 
             Bus.Subscribe(Bus.Channel.Power, ParseBus);
         }
+
+        public static bool ShuttingDown { get; private set; }
+        public static bool Requested { get; private set; }
+        public static bool Updating { get; set; }
 
         private static void ParseBus(dynamic data)
         {
@@ -88,7 +87,7 @@ namespace FOG.Handlers.Power
 
         private static void DelayShutdown(dynamic data)
         {
-            if (_timer != null) 
+            if (_timer != null)
             {
                 _timer.Stop();
                 _timer.Dispose();
@@ -113,7 +112,8 @@ namespace FOG.Handlers.Power
 
             Log.Entry(LogName, "Delayed power action by " + delayTime + " minutes");
 
-            var notification = new Notification("Shutdown Delayed", "Shutdown has been delayed for " + delayTime + " minutes", 10);
+            var notification = new Notification("Shutdown Delayed",
+                "Shutdown has been delayed for " + delayTime + " minutes", 10);
             Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
             delayed = true;
@@ -127,7 +127,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Called when a shutdown is requested via the Bus
+        ///     Called when a shutdown is requested via the Bus
         /// </summary>
         /// <param name="data">The shutdown data to use</param>
         private static void HelpShutdown(dynamic data)
@@ -137,14 +137,14 @@ namespace FOG.Handlers.Power
             string type = data.type.ToString();
             type = type.Trim();
 
-            if(type.Equals("shutdown"))
+            if (type.Equals("shutdown"))
                 Shutdown(data.reason.ToString(), FormOption.Abort, data.reason.ToString());
-            else if(type.Equals("reboot"))
+            else if (type.Equals("reboot"))
                 Restart(data.reason.ToString(), FormOption.Abort, data.reason.ToString());
         }
 
         /// <summary>
-        /// Create a shutdown command
+        ///     Create a shutdown command
         /// </summary>
         /// <param name="parameters">The parameters to use</param>
         public static void CreateTask(string parameters)
@@ -159,7 +159,8 @@ namespace FOG.Handlers.Power
             _instance.CreateTask(parameters);
         }
 
-        public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null, int gracePeriod = -1)
+        public static void QueueShutdown(string parameters, FormOption options = FormOption.Abort, string message = null,
+            int gracePeriod = -1)
         {
             // If no user is logged in, skip trying to notify users
             if (!UserHandler.IsUserLoggedIn())
@@ -192,7 +193,7 @@ namespace FOG.Handlers.Power
 
             // Generate the request data
             Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
-            
+
             requestData = new JObject();
             requestData.action = "request";
             requestData.period = gracePeriod;
@@ -238,7 +239,7 @@ namespace FOG.Handlers.Power
 
                     if (ShouldAbort()) return;
 
-                    QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int)requestData.period);
+                    QueueShutdown(requestData.command.ToString(), FormOption.None, message, (int) requestData.period);
                     return;
                 }
 
@@ -259,12 +260,14 @@ namespace FOG.Handlers.Power
             }
         }
 
-        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
+        public static void Shutdown(string comment, FormOption options = FormOption.Abort, string message = null,
+            int seconds = 0)
         {
             _instance.Shutdown(comment, options, message, seconds);
         }
 
-        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null, int seconds = 0)
+        public static void Restart(string comment, FormOption options = FormOption.Abort, string message = null,
+            int seconds = 0)
         {
             _instance.Restart(comment, options, message, seconds);
         }
@@ -284,7 +287,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Entry off the current user
+        ///     Entry off the current user
         /// </summary>
         public static void LogOffUser()
         {
@@ -292,15 +295,15 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Hibernate the computer
+        ///     Hibernate the computer
         /// </summary>
         public static void Hibernate()
         {
-           _instance.Hibernate();
+            _instance.Hibernate();
         }
 
         /// <summary>
-        /// Lock the workstation
+        ///     Lock the workstation
         /// </summary>
         public static void LockWorkStation()
         {
@@ -308,7 +311,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Abort a shutdown if it is not to late
+        ///     Abort a shutdown if it is not to late
         /// </summary>
         public static void AbortShutdown()
         {
@@ -327,7 +330,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Spawn an update waiter
+        ///     Spawn an update waiter
         /// </summary>
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(string fileName)

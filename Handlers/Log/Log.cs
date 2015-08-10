@@ -23,12 +23,12 @@ using System.IO;
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Handle all interaction with the log file
+    ///     Handle all interaction with the log file
     /// </summary>
     public static class Log
     {
         /// <summary>
-        /// The level of logging that should be recorded
+        ///     The level of logging that should be recorded
         /// </summary>
         public enum Level
         {
@@ -38,7 +38,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Where to output the log to
+        ///     Where to output the log to
         /// </summary>
         public enum Mode
         {
@@ -51,17 +51,13 @@ namespace FOG.Handlers
         private const int HeaderLength = 78;
         private const string LogName = "Log";
 
-        public static string FilePath { get; set; }
-        public static long MaxSize { get; set; }
-        public static Mode Output { get; set; }
-
         static Log()
         {
             Output = Mode.Quiet;
 
             FilePath = Path.Combine(Settings.Location, "fog.log");
             MaxSize = DefaultMaxLogSize;
-            
+
             var rootPath = Settings.Get("RootLog");
             if (!string.IsNullOrEmpty(rootPath) && rootPath.Trim().Equals("1"))
                 FilePath = @"\fog.log";
@@ -69,30 +65,34 @@ namespace FOG.Handlers
             Output = Mode.File;
         }
 
+        public static string FilePath { get; set; }
+        public static long MaxSize { get; set; }
+        public static Mode Output { get; set; }
+
         /// <summary>
-        /// Entry a message
+        ///     Entry a message
         /// </summary>
         /// <param name="level">The logging level</param>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
         public static void Entry(Level level, string caller, string message)
         {
-            #if DEBUG
-            #else
+#if DEBUG
+#else
             if (level == Level.Debug) return;
             #endif
 
             var prefix = "";
 
             if (level == Level.Debug || level == Level.Error)
-                prefix = level.ToString().ToUpper()+": ";
+                prefix = level.ToString().ToUpper() + ": ";
 
             WriteLine(level, string.Format(" {0} {1} {2} {3}{4}",
                 DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), caller, prefix, message));
         }
 
         /// <summary>
-        /// Entry a message
+        ///     Entry a message
         /// </summary>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
@@ -113,13 +113,13 @@ namespace FOG.Handlers
 
         public static void Debug(string caller, string message)
         {
-            #if DEBUG
-                Entry(Level.Debug, caller, message);
-            #endif
+#if DEBUG
+            Entry(Level.Debug, caller, message);
+#endif
         }
 
         /// <summary>
-        /// Write a new line to the log
+        ///     Write a new line to the log
         /// </summary>
         public static void NewLine()
         {
@@ -127,7 +127,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write a divider to the log
+        ///     Write a divider to the log
         /// </summary>
         public static void Divider()
         {
@@ -135,13 +135,13 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write a header to the log
+        ///     Write a header to the log
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
         public static void Header(string text)
         {
-            var headerSize = (double)((HeaderLength - text.Length))/2;
-            
+            var headerSize = (double) ((HeaderLength - text.Length))/2;
+
             // Construct the first section
             var output = "";
             for (var i = 0; i < (int) Math.Ceiling(headerSize); i++)
@@ -157,7 +157,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Create one header with a divider above and below it
+        ///     Create one header with a divider above and below it
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
         public static void PaddedHeader(string text)
@@ -168,7 +168,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write text to the log
+        ///     Write text to the log
         /// </summary>
         /// <param name="level">The logging level</param>
         /// <param name="text">The text to write</param>
@@ -210,7 +210,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write text to the log
+        ///     Write text to the log
         /// </summary>
         /// <param name="text">The text to write</param>
         public static void Write(string text)
@@ -219,7 +219,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write a line to the log
+        ///     Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
         public static void WriteLine(string line)
@@ -228,7 +228,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Write a line to the log
+        ///     Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
         /// <param name="level">The logging level</param>
@@ -245,7 +245,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Wipe the log
+        ///     Wipe the log
         /// </summary>
         /// <param name="logFile"></param>
         private static void CleanLog(FileSystemInfo logFile)

@@ -25,17 +25,8 @@ using System.Runtime.InteropServices;
 
 namespace FOG.Handlers.User
 {
-    class WindowsUser : IUser
+    internal class WindowsUser : IUser
     {
-        private const string LogName = "UserHandler";
-        [DllImport("user32.dll")]
-        private static extern bool GetLastInputInfo(ref Lastinputinfo plii);
-
-        [DllImport("Wtsapi32.dll")]
-        private static extern bool WTSQuerySessionInformation(IntPtr hServer, int sessionId, WtsInfoClass wtsInfoClass, out System.IntPtr ppBuffer, out int pBytesReturned);
-        [DllImport("Wtsapi32.dll")]
-        private static extern void WTSFreeMemory(IntPtr pointer);
-
         public enum WtsInfoClass
         {
             WTSInitialProgram,
@@ -62,22 +53,18 @@ namespace FOG.Handlers.User
             WTSIncomingFrames,
             WTSOutgoingFrames,
             WTSClientInfo,
-            WTSSessionInfo,
+            WTSSessionInfo
         }
 
-        internal struct Lastinputinfo
-        {
-            public uint CbSize;
-            public uint DwTime;
-        }
+        private const string LogName = "UserHandler";
 
         public int GetInactivityTime()
         {
             var lastInputInfo = new Lastinputinfo();
-            lastInputInfo.CbSize = (uint)Marshal.SizeOf(lastInputInfo);
+            lastInputInfo.CbSize = (uint) Marshal.SizeOf(lastInputInfo);
             lastInputInfo.DwTime = 0;
 
-            var envTicks = (uint)Environment.TickCount;
+            var envTicks = (uint) Environment.TickCount;
 
             if (!GetLastInputInfo(ref lastInputInfo))
                 return 0;
@@ -85,7 +72,7 @@ namespace FOG.Handlers.User
             var lastInputTick = lastInputInfo.DwTime;
             var idleTime = envTicks - lastInputTick;
 
-            return (int)idleTime / 1000;
+            return (int) idleTime/1000;
         }
 
         public List<string> GetUsersLoggedIn()
@@ -93,19 +80,29 @@ namespace FOG.Handlers.User
             var sessionIds = GetSessionIds();
 
             return (from sessionId in sessionIds
-                    where !GetUserNameFromSessionId(sessionId, false)
-                        .Equals("SYSTEM")
-                    select GetUserNameFromSessionId(sessionId, false)).ToList();
+                where !GetUserNameFromSessionId(sessionId, false)
+                    .Equals("SYSTEM")
+                select GetUserNameFromSessionId(sessionId, false)).ToList();
         }
 
+        [DllImport("user32.dll")]
+        private static extern bool GetLastInputInfo(ref Lastinputinfo plii);
+
+        [DllImport("Wtsapi32.dll")]
+        private static extern bool WTSQuerySessionInformation(IntPtr hServer, int sessionId, WtsInfoClass wtsInfoClass,
+            out IntPtr ppBuffer, out int pBytesReturned);
+
+        [DllImport("Wtsapi32.dll")]
+        private static extern void WTSFreeMemory(IntPtr pointer);
+
         /// <summary>
-        /// Get all active session IDs
+        ///     Get all active session IDs
         /// </summary>
         /// <returns>A list of session IDs</returns>
         private static List<int> GetSessionIds()
         {
             var sessionIds = new List<int>();
-            var properties = new[] { "SessionId" };
+            var properties = new[] {"SessionId"};
 
             var query = new SelectQuery("Win32_Process", "", properties); //SessionId
             var searcher = new ManagementObjectSearcher(query);
@@ -128,7 +125,7 @@ namespace FOG.Handlers.User
         }
 
         /// <summary>
-        /// Convert a session ID to its correlating username
+        ///     Convert a session ID to its correlating username
         /// </summary>
         /// <param name="sessionId">The session ID to use</param>
         /// <param name="prependDomain">If the user's domain should be prepended</param>
@@ -150,6 +147,12 @@ namespace FOG.Handlers.User
             username = Marshal.PtrToStringAnsi(buffer) + "\\" + username;
             WTSFreeMemory(buffer);
             return username;
+        }
+
+        internal struct Lastinputinfo
+        {
+            public uint CbSize;
+            public uint DwTime;
         }
     }
 }

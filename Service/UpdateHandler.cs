@@ -36,17 +36,16 @@ namespace FOG
         {
             try
             {
-                Thread.Sleep(5 * 1000);
+                Thread.Sleep(5*1000);
                 ProcessHandler.KillAllEXE("FOGUserService");
                 ProcessHandler.KillAllEXE("FOGTray");
-                Thread.Sleep(5 * 1000);
+                Thread.Sleep(5*1000);
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, "Could not stop sub processes");
                 Log.Error(LogName, ex);
             }
-
         }
 
         public static void BeginUpdate()

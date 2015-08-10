@@ -25,7 +25,6 @@ using FOG.Modules.DisplayManager.Linux;
 using FOG.Modules.DisplayManager.Mac;
 using FOG.Modules.DisplayManager.Windows;
 
-
 namespace FOG.Modules.DisplayManager
 {
     /// <summary>
@@ -33,7 +32,7 @@ namespace FOG.Modules.DisplayManager
     /// </summary>
     public class DisplayManager : AbstractModule
     {
-        private IDisplay _instance;
+        private readonly IDisplay _instance;
 
         public DisplayManager()
         {
@@ -81,7 +80,6 @@ namespace FOG.Modules.DisplayManager
             try
             {
                 _instance.ChangeResolution(device, width, height, refresh);
-
             }
             catch (Exception ex)
             {

@@ -24,9 +24,8 @@ using SuperWebSocket;
 
 namespace FOG.Handlers
 {
-    class BusServer
+    internal class BusServer
     {
-        public WebSocketServer Socket { get; }
         private const string LogName = "Bus::Server";
 
         public BusServer()
@@ -37,6 +36,8 @@ namespace FOG.Handlers
             bootstrap.Start();
             Socket = bootstrap.AppServers.FirstOrDefault() as WebSocketServer;
         }
+
+        public WebSocketServer Socket { get; }
 
         public bool Start()
         {
@@ -50,7 +51,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Send a message to all bus clients
+        ///     Send a message to all bus clients
         /// </summary>
         /// <param name="message">The message to emit</param>
         public void Send(string message)

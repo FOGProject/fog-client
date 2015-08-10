@@ -24,25 +24,16 @@ using FOG.Handlers.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Linux
 {
-    class LinuxHostName : IHostName
+    internal class LinuxHostName : IHostName
     {
-        private string Name = "HostnameChanger";
+        private readonly string Name = "HostnameChanger";
         private string currentHostName;
 
         public void RenameComputer(string hostname)
         {
             currentHostName = Environment.MachineName;
-            
-            BruteForce(hostname);
-        }
 
-        private void BruteForce(string hostname)
-        {
-            Log.Entry(Name, "Brute forcing hostname change...");
-            UpdateHostname(hostname);
-            UpdateHOSTNAME(hostname);
-            UpdateHosts(hostname);
-            UpdateNetwork(hostname);
+            BruteForce(hostname);
         }
 
         public bool RegisterComputer(Response response)
@@ -58,6 +49,15 @@ namespace FOG.Modules.HostnameChanger.Linux
         public void ActivateComputer(string key)
         {
             throw new NotImplementedException();
+        }
+
+        private void BruteForce(string hostname)
+        {
+            Log.Entry(Name, "Brute forcing hostname change...");
+            UpdateHostname(hostname);
+            UpdateHOSTNAME(hostname);
+            UpdateHosts(hostname);
+            UpdateNetwork(hostname);
         }
 
         private void ReplaceAll(string file, string hostname)
@@ -111,7 +111,6 @@ namespace FOG.Modules.HostnameChanger.Linux
                     if (!lines[i].Contains(ip)) continue;
 
                     lines[i] = ip + "   " + hostname;
-
                 }
 
                 File.WriteAllLines(file, lines);

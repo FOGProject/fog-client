@@ -29,9 +29,9 @@ using Newtonsoft.Json;
 
 namespace FOG
 {
-    class FOGUserService : AbstractService
+    internal class FOGUserService : AbstractService
     {
-        public FOGUserService() : base()
+        public FOGUserService()
         {
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
@@ -68,14 +68,19 @@ namespace FOG
         {
             return new AbstractModule[]
             {
-                new AutoLogOut(), 
+                new AutoLogOut(),
                 new DisplayManager(),
                 new DefaultPrinterManager()
             };
         }
 
-        protected override void Load() { }
-        protected override void Unload() { }
+        protected override void Load()
+        {
+        }
+
+        protected override void Unload()
+        {
+        }
 
         protected override int? GetSleepTime()
         {
@@ -86,7 +91,8 @@ namespace FOG
                 if (sleepTime >= DefaultSleepTime)
                     return sleepTime;
 
-                Log.Entry(Name, string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                Log.Entry(Name,
+                    string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
             }
             catch (Exception ex)
             {
@@ -102,7 +108,7 @@ namespace FOG
             Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
 
-            ProcessHandler.RunClientEXE("FOGNotificationGUI.exe",Transform.EncodeBase64(jsonData.ToString()), false);
+            ProcessHandler.RunClientEXE("FOGNotificationGUI.exe", Transform.EncodeBase64(jsonData), false);
         }
     }
 }

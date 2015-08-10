@@ -23,13 +23,14 @@ using FOG.Handlers.Middleware;
 
 namespace FOG
 {
-    class LinuxUpdate : IUpdate
+    internal class LinuxUpdate : IUpdate
     {
-        const string LogName = "UpdateHelper";
+        private const string LogName = "UpdateHelper";
 
         public void ApplyUpdate()
         {
-            ProcessHandler.Run("/bin/bash", string.Format("-c {0} {1}", Path.Combine(Settings.Location, "core.sh"), Configuration.ServerAddress));
+            ProcessHandler.Run("/bin/bash",
+                string.Format("-c {0} {1}", Path.Combine(Settings.Location, "core.sh"), Configuration.ServerAddress));
         }
 
         public void StartService()

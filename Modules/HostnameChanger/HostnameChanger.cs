@@ -25,7 +25,6 @@ using FOG.Modules.HostnameChanger.Linux;
 using FOG.Modules.HostnameChanger.Mac;
 using FOG.Modules.HostnameChanger.Windows;
 
-
 namespace FOG.Modules.HostnameChanger
 {
     /// <summary>
@@ -33,12 +32,12 @@ namespace FOG.Modules.HostnameChanger
     /// </summary>
     public class HostnameChanger : AbstractModule
     {
-        private IHostName _instance;
+        private readonly IHostName _instance;
 
         public HostnameChanger()
         {
             Name = "HostnameChanger";
-            
+
             switch (Settings.OS)
             {
                 case Settings.OSType.Mac:
@@ -89,12 +88,12 @@ namespace FOG.Modules.HostnameChanger
                 Log.Entry(Name, "Hostname is correct");
                 return;
             }
-            
+
             //First unjoin it from active directory
             UnRegisterComputer(response);
 
             Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
-            
+
             try
             {
                 _instance.RenameComputer(response.GetField("#hostname"));
@@ -115,7 +114,8 @@ namespace FOG.Modules.HostnameChanger
             if (response.GetField("#AD") != "1")
                 return;
 
-            if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
+            if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") ||
+                !response.IsFieldValid("#ADPass"))
             {
                 Log.Error(Name, "Required Domain Joining information is missing");
                 return;
@@ -130,7 +130,6 @@ namespace FOG.Modules.HostnameChanger
             {
                 Log.Error(Name, ex);
             }
-
         }
 
         //Remove the host from active directory
@@ -138,7 +137,7 @@ namespace FOG.Modules.HostnameChanger
         {
             Log.Entry(Name, "Removing host from active directory");
 
-            if (!response.IsFieldValid("#ADUser") || ! response.IsFieldValid("#ADPass"))
+            if (!response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
             {
                 Log.Error(Name, "Required Domain information is missing");
                 return;
@@ -161,14 +160,14 @@ namespace FOG.Modules.HostnameChanger
                 return;
 
             Log.Entry(Name, "Activing host with product key");
-            
+
             try
             {
                 _instance.ActivateComputer(response.GetField("#Key"));
             }
             catch (Exception ex)
             {
-              Log.Error(Name, ex);
+                Log.Error(Name, ex);
             }
         }
     }

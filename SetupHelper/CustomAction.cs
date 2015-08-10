@@ -27,7 +27,7 @@ namespace SetupHelper
 {
     public class CustomActions
     {
-        static void DisplayMSIError(Session session, string msg)
+        private static void DisplayMSIError(Session session, string msg)
         {
             var r = new Record();
             r.SetString(0, msg);
@@ -51,17 +51,16 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult SaveSettings(Session session)
         {
-
             try
             {
                 MonoHelper.SaveSettings(
                     session["HTTPS"],
                     session["USETRAY"],
-                    session["WEBADDRESS"], 
-                    session["WEBROOT"], 
-                    session["ProductVersion"], 
-                    "FOG", 
-                    session["INSTALLLOCATION"], 
+                    session["WEBADDRESS"],
+                    session["WEBROOT"],
+                    session["ProductVersion"],
+                    "FOG",
+                    session["INSTALLLOCATION"],
                     session["ROOTLOG"]);
 
                 return ActionResult.Success;
@@ -87,7 +86,6 @@ namespace SetupHelper
             }
 
             return ActionResult.Success;
-
         }
 
         [CustomAction]
@@ -104,7 +102,9 @@ namespace SetupHelper
                 taskService.RootFolder.DeleteFolder("FOG", false);
                 taskService.Dispose();
             }
-            catch (Exception ) { }
+            catch (Exception)
+            {
+            }
 
             return ActionResult.Success;
         }

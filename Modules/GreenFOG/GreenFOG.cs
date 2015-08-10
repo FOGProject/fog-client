@@ -30,7 +30,7 @@ namespace FOG.Modules.GreenFOG
     /// </summary>
     public class GreenFOG : AbstractModule
     {
-        private IGreen _instance;
+        private readonly IGreen _instance;
 
         public GreenFOG()
         {
@@ -68,11 +68,11 @@ namespace FOG.Modules.GreenFOG
 
         private List<Task> CastTasks(List<string> rawTasks)
         {
-            return (from task in rawTasks 
-                    select task.Split('@') 
-                    into taskData 
-                    where taskData.Length == 3 
-                    select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
+            return (from task in rawTasks
+                select task.Split('@')
+                into taskData
+                where taskData.Length == 3
+                select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
         }
 
         private void ClearAll()
@@ -88,7 +88,7 @@ namespace FOG.Modules.GreenFOG
             }
         }
 
-        new public bool IsEnabled()
+        public new bool IsEnabled()
         {
             var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
                 EnabledURL, Name.ToLower()), true);

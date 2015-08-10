@@ -19,25 +19,35 @@
 
 using System;
 using System.IO;
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Middleware
 {
     [TestFixture]
     public class CommunicationTests
     {
-        private const string Server = "http://fog.jbob.io";
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
-        private const string URL = "/service/Test.php?unit=";
-
         [SetUp]
         public void Init()
         {
             Log.Output = Log.Mode.Console;
             Configuration.ServerAddress = Server;
             Configuration.TestMAC = MAC;
+        }
+
+        private const string Server = "http://fog.jbob.io";
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
+        private const string URL = "/service/Test.php?unit=";
+
+        [Test]
+        public void Contact()
+        {
+            var success = Communication.Contact("/index.php");
+            Assert.IsTrue(success);
+
+            success = Communication.Contact("/no-exist");
+            Assert.IsFalse(success);
         }
 
         [Test]
@@ -75,16 +85,6 @@ namespace FOGService.Tests.Handlers.Middleware
             var response = Communication.GetRawResponse(URL + "RawResponse");
 
             Assert.AreEqual(phrase, response);
-        }
-
-        [Test]
-        public void Contact()
-        {
-            var success = Communication.Contact("/index.php");
-            Assert.IsTrue(success);
-
-            success = Communication.Contact("/no-exist");
-            Assert.IsFalse(success);
         }
     }
 }

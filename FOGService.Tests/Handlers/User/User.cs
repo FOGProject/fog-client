@@ -18,8 +18,8 @@
  */
 
 using System;
-using NUnit.Framework;
 using FOG.Handlers;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.User
 {
@@ -33,9 +33,9 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
-        public void IsUserLoggedIn()
+        public void GetCurrentUser()
         {
-            Assert.IsTrue(UserHandler.IsUserLoggedIn());
+            Assert.AreEqual(Environment.UserName, UserHandler.GetCurrentUser());
         }
 
         [Test]
@@ -49,12 +49,6 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
-        public void GetCurrentUser()
-        {
-            Assert.AreEqual(Environment.UserName, UserHandler.GetCurrentUser());
-        }
-
-        [Test]
         public void GetUsersLoggedIn()
         {
             var users = UserHandler.GetUsersLoggedIn();
@@ -62,5 +56,10 @@ namespace FOGService.Tests.Handlers.User
             Assert.IsTrue(users.Contains(Environment.UserName));
         }
 
+        [Test]
+        public void IsUserLoggedIn()
+        {
+            Assert.IsTrue(UserHandler.IsUserLoggedIn());
+        }
     }
 }

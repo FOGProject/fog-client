@@ -19,7 +19,7 @@
 
 namespace FOG.Modules.GreenFOG
 {
-    interface IGreen
+    internal interface IGreen
     {
         void AddTask(int min, int hour, bool restart);
         void RemoveTask(int min, int hour, bool restart);

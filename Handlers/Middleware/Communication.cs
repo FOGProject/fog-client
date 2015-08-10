@@ -32,7 +32,7 @@ namespace FOG.Handlers.Middleware
         private const string LogName = "Middleware::Communication";
 
         /// <summary>
-        /// Get the parsed response of a server url
+        ///     Get the parsed response of a server url
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <returns>The parsed response</returns>
@@ -50,7 +50,9 @@ namespace FOG.Handlers.Middleware
 
                 //See if the return code is known
                 var messageFound = false;
-                foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
+                foreach (
+                    var returnMessage in
+                        Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
                     messageFound = true;
                     Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
@@ -69,13 +71,13 @@ namespace FOG.Handlers.Middleware
             {
                 Log.Error(LogName, "Could not contact FOG server");
                 Log.Error(LogName, ex);
-            }           
-     
+            }
+
             return new Response();
         }
 
         /// <summary>
-        ///  Get the parsed response of a server url
+        ///     Get the parsed response of a server url
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <param name="appendMAC">If the MAC address of the host should be appended to the URL</param>
@@ -84,12 +86,12 @@ namespace FOG.Handlers.Middleware
         {
             if (appendMAC)
                 postfix += ((postfix.Contains(".php?") ? "&" : "?") + "mac=" + Configuration.MACAddresses());
-           
+
             return GetResponse(postfix);
         }
 
         /// <summary>
-        /// Get the raw response of a server url
+        ///     Get the raw response of a server url
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <returns>The unparsed response</returns>
@@ -112,7 +114,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// POST data to a URL
+        ///     POST data to a URL
         /// </summary>
         /// <param name="postfix">The text to append to the URL</param>
         /// <param name="param">The params to post</param>
@@ -139,7 +141,7 @@ namespace FOG.Handlers.Middleware
 
                 // Get the response.
                 var response = request.GetResponse();
-                Log.Debug(LogName, "Post response = " + ((HttpWebResponse)response).StatusDescription);
+                Log.Debug(LogName, "Post response = " + ((HttpWebResponse) response).StatusDescription);
                 dataStream = response.GetResponseStream();
 
                 // Open the stream using a StreamReader for easy access.
@@ -156,7 +158,9 @@ namespace FOG.Handlers.Middleware
                 rawResponse = Authentication.Decrypt(rawResponse);
 
                 var messageFound = false;
-                foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
+                foreach (
+                    var returnMessage in
+                        Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
                     messageFound = true;
                     Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
@@ -178,7 +182,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// GET a URL but don't check for a response
+        ///     GET a URL but don't check for a response
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <returns>True if the server was contacted successfully</returns>
@@ -198,13 +202,13 @@ namespace FOG.Handlers.Middleware
             {
                 Log.Error(LogName, "Could not contact FOG server");
                 Log.Error(LogName, ex);
-            }               
-  
+            }
+
             return false;
         }
 
         /// <summary>
-        /// GET a URL but don't check for a response
+        ///     GET a URL but don't check for a response
         /// </summary>
         /// <param name="postfix">The text to append to the url</param>
         /// <param name="appendMAC">Should the MAC be appended</param>
@@ -218,7 +222,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Downloads a file and creates necessary directories
+        ///     Downloads a file and creates necessary directories
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <param name="filePath">The location to save the file</param>
@@ -229,7 +233,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Download a file from an external server
+        ///     Download a file from an external server
         /// </summary>
         /// <param name="url">The URL to download from</param>
         /// <param name="filePath">The path to save the file to</param>
@@ -287,7 +291,6 @@ namespace FOG.Handlers.Middleware
 
                         // Write the data to the local file
                         localStream.Write(buffer, 0, bytesRead);
-
                     } while (bytesRead > 0);
                 }
             }

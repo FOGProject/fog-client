@@ -22,15 +22,16 @@ using WebSocket4Net;
 
 namespace FOG.Handlers
 {
-    class BusClient
+    internal class BusClient
     {
-        public WebSocket Socket { get; }
         private const string LogName = "Bus::Client";
 
         public BusClient(int port)
         {
             Socket = new WebSocket("ws://127.0.0.1:" + port + "/");
         }
+
+        public WebSocket Socket { get; }
 
         public void Start()
         {
@@ -44,7 +45,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Send a message to the bus server
+        ///     Send a message to the bus server
         /// </summary>
         /// <param name="message">The message to emit</param>
         public void Send(string message)

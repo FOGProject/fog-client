@@ -26,9 +26,9 @@ using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG
 {
-    class WindowsGreen : IGreen
+    internal class WindowsGreen : IGreen
     {
-         string LogName = "GreenFOG";
+        private readonly string LogName = "GreenFOG";
 
         public void AddTask(int min, int hour, bool restart)
         {
@@ -36,10 +36,10 @@ namespace FOG.Modules.GreenFOG
 
             //Create task definition
             var taskDefinition = taskService.NewTask();
-            taskDefinition.RegistrationInfo.Description = min+"@"+hour+"@"+((restart) ? "r" : "s");
+            taskDefinition.RegistrationInfo.Description = min + "@" + hour + "@" + ((restart) ? "r" : "s");
             taskDefinition.Principal.UserId = "SYSTEM";
 
-            var trigger = new DailyTrigger()
+            var trigger = new DailyTrigger
             {
                 StartBoundary = DateTime.Today + TimeSpan.FromHours(hour) + TimeSpan.FromMinutes(min)
             };
@@ -47,8 +47,8 @@ namespace FOG.Modules.GreenFOG
             taskDefinition.Triggers.Add(trigger);
 
             //Create task action
-            var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +@"Power.exe");
-            
+            var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"Power.exe");
+
             taskDefinition.Actions.Add(restart
                 ? new ExecAction(fileName, "reboot \"This computer is going to reboot.\"")
                 : new ExecAction(fileName, "shutdown \"This computer is going to shutdown to save power.\""));
@@ -58,19 +58,22 @@ namespace FOG.Modules.GreenFOG
             taskDefinition.Settings.DisallowStartOnRemoteAppSession = false;
             taskDefinition.Settings.StopIfGoingOnBatteries = false;
 
-            taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + taskDefinition.RegistrationInfo.Description, taskDefinition);
+            taskService.RootFolder.RegisterTaskDefinition(@"FOG\" + taskDefinition.RegistrationInfo.Description,
+                taskDefinition);
             taskService.Dispose();
         }
 
         public void RemoveTask(int min, int hour, bool restart)
         {
             var taskService = new TaskService();
-            var task = min +"@" + hour + "@" + ((restart) ? "r" : "s");
+            var task = min + "@" + hour + "@" + ((restart) ? "r" : "s");
             taskService.RootFolder.DeleteTask(@"FOG\" + task);
             taskService.Dispose();
         }
 
-        public void Reload() { }
+        public void Reload()
+        {
+        }
 
         public void ClearAll()
         {
@@ -90,7 +93,7 @@ namespace FOG.Modules.GreenFOG
             foreach (var task in existingTasks)
             {
                 Log.Debug(LogName, "Delete task " + task.Name);
-                taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);   
+                taskService.RootFolder.DeleteTask(@"FOG\" + task.Name);
             }
 
             taskService.Dispose();

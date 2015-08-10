@@ -22,7 +22,7 @@ using FOG.Handlers.Middleware;
 
 namespace FOG.Commands.Core.Middleware
 {
-    class CommunicationCommand : ICommand
+    internal class CommunicationCommand : ICommand
     {
         private const string LogName = "Console::Middleware::Communication";
 
@@ -35,7 +35,7 @@ namespace FOG.Commands.Core.Middleware
             }
 
             if (args.Length < 2) return false;
-            
+
             if (args[0].Equals("contact"))
             {
                 var success = Communication.Contact(args[1]);

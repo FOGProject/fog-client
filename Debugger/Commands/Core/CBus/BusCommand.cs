@@ -22,7 +22,7 @@ using Newtonsoft.Json.Linq;
 
 namespace FOG.Commands.Core.CBus
 {
-    class BusCommand : ICommand
+    internal class BusCommand : ICommand
     {
         private const string LogName = "Console::Bus";
 

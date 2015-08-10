@@ -29,8 +29,6 @@ namespace FOG.Handlers.Middleware
     public static class Configuration
     {
         private const string LogName = "Middleware::Configuration";
-        public static string ServerAddress { get; set; }
-        public static string TestMAC { get; set; }
 
         static Configuration()
         {
@@ -38,13 +36,15 @@ namespace FOG.Handlers.Middleware
             GetAndSetServerAddress();
         }
 
+        public static string ServerAddress { get; set; }
+        public static string TestMAC { get; set; }
+
         /// <summary>
-        /// Load the server information from the registry and apply it
+        ///     Load the server information from the registry and apply it
         /// </summary>
         /// <returns>True if settings were updated</returns>
         public static bool GetAndSetServerAddress()
         {
-
             if (string.IsNullOrEmpty(Settings.Get("HTTPS")) || Settings.Get("WebRoot") == null ||
                 string.IsNullOrEmpty(Settings.Get("Server")))
             {
@@ -59,7 +59,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Get the IP address of the host
+        ///     Get the IP address of the host
         /// </summary>
         /// <returns>The first IP address of the host</returns>
         public static string IPAddress()
@@ -72,7 +72,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        /// Get a string of all the host's valid MAC addresses
+        ///     Get a string of all the host's valid MAC addresses
         /// </summary>
         /// <returns>A string of all the host's valid MAC addresses, split by |</returns>
         public static string MACAddresses()
@@ -85,7 +85,10 @@ namespace FOG.Handlers.Middleware
                 var adapters = NetworkInterface.GetAllNetworkInterfaces();
 
                 macs = adapters.Aggregate(macs, (current, adapter) =>
-                    current + ("|" + string.Join(":", (from z in adapter.GetPhysicalAddress().GetAddressBytes() select z.ToString("X2")).ToArray())));
+                    current +
+                    ("|" +
+                     string.Join(":",
+                         (from z in adapter.GetPhysicalAddress().GetAddressBytes() select z.ToString("X2")).ToArray())));
 
                 // Remove the first |
                 if (macs.Length > 0)

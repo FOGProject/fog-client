@@ -27,7 +27,7 @@ using FOG.Handlers.Middleware;
 
 namespace FOG.Commands.Core.Middleware
 {
-    class AuthenticationCommand : ICommand
+    internal class AuthenticationCommand : ICommand
     {
         private const string LogName = "Console::Middleware::Authentication";
 
@@ -49,7 +49,8 @@ namespace FOG.Commands.Core.Middleware
             {
                 try
                 {
-                    var keyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp", "fog.ca.crt");
+                    var keyPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "tmp",
+                        "fog.ca.crt");
                     var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
 
                     if (!downloaded)
@@ -79,6 +80,5 @@ namespace FOG.Commands.Core.Middleware
             Log.WriteLine("--> handshake");
             Log.WriteLine("--> pin");
         }
-
     }
 }

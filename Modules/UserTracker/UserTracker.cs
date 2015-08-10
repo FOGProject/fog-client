@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
-
 namespace FOG.Modules.UserTracker
 {
     /// <summary>
@@ -45,13 +44,17 @@ namespace FOG.Modules.UserTracker
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in
                 if (!_usernames.Contains(username))
-                    Communication.Contact(string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}", Environment.MachineName, username), true);
+                    Communication.Contact(
+                        string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}",
+                            Environment.MachineName, username), true);
                 else
                     _usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
             foreach (var username in _usernames)
-                Communication.Contact(string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}", Environment.MachineName, username), true);
+                Communication.Contact(
+                    string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}",
+                        Environment.MachineName, username), true);
 
             _usernames = newUsernames;
         }

@@ -24,9 +24,9 @@ using FOG.Handlers;
 
 namespace FOG
 {
-    class WindowsUpdate : IUpdate
+    internal class WindowsUpdate : IUpdate
     {
-        const string LogName = "UpdateHelper";
+        private const string LogName = "UpdateHelper";
 
         public void ApplyUpdate()
         {
@@ -40,9 +40,11 @@ namespace FOG
             {
                 StartInfo =
                 {
-                    Arguments = string.Format("/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"", 
-                        Path.Combine(Settings.Location, "FOGService.msi"), 
-                        useTray, https, server, webRoot, logRoot)
+                    Arguments =
+                        string.Format(
+                            "/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"",
+                            Path.Combine(Settings.Location, "FOGService.msi"),
+                            useTray, https, server, webRoot, logRoot)
                 }
             };
             process.StartInfo.CreateNoWindow = true;
@@ -61,7 +63,7 @@ namespace FOG
             using (var service = new ServiceController("fogservice"))
             {
                 service.Start();
-                service.WaitForStatus(ServiceControllerStatus.Running);               
+                service.WaitForStatus(ServiceControllerStatus.Running);
             }
         }
 

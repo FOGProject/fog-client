@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace FOG.Modules.GreenFOG
 {
-    class MacGreen : IGreen
+    internal class MacGreen : IGreen
     {
         public void AddTask(int min, int hour, bool restart)
         {

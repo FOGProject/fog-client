@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace FOG.Handlers.User
 {
-    class MacUser : IUser
+    internal class MacUser : IUser
     {
         private const string LogName = "UserHandler";
 
@@ -54,14 +54,17 @@ namespace FOG.Handlers.User
 
         public int GetInactivityTime()
         {
-                        var time = "-1";
+            var time = "-1";
 
-            using (var process = new Process { StartInfo = new ProcessStartInfo {
-                FileName = @"/usr/sbin/ioreg",
-                Arguments = @"-c IOHIDSystem | /usr/bin/awk '/HIDIdleTime/ {print int($NF/1000000000); exit}'",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-                CreateNoWindow = true
+            using (var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = @"/usr/sbin/ioreg",
+                    Arguments = @"-c IOHIDSystem | /usr/bin/awk '/HIDIdleTime/ {print int($NF/1000000000); exit}'",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    CreateNoWindow = true
                 }
             })
             {

@@ -36,11 +36,8 @@ namespace FOG.Handlers
         }
 
         private const string LogName = "Settings";
-
         private static string _file;
         private static JObject _data = new JObject();
-        public static OSType OS { get; }
-        public static string Location { get; }
 
         static Settings()
         {
@@ -75,8 +72,11 @@ namespace FOG.Handlers
             }
         }
 
+        public static OSType OS { get; }
+        public static string Location { get; }
+
         /// <summary>
-        /// Check if the current OS is compatible with the given type
+        ///     Check if the current OS is compatible with the given type
         /// </summary>
         /// <param name="type">The type of OS to check for compatibility with</param>
         /// <returns>True if compatible</returns>
@@ -95,7 +95,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Set the filePath of the settings.json file. Will automatically reload.
+        ///     Set the filePath of the settings.json file. Will automatically reload.
         /// </summary>
         /// <param name="filePath">The path of the file</param>
         public static void SetPath(string filePath)
@@ -105,7 +105,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Reparse the settings.json file
+        ///     Reparse the settings.json file
         /// </summary>
         public static void Reload()
         {
@@ -113,7 +113,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Save the current data to settings.json
+        ///     Save the current data to settings.json
         /// </summary>
         /// <returns>True if successful</returns>
         private static bool Save()
@@ -153,7 +153,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Set the value of a setting. Will automatically save.
+        ///     Set the value of a setting. Will automatically save.
         /// </summary>
         /// <param name="key">The name of the setting</param>
         /// <param name="value">The new value of the setting</param>

@@ -27,14 +27,14 @@ using System.Text;
 namespace FOG.Handlers.Data
 {
     /// <summary>
-    /// Handle all encryption/decryption
+    ///     Handle all encryption/decryption
     /// </summary>
     public static class Transform
     {
         private const string LogName = "EncryptionHandler";
 
         /// <summary>
-        /// Base64 encode a string
+        ///     Base64 encode a string
         /// </summary>
         /// <param name="toEncode">The string that will be encoded</param>
         /// <returns>A base64 encoded string</returns>
@@ -54,7 +54,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Decodes a base64 encoded string
+        ///     Decodes a base64 encoded string
         /// </summary>
         /// <param name="toDecode">A base64 encoded string</param>
         /// <returns>Returns the base64 decoded string</returns>
@@ -74,7 +74,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Converts a byte array to a hex string
+        ///     Converts a byte array to a hex string
         /// </summary>
         /// <param name="ba">The byte array to be converted</param>
         /// <returns>A hex string representation of the byte array</returns>
@@ -83,12 +83,12 @@ namespace FOG.Handlers.Data
             var hex = new StringBuilder(ba.Length*2);
             foreach (var b in ba)
                 hex.AppendFormat("{0:x2}", b);
-            
+
             return hex.ToString();
         }
 
         /// <summary>
-        /// Converts a hex string to a byte array
+        ///     Converts a hex string to a byte array
         /// </summary>
         /// <param name="hex">The hex string to be converted</param>
         /// <returns>A byte array representation of the hex string</returns>
@@ -98,12 +98,12 @@ namespace FOG.Handlers.Data
             var bytes = new byte[numberChars/2];
             for (var i = 0; i < numberChars; i += 2)
                 bytes[i/2] = Convert.ToByte(hex.Substring(i, 2), 16);
-            
+
             return bytes;
         }
 
         /// <summary>
-        /// Creates an md5 hash of bytes
+        ///     Creates an md5 hash of bytes
         /// </summary>
         /// <param name="data">The bytes to hash</param>
         /// <returns></returns>
@@ -121,7 +121,7 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        /// Creates an md5 hash of a file
+        ///     Creates an md5 hash of a file
         /// </summary>
         /// <param name="filePath">The path to the file</param>
         /// <returns></returns>

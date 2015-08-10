@@ -20,7 +20,6 @@
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
-
 namespace FOG.Modules
 {
     /// <summary>
@@ -28,17 +27,17 @@ namespace FOG.Modules
     /// </summary>
     public abstract class AbstractModule
     {
-        //Basic variables every module needs
-        public string Name { get; protected set; }
-        public string EnabledURL { get; protected set; }
-        public Settings.OSType Compatiblity { get; protected set; }
-
         protected AbstractModule()
         {
             Name = "Generic Module";
             EnabledURL = "/service/servicemodule-active.php";
             Compatiblity = Settings.OSType.All;
         }
+
+        //Basic variables every module needs
+        public string Name { get; protected set; }
+        public string EnabledURL { get; protected set; }
+        public Settings.OSType Compatiblity { get; protected set; }
 
         /// <summary>
         ///     Called to Start the module. Filters out modules that are disabled on the server
@@ -47,7 +46,7 @@ namespace FOG.Modules
         {
             if (!Settings.IsCompatible(Compatiblity))
             {
-                Log.Entry(Name, "Module is not compatible with " + Settings.OS.ToString());
+                Log.Entry(Name, "Module is not compatible with " + Settings.OS);
                 return;
             }
 

@@ -32,9 +32,11 @@ using FOG.Modules.UserTracker;
 
 namespace FOG.Commands.Modules
 {
-    class ModuleCommand : ICommand
+    internal class ModuleCommand : ICommand
     {
-        private readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>()
+        private const string LogName = "Console::Modules";
+
+        private readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
         {
             {"autologout", new AutoLogOut()},
             {"clientupdater", new ClientUpdater()},
@@ -46,9 +48,6 @@ namespace FOG.Commands.Modules
             {"taskreboot", new TaskReboot()},
             {"usertracker", new UserTracker()}
         };
-
-        private const string LogName = "Console::Modules";
-
 
         public bool Process(string[] args)
         {
@@ -65,7 +64,7 @@ namespace FOG.Commands.Modules
             }
 
             if (!_modules.ContainsKey(args[0].ToLower())) return false;
-               
+
             _modules[args[0]].Start();
             return true;
         }

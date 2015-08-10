@@ -26,12 +26,12 @@ using WebSocket4Net;
 namespace FOG.Handlers
 {
     /// <summary>
-    /// An event driven IPC interface. Can also be used to send event only within the running process.
+    ///     An event driven IPC interface. Can also be used to send event only within the running process.
     /// </summary>
     public static class Bus
     {
         /// <summary>
-        /// Channels are used to categorize events. 
+        ///     Channels are used to categorize events.
         /// </summary>
         public enum Channel
         {
@@ -43,7 +43,8 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// The role of this bus instance. This is only needed for IPC. Note that the Server bus must be initialized before a client bus.
+        ///     The role of this bus instance. This is only needed for IPC. Note that the Server bus must be initialized before a
+        ///     client bus.
         /// </summary>
         public enum Mode
         {
@@ -51,20 +52,19 @@ namespace FOG.Handlers
             Client
         }
 
+        private const string LogName = "Bus";
+        private const int Port = 1277;
+
         private static readonly Dictionary<Channel, LinkedList<Action<dynamic>>> Registrar =
             new Dictionary<Channel, LinkedList<Action<dynamic>>>();
 
-        private const string LogName = "Bus";
         private static bool _initialized;
         private static BusServer _server;
         private static BusClient _client;
-
-        private const int Port = 1277;
-
         private static Mode _mode = Mode.Client;
 
         /// <summary>
-        /// Set the mode of the bus instance. Upon calling this method, the IPC interface will initialize.
+        ///     Set the mode of the bus instance. Upon calling this method, the IPC interface will initialize.
         /// </summary>
         /// <param name="mode"></param>
         public static void SetMode(Mode mode)
@@ -74,9 +74,9 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Initiate the socket that connects to all other FOG bus instances
-        /// It MUST be assumed that this socket is compromised
-        /// Do NOT send security relevant data across it
+        ///     Initiate the socket that connects to all other FOG bus instances
+        ///     It MUST be assumed that this socket is compromised
+        ///     Do NOT send security relevant data across it
         /// </summary>
         /// <returns></returns>
         private static void Initializesocket()
@@ -117,7 +117,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Send a message to other bus instances
+        ///     Send a message to other bus instances
         /// </summary>
         /// <param name="msg">The message to send, should be in json format</param>
         private static void SendMessage(string msg)
@@ -125,14 +125,14 @@ namespace FOG.Handlers
             if (!_initialized) Initializesocket();
             if (!_initialized) return;
 
-            if(_server != null)
+            if (_server != null)
                 _server.Send(msg);
             else if (_client != null)
                 _client.Send(msg);
         }
 
         /// <summary>
-        /// Emit a message to all listeners
+        ///     Emit a message to all listeners
         /// </summary>
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
@@ -143,7 +143,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Emit a message to all listeners
+        ///     Emit a message to all listeners
         /// </summary>
         /// <param name="channel">The channel to emit on</param>
         /// <param name="data">The data to send</param>
@@ -157,7 +157,7 @@ namespace FOG.Handlers
                 SendMessage(transport.ToString());
 
                 // If this bus instance is a client, wait for the event to be bounced-back before processing
-                if(_client != null)
+                if (_client != null)
                     return;
             }
 
@@ -178,7 +178,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Register an action with a channel. When a message is recieved on this channel, the method will be called.
+        ///     Register an action with a channel. When a message is recieved on this channel, the method will be called.
         /// </summary>
         /// <param name="channel">The channel to register within</param>
         /// <param name="action">The action (method) to register</param>
@@ -194,7 +194,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Unregister an action from a channel
+        ///     Unregister an action from a channel
         /// </summary>
         /// <param name="channel"></param>
         /// <param name="action"></param>
@@ -207,8 +207,8 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Called when the server socket recieves a message
-        /// It will replay the message to all other instances, including the original sender unless told otherwise
+        ///     Called when the server socket recieves a message
+        ///     It will replay the message to all other instances, including the original sender unless told otherwise
         /// </summary>
         private static void socket_RecieveMessage(object sender, MessageReceivedEventArgs messageReceivedEventArgs)
         {
@@ -216,7 +216,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Called when the socket client recieves a message
+        ///     Called when the socket client recieves a message
         /// </summary>
         private static void socket_RecieveMessage(WebSocketSession session, string value)
         {
@@ -224,7 +224,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Parse a message recieved in the socket and emit it to channels confined in its instance
+        ///     Parse a message recieved in the socket and emit it to channels confined in its instance
         /// </summary>
         /// <param name="message"></param>
         private static void EmitMessageFromSocket(string message)
@@ -233,7 +233,7 @@ namespace FOG.Handlers
             {
                 dynamic transport = JObject.Parse(message);
 
-                var channel = (Channel)Enum.Parse(typeof(Channel), transport.channel.ToString());
+                var channel = (Channel) Enum.Parse(typeof (Channel), transport.channel.ToString());
                 Emit(channel, transport.data.ToString(), transport.bounce != null && !transport.bounce);
             }
             catch (Exception ex)

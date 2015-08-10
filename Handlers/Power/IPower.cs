@@ -19,7 +19,7 @@
 
 namespace FOG.Handlers.Power
 {
-    interface IPower
+    internal interface IPower
     {
         void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
             int seconds = 30);
@@ -28,11 +28,8 @@ namespace FOG.Handlers.Power
             int seconds = 30);
 
         void LogOffUser();
-
         void Hibernate();
-
         void LockWorkStation();
-
         void CreateTask(string parameters);
     }
 }

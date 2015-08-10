@@ -19,7 +19,7 @@
 
 namespace FOG.Commands
 {
-    interface ICommand
+    internal interface ICommand
     {
         bool Process(string[] args);
     }

@@ -22,7 +22,7 @@ using FOG.Handlers.Middleware;
 
 namespace FOG.Modules.HostnameChanger
 {
-    interface IHostName
+    internal interface IHostName
     {
         void RenameComputer(string hostname);
         bool RegisterComputer(Response response);

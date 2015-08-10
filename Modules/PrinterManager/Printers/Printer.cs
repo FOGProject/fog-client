@@ -24,7 +24,6 @@ namespace FOG.Modules.PrinterManager
 {
     public abstract class Printer
     {
-
         public enum PrinterType
         {
             // ReSharper disable once InconsistentNaming
@@ -42,7 +41,6 @@ namespace FOG.Modules.PrinterManager
         public bool Default { get; protected set; }
         public PrinterType Type { get; protected set; }
         public static string LogName { get; protected set; }
-
         public abstract void Add(PrintManagerBridge instance);
 
         public void Remove(PrintManagerBridge instance)

@@ -26,7 +26,6 @@ namespace FOG
     /// </summary>
     public class Service : ServiceBase
     {
-
         private readonly AbstractService _fogService;
 
         public Service()
@@ -44,7 +43,7 @@ namespace FOG
         //Called when the service stops
         protected override void OnStop()
         {
-            _fogService.Stop();  
+            _fogService.Stop();
         }
     }
 }

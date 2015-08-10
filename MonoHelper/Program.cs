@@ -32,7 +32,7 @@ namespace FOG
         private const string LogName = "Installer";
         private const string Location = "/opt/fog-service";
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length != 6) return;
 
@@ -94,7 +94,8 @@ namespace FOG
             }
         }
 
-        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot, string version, string company, string rootLog, string location)
+        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot, string version,
+            string company, string rootLog, string location)
         {
             try
             {
@@ -118,7 +119,6 @@ namespace FOG
                 Log.Error(LogName, ex);
                 return false;
             }
-
         }
 
         public static bool UnpinCert()
@@ -132,7 +132,7 @@ namespace FOG
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);
                 store.Close();
-                return true; 
+                return true;
             }
             catch (Exception ex)
             {

@@ -17,19 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Middleware
 {
     [TestFixture]
     public class ResponseTests
     {
-        private const string Server = "http://fog.jbob.io";
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
-        private const string URL = "/service/Test.php?unit=";
-
         [SetUp]
         public void Init()
         {
@@ -37,6 +33,10 @@ namespace FOGService.Tests.Handlers.Middleware
             Configuration.ServerAddress = Server;
             Configuration.TestMAC = MAC;
         }
+
+        private const string Server = "http://fog.jbob.io";
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
+        private const string URL = "/service/Test.php?unit=";
 
         [Test]
         public void GetBadResponse()
@@ -66,27 +66,6 @@ namespace FOGService.Tests.Handlers.Middleware
         }
 
         [Test]
-        public void ParseResponse()
-        {
-            /**
-            * Ensure that responses can be parsed
-            */
-
-            const string msg = "#!ok\n" +
-                               "#Foo=bar\n" +
-                               "#Empty=\n" +
-                               "#-X=Special";
-
-            var response = new Response(msg);
-
-            Assert.IsFalse(response.Error);
-            Assert.AreEqual("bar", response.GetField("#Foo"));
-            Assert.IsEmpty(response.GetField("#Empty"));
-            Assert.AreEqual("Special", response.GetField("#-X"));
-            Assert.IsNullOrEmpty(response.GetField("#NON_EXISTENT"));
-        }
-
-        [Test]
         public void ParseDataArray()
         {
             /**
@@ -105,6 +84,27 @@ namespace FOGService.Tests.Handlers.Middleware
             Assert.AreEqual("foo", objArray[0]);
             Assert.AreEqual("bar", objArray[1]);
             Assert.AreEqual("22!", objArray[2]);
+        }
+
+        [Test]
+        public void ParseResponse()
+        {
+            /**
+            * Ensure that responses can be parsed
+            */
+
+            const string msg = "#!ok\n" +
+                               "#Foo=bar\n" +
+                               "#Empty=\n" +
+                               "#-X=Special";
+
+            var response = new Response(msg);
+
+            Assert.IsFalse(response.Error);
+            Assert.AreEqual("bar", response.GetField("#Foo"));
+            Assert.IsEmpty(response.GetField("#Empty"));
+            Assert.AreEqual("Special", response.GetField("#-X"));
+            Assert.IsNullOrEmpty(response.GetField("#NON_EXISTENT"));
         }
     }
 }

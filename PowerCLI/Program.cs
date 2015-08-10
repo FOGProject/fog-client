@@ -24,9 +24,9 @@ using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             if (args.Length == 0) Environment.Exit(1);
             Log.Output = Log.Mode.Console;
@@ -39,7 +39,7 @@ namespace FOG
 
             if (args[0].Equals("shutdown"))
                 json.type = "shutdown";
-            else if(args[0].Equals("reboot"))
+            else if (args[0].Equals("reboot"))
                 json.type = "reboot";
 
             if (args.Length > 1)
@@ -48,7 +48,7 @@ namespace FOG
             Bus.SetMode(Bus.Mode.Client);
             Thread.Sleep(1000*5);
             Bus.Emit(Bus.Channel.Power, json, true);
-            Thread.Sleep(1000 * 5);
+            Thread.Sleep(1000*5);
             Bus.Dispose();
             Environment.Exit(0);
         }

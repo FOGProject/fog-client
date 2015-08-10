@@ -18,6 +18,8 @@
  */
 
 
+using FOG.Handlers.Middleware;
+
 namespace FOG.Handlers
 {
     public static class Eager
@@ -26,7 +28,7 @@ namespace FOG.Handlers
         {
 #pragma warning disable 642
             if (Power.Power.Updating) ;
-            if (Middleware.Configuration.TestMAC != null) ;
+            if (Configuration.TestMAC != null) ;
 #pragma warning restore 642
         }
     }

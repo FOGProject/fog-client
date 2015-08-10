@@ -29,10 +29,8 @@ namespace FOG
     /// </summary>
     internal class main
     {
-
-        private static AbstractService _fogService;
         private const string LogName = "UserService";
-
+        private static AbstractService _fogService;
 
         public static void Main(string[] args)
         {

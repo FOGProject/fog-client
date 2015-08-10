@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -26,7 +25,7 @@ using FOG.Handlers;
 
 namespace FOG.Modules.GreenFOG
 {
-    class LinuxGreen : IGreen
+    internal class LinuxGreen : IGreen
     {
         private const string Cronpath = @"/etc/cron.d/fog";
         private const string LogName = "GreenFOG";
@@ -38,7 +37,28 @@ namespace FOG.Modules.GreenFOG
             var lines = File.ReadLines(Cronpath).ToList();
 
             lines.Add(GenerateCommand(min, hour, restart));
-            
+
+            File.WriteAllLines(Cronpath, lines);
+        }
+
+        public void Reload()
+        {
+            ProcessHandler.Run("/etc/init.d/cron", "reload");
+        }
+
+        public void ClearAll()
+        {
+            CreateCron();
+        }
+
+        public void RemoveTask(int min, int hour, bool restart)
+        {
+            if (!File.Exists(Cronpath)) CreateCron();
+
+            var lines = File.ReadLines(Cronpath).ToList();
+
+            lines.Remove(GenerateCommand(min, hour, restart));
+
             File.WriteAllLines(Cronpath, lines);
         }
 
@@ -61,27 +81,6 @@ namespace FOG.Modules.GreenFOG
                 $"{min} {hour} * * * root mono {filepath} {(restart ? "reboot \"This computer is going to reboot.\"" : "shutdown \"This computer is going to shutdown to save power.\"")}";
 
             return command;
-        }
-
-        public void Reload()
-        {
-            ProcessHandler.Run("/etc/init.d/cron", "reload");
-        }
-
-        public void ClearAll()
-        {
-            CreateCron();
-        }
-
-        public void RemoveTask(int min, int hour, bool restart)
-        {
-            if (!File.Exists(Cronpath)) CreateCron();
-
-            var lines = File.ReadLines(Cronpath).ToList();
-
-            lines.Remove(GenerateCommand(min, hour, restart));
-
-            File.WriteAllLines(Cronpath, lines);
         }
     }
 }

@@ -17,12 +17,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using FOG.Handlers;
 
 namespace FOG.Commands.Core.User
 {
-    class UserCommand : ICommand
+    internal class UserCommand : ICommand
     {
         private const string LogName = "Console::UserHandler";
 
@@ -36,7 +35,7 @@ namespace FOG.Commands.Core.User
 
             if (args[0].Equals("loggedin"))
             {
-                Log.WriteLine("--> " + UserHandler.IsUserLoggedIn().ToString());
+                Log.WriteLine("--> " + UserHandler.IsUserLoggedIn());
                 return true;
             }
 
@@ -73,7 +72,6 @@ namespace FOG.Commands.Core.User
             Log.WriteLine("--> current");
             Log.WriteLine("--> inactivity");
             Log.WriteLine("--> list");
-
         }
     }
 }

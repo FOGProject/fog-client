@@ -23,7 +23,6 @@ using FOG.Handlers.Middleware;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 
-
 namespace FOG.Modules.PrinterManager
 {
     /// <summary>
@@ -31,7 +30,7 @@ namespace FOG.Modules.PrinterManager
     /// </summary>
     public class DefaultPrinterManager : AbstractModule
     {
-        private PrintManagerBridge _instance;
+        private readonly PrintManagerBridge _instance;
 
         public DefaultPrinterManager()
         {

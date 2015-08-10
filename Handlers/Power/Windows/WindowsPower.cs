@@ -22,18 +22,16 @@ using System.Runtime.InteropServices;
 
 namespace FOG.Handlers.Power
 {
-    class WindowsPower : IPower
+    internal class WindowsPower : IPower
     {
-        //Load the ability to lock the computer from the native user32 dll
-        [DllImport("user32")]
-        private static extern void lockWorkStation();
-
-        public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
+        public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
+            int seconds = 30)
         {
             Power.QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options, message);
         }
 
-        public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null, int seconds = 30)
+        public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
+            int seconds = 30)
         {
             Power.QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
         }
@@ -57,5 +55,9 @@ namespace FOG.Handlers.Power
         {
             Process.Start("shutdown", parameters);
         }
+
+        //Load the ability to lock the computer from the native user32 dll
+        [DllImport("user32")]
+        private static extern void lockWorkStation();
     }
 }

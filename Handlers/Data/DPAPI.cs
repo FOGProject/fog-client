@@ -26,25 +26,27 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::DPAPI";
 
         /// <summary>
-        /// Securly protect bytes by using local credentials
+        ///     Securly protect bytes by using local credentials
         /// </summary>
         /// <param name="data">The bytes to protect</param>
         /// <param name="userScope">Encrypt the data as the current user (false means use the local machine)</param>
         /// <returns></returns>
         public static byte[] ProtectData(byte[] data, bool userScope)
         {
-            return ProtectedData.Protect(data, null, userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+            return ProtectedData.Protect(data, null,
+                userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
         }
 
         /// <summary>
-        /// Unprotect bytes by using local credentials
+        ///     Unprotect bytes by using local credentials
         /// </summary>
         /// <param name="data">The bytes to unprotect</param>
         /// <param name="userScope">Decrypt the data as the current user (false means use the local machine)</param>
         /// <returns></returns>
         public static byte[] UnProtectData(byte[] data, bool userScope)
         {
-            return ProtectedData.Unprotect(data, null, userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
+            return ProtectedData.Unprotect(data, null,
+                userScope ? DataProtectionScope.CurrentUser : DataProtectionScope.LocalMachine);
         }
     }
 }

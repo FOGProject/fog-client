@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace FOG.Modules.PrinterManager
 {
-    class UnixPrinterManager : PrintManagerBridge
+    internal class UnixPrinterManager : PrintManagerBridge
     {
         public override List<string> GetPrinters()
         {

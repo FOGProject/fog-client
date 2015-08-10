@@ -24,7 +24,6 @@ using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
-
 namespace FOG.Modules.SnapinClient
 {
     /// <summary>
@@ -60,8 +59,9 @@ namespace FOG.Modules.SnapinClient
 
                 var snapinFilePath = Path.Combine(Settings.Location, "tmp", taskResponse.GetField("SNAPINFILENAME"));
 
-                var downloaded = Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}", 
-                    Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
+                var downloaded =
+                    Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}",
+                        Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
 
                 Log.Entry(Name, snapinFilePath);
                 var exitCode = "-1";
@@ -75,7 +75,7 @@ namespace FOG.Modules.SnapinClient
 
                     Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
                         taskResponse.GetField("JOBTASKID"), exitCode), true);
-                    
+
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
                         if (!Power.ShuttingDown)
@@ -151,8 +151,9 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    string.Format("{0} \"{1}\" {2}", taskResponse.GetField("SNAPINRUNWITHARGS").Trim(), 
-                        snapinPath.Trim(), Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())).Trim());
+                    string.Format("{0} \"{1}\" {2}", taskResponse.GetField("SNAPINRUNWITHARGS").Trim(),
+                        snapinPath.Trim(),
+                        Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())).Trim());
             }
             else
             {

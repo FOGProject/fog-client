@@ -19,7 +19,7 @@
 
 namespace FOG
 {
-    interface IUpdate
+    internal interface IUpdate
     {
         void ApplyUpdate();
         void StartService();

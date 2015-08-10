@@ -18,16 +18,15 @@
  */
 
 using System.Text;
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
     public class DPAPITests
     {
-
         [SetUp]
         public void Init()
         {

@@ -30,10 +30,8 @@ namespace FOG
 {
     public abstract class AbstractService
     {
-        // Basic variables every service needs
-        public string Name { get; protected set; }
-        private readonly AbstractModule[] _modules;
         protected const int DefaultSleepTime = 60;
+        private readonly AbstractModule[] _modules;
         private readonly Thread _moduleThread;
 
         protected AbstractService()
@@ -49,12 +47,14 @@ namespace FOG
             Name = "Service";
         }
 
+        // Basic variables every service needs
+        public string Name { get; protected set; }
         protected abstract AbstractModule[] GetModules();
         protected abstract void Load();
         protected abstract void Unload();
 
         /// <summary>
-        /// Start the service
+        ///     Start the service
         /// </summary>
         public virtual void Start()
         {
@@ -65,7 +65,7 @@ namespace FOG
         }
 
         /// <summary>
-        /// Loop through all the modules until an update or shutdown is pending
+        ///     Loop through all the modules until an update or shutdown is pending
         /// </summary>
         protected virtual void ModuleLooper()
         {
@@ -109,8 +109,8 @@ namespace FOG
                 // Once all modules have been run, sleep for the set time
                 var sleepTime = GetSleepTime() ?? DefaultSleepTime;
                 Log.Entry(Name, string.Format("Sleeping for {0} seconds", sleepTime));
-                Thread.Sleep(sleepTime * 1000);
-            } 
+                Thread.Sleep(sleepTime*1000);
+            }
         }
 
         /// <summary>
@@ -119,7 +119,7 @@ namespace FOG
         protected abstract int? GetSleepTime();
 
         /// <summary>
-        /// Stop the service
+        ///     Stop the service
         /// </summary>
         public virtual void Stop()
         {
@@ -127,6 +127,5 @@ namespace FOG
             _moduleThread.Abort();
             Unload();
         }
-
     }
 }

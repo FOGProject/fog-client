@@ -33,7 +33,7 @@ namespace FOG.Modules.PrinterManager
     public class PrinterManager : AbstractModule
     {
         private static string LogName;
-        private PrintManagerBridge _instance;
+        private readonly PrintManagerBridge _instance;
 
         public PrinterManager()
         {
@@ -75,7 +75,7 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Adding printers");
             foreach (var printer in printers)
             {
-                if(!PrinterExists(printer.Name))
+                if (!PrinterExists(printer.Name))
                     printer.Add(_instance);
                 else
                     Log.Entry(Name, printer.Name + " already exists");
@@ -98,7 +98,6 @@ namespace FOG.Modules.PrinterManager
 
             if (!removeAll)
             {
-
                 var allPrinters = Communication.GetResponse("/service/printerlisting.php");
 
                 if (allPrinters.Error) return;
@@ -133,24 +132,25 @@ namespace FOG.Modules.PrinterManager
         {
             try
             {
-                return printerIDs.Select(id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true))
-                    .Select(PrinterFactory)
-                    .Where(printer => printer != null)
-                    .ToList();
+                return
+                    printerIDs.Select(
+                        id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true))
+                        .Select(PrinterFactory)
+                        .Where(printer => printer != null)
+                        .ToList();
             }
             catch (Exception ex)
             {
                 Log.Error(LogName, ex);
                 return new List<Printer>();
             }
-
         }
 
         public static Printer PrinterFactory(Response printerData)
         {
-            if(printerData.GetField("#type").Equals("iPrint"))
-                return new iPrintPrinter(printerData.GetField("#name"), 
-                    printerData.GetField("#ip"), 
+            if (printerData.GetField("#type").Equals("iPrint"))
+                return new iPrintPrinter(printerData.GetField("#name"),
+                    printerData.GetField("#ip"),
                     printerData.GetField("#port"),
                     printerData.GetField("#default").Equals("1"));
 

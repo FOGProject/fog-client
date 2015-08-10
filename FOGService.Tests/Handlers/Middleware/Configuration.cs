@@ -17,17 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Middleware
 {
     [TestFixture]
     public class ConfigurationTests
     {
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
-
         [SetUp]
         public void Init()
         {
@@ -35,16 +33,18 @@ namespace FOGService.Tests.Handlers.Middleware
             Configuration.TestMAC = MAC;
         }
 
-        [Test]
-        public void MacAddresses()
-        {
-            Assert.AreEqual(MAC, Configuration.MACAddresses());
-        }
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
 
         [Test]
         public void IPAddress()
         {
             Assert.IsNotNullOrEmpty(Configuration.IPAddress());
+        }
+
+        [Test]
+        public void MacAddresses()
+        {
+            Assert.AreEqual(MAC, Configuration.MACAddresses());
         }
     }
 }

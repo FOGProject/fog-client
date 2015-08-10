@@ -23,7 +23,7 @@ using Microsoft.Win32;
 namespace FOG.Handlers
 {
     /// <summary>
-    /// Handle all interaction with the registry
+    ///     Handle all interaction with the registry
     /// </summary>
     public static class RegistryHandler
     {
@@ -41,7 +41,7 @@ namespace FOG.Handlers
                 var key = Registry.LocalMachine.OpenSubKey(keyPath);
 
                 if (key == null) throw new NullReferenceException("Null key");
-                
+
                 var keyValue = key.GetValue(keyName).ToString();
                 key.Close();
                 return keyValue.Trim();
@@ -55,7 +55,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Set the value of a registry key
+        ///     Set the value of a registry key
         /// </summary>
         /// <param name="keyPath">The path to the registry key</param>
         /// <param name="keyName">The name of the registry key</param>
@@ -82,7 +82,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Delete a folder in the registry
+        ///     Delete a folder in the registry
         /// </summary>
         /// <param name="path">The folder to delete</param>
         /// <returns>True if successful</returns>
@@ -107,7 +107,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Delete a registry key
+        ///     Delete a registry key
         /// </summary>
         /// <param name="keyPath">The path to the registry key</param>
         /// <param name="keyName">The name of the registry key</param>

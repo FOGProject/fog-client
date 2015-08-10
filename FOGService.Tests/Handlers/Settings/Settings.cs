@@ -17,26 +17,16 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.IO;
-using System.Reflection;
-using NUnit.Framework;
 using FOG.Handlers;
 using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Settings
 {
     [TestFixture]
     public class SettingsTests
     {
-        private const string Https = "0";
-        private const string Tray = "1";
-        private const string Server = "fog.jbob.io";
-        private const string Webroot = "";
-        private const string Version = "1.9.2";
-        private const string Company = "FOG";
-        private const string Rootlog = "0";
-
         [SetUp]
         public void Init()
         {
@@ -51,20 +41,35 @@ namespace FOGService.Tests.Handlers.Settings
             File.Delete("settings.json");
         }
 
+        private const string Https = "0";
+        private const string Tray = "1";
+        private const string Server = "fog.jbob.io";
+        private const string Webroot = "";
+        private const string Version = "1.9.2";
+        private const string Company = "FOG";
+        private const string Rootlog = "0";
+
         private void WriteSettings()
         {
             var settings = new JObject
-                {
-                    {"HTTPS", Https},
-                    {"Tray", Tray},
-                    {"Server", Server},
-                    {"WebRoot", Webroot},
-                    {"Version", Version},
-                    {"Company", Company},
-                    {"RootLog", Rootlog}
-                };
+            {
+                {"HTTPS", Https},
+                {"Tray", Tray},
+                {"Server", Server},
+                {"WebRoot", Webroot},
+                {"Version", Version},
+                {"Company", Company},
+                {"RootLog", Rootlog}
+            };
 
             File.WriteAllText("settings.json", settings.ToString());
+        }
+
+        [Test]
+        public void BadGet()
+        {
+            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("NO_EXIST"));
+            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("https"));
         }
 
         [Test]
@@ -77,13 +82,6 @@ namespace FOGService.Tests.Handlers.Settings
             Assert.AreEqual(Version, FOG.Handlers.Settings.Get("Version"));
             Assert.AreEqual(Company, FOG.Handlers.Settings.Get("Company"));
             Assert.AreEqual(Rootlog, FOG.Handlers.Settings.Get("RootLog"));
-        }
-
-        [Test]
-        public void BadGet()
-        {
-            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("NO_EXIST"));
-            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("https"));
         }
 
         [Test]

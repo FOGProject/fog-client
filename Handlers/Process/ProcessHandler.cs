@@ -28,9 +28,8 @@ namespace FOG.Handlers
     {
         private const string LogName = "Process";
 
-
         /// <summary>
-        /// Get the output of a command
+        ///     Get the output of a command
         /// </summary>
         /// <param name="filePath">The file to execute</param>
         /// <param name="param">The arguments to use</param>
@@ -51,11 +50,12 @@ namespace FOG.Handlers
                 proc.Start();
                 var output = proc.StandardOutput.ReadToEnd();
                 proc.WaitForExit();
-                return output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+                return output.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
             }
         }
+
         /// <summary>
-        /// Run an EXE located in the client's directory
+        ///     Run an EXE located in the client's directory
         /// </summary>
         /// <param name="file">The name of the EXE to run</param>
         /// <param name="param">Parameters to run the EXE with</param>
@@ -63,11 +63,11 @@ namespace FOG.Handlers
         /// <returns>The exit code of the process. Will be -1 if wait is false.</returns>
         public static int RunClientEXE(string file, string param, bool wait = true)
         {
-            return RunEXE(Path.Combine(Settings.Location, file), param, wait);    
+            return RunEXE(Path.Combine(Settings.Location, file), param, wait);
         }
 
         /// <summary>
-        /// Run an EXE
+        ///     Run an EXE
         /// </summary>
         /// <param name="filePath">The path of the EXE to run</param>
         /// <param name="param">Parameters to run the EXE with</param>
@@ -100,7 +100,7 @@ namespace FOG.Handlers
             {
                 if (sw.BaseStream.CanWrite)
                 {
-                    sw.WriteLine("export DISPLAY=:0;"+ param);
+                    sw.WriteLine("export DISPLAY=:0;" + param);
                 }
             }
 
@@ -110,13 +110,13 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Run a process
+        ///     Run a process
         /// </summary>
         /// <param name="filePath">The path of the executable to run</param>
         /// <param name="param">Parameters to run the process with</param>
         /// <param name="wait">Wait for the process to exit</param>
         /// <returns>The exit code of the process. Will be -1 if wait is false.</returns>
-        public static int Run(string filePath, string param,  bool wait = true)
+        public static int Run(string filePath, string param, bool wait = true)
         {
             Log.Debug(LogName, "Running process...");
             Log.Debug(LogName, "--> Filepath:   " + filePath);
@@ -132,7 +132,6 @@ namespace FOG.Handlers
                         FileName = filePath,
                         Arguments = param
                     }
-
                 })
                 {
                     process.Start();
@@ -155,7 +154,8 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Create an process as another user. The process will not be run automatically. This can only be done on unix systems.
+        ///     Create an process as another user. The process will not be run automatically. This can only be done on unix
+        ///     systems.
         /// </summary>
         /// <param name="filePath">The path of the executable to run</param>
         /// <param name="param">Parameters to run the process with</param>
@@ -163,7 +163,7 @@ namespace FOG.Handlers
         /// <returns>The process created</returns>
         public static Process CreateImpersonatedClientEXE(string filePath, string param, string user)
         {
-            if(Settings.OS == Settings.OSType.Windows) throw new NotSupportedException();
+            if (Settings.OS == Settings.OSType.Windows) throw new NotSupportedException();
 
             var fileName = "su";
             var arguments = "- " + user + " -c \"mono " + Path.Combine(Settings.Location, filePath) + " " + param;
@@ -188,7 +188,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Kill all instances of a process
+        ///     Kill all instances of a process
         /// </summary>
         /// <param name="name">The name of the process</param>
         public static void KillAll(string name)
@@ -206,7 +206,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Kill all instances of an EXE
+        ///     Kill all instances of an EXE
         /// </summary>
         /// <param name="name">The name of the process</param>
         public static void KillAllEXE(string name)
@@ -221,7 +221,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Kill the first instance of a process
+        ///     Kill the first instance of a process
         /// </summary>
         /// <param name="name">The name of the process</param>
         public static void Kill(string name)
@@ -242,7 +242,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        /// Kill the first instance of an EXE
+        ///     Kill the first instance of an EXE
         /// </summary>
         /// <param name="name">The name of the EXE</param>
         public static void KillEXE(string name)

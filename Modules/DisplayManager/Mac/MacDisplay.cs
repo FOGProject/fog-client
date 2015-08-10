@@ -23,10 +23,9 @@ using System.Collections.Generic;
 
 namespace FOG.Modules.DisplayManager.Mac
 {
-    class MacDisplay : IDisplay
+    internal class MacDisplay : IDisplay
     {
         private string Name = "DisplayManager";
-
 
         public void ChangeResolution(string device, int width, int height, int refresh)
         {

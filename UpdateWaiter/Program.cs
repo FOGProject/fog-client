@@ -36,7 +36,9 @@ namespace FOG
             if (args.Length <= 0) return;
 
             //Wait for all update files to be applied
-            while (UpdateFilePresent()) { }
+            while (UpdateFilePresent())
+            {
+            }
             //Spawn the process that originally called this program
             if (File.Exists(args[0]))
                 SpawnParentProgram(args[0]);

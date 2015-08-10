@@ -22,10 +22,9 @@ using System.Collections.Generic;
 
 namespace FOG.Modules.DisplayManager.Linux
 {
-    class LinuxDisplay : IDisplay
+    internal class LinuxDisplay : IDisplay
     {
         private string Name = "DisplayManager";
-
 
         public void ChangeResolution(string device, int width, int height, int refresh)
         {

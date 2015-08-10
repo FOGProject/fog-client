@@ -18,20 +18,34 @@
  */
 
 using System.Text;
-using NUnit.Framework;
 using FOG.Handlers;
 using FOG.Handlers.Data;
+using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Data
 {
     [TestFixture]
     public class TransformTests
     {
-
         [SetUp]
         public void Init()
         {
             Log.Output = Log.Mode.Console;
+        }
+
+        [Test]
+        public void MD5Hash()
+        {
+            // MD5 hash a known byte set
+            var testBytes = Encoding.ASCII.GetBytes("TestString");
+            const string md5 = "5B56F40F8828701F97FA4511DDCD25FB";
+
+            var calculatedMD5 = Transform.MD5Hash(testBytes);
+            StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
+
+            // Test invalid data
+            byte[] nullBytes = null;
+            Assert.IsNull(Transform.MD5Hash(nullBytes));
         }
 
         [Test]
@@ -58,21 +72,6 @@ namespace FOGService.Tests.Handlers.Data
             var decoded = Transform.ByteArrayToHexString(encoded);
 
             Assert.AreEqual(message, decoded);
-        }
-
-        [Test]
-        public void MD5Hash()
-        {
-            // MD5 hash a known byte set
-            var testBytes = Encoding.ASCII.GetBytes("TestString");
-            const string md5 = "5B56F40F8828701F97FA4511DDCD25FB";
-
-            var calculatedMD5 = Transform.MD5Hash(testBytes);
-            StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
-
-            // Test invalid data
-            byte[] nullBytes = null;
-            Assert.IsNull(Transform.MD5Hash(nullBytes));
         }
     }
 }

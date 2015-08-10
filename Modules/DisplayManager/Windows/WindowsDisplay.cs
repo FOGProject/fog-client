@@ -26,10 +26,10 @@ using FOG.Handlers;
 
 namespace FOG.Modules.DisplayManager.Windows
 {
-    class WindowsDisplay : IDisplay
+    internal class WindowsDisplay : IDisplay
     {
-        private string Name = "DisplayManager";
         private readonly Display _display;
+        private readonly string Name = "DisplayManager";
 
         public WindowsDisplay()
         {
@@ -38,7 +38,6 @@ namespace FOG.Modules.DisplayManager.Windows
 
         public void ChangeResolution(string device, int width, int height, int refresh)
         {
-
             _display.LoadDisplaySettings();
             if (!_display.PopulatedSettings)
             {
@@ -56,8 +55,11 @@ namespace FOG.Modules.DisplayManager.Windows
 
             try
             {
-                Log.Entry(Name, string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth, _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
-                Log.Entry(Name, string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
+                Log.Entry(Name,
+                    string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth,
+                        _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
+                Log.Entry(Name,
+                    string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
                 Log.Entry(Name, "Display name: " + device);
 
                 _display.ChangeResolution(device, width, height, refresh);
@@ -65,16 +67,15 @@ namespace FOG.Modules.DisplayManager.Windows
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
-
             }
         }
 
         public List<string> GetDisplays()
         {
-
             var monitorSearcher = new ManagementObjectSearcher("SELECT * FROM Win32_DesktopMonitor");
 
-            return (from ManagementBaseObject monitor in monitorSearcher.Get() select monitor["Name"].ToString()).ToList();
+            return
+                (from ManagementBaseObject monitor in monitorSearcher.Get() select monitor["Name"].ToString()).ToList();
         }
     }
 }

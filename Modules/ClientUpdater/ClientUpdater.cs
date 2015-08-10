@@ -24,7 +24,6 @@ using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
-
 namespace FOG.Modules.ClientUpdater
 {
     /// <summary>
@@ -73,7 +72,15 @@ namespace FOG.Modules.ClientUpdater
         //Prepare the downloaded update
         private void PrepareUpdateHelpers()
         {
-            var files = new List<string> { "FOGUpdateHelper.exe", "FOGUpdateWaiter.exe", "Handlers.dll", "Newtonsoft.Json.dll", "settings.json", "token.dat" };
+            var files = new List<string>
+            {
+                "FOGUpdateHelper.exe",
+                "FOGUpdateWaiter.exe",
+                "Handlers.dll",
+                "Newtonsoft.Json.dll",
+                "settings.json",
+                "token.dat"
+            };
 
             foreach (var file in files)
             {

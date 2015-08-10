@@ -17,19 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Diagnostics;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Mac
 {
-    class MacHostName : IHostName
+    internal class MacHostName : IHostName
     {
-        private string Name = "HostnameChanger";
+        private readonly string Name = "HostnameChanger";
 
         public void RenameComputer(string hostname)
         {
-
             using (var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -63,17 +63,17 @@ namespace FOG.Modules.HostnameChanger.Mac
 
         public bool RegisterComputer(Response response)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void UnRegisterComputer(Response response)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void ActivateComputer(string key)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
 }
