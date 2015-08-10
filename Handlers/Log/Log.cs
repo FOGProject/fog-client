@@ -23,7 +23,7 @@ using System.IO;
 namespace FOG.Handlers
 {
     /// <summary>
-    ///     Handle all interaction with the log file
+    /// Handle all interaction with the log file
     /// </summary>
     public static class Log
     {
@@ -70,7 +70,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Entry a message
+        /// Entry a message
         /// </summary>
         /// <param name="level">The logging level</param>
         /// <param name="caller">The name of the calling method or class</param>
@@ -92,7 +92,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Entry a message
+        /// Entry a message
         /// </summary>
         /// <param name="caller">The name of the calling method or class</param>
         /// <param name="message">The message to log</param>
@@ -116,10 +116,10 @@ namespace FOG.Handlers
             #if DEBUG
                 Entry(Level.Debug, caller, message);
             #endif
-        }       
+        }
 
         /// <summary>
-        ///     Write a new line to the log
+        /// Write a new line to the log
         /// </summary>
         public static void NewLine()
         {
@@ -127,7 +127,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write a divider to the log
+        /// Write a divider to the log
         /// </summary>
         public static void Divider()
         {
@@ -135,7 +135,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write a header to the log
+        /// Write a header to the log
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
         public static void Header(string text)
@@ -157,7 +157,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Create one header with a divider above and below it
+        /// Create one header with a divider above and below it
         /// </summary>
         /// <param name="text">The text to put in the center of the header</param>
         public static void PaddedHeader(string text)
@@ -168,7 +168,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write text to the log
+        /// Write text to the log
         /// </summary>
         /// <param name="level">The logging level</param>
         /// <param name="text">The text to write</param>
@@ -210,7 +210,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write text to the log
+        /// Write text to the log
         /// </summary>
         /// <param name="text">The text to write</param>
         public static void Write(string text)
@@ -219,7 +219,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write a line to the log
+        /// Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
         public static void WriteLine(string line)
@@ -228,7 +228,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Write a line to the log
+        /// Write a line to the log
         /// </summary>
         /// <param name="line">The line to write</param>
         /// <param name="level">The logging level</param>
@@ -245,7 +245,7 @@ namespace FOG.Handlers
         }
 
         /// <summary>
-        ///     Wipe the log
+        /// Wipe the log
         /// </summary>
         /// <param name="logFile"></param>
         private static void CleanLog(FileSystemInfo logFile)

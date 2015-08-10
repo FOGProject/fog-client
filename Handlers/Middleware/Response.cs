@@ -24,7 +24,7 @@ using System.Linq;
 namespace FOG.Handlers.Middleware
 {
     /// <summary>
-    ///     Contains the information that the FOG Server responds with
+    /// Contains the information that the FOG Server responds with
     /// </summary>
     public class Response
     {
@@ -99,11 +99,11 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Parse a Response for an array of objects
-        ///     <param name="identifier">The string identifier infront of the elements</param>
-        ///     <param name="base64Decode">Whether the elements should be base64 decoded</param>
-        ///     <returns>A List of the elements matching the identifier</returns>
+        /// Parse a Response for an array of objects
         /// </summary>
+        /// <param name="identifier">The string identifier infront of the elements</param>
+        /// <param name="base64Decode">Whether the elements should be base64 decoded</param>
+        /// <returns>A List of the elements matching the identifier</returns>
         public List<string> GetList(string identifier, bool base64Decode)
         {
             Log.Debug(LogName, "Parsing List...");
@@ -123,7 +123,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Return the value stored at a specified key
+        /// Return the value stored at a specified key
         /// </summary>
         /// <param name="id">The ID to return</param>
         /// <returns>The value stored at key ID, if the ID is not present, return null</returns>
@@ -133,7 +133,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Check if a field is not null or empty
+        /// Check if a field is not null or empty
         /// </summary>
         /// <param name="id">The field to check</param>
         /// <returns></returns>
@@ -143,7 +143,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Print out all ids and values 
+        /// Print out all ids and values 
         /// </summary>
         public void PrettyPrint()
         {

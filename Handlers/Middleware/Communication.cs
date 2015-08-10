@@ -32,10 +32,10 @@ namespace FOG.Handlers.Middleware
         private const string LogName = "Middleware::Communication";
 
         /// <summary>
-        ///     Get the parsed response of a server url
-        ///     <param name="postfix">The postfix to attach to the server address</param>
-        ///     <returns>The parsed response</returns>
+        /// Get the parsed response of a server url
         /// </summary>
+        /// <param name="postfix">The postfix to attach to the server address</param>
+        /// <returns>The parsed response</returns>
         public static Response GetResponse(string postfix)
         {
             //ID the service as the new one
@@ -75,7 +75,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Get the parsed response of a server url
+        ///  Get the parsed response of a server url
         /// </summary>
         /// <param name="postfix">The postfix to attach to the server address</param>
         /// <param name="appendMAC">If the MAC address of the host should be appended to the URL</param>
@@ -89,10 +89,10 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Get the raw response of a server url
-        ///     <param name="postfix">The postfix to attach to the server address</param>
-        ///     <returns>The unparsed response</returns>
+        /// Get the raw response of a server url
         /// </summary>
+        /// <param name="postfix">The postfix to attach to the server address</param>
+        /// <returns>The unparsed response</returns>
         public static string GetRawResponse(string postfix)
         {
             //ID the service as the new one
@@ -112,7 +112,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     POST data to a URL
+        /// POST data to a URL
         /// </summary>
         /// <param name="postfix">The text to append to the URL</param>
         /// <param name="param">The params to post</param>
@@ -178,10 +178,10 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     GET a URL but don't check for a response
-        ///     <param name="postfix">The postfix to attach to the server address</param>
-        ///     <returns>True if the server was contacted successfully</returns>
+        /// GET a URL but don't check for a response
         /// </summary>
+        /// <param name="postfix">The postfix to attach to the server address</param>
+        /// <returns>True if the server was contacted successfully</returns>
         public static bool Contact(string postfix)
         {
             //ID the service as the new one
@@ -204,7 +204,7 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     GET a URL but don't check for a response
+        /// GET a URL but don't check for a response
         /// </summary>
         /// <param name="postfix">The text to append to the url</param>
         /// <param name="appendMAC">Should the MAC be appended</param>
@@ -218,18 +218,18 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Downloads a file and creates necessary directories
-        ///     <param name="postfix">The postfix to attach to the server address</param>
-        ///     <param name="filePath">The location to save the file</param>
-        ///     <returns>True if the download was successful</returns>
+        /// Downloads a file and creates necessary directories
         /// </summary>
+        /// <param name="postfix">The postfix to attach to the server address</param>
+        /// <param name="filePath">The location to save the file</param>
+        /// <returns>True if the download was successful</returns>
         public static bool DownloadFile(string postfix, string filePath)
         {
             return DownloadExternalFile(Configuration.ServerAddress + postfix, filePath);
         }
 
         /// <summary>
-        ///     Download a file from an external server
+        /// Download a file from an external server
         /// </summary>
         /// <param name="url">The URL to download from</param>
         /// <param name="filePath">The path to save the file to</param>

@@ -21,39 +21,16 @@ namespace FOG.Handlers.Power
 {
     interface IPower
     {
-        /// <summary>
-        ///     Shutdown the computer
-        /// </summary>
-        /// <param name="comment">The message to append to the request</param>
-        /// <param name="options">The options the user has on the prompt form</param>
-        /// <param name="message">The message to show in the shutdown gui</param>
-        /// <param name="seconds">How long to wait before processing the request</param>
         void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
             int seconds = 30);
 
-        /// <summary>
-        ///     Restart the computer
-        /// </summary>
-        /// <param name="comment">The message to append to the request</param>
-        /// <param name="options">The options the user has on the prompt form</param>
-        /// <param name="message">The message to show in the shutdown gui</param>
-        /// <param name="seconds">How long to wait before processing the request</param>
         void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
             int seconds = 30);
 
-        /// <summary>
-        ///     Entry off the current user
-        /// </summary>
         void LogOffUser();
 
-        /// <summary>
-        ///     Hibernate the computer
-        /// </summary>
         void Hibernate();
 
-        /// <summary>
-        ///     Lock the workstation
-        /// </summary>
         void LockWorkStation();
 
         void CreateTask(string parameters);

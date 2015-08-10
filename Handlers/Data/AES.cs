@@ -29,7 +29,7 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::AES";
 
         /// <summary>
-        ///     AES decrypts a string
+        /// AES decrypts a string
         /// </summary>
         /// <param name="toDecode">The string to be decrypted</param>
         /// <param name="key">The AES pass key</param>
@@ -56,12 +56,12 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     AES decrypts a string
-        ///     <param name="toDecode">The hex-code string to be decrypted</param>
-        ///     <param name="passKey">The AES pass key</param>
-        ///     <param name="initializationVector">The AES initialization vector</param>
-        ///     <returns>An decrypted string of toDecode</returns>
+        /// AES decrypts a string
         /// </summary>
+        /// <param name="toDecode">The hex-code string to be decrypted</param>
+        /// <param name="passKey">The AES pass key</param>
+        /// <param name="initializationVector">The AES initialization vector</param>
+        /// <returns>An decrypted string of toDecode</returns>
         public static string Decrypt(string toDecode, string passKey, string initializationVector)
         {
             //Convert the initialization vector and key into a byte array
@@ -73,11 +73,11 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Decrypts a string using AES, and automatically extracts the initialization vector
-        ///     <param name="toDecode">The string to be decrypted</param>
-        ///     <param name="key">The AES pass key to use</param>
-        ///     <returns>A decrypted version of toDecode</returns>
+        /// Decrypts a string using AES, and automatically extracts the initialization vector
         /// </summary>
+        /// <param name="toDecode">The string to be decrypted</param>
+        /// <param name="key">The AES pass key to use</param>
+        /// <returns>A decrypted version of toDecode</returns>
         public static string Decrypt(string toDecode, byte[] key)
         {
             var iv = Transform.HexStringToByteArray(toDecode.Substring(0, toDecode.IndexOf("|")));

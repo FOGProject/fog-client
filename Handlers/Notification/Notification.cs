@@ -22,7 +22,7 @@ using Newtonsoft.Json.Linq;
 namespace FOG.Handlers
 {
     /// <summary>
-    ///     Store neccesary notification information
+    /// Store neccesary notification information
     /// </summary>
     public class Notification
     {

@@ -27,17 +27,17 @@ using System.Text;
 namespace FOG.Handlers.Data
 {
     /// <summary>
-    ///     Handle all encryption/decryption
+    /// Handle all encryption/decryption
     /// </summary>
     public static class Transform
     {
         private const string LogName = "EncryptionHandler";
 
         /// <summary>
-        ///     Base64 encode a string
-        ///     <param name="toEncode">The string that will be encoded</param>
-        ///     <returns>A base64 encoded string</returns>
+        /// Base64 encode a string
         /// </summary>
+        /// <param name="toEncode">The string that will be encoded</param>
+        /// <returns>A base64 encoded string</returns>
         public static string EncodeBase64(string toEncode)
         {
             try
@@ -54,10 +54,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Decodes a base64 encoded string
-        ///     <param name="toDecode">A base64 encoded string</param>
-        ///     <returns>Returns the base64 decoded string</returns>
+        /// Decodes a base64 encoded string
         /// </summary>
+        /// <param name="toDecode">A base64 encoded string</param>
+        /// <returns>Returns the base64 decoded string</returns>
         public static string DecodeBase64(string toDecode)
         {
             try
@@ -74,10 +74,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Converts a byte array to a hex string
-        ///     <param name="ba">The byte array to be converted</param>
-        ///     <returns>A hex string representation of the byte array</returns>
+        /// Converts a byte array to a hex string
         /// </summary>
+        /// <param name="ba">The byte array to be converted</param>
+        /// <returns>A hex string representation of the byte array</returns>
         public static string ByteArrayToHexString(byte[] ba)
         {
             var hex = new StringBuilder(ba.Length*2);
@@ -88,10 +88,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Converts a hex string to a byte array
-        ///     <param name="hex">The hex string to be converted</param>
-        ///     <returns>A byte array representation of the hex string</returns>
+        /// Converts a hex string to a byte array
         /// </summary>
+        /// <param name="hex">The hex string to be converted</param>
+        /// <returns>A byte array representation of the hex string</returns>
         public static byte[] HexStringToByteArray(string hex)
         {
             var numberChars = hex.Length;
@@ -103,10 +103,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Creates an md5 hash of bytes
-        ///     <param name="data">The bytes to hash</param>
-        ///     <returns></returns>
+        /// Creates an md5 hash of bytes
         /// </summary>
+        /// <param name="data">The bytes to hash</param>
+        /// <returns></returns>
         public static string MD5Hash(byte[] data)
         {
             if (data == null) return null;
@@ -121,10 +121,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Creates an md5 hash of a file
-        ///     <param name="filePath">The path to the file</param>
-        ///     <returns></returns>
+        /// Creates an md5 hash of a file
         /// </summary>
+        /// <param name="filePath">The path to the file</param>
+        /// <returns></returns>
         public static string MD5Hash(string filePath)
         {
             return !File.Exists(filePath) ? null : MD5Hash(File.ReadAllBytes(filePath));

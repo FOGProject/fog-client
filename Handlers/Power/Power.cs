@@ -24,8 +24,8 @@ using Newtonsoft.Json.Linq;
 namespace FOG.Handlers.Power
 {
     /// <summary>
-    ///     Handle all shutdown requests
-    ///     The windows shutdown command is used instead of the win32 api because it notifies the user prior
+    /// Handle all shutdown requests
+    /// The windows shutdown command is used instead of the win32 api because it notifies the user prior
     /// </summary>
     public static class Power
     {
@@ -144,7 +144,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Create a shutdown command
+        /// Create a shutdown command
         /// </summary>
         /// <param name="parameters">The parameters to use</param>
         public static void CreateTask(string parameters)
@@ -284,7 +284,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Entry off the current user
+        /// Entry off the current user
         /// </summary>
         public static void LogOffUser()
         {
@@ -292,7 +292,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Hibernate the computer
+        /// Hibernate the computer
         /// </summary>
         public static void Hibernate()
         {
@@ -300,7 +300,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Lock the workstation
+        /// Lock the workstation
         /// </summary>
         public static void LockWorkStation()
         {
@@ -308,7 +308,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Abort a shutdown if it is not to late
+        /// Abort a shutdown if it is not to late
         /// </summary>
         public static void AbortShutdown()
         {
@@ -327,7 +327,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Restart the service
+        /// Restart the service
         /// </summary>
         public static void RestartService()
         {
@@ -338,7 +338,7 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        ///     Spawn an update waiter
+        /// Spawn an update waiter
         /// </summary>
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
         public static void SpawnUpdateWaiter(string fileName)

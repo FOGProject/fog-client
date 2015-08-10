@@ -34,9 +34,9 @@ namespace FOG.Handlers.Middleware
         public static byte[] TestPassKey;
 
         /// <summary>
-        ///     Generate a random AES pass key and securely send it to the server
-        ///     <returns>True if successfully authenticated</returns>
+        /// Generate a random AES pass key and securely send it to the server
         /// </summary>
+        /// <returns>True if successfully authenticated</returns>
         public static bool HandShake()
         {
             try
@@ -131,10 +131,10 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Decrypts a response using AES, filtering out encryption flags
-        ///     <param name="toDecode">The string to decrypt</param>
-        ///     <returns>True if the server was contacted successfully</returns>
+        /// Decrypts a response using AES, filtering out encryption flags
         /// </summary>
+        /// <param name="toDecode">The string to decrypt</param>
+        /// <returns>True if the server was contacted successfully</returns>
         public static string Decrypt(string toDecode)
         {
             const string encryptedFlag = "#!en=";

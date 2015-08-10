@@ -39,9 +39,9 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Load the server information from the registry and apply it
-        ///     <returns>True if settings were updated</returns>
+        /// Load the server information from the registry and apply it
         /// </summary>
+        /// <returns>True if settings were updated</returns>
         public static bool GetAndSetServerAddress()
         {
 
@@ -59,9 +59,9 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Get the IP address of the host
-        ///     <returns>The first IP address of the host</returns>
+        /// Get the IP address of the host
         /// </summary>
+        /// <returns>The first IP address of the host</returns>
         public static string IPAddress()
         {
             var hostName = Dns.GetHostName();
@@ -72,9 +72,9 @@ namespace FOG.Handlers.Middleware
         }
 
         /// <summary>
-        ///     Get a string of all the host's valid MAC addresses
-        ///     <returns>A string of all the host's valid MAC addresses, split by |</returns>
+        /// Get a string of all the host's valid MAC addresses
         /// </summary>
+        /// <returns>A string of all the host's valid MAC addresses, split by |</returns>
         public static string MACAddresses()
         {
             if (!string.IsNullOrEmpty(TestMAC)) return TestMAC;

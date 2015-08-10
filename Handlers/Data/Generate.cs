@@ -27,12 +27,12 @@ namespace FOG.Handlers.Data
         private const string LogName = "Data::Generate";
 
         /// <summary>
-        ///     Securley generates a random number
-        ///     <param name="rngProvider">The RNG crypto provider used</param>
-        ///     <param name="min">The minimum value of the random number</param>
-        ///     <param name="max">The maximum value of the random number</param>
-        ///     <returns>A random number between min and max</returns>
+        /// Securely generates a random number
         /// </summary>
+        /// <param name="rngProvider">The RNG crypto provider used</param>
+        /// <param name="min">The minimum value of the random number</param>
+        /// <param name="max">The maximum value of the random number</param>
+        /// <returns>A random number between min and max</returns>
         public static int Random(RNGCryptoServiceProvider rngProvider, int min, int max)
         {
             if (rngProvider == null) throw new ArgumentNullException(nameof(rngProvider));
@@ -46,10 +46,10 @@ namespace FOG.Handlers.Data
         }
 
         /// <summary>
-        ///     Securely generates an alpha-numerical password
-        ///     <param name="length">The number of characters the password should contain</param>
-        ///     <returns>A randomly generated password</returns>
+        /// Securely generates an alpha-numerical password
         /// </summary>
+        /// <param name="length">The number of characters the password should contain</param>
+        /// <returns>A randomly generated password</returns>
         public static string Password(int length)
         {
             if (length <= 0) return null;
