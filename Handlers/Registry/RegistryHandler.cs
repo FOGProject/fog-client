@@ -23,12 +23,18 @@ using Microsoft.Win32;
 namespace FOG.Handlers
 {
     /// <summary>
-    ///     Handle all interaction with the registry
+    /// Handle all interaction with the registry
     /// </summary>
     public static class RegistryHandler
     {
         private const string LogName = "RegistryHandler";
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="keyPath">The path to the registry key</param>
+        /// <param name="keyName">The name of the registry key</param>
+        /// <returns>The value of the key</returns>
         public static string GetRegisitryValue(string keyPath, string keyName)
         {
             try

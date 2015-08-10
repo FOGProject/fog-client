@@ -28,6 +28,32 @@ namespace FOG.Handlers
     {
         private const string LogName = "Process";
 
+
+        /// <summary>
+        /// Get the output of a command
+        /// </summary>
+        /// <param name="filePath">The file to execute</param>
+        /// <param name="param">The arguments to use</param>
+        /// <returns>An array of the lines outputed</returns>
+        public static string[] GetOutput(string filePath, string param)
+        {
+            using (var proc = new Process
+            {
+                StartInfo =
+                {
+                    FileName = filePath,
+                    Arguments = param,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true
+                }
+            })
+            {
+                proc.Start();
+                var output = proc.StandardOutput.ReadToEnd();
+                proc.WaitForExit();
+                return output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
+            }
+        }
         /// <summary>
         /// Run an EXE located in the client's directory
         /// </summary>
