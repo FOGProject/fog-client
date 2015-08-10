@@ -75,10 +75,8 @@ namespace FOG.Modules.GreenFOG
         private string GenerateCommand(int min, int hour, bool restart)
         {
             var filepath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Power.exe");
-            var command = "";
 
-            command =
-                $"{min} {hour} * * * root mono {filepath} {(restart ? "reboot \"This computer is going to reboot.\"" : "shutdown \"This computer is going to shutdown to save power.\"")}";
+            string command = $"{min} {hour} * * * root mono {filepath} {(restart ? "reboot \"This computer is going to reboot.\"" : "shutdown \"This computer is going to shutdown to save power.\"")}";
 
             return command;
         }

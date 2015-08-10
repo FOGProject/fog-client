@@ -104,6 +104,7 @@ namespace SetupHelper
             }
             catch (Exception)
             {
+                // ignored
             }
 
             return ActionResult.Success;

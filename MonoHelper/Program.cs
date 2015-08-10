@@ -56,6 +56,7 @@ namespace FOG
             }
             catch (Exception)
             {
+                // ignored
             }
 
 

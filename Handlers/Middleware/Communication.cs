@@ -150,7 +150,7 @@ namespace FOG.Handlers.Middleware
 
                 // Clean up the streams.
                 reader.Close();
-                dataStream.Close();
+                dataStream?.Close();
                 response.Close();
 
                 Log.Debug(LogName, rawResponse);

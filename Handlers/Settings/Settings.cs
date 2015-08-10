@@ -147,6 +147,7 @@ namespace FOG.Handlers
             }
             catch (Exception)
             {
+                // ignored
             }
 
             return string.Empty;

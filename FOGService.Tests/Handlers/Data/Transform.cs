@@ -44,8 +44,7 @@ namespace FOGService.Tests.Handlers.Data
             StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
 
             // Test invalid data
-            byte[] nullBytes = null;
-            Assert.IsNull(Transform.MD5Hash(nullBytes));
+            Assert.IsNull(Transform.MD5Hash((byte[]) null));
         }
 
         [Test]

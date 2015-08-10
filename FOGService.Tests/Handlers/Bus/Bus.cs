@@ -48,7 +48,7 @@ namespace FOGService.Tests.Handlers.Bus
                 {"message", expected}
             };
 
-            FOG.Handlers.Bus.Emit(FOG.Handlers.Bus.Channel.Debug, data, false);
+            FOG.Handlers.Bus.Emit(FOG.Handlers.Bus.Channel.Debug, data);
 			Assert.AreEqual(expected, message);
         }
 
@@ -63,7 +63,7 @@ namespace FOGService.Tests.Handlers.Bus
             };
 
 			FOG.Handlers.Bus.Unsubscribe(FOG.Handlers.Bus.Channel.Debug, RecieveMessage);
-            FOG.Handlers.Bus.Emit(FOG.Handlers.Bus.Channel.Debug, data, false);
+            FOG.Handlers.Bus.Emit(FOG.Handlers.Bus.Channel.Debug, data);
             Assert.AreNotEqual(expected, message);
         }
     }

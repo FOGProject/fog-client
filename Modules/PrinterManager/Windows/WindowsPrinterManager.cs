@@ -64,8 +64,6 @@ namespace FOG.Modules.PrinterManager
                 string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"",
                     printer.Name, printer.File, printer.Port, printer.Model));
             proc?.WaitForExit(120000);
-
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
         protected override void AddNetwork(NetworkPrinter printer)
@@ -75,11 +73,9 @@ namespace FOG.Modules.PrinterManager
             // Add per machine printer connection
             var proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /ga /n " + printer.Name);
             proc?.WaitForExit(120000);
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
             // Add printer network connection, download the drivers from the print server
             proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /in /n " + printer.Name);
             proc?.WaitForExit(120000);
-            Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
         protected override void AddCUPS(CUPSPrinter printer)

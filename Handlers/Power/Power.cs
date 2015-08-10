@@ -96,7 +96,7 @@ namespace FOG.Handlers.Power
             if (data.delay == null) return;
 
             //DelayTime is in minutes
-            var delayTime = -1;
+            int delayTime;
 
             try
             {

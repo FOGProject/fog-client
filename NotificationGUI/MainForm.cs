@@ -68,7 +68,7 @@ namespace FOG
                         break;
                 }
 
-                var message = "";
+                string message;
 
                 Log.Entry(LogName, "Step 1");
                 try
