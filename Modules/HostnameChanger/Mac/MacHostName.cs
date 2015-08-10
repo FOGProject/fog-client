@@ -30,35 +30,9 @@ namespace FOG.Modules.HostnameChanger.Mac
 
         public void RenameComputer(string hostname)
         {
-            using (var process = new Process
-            {
-                StartInfo = new ProcessStartInfo
-                {
-                    FileName = "scutil",
-                    Arguments = "--set HostName " + hostname,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    CreateNoWindow = true
-                }
-            })
-            {
-                Log.Entry(Name, "Changing hostname");
-                process.Start();
-                process.WaitForExit();
-                Log.Entry(Name, "Return code = " + process.ExitCode);
-
-                Log.Entry(Name, "Changing Bonjour name");
-                process.StartInfo.Arguments = "--set LocalHostName " + hostname;
-                process.Start();
-                process.WaitForExit();
-                Log.Entry(Name, "Return code = " + process.ExitCode);
-
-                Log.Entry(Name, "Changing Computer name");
-                process.StartInfo.Arguments = "--set ComputerName " + hostname;
-                process.Start();
-                process.WaitForExit();
-                Log.Entry(Name, "Return code = " + process.ExitCode);
-            }
+            ProcessHandler.Run("scutil", "--set HostName " + hostname);
+            ProcessHandler.Run("scutil", "--set LocalHostName " + hostname);
+            ProcessHandler.Run("scutil", "--set ComputerName " + hostname);
         }
 
         public bool RegisterComputer(Response response)

@@ -140,7 +140,7 @@ namespace FOG.Handlers
 
                     if (!process.HasExited) return -1;
 
-                    Log.Debug(LogName, $"--> Exit Code = {process.ExitCode}");
+                    Log.Entry(LogName, $"--> Exit Code = {process.ExitCode}");
                     return process.ExitCode;
                 }
             }
