@@ -91,6 +91,7 @@ namespace FOG.Modules.HostnameChanger
 
             //First unjoin it from active directory
             UnRegisterComputer(response);
+            if (Power.ShuttingDown || Power.Requested) return;
 
             Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
 
