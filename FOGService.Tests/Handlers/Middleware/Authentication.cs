@@ -49,9 +49,9 @@ namespace FOGService.Tests.Handlers.Middleware
 
             Authentication.TestPassKey = Transform.HexStringToByteArray(PassKeyHex);
             var response1 =
-                Communication.GetResponse(string.Format("{0}AESDecryptionResponse1&key={1}", URL, PassKeyHex));
+                Communication.GetResponse($"{URL}AESDecryptionResponse1&key={PassKeyHex}");
             var response2 =
-                Communication.GetResponse(string.Format("{0}AESDecryptionResponse2&key={1}", URL, PassKeyHex));
+                Communication.GetResponse($"{URL}AESDecryptionResponse2&key={PassKeyHex}");
 
             Assert.IsFalse(response1.Error);
             Assert.AreEqual("Foobar22!", response1.GetField("#data"));

@@ -192,7 +192,7 @@ namespace FOG.Handlers.Power
             }
 
             // Generate the request data
-            Log.Entry(LogName, string.Format("Creating shutdown command in {0} seconds", gracePeriod));
+            Log.Entry(LogName, $"Creating shutdown command in {gracePeriod} seconds");
 
             requestData = new JObject();
             requestData.action = "request";
@@ -337,7 +337,7 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Spawning update waiter");
 
-            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", string.Format("\"{0}\"", fileName));
+            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", $"\"{fileName}\"");
         }
     }
 }

@@ -45,16 +45,14 @@ namespace FOG.Modules.UserTracker
                 // Remove users that are have remained logged in
                 if (!_usernames.Contains(username))
                     Communication.Contact(
-                        string.Format("/service/usertracking.report.php?action=login&user={0}\\{1}",
-                            Environment.MachineName, username), true);
+                        $"/service/usertracking.report.php?action=login&user={Environment.MachineName}\\{username}", true);
                 else
                     _usernames.Remove(username);
 
             // Any users left in the usernames list have logged out
             foreach (var username in _usernames)
                 Communication.Contact(
-                    string.Format("/service/usertracking.report.php?action=logout&user={0}\\{1}",
-                        Environment.MachineName, username), true);
+                    $"/service/usertracking.report.php?action=logout&user={Environment.MachineName}\\{username}", true);
 
             _usernames = newUsernames;
         }

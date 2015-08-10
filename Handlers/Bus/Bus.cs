@@ -184,7 +184,7 @@ namespace FOG.Handlers
         /// <param name="action">The action (method) to register</param>
         public static void Subscribe(Channel channel, Action<dynamic> action)
         {
-            Log.Entry(LogName, string.Format("Registering {0} in channel {1}", action.Method.Name, channel));
+            Log.Entry(LogName, $"Registering {action.Method.Name} in channel {channel}");
 
             if (!Registrar.ContainsKey(channel))
                 Registrar.Add(channel, new LinkedList<Action<dynamic>>());
@@ -200,7 +200,7 @@ namespace FOG.Handlers
         /// <param name="action"></param>
         public static void Unsubscribe(Channel channel, Action<dynamic> action)
         {
-            Log.Entry(LogName, string.Format("UnRegistering {0} in channel {1}", action.Method.Name, channel));
+            Log.Entry(LogName, $"UnRegistering {action.Method.Name} in channel {channel}");
 
             if (!Registrar.ContainsKey(channel)) return;
             Registrar[channel].Remove(action);

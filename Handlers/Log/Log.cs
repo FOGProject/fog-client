@@ -87,8 +87,8 @@ namespace FOG.Handlers
             if (level == Level.Debug || level == Level.Error)
                 prefix = level.ToString().ToUpper() + ": ";
 
-            WriteLine(level, string.Format(" {0} {1} {2} {3}{4}",
-                DateTime.Now.ToShortDateString(), DateTime.Now.ToShortTimeString(), caller, prefix, message));
+            WriteLine(level,
+                $" {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} {caller} {prefix}{message}");
         }
 
         /// <summary>
@@ -240,8 +240,8 @@ namespace FOG.Handlers
         public static void UnhandledException(object sender, UnhandledExceptionEventArgs ex)
         {
             Entry(LogName, "Unhandled exception caught");
-            Entry(LogName, string.Format("    Terminating: {0}", ex.IsTerminating));
-            Entry(LogName, string.Format("    Hash code: {0}", ex.ExceptionObject.GetHashCode()));
+            Entry(LogName, $"    Terminating: {ex.IsTerminating}");
+            Entry(LogName, $"    Hash code: {ex.ExceptionObject.GetHashCode()}");
         }
 
         /// <summary>

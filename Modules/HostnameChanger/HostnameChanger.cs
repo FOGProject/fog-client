@@ -93,7 +93,7 @@ namespace FOG.Modules.HostnameChanger
             UnRegisterComputer(response);
             if (Power.ShuttingDown || Power.Requested) return;
 
-            Log.Entry(Name, string.Format("Renaming host to {0}", response.GetField("#hostname")));
+            Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
 
             try
             {

@@ -87,8 +87,7 @@ namespace FOG.Modules.GreenFOG
 
         public new bool IsEnabled()
         {
-            var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
-                EnabledURL, Name.ToLower()), true);
+            var moduleActiveResponse = Communication.GetResponse($"{EnabledURL}?moduleid={Name.ToLower()}", true);
 
             return !moduleActiveResponse.Error;
         }

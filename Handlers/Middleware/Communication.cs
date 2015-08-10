@@ -41,7 +41,7 @@ namespace FOG.Handlers.Middleware
             //ID the service as the new one
             var newPostfix = postfix + ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            Log.Entry(LogName, string.Format("URL: {0} -- {1}", Configuration.ServerAddress, newPostfix));
+            Log.Entry(LogName, $"URL: {Configuration.ServerAddress} -- {newPostfix}");
 
             try
             {
@@ -55,12 +55,12 @@ namespace FOG.Handlers.Middleware
                         Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
                     messageFound = true;
-                    Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                    Log.Entry(LogName, $"Response: {Response.Codes[returnMessage]}");
                     break;
                 }
 
                 if (!messageFound)
-                    Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+                    Log.Entry(LogName, $"Unknown Response: {rawResponse.Replace("\n", "")}");
 
 
                 if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse);
@@ -163,12 +163,12 @@ namespace FOG.Handlers.Middleware
                         Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
                 {
                     messageFound = true;
-                    Log.Entry(LogName, string.Format("Response: {0}", Response.Codes[returnMessage]));
+                    Log.Entry(LogName, $"Response: {Response.Codes[returnMessage]}");
                     break;
                 }
 
                 if (!messageFound)
-                    Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
+                    Log.Entry(LogName, $"Unknown Response: {rawResponse.Replace("\n", "")}");
 
                 return new Response(rawResponse);
             }
@@ -191,7 +191,7 @@ namespace FOG.Handlers.Middleware
             //ID the service as the new one
             postfix += ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
 
-            Log.Entry(LogName, string.Format("URL: {0}{1}", Configuration.ServerAddress, postfix));
+            Log.Entry(LogName, $"URL: {Configuration.ServerAddress}{postfix}");
 
             try
             {
@@ -240,7 +240,7 @@ namespace FOG.Handlers.Middleware
         /// <returns>True if successful</returns>
         public static bool DownloadExternalFile(string url, string filePath)
         {
-            Log.Entry(LogName, string.Format("URL: {0}", url));
+            Log.Entry(LogName, $"URL: {url}");
 
             if (string.IsNullOrEmpty(url) || string.IsNullOrEmpty(filePath))
             {

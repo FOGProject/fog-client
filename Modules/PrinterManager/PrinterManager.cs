@@ -134,7 +134,7 @@ namespace FOG.Modules.PrinterManager
             {
                 return
                     printerIDs.Select(
-                        id => Communication.GetResponse(string.Format("/service/Printers.php?id={0}", id), true))
+                        id => Communication.GetResponse($"/service/Printers.php?id={id}", true))
                         .Select(PrinterFactory)
                         .Where(printer => printer != null)
                         .ToList();

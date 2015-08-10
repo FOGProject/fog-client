@@ -30,7 +30,7 @@ namespace FOG
         public void ApplyUpdate()
         {
             ProcessHandler.Run("/bin/bash",
-                string.Format("-c {0} {1}", Path.Combine(Settings.Location, "core.sh"), Configuration.ServerAddress));
+                $"-c {Path.Combine(Settings.Location, "core.sh")} {Configuration.ServerAddress}");
         }
 
         public void StartService()

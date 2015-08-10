@@ -47,21 +47,21 @@ namespace FOG.Modules.SnapinClient
                 if (taskResponse.Error) return;
 
                 Log.Entry(Name, "Snapin Found:");
-                Log.Entry(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
-                Log.Entry(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
-                Log.Entry(Name, string.Format("    RunWithArgs: {0}", taskResponse.GetField("SNAPINRUNWITHARGS")));
-                Log.Entry(Name, string.Format("    Name: {0}", taskResponse.GetField("SNAPINNAME")));
-                Log.Entry(Name, string.Format("    File: {0}", taskResponse.GetField("SNAPINFILENAME")));
-                Log.Entry(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
-                Log.Entry(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
-                Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
+                Log.Entry(Name, $"    ID: {taskResponse.GetField("JOBTASKID")}");
+                Log.Entry(Name, $"    RunWith: {taskResponse.GetField("SNAPINRUNWITH")}");
+                Log.Entry(Name, $"    RunWithArgs: {taskResponse.GetField("SNAPINRUNWITHARGS")}");
+                Log.Entry(Name, $"    Name: {taskResponse.GetField("SNAPINNAME")}");
+                Log.Entry(Name, $"    File: {taskResponse.GetField("SNAPINFILENAME")}");
+                Log.Entry(Name, $"    Created: {taskResponse.GetField("JOBCREATION")}");
+                Log.Entry(Name, $"    Args: {taskResponse.GetField("SNAPINARGS")}");
+                Log.Entry(Name, $"    Reboot: {taskResponse.GetField("SNAPINBOUNCE")}");
 
 
                 var snapinFilePath = Path.Combine(Settings.Location, "tmp", taskResponse.GetField("SNAPINFILENAME"));
 
                 var downloaded =
-                    Communication.DownloadFile(string.Format("/service/snapins.file.php?mac={0}&taskid={1}",
-                        Configuration.MACAddresses(), taskResponse.GetField("JOBTASKID")), snapinFilePath);
+                    Communication.DownloadFile(
+                        $"/service/snapins.file.php?mac={Configuration.MACAddresses()}&taskid={taskResponse.GetField("JOBTASKID")}", snapinFilePath);
 
                 Log.Entry(Name, snapinFilePath);
                 var exitCode = "-1";
@@ -73,8 +73,8 @@ namespace FOG.Modules.SnapinClient
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
 
-                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
-                        taskResponse.GetField("JOBTASKID"), exitCode), true);
+                    Communication.Contact(
+                        $"/service/snapins.checkin.php?taskid={taskResponse.GetField("JOBTASKID")}&exitcode={exitCode}", true);
 
                     if (!taskResponse.GetField("SNAPINBOUNCE").Equals("1"))
                     {
@@ -91,8 +91,8 @@ namespace FOG.Modules.SnapinClient
                     }
                 }
                 else
-                    Communication.Contact(string.Format("/service/snapins.checkin.php?taskid={0}&exitcode={1}",
-                        taskResponse.GetField("JOBTASKID"), exitCode), true);
+                    Communication.Contact(
+                        $"/service/snapins.checkin.php?taskid={taskResponse.GetField("JOBTASKID")}&exitcode={exitCode}", true);
                 break;
             }
         }
@@ -101,7 +101,7 @@ namespace FOG.Modules.SnapinClient
         private string StartSnapin(Response taskResponse, string snapinPath)
         {
             var notification = new Notification(taskResponse.GetField("SNAPINNAME"),
-                string.Format("FOG is installing {0}", taskResponse.GetField("SNAPINNAME")), 10);
+                $"FOG is installing {taskResponse.GetField("SNAPINNAME")}", 10);
 
             Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
@@ -116,7 +116,7 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, "Return Code: " + process.ExitCode);
 
                 notification = new Notification(
-                    string.Format("Finished {0}", taskResponse.GetField("SNAPINNAME")),
+                    $"Finished {taskResponse.GetField("SNAPINNAME")}",
                     taskResponse.GetField("SNAPINNAME") + " finished installing", 10);
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
@@ -151,9 +151,8 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    string.Format("{0} \"{1}\" {2}", taskResponse.GetField("SNAPINRUNWITHARGS").Trim(),
-                        snapinPath.Trim(),
-                        Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())).Trim());
+                    $"{taskResponse.GetField("SNAPINRUNWITHARGS").Trim()} \"{snapinPath.Trim()}\" {Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())}"
+                        .Trim());
             }
             else
             {

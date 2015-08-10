@@ -41,10 +41,7 @@ namespace FOG
                 StartInfo =
                 {
                     Arguments =
-                        string.Format(
-                            "/i \"{0}\" /quiet USETRAY=\"{1}\" HTTPS=\"{2}\" WEBADDRESS=\"{3}\" WEBROOT=\"{4}\" ROOTLOG=\"{5}\"",
-                            Path.Combine(Settings.Location, "FOGService.msi"),
-                            useTray, https, server, webRoot, logRoot)
+                        $"/i \"{Path.Combine(Settings.Location, "FOGService.msi")}\" /quiet USETRAY=\"{useTray}\" HTTPS=\"{https}\" WEBADDRESS=\"{server}\" WEBROOT=\"{webRoot}\" ROOTLOG=\"{logRoot}\""
                 }
             };
             process.StartInfo.CreateNoWindow = true;

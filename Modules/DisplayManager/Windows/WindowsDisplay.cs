@@ -56,10 +56,9 @@ namespace FOG.Modules.DisplayManager.Windows
             try
             {
                 Log.Entry(Name,
-                    string.Format("Current Resolution: {0} x {1} {2}hz", _display.Configuration.dmPelsWidth,
-                        _display.Configuration.dmPelsHeight, _display.Configuration.dmDisplayFrequency));
+                    $"Current Resolution: {_display.Configuration.dmPelsWidth} x {_display.Configuration.dmPelsHeight} {_display.Configuration.dmDisplayFrequency}hz");
                 Log.Entry(Name,
-                    string.Format("Attempting to change resoltution to {0} x {1} {2}hz", width, height, refresh));
+                    $"Attempting to change resoltution to {width} x {height} {refresh}hz");
                 Log.Entry(Name, "Display name: " + device);
 
                 _display.ChangeResolution(device, width, height, refresh);

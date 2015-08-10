@@ -75,9 +75,8 @@ namespace FOG.Modules.HostnameChanger.Windows
             }
 
             // Entry the results
-            Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                : "Unknown Return Code: "), returnCode));
+            Log.Entry(Name,
+                $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
             return returnCode == 0;
         }
@@ -89,9 +88,8 @@ namespace FOG.Modules.HostnameChanger.Windows
                 var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"),
                     response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
 
-                Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                    ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                    : "Unknown Return Code: "), returnCode));
+                Log.Entry(Name,
+                    $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
                 if (returnCode.Equals(0))
                     Power.Restart("Host left active directory, restart needed", Power.FormOption.Delay);
@@ -117,8 +115,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     StartInfo =
                     {
                         FileName = @"cscript",
-                        Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}",
-                            Environment.SystemDirectory, key),
+                        Arguments = $"//B //Nologo {Environment.SystemDirectory}\\slmgr.vbs /ipk {key}",
                         WindowStyle = ProcessWindowStyle.Hidden
                     }
                 })
@@ -129,8 +126,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     process.Close();
 
                     //Try and activate the new key
-                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato",
-                        Environment.SystemDirectory);
+                    process.StartInfo.Arguments = $"//B //Nologo {Environment.SystemDirectory}\\slmgr.vbs /ato";
                     process.Start();
                     process.WaitForExit();
                     process.Close();

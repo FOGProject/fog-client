@@ -57,7 +57,7 @@ namespace FOG
 
             Log.NewLine();
             Log.PaddedHeader("Authentication");
-            Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
+            Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
             if (!Authentication.HandShake()) return;
             Log.NewLine();
         }
@@ -118,7 +118,7 @@ namespace FOG
                 }
 
                 Log.Entry(Name,
-                    string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
             }
             catch (Exception ex)
             {

@@ -27,13 +27,13 @@ namespace FOG.Handlers.Power
         public void Shutdown(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
             int seconds = 30)
         {
-            Power.QueueShutdown(string.Format("/s /c \"{0}\" /t {1}", comment, seconds), options, message);
+            Power.QueueShutdown($"/s /c \"{comment}\" /t {seconds}", options, message);
         }
 
         public void Restart(string comment, Power.FormOption options = Power.FormOption.Abort, string message = null,
             int seconds = 30)
         {
-            Power.QueueShutdown(string.Format("/r /c \"{0}\" /t {1}", comment, seconds), options, message);
+            Power.QueueShutdown($"/r /c \"{comment}\" /t {seconds}", options, message);
         }
 
         public void LogOffUser()

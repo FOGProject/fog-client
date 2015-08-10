@@ -49,8 +49,8 @@ namespace FOG.Modules.AutoLogOut
                 var timeOut = GetTimeOut(taskResponse);
                 if (timeOut <= 0) return;
 
-                Log.Entry(Name, string.Format("Time set to {0} seconds", timeOut));
-                Log.Entry(Name, string.Format("Inactive for {0} seconds", UserHandler.GetInactivityTime()));
+                Log.Entry(Name, $"Time set to {timeOut} seconds");
+                Log.Entry(Name, $"Inactive for {UserHandler.GetInactivityTime()} seconds");
 
                 if (UserHandler.GetInactivityTime() < timeOut) return;
 

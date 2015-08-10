@@ -78,7 +78,7 @@ namespace FOG
                     // Entry file formatting
                     Log.NewLine();
                     Log.PaddedHeader(module.Name);
-                    Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
+                    Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
 
                     try
                     {
@@ -108,7 +108,7 @@ namespace FOG
 
                 // Once all modules have been run, sleep for the set time
                 var sleepTime = GetSleepTime() ?? DefaultSleepTime;
-                Log.Entry(Name, string.Format("Sleeping for {0} seconds", sleepTime));
+                Log.Entry(Name, $"Sleeping for {sleepTime} seconds");
                 Thread.Sleep(sleepTime*1000);
             }
         }

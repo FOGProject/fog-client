@@ -118,7 +118,7 @@ namespace FOG.Handlers.Data
                 if (!isChainValid)
                 {
                     var errors = chain.ChainStatus
-                        .Select(x => string.Format("{0} ({1})", x.StatusInformation.Trim(), x.Status))
+                        .Select(x => $"{x.StatusInformation.Trim()} ({x.Status})")
                         .ToArray();
                     var certificateErrorsString = "Unknown errors.";
 

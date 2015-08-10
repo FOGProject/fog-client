@@ -61,8 +61,7 @@ namespace FOG.Modules.PrinterManager
                 AddIPPort(printer, "9100");
 
             var proc = Process.Start("rundll32.exe",
-                string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"",
-                    printer.Name, printer.File, printer.Port, printer.Model));
+                $" printui.dll,PrintUIEntry /if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
             proc?.WaitForExit(120000);
         }
 
@@ -87,8 +86,8 @@ namespace FOG.Modules.PrinterManager
         {
             Log.Entry("Printer", "Removing printer: " + name);
             var proc = name.StartsWith("\\\\")
-                ? Process.Start("rundll32.exe", string.Format(" printui.dll,PrintUIEntry /gd /q /n \"{0}\"", name))
-                : Process.Start("rundll32.exe", string.Format(" printui.dll,PrintUIEntry /dl /q /n \"{0}\"", name));
+                ? Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry /gd /q /n \"{name}\"")
+                : Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry /dl /q /n \"{name}\"");
 
             if (proc == null) return;
             proc.Start();

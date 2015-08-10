@@ -92,7 +92,7 @@ namespace FOG
                     return sleepTime;
 
                 Log.Entry(Name,
-                    string.Format("Sleep time set on the server is below the minimum of {0}", DefaultSleepTime));
+                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
             }
             catch (Exception ex)
             {

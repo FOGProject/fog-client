@@ -33,15 +33,15 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(LogName, "Attempting to add printer:");
 
             if (printer.Name != null)
-                Log.Entry(LogName, string.Format("--> Name = {0}", printer.Name));
+                Log.Entry(LogName, $"--> Name = {printer.Name}");
             if (printer.IP != null)
-                Log.Entry(LogName, string.Format("--> IP = {0}", printer.IP));
+                Log.Entry(LogName, $"--> IP = {printer.IP}");
             if (printer.Port != null)
-                Log.Entry(LogName, string.Format("--> Port = {0}", printer.Port));
+                Log.Entry(LogName, $"--> Port = {printer.Port}");
             if (printer.File != null)
-                Log.Entry(LogName, string.Format("--> File = {0}", printer.File));
+                Log.Entry(LogName, $"--> File = {printer.File}");
             if (printer.Model != null)
-                Log.Entry(LogName, string.Format("--> Model = {0}", printer.Model));
+                Log.Entry(LogName, $"--> Model = {printer.Model}");
 
             try
             {

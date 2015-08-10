@@ -68,7 +68,7 @@ namespace FOG.Handlers.Middleware
 
                 // Send the encrypted data to the server and get the response
                 var response = Communication.Post("/management/index.php?sub=authorize",
-                    string.Format("sym_key={0}&token={1}&mac={2}", enKey, enToken, Configuration.MACAddresses()));
+                    $"sym_key={enKey}&token={enToken}&mac={Configuration.MACAddresses()}");
 
                 // If the server accepted the token and AES key, save the new token
                 if (!response.Error)
@@ -80,7 +80,7 @@ namespace FOG.Handlers.Middleware
 
                 // If the server does not recognize the host, register it
                 if (response.ReturnCode.Equals("#!ih"))
-                    Communication.Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
+                    Communication.Contact($"/service/register.php?hostname={Dns.GetHostName()}", true);
             }
             catch (Exception ex)
             {
