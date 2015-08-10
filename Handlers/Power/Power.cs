@@ -154,7 +154,7 @@ namespace FOG.Handlers.Power
             requestData = new JObject();
 
             Log.Entry(LogName, "Creating shutdown request");
-            Log.Entry(LogName, $"Parameters: {parameters}");
+            Log.Entry(LogName, "Parameters: " + parameters);
 
             _instance.CreateTask(parameters);
         }
@@ -337,7 +337,7 @@ namespace FOG.Handlers.Power
         {
             Log.Entry(LogName, "Spawning update waiter");
 
-            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", $"\"{fileName}\"");
+            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", string.Format("\"{0}\"", fileName));
         }
     }
 }
