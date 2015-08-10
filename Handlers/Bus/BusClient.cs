@@ -31,7 +31,7 @@ namespace FOG.Handlers
             Socket = new WebSocket("ws://127.0.0.1:" + port + "/");
         }
 
-        public WebSocket Socket { get; }
+        public WebSocket Socket { get; private set; }
 
         public void Start()
         {
