@@ -30,7 +30,6 @@ namespace FOG.Handlers
         private const string LogName = "RegistryHandler";
 
         /// <summary>
-        /// 
         /// </summary>
         /// <param name="keyPath">The path to the registry key</param>
         /// <param name="keyName">The name of the registry key</param>
@@ -55,6 +54,13 @@ namespace FOG.Handlers
             return null;
         }
 
+        /// <summary>
+        /// Set the value of a registry key
+        /// </summary>
+        /// <param name="keyPath">The path to the registry key</param>
+        /// <param name="keyName">The name of the registry key</param>
+        /// <param name="value">The value to set the key to</param>
+        /// <returns>True if successful</returns>
         public static bool SetRegistryValue(string keyPath, string keyName, string value)
         {
             try
@@ -75,6 +81,11 @@ namespace FOG.Handlers
             return false;
         }
 
+        /// <summary>
+        /// Delete a folder in the registry
+        /// </summary>
+        /// <param name="path">The folder to delete</param>
+        /// <returns>True if successful</returns>
         public static bool DeleteFolder(string path)
         {
             try
@@ -95,6 +106,12 @@ namespace FOG.Handlers
             return false;
         }
 
+        /// <summary>
+        /// Delete a registry key
+        /// </summary>
+        /// <param name="keyPath">The path to the registry key</param>
+        /// <param name="keyName">The name of the registry key</param>
+        /// <returns>True if successful</returns>
         public static bool DeleteKey(string keyPath, string keyName)
         {
             try
