@@ -188,14 +188,14 @@ namespace FOG.Handlers
                     Console.BackgroundColor = ConsoleColor.Black;
                     break;
                 default:
-                    var logFile = new FileInfo(FilePath);
-
-                    //Delete the log file if it excedes the max log size
-                    if (logFile.Exists && logFile.Length > MaxSize)
-                        CleanLog(logFile);
-
                     try
                     {
+                        var logFile = new FileInfo(FilePath);
+
+                        //Delete the log file if it excedes the max log size
+                        if (logFile.Exists && logFile.Length > MaxSize)
+                            CleanLog(logFile);
+
                         //Write message to log file
                         var logWriter = new StreamWriter(FilePath, true);
                         logWriter.Write(text);
