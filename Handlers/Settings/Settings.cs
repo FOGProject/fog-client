@@ -75,6 +75,11 @@ namespace FOG.Handlers
             }
         }
 
+        /// <summary>
+        /// Check if the current OS is compatible with the given type
+        /// </summary>
+        /// <param name="type">The type of OS to check for compatibility with</param>
+        /// <returns>True if compatible</returns>
         public static bool IsCompatible(OSType type)
         {
             if (type == OSType.All)
@@ -89,17 +94,28 @@ namespace FOG.Handlers
             return false;
         }
 
-        public static void SetPath(string path)
+        /// <summary>
+        /// Set the filePath of the settings.json file. Will automatically reload.
+        /// </summary>
+        /// <param name="filePath">The path of the file</param>
+        public static void SetPath(string filePath)
         {
-            _file = path;
+            _file = filePath;
             Reload();
         }
 
+        /// <summary>
+        /// Reparse the settings.json file
+        /// </summary>
         public static void Reload()
         {
             _data = JObject.Parse(File.ReadAllText(_file));
         }
 
+        /// <summary>
+        /// Save the current data to settings.json
+        /// </summary>
+        /// <returns>True if successful</returns>
         private static bool Save()
         {
             try
@@ -116,6 +132,10 @@ namespace FOG.Handlers
             return false;
         }
 
+        /// <summary>
+        /// </summary>
+        /// <param name="key">The setting to retrieve</param>
+        /// <returns>The value of a setting. Will return an empty string if the key is not present.</returns>
         public static string Get(string key)
         {
             if (_data == null) return string.Empty;
@@ -132,6 +152,11 @@ namespace FOG.Handlers
             return string.Empty;
         }
 
+        /// <summary>
+        /// Set the value of a setting. Will automatically save.
+        /// </summary>
+        /// <param name="key">The name of the setting</param>
+        /// <param name="value">The new value of the setting</param>
         public static void Set(string key, JToken value)
         {
             if (_data == null) _data = new JObject();
