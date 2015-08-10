@@ -327,17 +327,6 @@ namespace FOG.Handlers.Power
         }
 
         /// <summary>
-        /// Restart the service
-        /// </summary>
-        public static void RestartService()
-        {
-            Log.Entry(LogName, "Restarting service");
-            ShuttingDown = true;
-
-            ProcessHandler.RunClientEXE("RestartFOGService.exe", "", false);
-        }
-
-        /// <summary>
         /// Spawn an update waiter
         /// </summary>
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
