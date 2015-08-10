@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 

@@ -60,8 +60,6 @@ namespace FOGService.Tests.Handlers.Middleware
             Assert.AreEqual("Foobar22!", response2.GetField("#data"));
         }
 
-        //This test will fail for mono due to a bug
-        //TODO find mono fix
         [Test]
         [Ignore("Ignore test due to lack of FOG CA from build server")]
         public void Authenticate()

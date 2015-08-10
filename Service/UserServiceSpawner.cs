@@ -29,7 +29,6 @@ namespace FOG
     {
         private static readonly Dictionary<string, Process> Processes = new Dictionary<string, Process>();
         private static readonly Thread UserThread;
-        private static volatile bool _running;
 
         static UserServiceSpawner()
         {
@@ -70,13 +69,11 @@ namespace FOG
 
         public static void Start()
         {
-            _running = true;
             UserThread.Start();
         }
 
         public static void Stop()
         {
-            _running = false;
         }
 
         public static void KillAll()
