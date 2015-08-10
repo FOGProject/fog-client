@@ -16,3 +16,4 @@ D:\fog\client\NotificationGUI\bin\x86\Debug\Handlers.pdb
 D:\fog\client\NotificationGUI\bin\x86\Debug\Newtonsoft.Json.xml
 D:\fog\client\NotificationGUI\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\NotificationGUI\bin\x86\Debug\PipeClient.pdb
+E:\fog-client\bin\FOGNotificationGUI.exe.config

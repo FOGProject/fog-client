@@ -12,3 +12,4 @@ C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOG.NotificationIcon.resources
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\Tray.csproj.GenerateResource.Cache
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.exe
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.pdb
+E:\fog-client\bin\FOGTray.exe.config

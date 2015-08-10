@@ -28,47 +28,68 @@ namespace FOG.Handlers
     {
         private const string LogName = "Process";
 
-        public static int RunClientEXE(string filePath, string param, bool wait = true)
+        /// <summary>
+        /// Run an EXE located in the client's directory
+        /// </summary>
+        /// <param name="file">The name of the EXE to run</param>
+        /// <param name="param">Parameters to run the EXE with</param>
+        /// <param name="wait">Wait for the process to exit</param>
+        /// <returns>The exit code of the process. Will be -1 if wait is false.</returns>
+        public static int RunClientEXE(string file, string param, bool wait = true)
         {
-            return RunEXE(Path.Combine(Settings.Location, filePath), param, wait);    
+            return RunEXE(Path.Combine(Settings.Location, file), param, wait);    
         }
 
+        /// <summary>
+        /// Run an EXE
+        /// </summary>
+        /// <param name="filePath">The path of the EXE to run</param>
+        /// <param name="param">Parameters to run the EXE with</param>
+        /// <param name="wait">Wait for the process to exit</param>
+        /// <returns>The exit code of the process. Will be -1 if wait is false.</returns>
         public static int RunEXE(string filePath, string param, bool wait = true)
         {
-            if (Settings.OS != Settings.OSType.Windows)
+            // If the current OS is Windows, simply run the process
+            if (Settings.OS == Settings.OSType.Windows) return Run(filePath, param, wait);
+
+            // Re-write the param information to include mono
+            param = "mono " + filePath + " " + param;
+            param = param.Trim();
+
+            // Create a process with /bin/bash as the FileName so that we can run multiple commands in one line
+            // This is needed for ensuring any GUIs will be rendered on the screen
+            var proc = new Process();
+            var info = new ProcessStartInfo
             {
-                param = "mono " + filePath + " " + param;
-                param = param.Trim();
+                FileName = "/bin/bash",
+                RedirectStandardInput = true,
+                UseShellExecute = false
+            };
 
-                var proc = new Process();
-                var info = new ProcessStartInfo
+            proc.StartInfo = info;
+            proc.Start();
+
+            // Pipe any GUI to the first display
+            using (var sw = proc.StandardInput)
+            {
+                if (sw.BaseStream.CanWrite)
                 {
-                    FileName = "/bin/bash",
-                    RedirectStandardInput = true,
-                    UseShellExecute = false
-                };
-
-                proc.StartInfo = info;
-                proc.Start();
-
-                using (var sw = proc.StandardInput)
-                {
-                    if (sw.BaseStream.CanWrite)
-                    {
-                        sw.WriteLine("export DISPLAY=:0;"+ param);
-                    }
+                    sw.WriteLine("export DISPLAY=:0;"+ param);
                 }
-
-
-                if (!proc.HasExited) return -1;
-                return proc.ExitCode;
-
             }
 
 
-            return Run(filePath, param, wait);
+            if (!proc.HasExited) return -1;
+            return proc.ExitCode;
         }
 
+        /// <summary>
+        /// Run a process
+        /// </summary>
+        /// <param name="filePath">The path of the executable to run</param>
+        /// <param name="param">Parameters to run the process with</param>
+        /// <param name="wait">Wait for the process to exit</param>
+        /// <returns>The exit code of the process. Will be -1 if wait is false.</returns>
         public static int Run(string filePath, string param,  bool wait = true)
         {
             Log.Debug(LogName, "Running process...");
@@ -107,8 +128,17 @@ namespace FOG.Handlers
             return -1;
         }
 
+        /// <summary>
+        /// Create an process as another user. The process will not be run automatically. This can only be done on unix systems.
+        /// </summary>
+        /// <param name="filePath">The path of the executable to run</param>
+        /// <param name="param">Parameters to run the process with</param>
+        /// <param name="user">The user to impersonate</param>
+        /// <returns>The process created</returns>
         public static Process CreateImpersonatedClientEXE(string filePath, string param, string user)
         {
+            if(Settings.OS == Settings.OSType.Windows) throw new NotSupportedException();
+
             var fileName = "su";
             var arguments = "- " + user + " -c \"mono " + Path.Combine(Settings.Location, filePath) + " " + param;
             arguments = arguments.Trim();
@@ -131,6 +161,10 @@ namespace FOG.Handlers
             return proc;
         }
 
+        /// <summary>
+        /// Kill all instances of a process
+        /// </summary>
+        /// <param name="name">The name of the process</param>
         public static void KillAll(string name)
         {
             try
@@ -145,6 +179,10 @@ namespace FOG.Handlers
             }
         }
 
+        /// <summary>
+        /// Kill all instances of an EXE
+        /// </summary>
+        /// <param name="name">The name of the process</param>
         public static void KillAllEXE(string name)
         {
             if (Settings.OS == Settings.OSType.Windows)
@@ -156,6 +194,10 @@ namespace FOG.Handlers
             Run("pkill", "-f " + name);
         }
 
+        /// <summary>
+        /// Kill the first instance of a process
+        /// </summary>
+        /// <param name="name">The name of the process</param>
         public static void Kill(string name)
         {
             try
@@ -173,6 +215,10 @@ namespace FOG.Handlers
             }
         }
 
+        /// <summary>
+        /// Kill the first instance of an EXE
+        /// </summary>
+        /// <param name="name">The name of the EXE</param>
         public static void KillEXE(string name)
         {
             if (Settings.OS == Settings.OSType.Windows)
