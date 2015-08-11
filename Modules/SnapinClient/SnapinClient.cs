@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
@@ -75,6 +76,8 @@ namespace FOG.Modules.SnapinClient
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
+                    var sha2 = Transform.SHA2(snapinFilePath);
+
                     exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
