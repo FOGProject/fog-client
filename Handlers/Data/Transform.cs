@@ -107,7 +107,7 @@ namespace FOG.Handlers.Data
         /// </summary>
         /// <param name="data">The bytes to hash</param>
         /// <returns></returns>
-        public static string MD5Hash(byte[] data)
+        public static string MD5(byte[] data)
         {
             if (data == null) return null;
 
@@ -125,9 +125,35 @@ namespace FOG.Handlers.Data
         /// </summary>
         /// <param name="filePath">The path to the file</param>
         /// <returns></returns>
-        public static string MD5Hash(string filePath)
+        public static string MD5(string filePath)
         {
-            return !File.Exists(filePath) ? null : MD5Hash(File.ReadAllBytes(filePath));
+            return !File.Exists(filePath) ? null : MD5(File.ReadAllBytes(filePath));
+        }
+
+        /// <summary>
+        ///     Creates a sha512 hash of bytes
+        /// </summary>
+        /// <param name="data">The bytes to hash</param>
+        /// <returns></returns>
+        public static string SHA2(byte[] data)
+        {
+            if (data == null) return null;
+
+            using (var alg = SHA512.Create())
+            {
+                alg.ComputeHash(data);
+                return BitConverter.ToString(alg.Hash).Replace("-", "");
+            }
+        }
+
+        /// <summary>
+        ///     Creates a sha512 hash of a file
+        /// </summary>
+        /// <param name="filePath">The path to the file</param>
+        /// <returns></returns>
+        public static string SHA2(string filePath)
+        {
+            return !File.Exists(filePath) ? null : SHA2(File.ReadAllBytes(filePath));
         }
     }
 }

@@ -34,17 +34,31 @@ namespace FOGService.Tests.Handlers.Data
         }
 
         [Test]
-        public void MD5Hash()
+        public void MD5()
         {
             // MD5 hash a known byte set
             var testBytes = Encoding.ASCII.GetBytes("TestString");
             const string md5 = "5B56F40F8828701F97FA4511DDCD25FB";
 
-            var calculatedMD5 = Transform.MD5Hash(testBytes);
+            var calculatedMD5 = Transform.MD5(testBytes);
             StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
 
             // Test invalid data
-            Assert.IsNull(Transform.MD5Hash((byte[]) null));
+            Assert.IsNull(Transform.MD5((byte[]) null));
+        }
+
+        [Test]
+        public void SHA2()
+        {
+            // MD5 hash a known byte set
+            var testBytes = Encoding.ASCII.GetBytes("TestString");
+            const string sha2 = "69DFD91314578F7F329939A7EA6BE4497E6FE3909B9C8F308FE711D29D4340D90D77B7FDF359B7D0DBEED940665274F7CA514CD067895FDF59DE0CF142B62336";
+
+            var calculatedSHA2 = Transform.SHA2(testBytes);
+            StringAssert.AreEqualIgnoringCase(sha2, calculatedSHA2);
+
+            // Test invalid data
+            Assert.IsNull(Transform.MD5((byte[])null));
         }
 
         [Test]
