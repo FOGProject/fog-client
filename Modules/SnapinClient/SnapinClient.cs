@@ -46,6 +46,12 @@ namespace FOG.Modules.SnapinClient
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
+                if (!taskResponse.Encrypted)
+                {
+                    Log.Error(Name, "Response was not encrypted");
+                    return;
+                }
+
                 Log.Entry(Name, "Snapin Found:");
                 Log.Entry(Name, $"    ID: {taskResponse.GetField("JOBTASKID")}");
                 Log.Entry(Name, $"    RunWith: {taskResponse.GetField("SNAPINRUNWITH")}");

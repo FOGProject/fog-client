@@ -46,6 +46,7 @@ namespace FOG.Modules.AutoLogOut
                 var taskResponse = Communication.GetResponse("/service/autologout.php", true);
 
                 if (taskResponse.Error) return;
+
                 var timeOut = GetTimeOut(taskResponse);
                 if (timeOut <= 0) return;
 
