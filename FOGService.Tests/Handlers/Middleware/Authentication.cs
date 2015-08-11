@@ -54,9 +54,11 @@ namespace FOGService.Tests.Handlers.Middleware
                 Communication.GetResponse($"{URL}AESDecryptionResponse2&key={PassKeyHex}");
 
             Assert.IsFalse(response1.Error);
+            Assert.IsTrue(response1.Encrypted);
             Assert.AreEqual("Foobar22!", response1.GetField("#data"));
 
             Assert.IsFalse(response2.Error);
+            Assert.IsTrue(response2.Encrypted);
             Assert.AreEqual("Foobar22!", response2.GetField("#data"));
         }
 
