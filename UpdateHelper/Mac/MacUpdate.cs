@@ -31,7 +31,7 @@ namespace FOG
         public void ApplyUpdate()
         {
             ProcessHandler.Run("/bin/bash",
-                $"-c {Path.Combine(Settings.Location, "core.sh")} {Configuration.ServerAddress}");
+                $"{Path.Combine(Settings.Location, "core.sh")} {Configuration.ServerAddress}");
         }
 
         public void StartService()
