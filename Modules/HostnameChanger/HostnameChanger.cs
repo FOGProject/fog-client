@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.Diagnostics.Eventing.Reader;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
@@ -56,6 +57,12 @@ namespace FOG.Modules.HostnameChanger
         {
             //Get task info
             var taskResponse = Communication.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
+            if (taskResponse.Error) return;
+            if (!taskResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
 
             Log.Debug(Name, "AD Settings");
             Log.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
@@ -63,8 +70,6 @@ namespace FOG.Modules.HostnameChanger
             Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
             Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
             Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
-
-            if (taskResponse.Error) return;
 
             RenameComputer(taskResponse);
 

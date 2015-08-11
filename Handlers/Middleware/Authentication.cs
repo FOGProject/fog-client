@@ -71,7 +71,7 @@ namespace FOG.Handlers.Middleware
                     $"sym_key={enKey}&token={enToken}&mac={Configuration.MACAddresses()}");
 
                 // If the server accepted the token and AES key, save the new token
-                if (!response.Error)
+                if (!response.Error && response.Encrypted)
                 {
                     Log.Entry(LogName, "Authenticated");
                     SetSecurityToken("token.dat", Transform.HexStringToByteArray(response.GetField("#token")));
