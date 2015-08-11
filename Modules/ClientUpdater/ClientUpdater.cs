@@ -43,17 +43,17 @@ namespace FOG.Modules.ClientUpdater
             var localVersion = Settings.Get("Version");
             try
             {
+                var updater = (Settings.OS == Settings.OSType.Windows)
+                                ? "FOGService.msi"
+                                : "core.sh";
+
+                if (File.Exists(Path.Combine(Settings.Location, "tmp", updater)))
+                    File.Delete(Path.Combine(Settings.Location, "tmp", updater));
+
                 var server = int.Parse(serverVersion.Replace(".", ""));
                 var local = int.Parse(localVersion.Replace(".", ""));
 
                 if (server <= local) return;
-
-                var updater = (Settings.OS == Settings.OSType.Windows)
-                    ? "FOGService.msi"
-                    : "core.sh";
-
-                if (File.Exists(Path.Combine(Settings.Location, "tmp", updater)))
-                    File.Delete(Path.Combine(Settings.Location, "tmp", updater));
 
                 Communication.DownloadFile("/client/" + updater,
                     Path.Combine(Settings.Location, "tmp", updater));
