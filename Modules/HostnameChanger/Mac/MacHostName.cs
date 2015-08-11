@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 
@@ -36,11 +37,14 @@ namespace FOG.Modules.HostnameChanger.Mac
 
         public bool RegisterComputer(Response response)
         {
-            string domain = response.GetField("#ADDom");
-            string ou = response.GetField("#ADOU");
-            string adadmin = response.GetField("#ADUser");
-            string adpass = response.GetField("#ADPass");
-            ProcessHandler.Run("/bin/bash", string.Format("{0} {1} {2} {3} {4}",	Path.Combine(Settings.Location, "/Scripts/Mac/osxADBind.sh"),domain, ou, adadmin,adpass));
+            var domain = response.GetField("#ADDom");
+            var ou = response.GetField("#ADOU");
+            var adadmin = response.GetField("#ADUser");
+            var adpass = response.GetField("#ADPass");
+            var returnCode = ProcessHandler.Run("/bin/bash",
+                $"{Path.Combine(Settings.Location, "/Scripts/Mac/osxADBind.sh")} {domain} {ou} {adadmin} {adpass}");
+
+            return returnCode == 0;
         }
 
         public void UnRegisterComputer(Response response)
