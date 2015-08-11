@@ -1,4 +1,4 @@
-﻿/*
+/*
  * FOG Service : A computer management client for the FOG Project
  * Copyright (C) 2014-2015 FOG Project
  * 
@@ -36,7 +36,11 @@ namespace FOG.Modules.HostnameChanger.Mac
 
         public bool RegisterComputer(Response response)
         {
-            throw new NotImplementedException();
+            string domain = response.GetField("#ADDom");
+            string ou = response.GetField("#ADOU");
+            string adadmin = response.GetField("#ADUser");
+            string adpass = response.GetField("#ADPass");
+            ProcessHandler.Run("/bin/bash", string.Format("{0} {1} {2} {3} {4}",	Path.Combine(Settings.Location, "/Scripts/Mac/osxADBind.sh"),domain, ou, adadmin,adpass));
         }
 
         public void UnRegisterComputer(Response response)
