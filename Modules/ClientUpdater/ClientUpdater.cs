@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
@@ -55,8 +56,10 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                Communication.DownloadFile("/client/" + updater,
-                    Path.Combine(Settings.Location, "tmp", updater));
+                // Hash the updater
+                var updaterPath = Path.Combine(Settings.Location, "tmp", updater);
+                Communication.DownloadFile("/client/" + updater, updaterPath);
+                var sha2 = Transform.SHA2(updaterPath);
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;
