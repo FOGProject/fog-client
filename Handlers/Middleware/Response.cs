@@ -55,8 +55,9 @@ namespace FOG.Handlers.Middleware
             {"#!er", "General error"}
         };
 
-        public Response(string rawData)
+        public Response(string rawData, bool encrypted)
         {
+            Encrypted = encrypted;
             var data = rawData.Split('\n'); //Split the response at every new line
             var parsedData = new Dictionary<string, string>();
             try
@@ -82,11 +83,12 @@ namespace FOG.Handlers.Middleware
             }
         }
 
-        public Response(bool error, Dictionary<string, string> data, string returnCode)
+        public Response(bool error, Dictionary<string, string> data, string returnCode, bool encrypted)
         {
             Error = error;
             Data = data;
             ReturnCode = returnCode;
+            Encrypted = encrypted;
         }
 
         public Response()
@@ -94,9 +96,11 @@ namespace FOG.Handlers.Middleware
             Error = true;
             Data = new Dictionary<string, string>();
             ReturnCode = "";
+            Encrypted = false;
         }
 
         public bool Error { get; set; }
+        public bool Encrypted { get; private set; }
         public Dictionary<string, string> Data { get; set; }
         public string ReturnCode { get; set; }
 

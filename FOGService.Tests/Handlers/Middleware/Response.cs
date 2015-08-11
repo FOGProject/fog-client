@@ -77,7 +77,7 @@ namespace FOGService.Tests.Handlers.Middleware
                                "#obj1=bar\n" +
                                "#obj2=22!";
 
-            var response = new Response(msg);
+            var response = new Response(msg, false);
             var objArray = response.GetList("#obj", false);
 
             Assert.AreEqual(3, objArray.Count);
@@ -98,7 +98,7 @@ namespace FOGService.Tests.Handlers.Middleware
                                "#Empty=\n" +
                                "#-X=Special";
 
-            var response = new Response(msg);
+            var response = new Response(msg, false);
 
             Assert.IsFalse(response.Error);
             Assert.AreEqual("bar", response.GetField("#Foo"));
