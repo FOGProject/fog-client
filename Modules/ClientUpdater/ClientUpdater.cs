@@ -48,10 +48,9 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                var updater = "FOGService.msi";
-
-                if (Settings.OS != Settings.OSType.Windows)
-                    updater = "core.sh";
+                var updater = (Settings.OS == Settings.OSType.Windows)
+                    ? "FOGService.msi"
+                    : "core.sh";
 
                 if (File.Exists(Path.Combine(Settings.Location, "tmp", updater)))
                     File.Delete(Path.Combine(Settings.Location, "tmp", updater));
