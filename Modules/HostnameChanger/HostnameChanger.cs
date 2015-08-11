@@ -18,7 +18,6 @@
  */
 
 using System;
-using System.Diagnostics.Eventing.Reader;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
