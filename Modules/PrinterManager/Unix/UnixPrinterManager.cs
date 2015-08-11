@@ -51,7 +51,7 @@ namespace FOG.Modules.PrinterManager
             var portName = ProcessHandler.GetOutput("echo", $"{printer.Name} | tr ' ' '_'");
             var lpdAddress = $"lpd://{printer.IP}";
             ProcessHandler.Run("lpadmin",
-                $"{"-p"} {portName} -E -v {lpdAddress} -P {printer.File} -D {printer.Name}");
+                $"-p {portName} -E -v {lpdAddress} -P {printer.File} -D {printer.Name}");
         }
 
         public override void Remove(string name)
