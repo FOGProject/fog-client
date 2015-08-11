@@ -19,6 +19,7 @@
 
 using System;
 using System.Collections.Generic;
+using FOG.Handlers;
 
 namespace FOG.Modules.PrinterManager
 {
@@ -47,14 +48,15 @@ namespace FOG.Modules.PrinterManager
 
         protected override void AddCUPS(CUPSPrinter printer)
         {
-            var portName = ProcessHandler.GetOutput("echo", string.Format("{0} {1}",printer.Name," | tr ' ' '_'"));
-            var lpdAddress = string.Format("{0} {1}","lpd://",printer.IP);
-            ProcessHandler.Run("lpadmin", string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}","-p",portName, "-E","-v",lpdAddress,"-P",printer.File, "-D",printer.Name));
+            var portName = ProcessHandler.GetOutput("echo", $"{printer.Name} | tr ' ' '_'");
+            var lpdAddress = $"lpd://{printer.IP}";
+            ProcessHandler.Run("lpadmin",
+                $"{"-p"} {portName} -E -v {lpdAddress} -P {printer.File} -D {printer.Name}");
         }
 
         public override void Remove(string name)
         {
-            ProcessHandler.Run("lpstat", string.Format("{0} {1} {2}", "-","-P",name));
+            ProcessHandler.Run("lpstat", $"- -P {name}");
         }
 
         public override void Default(string name)
