@@ -49,7 +49,6 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
-        [Ignore("Ignore test due to build agents being run as root")]
         public void GetUsersLoggedIn()
         {
             var users = UserHandler.GetUsersLoggedIn();
@@ -58,7 +57,6 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
-        [Ignore("Ignore test due to build agents being run as root")]
         public void IsUserLoggedIn()
         {
             Assert.IsTrue(UserHandler.IsUserLoggedIn());
