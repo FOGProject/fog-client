@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{5C3289AB-B65D-42F8-BFD0-21C61619729A}"
 EndProject
@@ -42,6 +42,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupHelper", "SetupHelper\SetupHelper.csproj", "{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerCLI", "PowerCLI\PowerCLI.csproj", "{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repin", "Repin\Repin.csproj", "{A8C15B88-88B9-4209-9B03-EAA83DD946D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -233,6 +235,18 @@ Global
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|Mixed Platforms.Build.0 = Release|x86
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|x86.ActiveCfg = Release|x86
 		{2210F95B-7BA3-40E4-9AAE-A2FB0487B3EE}.Release|x86.Build.0 = Release|x86
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Debug|x86.Build.0 = Debug|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|x86.ActiveCfg = Release|Any CPU
+		{A8C15B88-88B9-4209-9B03-EAA83DD946D3}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
