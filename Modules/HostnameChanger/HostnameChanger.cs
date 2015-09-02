@@ -20,6 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
@@ -134,16 +137,38 @@ namespace FOG.Modules.HostnameChanger
         //Add a host to active directory
         private void RegisterComputer(Response response)
         {
-            Log.Entry(Name, "Registering host with active directory");
-
             if (response.GetField("#AD") != "1")
                 return;
+
+            Log.Entry(Name, "Registering host with active directory");
 
             if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
             {
                 Log.Error(Name, "Required Domain Joining information is missing");
                 return;
             }
+
+            // Check if the host is already part of the set domain by checking server IPs
+            try
+            {
+                using (var domain = Domain.GetComputerDomain())
+                {
+                    var currentIP = Dns.GetHostAddresses(domain.Name);
+                    var targetIP = Dns.GetHostAddresses(response.GetField("#ADDom"));
+
+                    if (currentIP.Intersect(targetIP).Any())
+                    {
+                        Log.Entry(Name, "Host is already joined to target domain");
+                        return;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
 
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
