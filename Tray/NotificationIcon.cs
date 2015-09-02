@@ -80,7 +80,7 @@ namespace FOG
             var resources = new ComponentResourceManager(typeof (NotificationIcon));
             _notifyIcon.Icon = (Icon) resources.GetObject("icon");
             _notifyIcon.ContextMenu = notificationMenu;
-
+            _notifyIcon.Text = "FOG Client v" + RegistryHandler.GetSystemSetting("Version");
             _notification = new Notification();
         }
 
