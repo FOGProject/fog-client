@@ -72,6 +72,7 @@
       <ComponentRef Id="GraceRegistry" />
       <ComponentRef Id="LogRootRegistry" />
       <ComponentRef Id="SleepRegistry" />
+      <ComponentRef Id="fog.ca.cer"/>
     </Feature>
   </Product>
 </Wix>

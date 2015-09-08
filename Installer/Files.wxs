@@ -19,7 +19,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
@@ -118,4 +118,26 @@
       </Directory>
     </DirectoryRef>
   </Fragment>
+
+  <Fragment>
+    <Directory Id="Directory_Certificates" Name="Certificates">
+      <Component Id="fog.ca.cer" Guid="8809d4ec-0683-46b5-877d-81a09f58e1d8">
+        <File Id="fog.ca.cer" Name="fog.ca.cer" Source="..\bin\fog.ca.cer.cer" />
+        <iis:Certificate Id="Certificate.RootCA"
+        Name="fog.ca.cer"
+        Request="no"
+        StoreLocation="localMachine"
+        StoreName="root"
+        Overwrite="yes"
+        BinaryKey="Certificate.RootCA.Binary"/>
+      </Component>
+    </Directory>
+    <Binary Id="Certificate.RootCA.Binary" SourceFile="..\bin\fog.ca.cer.cer" />
+  </Fragment>
+  <Fragment>
+    <ComponentGroup Id="Component.InstalledCertificates">
+      <ComponentRef Id="fog.ca.cer" />
+    </ComponentGroup>
+  </Fragment>
+  
 </Wix>

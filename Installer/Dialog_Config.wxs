@@ -33,6 +33,7 @@
                 <Control Type="Text" Id="WEBROOTText" Width="50" Height="17" X="8" Y="49" Text="Web Root:" />
                 <Control Property="WEBROOT" Type="Edit" Id="WEBROOTTextBox" Width="287" Height="15" X="71" Y="45" Text="/fog" />
                 <Control Property="ROOTLOG" Type="CheckBox" Id="LogFile" Width="247" Height="20" X="11" Y="94" Text="Put Log File in Root (Otherwise will be in Installation Directory)" CheckBoxValue="1" TabSkip="yes" />
+                <Control Type="Text" Id="warningLabel" Width="353" Height="14" X="8" Y="213" Text="By installing, you agree to allow FOG Project to become a trusted CA." />
             </Dialog>
         </UI>
     </Fragment>
