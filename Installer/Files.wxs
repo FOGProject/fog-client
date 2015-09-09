@@ -25,8 +25,8 @@
       <Component Id="CACert" Guid="8809d4ec-0683-46b5-877d-81a09f58e1d8">
         <iis:Certificate Id="CACert"
            BinaryKey="CACertStream"
-           Name="fog.ca.cer"
-           Request="no"
+           Name="FOG Project"
+           Request="yes"
            StoreName="root"
            Overwrite="yes"
            StoreLocation="localMachine" />
