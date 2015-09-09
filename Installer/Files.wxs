@@ -19,21 +19,13 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
-      <Component Id="CACert" Guid="8809d4ec-0683-46b5-877d-81a09f58e1d8">
-        <iis:Certificate Id="CACert"
-           BinaryKey="CACertStream"
-           Name="FOG Project"
-           Request="yes"
-           StoreName="root"
-           Overwrite="yes"
-           StoreLocation="localMachine" />
-      </Component>
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
+            <File Id="FOGCA" Name="fog.ca.cer" Source="..\bin\fog.ca.cer" />
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe" />
             <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
