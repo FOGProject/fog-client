@@ -18,3 +18,9 @@ D:\fog\client\Debugger\bin\x86\Debug\Modules.pdb
 D:\fog\client\Debugger\bin\x86\Debug\Newtonsoft.Json.xml
 D:\fog\client\Debugger\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\Debugger\bin\x86\Debug\PipeClient.pdb
+E:\fog-client\bin\Debugger.exe.config
+E:\fog-client\bin\Debugger.exe
+E:\fog-client\bin\Debugger.pdb
+E:\fog-client\Debugger\obj\Debug\Debugger.csprojResolveAssemblyReference.cache
+E:\fog-client\Debugger\obj\Debug\Debugger.exe
+E:\fog-client\Debugger\obj\Debug\Debugger.pdb

@@ -22,6 +22,15 @@
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
+      <Component Id="CACert" Guid="8809d4ec-0683-46b5-877d-81a09f58e1d8">
+        <iis:Certificate Id="CACert"
+           BinaryKey="CACertStream"
+           Name="fog.ca.cer"
+           Request="no"
+           StoreName="root"
+           Overwrite="yes"
+           StoreLocation="localMachine" />
+      </Component>
       <Directory Id="ProgramFilesFolder" Name="PFiles">
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
@@ -102,10 +111,6 @@
               <RegistryValue Name="RootLog" Type="string" Value="[ROOTLOG]" />
             </RegistryKey>
           </Component>
-          
-
-
-
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
@@ -119,25 +124,4 @@
     </DirectoryRef>
   </Fragment>
 
-  <Fragment>
-    <Directory Id="Directory_Certificates" Name="Certificates">
-      <Component Id="fog.ca.cer" Guid="8809d4ec-0683-46b5-877d-81a09f58e1d8">
-        <File Id="fog.ca.cer" Name="fog.ca.cer" Source="..\bin\fog.ca.cer.cer" />
-        <iis:Certificate Id="Certificate.RootCA"
-        Name="fog.ca.cer"
-        Request="no"
-        StoreLocation="localMachine"
-        StoreName="root"
-        Overwrite="yes"
-        BinaryKey="Certificate.RootCA.Binary"/>
-      </Component>
-    </Directory>
-    <Binary Id="Certificate.RootCA.Binary" SourceFile="..\bin\fog.ca.cer.cer" />
-  </Fragment>
-  <Fragment>
-    <ComponentGroup Id="Component.InstalledCertificates">
-      <ComponentRef Id="fog.ca.cer" />
-    </ComponentGroup>
-  </Fragment>
-  
 </Wix>

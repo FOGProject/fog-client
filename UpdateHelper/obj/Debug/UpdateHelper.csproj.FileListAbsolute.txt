@@ -19,3 +19,9 @@ D:\fog\client\UpdateHelper\bin\x86\Debug\Handlers.pdb
 D:\fog\client\UpdateHelper\bin\x86\Debug\Newtonsoft.Json.xml
 D:\fog\client\UpdateHelper\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\UpdateHelper\bin\x86\Debug\PipeClient.pdb
+E:\fog-client\bin\FOGUpdateHelper.exe.config
+E:\fog-client\bin\FOGUpdateHelper.exe
+E:\fog-client\bin\FOGUpdateHelper.pdb
+E:\fog-client\UpdateHelper\obj\Debug\UpdateHelper.csprojResolveAssemblyReference.cache
+E:\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.exe
+E:\fog-client\UpdateHelper\obj\Debug\FOGUpdateHelper.pdb

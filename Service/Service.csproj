@@ -81,7 +81,7 @@
     <PlatformTarget>x86</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestCertificateThumbprint>BCC9AE80C5D10BC8B53ED4B56F7DF636B37251E0</ManifestCertificateThumbprint>

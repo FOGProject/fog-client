@@ -8,3 +8,7 @@ C:\Users\jbob\Desktop\fog-client\bin\PipeClient.pdb
 C:\Users\jbob\Desktop\fog-client\PipeClient\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\PipeClient\obj\Debug\PipeClient.dll
 C:\Users\jbob\Desktop\fog-client\PipeClient\obj\Debug\PipeClient.pdb
+E:\fog-client\bin\PipeClient.dll
+E:\fog-client\bin\PipeClient.pdb
+E:\fog-client\PipeClient\obj\Debug\PipeClient.dll
+E:\fog-client\PipeClient\obj\Debug\PipeClient.pdb

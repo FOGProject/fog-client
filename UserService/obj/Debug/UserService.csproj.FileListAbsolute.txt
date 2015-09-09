@@ -8,3 +8,9 @@ C:\Users\jbob\Desktop\fog-client\bin\FOGUserService.pdb
 C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\ResolveAssemblyReference.cache
 C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\FOGUserService.exe
 C:\Users\jbob\Desktop\fog-client\UserService\obj\Debug\FOGUserService.pdb
+E:\fog-client\bin\FOGUserService.exe.config
+E:\fog-client\bin\FOGUserService.exe
+E:\fog-client\bin\FOGUserService.pdb
+E:\fog-client\UserService\obj\Debug\UserService.csprojResolveAssemblyReference.cache
+E:\fog-client\UserService\obj\Debug\FOGUserService.exe
+E:\fog-client\UserService\obj\Debug\FOGUserService.pdb

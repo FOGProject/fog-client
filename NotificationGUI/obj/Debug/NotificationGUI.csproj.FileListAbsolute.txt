@@ -16,3 +16,11 @@ D:\fog\client\NotificationGUI\bin\x86\Debug\Handlers.pdb
 D:\fog\client\NotificationGUI\bin\x86\Debug\Newtonsoft.Json.xml
 D:\fog\client\NotificationGUI\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\NotificationGUI\bin\x86\Debug\PipeClient.pdb
+E:\fog-client\bin\FOGNotificationGUI.exe.config
+E:\fog-client\bin\FOGNotificationGUI.exe
+E:\fog-client\bin\FOGNotificationGUI.pdb
+E:\fog-client\NotificationGUI\obj\Debug\NotificationGUI.csprojResolveAssemblyReference.cache
+E:\fog-client\NotificationGUI\obj\Debug\FOG.MainForm.resources
+E:\fog-client\NotificationGUI\obj\Debug\NotificationGUI.csproj.GenerateResource.Cache
+E:\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.exe
+E:\fog-client\NotificationGUI\obj\Debug\FOGNotificationGUI.pdb
