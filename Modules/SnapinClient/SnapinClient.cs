@@ -149,9 +149,6 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    taskResponse.GetField("SNAPINRUNWITHARGS"));
-
-                process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
                     string.Format("{0} \"{1} \"{2}", taskResponse.GetField("SNAPINRUNWITHARGS"), 
                         snapinPath, Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))));
             }

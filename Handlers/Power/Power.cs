@@ -180,7 +180,7 @@ namespace FOG.Handlers.Power
             requestData.period = gracePeriod;
             requestData.options = options;
             requestData.command = parameters;
-            requestData.message = message ?? "This computer needs to perform maintance.";
+            requestData.message = message ?? "This computer needs to perform maintenance.";
 
             Bus.Emit(Bus.Channel.Power, requestData, true);
             _timer = new Timer(gracePeriod*1000);

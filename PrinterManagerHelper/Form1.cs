@@ -51,7 +51,7 @@ namespace PrinterManagerHelper
         {
             var printers = new Dictionary<string, ManagementBaseObject>();
 
-            using (var query = new ManagementObjectSearcher("SELECT * from Win32_Printer"))
+            using (var query = new ManagementObjectSearcher("SELECT * from Win32_Printer Where Network=false And Local=True"))
             {
                 foreach (var printer in query.Get())
                 {
