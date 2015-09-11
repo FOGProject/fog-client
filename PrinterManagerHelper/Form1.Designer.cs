@@ -123,6 +123,8 @@
             // 
             this.driverText.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.driverText.Cursor = System.Windows.Forms.Cursors.Default;
+            this.driverText.ForeColor = System.Drawing.SystemColors.WindowText;
             this.driverText.Location = new System.Drawing.Point(69, 131);
             this.driverText.Name = "driverText";
             this.driverText.ReadOnly = true;
