@@ -42,4 +42,4 @@ mono /opt/fog-service/MonoHelper.exe $1 $2 $version "FOG" "0" $3
 ########################
 
 rm /opt/FOGService.zip
-rm /opt/fog-service/SetupHelper.exe
+rm /opt/fog-service/MonoHelper.exe
