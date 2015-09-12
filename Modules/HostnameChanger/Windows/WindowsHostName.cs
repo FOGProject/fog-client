@@ -1,17 +1,17 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
  * Copyright (C) 2014-2015 FOG Project
- * 
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
  * of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
@@ -58,6 +58,27 @@ namespace FOG.Modules.HostnameChanger.Windows
 
         public bool RegisterComputer(Response response)
         {
+            // Check if the host is already part of the set domain by checking server IPs
+            try
+            {
+                using (var domain = Domain.GetComputerDomain())
+                {
+                    var currentIP = Dns.GetHostAddresses(domain.Name);
+                    var targetIP = Dns.GetHostAddresses(response.GetField("#ADDom"));
+
+                    if (currentIP.Intersect(targetIP).Any())
+                    {
+                        Log.Entry(Name, "Host is already joined to target domain");
+                        return;
+                    }
+
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true,
                 (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));

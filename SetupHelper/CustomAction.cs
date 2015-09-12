@@ -89,6 +89,71 @@ namespace SetupHelper
         }
 
         [CustomAction]
+        public static ActionResult InstallFOGCert(Session session)
+        {
+            try
+            {
+                var cert = new X509Certificate2(session.CustomActionData["CAFile"]);
+                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadWrite);
+                store.Add(cert);
+
+                store.Close();
+
+                return ActionResult.Success;
+            }
+            catch (Exception ex)
+            {
+                DisplayMSIError(session, "Unable to install FOG Project CA: " + ex.Message);
+                return ActionResult.Failure;
+            }
+        }
+
+        [CustomAction]
+        public static ActionResult UninstallFOGCert(Session session)
+        {
+            var cert = new X509Certificate2();
+            try
+            {
+                X509Certificate2 CAroot = null;
+                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadOnly);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
+
+                if (cers.Count > 0)
+                {
+                    CAroot = cers[0];
+                }
+                store.Close();
+
+                cert = CAroot;
+            }
+            catch (Exception ex)
+            {
+                DisplayMSIError(session, "Unable to remove FOG Project CA certficate: " + ex.Message);
+                return ActionResult.Success;
+            }
+
+            if (cert == null) return ActionResult.Success;
+
+            try
+            {
+                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+                store.Open(OpenFlags.ReadWrite);
+                store.Remove(cert);
+                store.Close();
+                return ActionResult.Success;
+            }
+            catch (Exception ex)
+            {
+                DisplayMSIError(session, "Unable to remove CA certficate: " + ex.Message);
+                return ActionResult.Success;
+            }
+
+        }
+
+
+        [CustomAction]
         public static ActionResult CleanTasks(Session session)
         {
             try

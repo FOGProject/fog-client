@@ -103,10 +103,12 @@ namespace FOG
         {
             var response = Communication.GetResponse("/management/index.php?node=client&sub=configure");
 
-            if (response.Error || response.IsFieldValid("#sleep")) return null;
+            if (response.Error) return null;
 
             // Set the shutdown graceperiod
             Settings.Set("gracePeriod", response.GetField("#promptTime"));
+
+            if (!response.IsFieldValid("#sleep")) return null;
 
             try
             {
