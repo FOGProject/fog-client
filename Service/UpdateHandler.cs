@@ -36,6 +36,7 @@ namespace FOG
         {
             try
             {
+                UserServiceSpawner.KillAll();
                 Thread.Sleep(5*1000);
                 ProcessHandler.KillAllEXE("FOGUserService");
                 ProcessHandler.KillAllEXE("FOGTray");
@@ -52,8 +53,10 @@ namespace FOG
         {
             try
             {
+                UserServiceSpawner.Stop();
+
                 //Create updating.info which will warn any sub-processes currently initializing that they should halt
-                File.WriteAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "updating.info"), "");
+                File.WriteAllText(Path.Combine(Settings.Location, "tmp", "updating.info"), "");
 
                 //Give time for any sub-processes that may be in the middle of initializing and missed the updating.info file so they can recieve the update pipe notice
                 Thread.Sleep(1000);

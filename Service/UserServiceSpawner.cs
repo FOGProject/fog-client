@@ -69,11 +69,14 @@ namespace FOG
 
         public static void Start()
         {
-            UserThread.Start();
+            if (!UserThread.IsAlive)
+                UserThread.Start();
         }
 
         public static void Stop()
         {
+            if(UserThread != null && UserThread.IsAlive)
+                UserThread.Abort();
         }
 
         public static void KillAll()

@@ -35,12 +35,12 @@ namespace FOG
 
         public void StartService()
         {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/fog-service start");
+            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service start");
         }
 
         public void StopService()
         {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/fog-service stop");
+            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service stop");
         }
     }
 }
