@@ -72,7 +72,7 @@ namespace FOG.Modules.HostnameChanger
 
             RenameComputer(taskResponse);
 
-            UnRegisterComputer(response);
+            UnRegisterComputer(taskResponse);
             if (Power.ShuttingDown || Power.Requested) return;
 
             if (!Power.ShuttingDown && !Power.Requested)

@@ -19,6 +19,7 @@
 
 using System;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using FOG;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;

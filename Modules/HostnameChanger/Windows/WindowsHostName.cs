@@ -20,6 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
@@ -69,7 +72,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     if (currentIP.Intersect(targetIP).Any())
                     {
                         Log.Entry(Name, "Host is already joined to target domain");
-                        return;
+                        return false;
                     }
 
                 }
