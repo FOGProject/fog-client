@@ -49,14 +49,14 @@ namespace FOG.Commands.Core.Middleware
                 return true;
             }
 
-            if (args.Length < 3) return false;
+            if (args.Length < 2) return false;
 
-            if (args[9].Equals("server"))
+            if (args[0].Equals("server"))
             {
                 Configuration.ServerAddress = args[1];
                 return true;
             }
-            if (args[9].Equals("mac"))
+            if (args[0].Equals("mac"))
             {
                 Configuration.TestMAC = args[1];
                 return true;
