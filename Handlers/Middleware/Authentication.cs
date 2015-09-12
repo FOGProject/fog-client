@@ -67,7 +67,7 @@ namespace FOG.Handlers.Middleware
                     Log.Entry(LogName, "Authenticated");
                     SetSecurityToken("token.dat", Data.Transform.HexStringToByteArray(response.GetField("#token")));
                     return true;
-                } 
+                }
                 
                 if (response.ReturnCode.Equals("#!ih"))
                     Communication.Contact(string.Format("/service/register.php?hostname={0}", Dns.GetHostName()), true);
