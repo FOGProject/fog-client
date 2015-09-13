@@ -79,7 +79,7 @@ namespace FOG.Handlers
             if (Settings.OS == Settings.OSType.Windows) return Run(filePath, param, wait);
 
             // Re-write the param information to include mono
-            param = filePath + " " + param;
+            param = $"-c \"mono {filePath} {param}\"";
             param = param.Trim();
 
             // Create a process with /bin/bash as the FileName so that we can run multiple commands in one line
@@ -87,7 +87,7 @@ namespace FOG.Handlers
             var proc = new Process();
             var info = new ProcessStartInfo
             {
-                FileName = "mono",
+                FileName = "/bin/bash",
                 RedirectStandardInput = true,
                 UseShellExecute = false
             };
