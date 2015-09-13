@@ -161,8 +161,7 @@ namespace FOG.Handlers
         public static void Set(string key, JToken value)
         {
             if (_data == null) _data = new JObject();
-
-            _data.Add(key, value);
+            _data[key] = value;
             Save();
         }
     }

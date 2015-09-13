@@ -30,17 +30,17 @@ namespace FOG
         public void ApplyUpdate()
         {
             ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "core.sh")} {Configuration.ServerAddress}");
+                $"{Path.Combine(Settings.Location, "core.sh")} {Settings.Get("Server")} 0 0");
         }
 
         public void StartService()
         {
-            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service start");
+            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService start");
         }
 
         public void StopService()
         {
-            ProcessHandler.Run("/bin/bash", "-c /etc/init.d/fog-service stop");
+            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService stop");
         }
     }
 }

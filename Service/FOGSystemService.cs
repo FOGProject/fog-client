@@ -19,6 +19,7 @@
 
 
 using System;
+using System.Diagnostics;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
@@ -97,6 +98,8 @@ namespace FOG
 
             if (Power.Updating)
                 UpdateHandler.BeginUpdate();
+
+            Process.GetCurrentProcess().Kill();
         }
 
         protected override int? GetSleepTime()

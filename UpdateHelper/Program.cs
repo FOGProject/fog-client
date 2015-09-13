@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using FOG.Handlers;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -31,6 +32,12 @@ namespace FOG
         public static void Main(string[] args)
         {
             Eager.Initalize();
+
+            if (args.Length > 0)
+            {
+                Log.FilePath = args[0];
+                Log.Output = Log.Mode.File;
+            }
             switch (Settings.OS)
             {
                 case Settings.OSType.Mac:
