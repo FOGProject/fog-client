@@ -6,18 +6,19 @@ Windows      | Linux       | Mac
 -------------|-------------|-------------
 [![Windows](https://ci.appveyor.com/api/projects/status/6uqyhjiarj0dysa8?svg=true)](https://ci.appveyor.com/project/jbob182/fog-client) | [![Linux] (https://travis-ci.org/FOGProject/fog-client.svg?branch=mono)] (https://travis-ci.org/FOGProject/fog-client/) | NA 
 
+
 Progress
-      Feature     | Windows | Linux | OSX 
-------------------|---------|-------|-----
-    Auto Logout   |    ✓    |   ✓   |  ✓  
-   Auto Updating  |    ✓    |   X   |  X  
-  Display Manager |    ✓    |   X   |  X  
-     GreenFOG     |    ✓    |   X   |  X  
-      Rename      |    ✓    |   ✓   |  ✓  
-    Join Domain   |    ✓    |   X   |  ✓  
-      Snapins     |    ✓    |   ✓   |  ✓  
-    Task Reboot   |    ✓    |   ✓   |  ✓  
-   User Tracker   |    ✓    |   ✓   |  ✓  
-    IP Printers   |    ✓    |   X   |  X  
- Network Printers |    ✓    |   X   |  X  
-   CUPS Printers  |    X    |   X   |  X  
+| Feature | Windows | Linux | OSX |
+|------------------|---------|-------|-----|
+| Auto Logout | ✓ | ✓ | ✓ |
+| Auto Updating | ✓ |  |  |
+| Display Manager | ✓ |  |  |
+| GreenFOG | ✓ |  |  |
+| Rename | ✓ | ✓ | ✓ |
+| Join Domain | ✓ |  | ✓ |
+| Snapins | ✓ | ✓ | ✓ |
+| Task Reboot | ✓ | ✓ | ✓ |
+| User Tracker | ✓ | ✓ | ✓ |
+| IP Printers | ✓ |  |  |
+| Network Printers | ✓ |  |  |
+| CUPS Printers |  |  |  |
