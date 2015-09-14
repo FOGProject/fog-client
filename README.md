@@ -10,7 +10,7 @@ Windows      | Linux       | Mac
 Progress
 
 | Feature | Windows | Linux | OSX |
-|------------------|---------|-------|-----|
+|:----------------:|:-------:|:-----:|:---:|
 | Auto Logout | ✓ | ✓ | ✓ |
 | Auto Updating | ✓ |  |  |
 | Display Manager | ✓ |  |  |
