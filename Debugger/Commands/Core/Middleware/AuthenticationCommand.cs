@@ -76,7 +76,7 @@ namespace FOG.Commands.Core.Middleware
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> handshake");
             Log.WriteLine("--> pin");
         }

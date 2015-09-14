@@ -67,7 +67,7 @@ namespace FOG.Commands.Core.CBus
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> mode    [server/client]");
             Log.WriteLine("--> public  [message]");
             Log.WriteLine("--> private [message]");

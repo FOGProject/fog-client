@@ -117,7 +117,7 @@ namespace FOG.Commands.Core.Process
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> run [PATH] [Param ...]");
             Log.WriteLine("--> runexe [PATH] [Param ...]");
             Log.WriteLine("--> runclient [NAME] [Param ...]");

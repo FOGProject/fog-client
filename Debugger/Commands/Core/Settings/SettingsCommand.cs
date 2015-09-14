@@ -77,7 +77,7 @@ namespace FOG.Commands.Core.Settings
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> os");
             Log.WriteLine("--> get [SETTING]");
             Log.WriteLine("--> set [SETTING] [VALUE]");

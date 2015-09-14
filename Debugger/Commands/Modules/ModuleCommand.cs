@@ -71,7 +71,7 @@ namespace FOG.Commands.Modules
 
         private void Help()
         {
-            Log.WriteLine("Avaible modules");
+            Log.WriteLine("Available modules");
             foreach (var moduleName in _modules.Keys)
             {
                 Log.WriteLine("--> " + moduleName);

@@ -66,7 +66,7 @@ namespace FOG.Commands.Core.Middleware
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> info");
             Log.WriteLine("--> default");
             Log.WriteLine("--> server  [SERVER_ADDRESS]");

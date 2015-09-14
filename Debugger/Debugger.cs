@@ -102,7 +102,7 @@ namespace FOG
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands (append ? to any command for more information)");
+            Log.WriteLine("Available commands (append ? to any command for more information)");
             foreach (var keyword in Commands.Keys)
             {
                 Log.WriteLine("--> " + keyword);

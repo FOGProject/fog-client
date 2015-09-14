@@ -67,7 +67,7 @@ namespace FOG.Commands.Core.User
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> loggedin");
             Log.WriteLine("--> current");
             Log.WriteLine("--> inactivity");

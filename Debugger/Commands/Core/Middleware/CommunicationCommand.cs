@@ -86,7 +86,7 @@ namespace FOG.Commands.Core.Middleware
 
         private static void Help()
         {
-            Log.WriteLine("Avaible commands");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> contact            [postfix]");
             Log.WriteLine("--> download           [postfix] [download_path]");
             Log.WriteLine("--> download-external  [url]     [download_path]");
