@@ -65,7 +65,6 @@ namespace FOG.Handlers.Middleware
                 // Encrypt the security token and AES key using the public key
                 var enKey = Transform.ByteArrayToHexString(RSA.Encrypt(certificate, Passkey));
                 var enToken = Transform.ByteArrayToHexString(RSA.Encrypt(certificate, token));
-                Log.Debug(LogName, "Key: " + enKey);
                 // Send the encrypted data to the server and get the response
                 var response = Communication.Post("/management/index.php?sub=authorize",
                     $"sym_key={enKey}&token={enToken}&mac={Configuration.MACAddresses()}");
