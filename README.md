@@ -24,4 +24,4 @@ Progress
 | User Tracker | ✓ | ✓ | ✓ |
 | IP Printers | ✓ |  |  |
 | Network Printers | ✓ |  |  |
-| CUPS Printers | ✓ |  | ✓ |
+| CUPS Printers | ✓ | ✓ | ✓ |
