@@ -1,4 +1,9 @@
 ﻿
+using System.Windows.Forms;
+using MetroFramework;
+using MetroFramework.Components;
+using MetroFramework.Controls;
+
 namespace FOG {
 	partial class MainForm {
 		/// <summary>
@@ -29,13 +34,13 @@ namespace FOG {
 		{
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            this.btnAbort = new System.Windows.Forms.Button();
-            this.progressBar1 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
+            this.btnAbort = new MetroFramework.Controls.MetroButton();
+            this.progressBar1 = new MetroFramework.Controls.MetroProgressBar();
+            this.label1 = new MetroFramework.Controls.MetroLabel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new MetroFramework.Controls.MetroTextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
-            this.btnNow = new System.Windows.Forms.Button();
+            this.btnNow = new MetroFramework.Controls.MetroButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -44,9 +49,8 @@ namespace FOG {
             this.btnAbort.Location = new System.Drawing.Point(510, 280);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(147, 41);
-            this.btnAbort.TabIndex = 1;
+            this.btnAbort.TabIndex = 5;
             this.btnAbort.Text = "Abort";
-            this.btnAbort.UseVisualStyleBackColor = true;
             this.btnAbort.Click += new System.EventHandler(this.BtnAbortClick);
             // 
             // progressBar1
@@ -54,14 +58,15 @@ namespace FOG {
             this.progressBar1.Location = new System.Drawing.Point(12, 327);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(645, 21);
-            this.progressBar1.TabIndex = 2;
+            this.progressBar1.TabIndex = 1;
             // 
             // label1
             // 
+            this.label1.BackColor = System.Drawing.SystemColors.Window;
             this.label1.Location = new System.Drawing.Point(12, 306);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 15);
-            this.label1.TabIndex = 3;
+            this.label1.Size = new System.Drawing.Size(150, 15);
+            this.label1.TabIndex = 2;
             this.label1.Text = "60 seconds";
             // 
             // pictureBox1
@@ -70,11 +75,12 @@ namespace FOG {
             this.pictureBox1.Location = new System.Drawing.Point(12, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(645, 120);
-            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabIndex = 3;
             this.pictureBox1.TabStop = false;
             // 
             // textBox1
             // 
+            this.textBox1.BackColor = System.Drawing.SystemColors.Control;
             this.textBox1.Location = new System.Drawing.Point(12, 167);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
@@ -95,14 +101,13 @@ namespace FOG {
             this.btnNow.Size = new System.Drawing.Size(147, 41);
             this.btnNow.TabIndex = 6;
             this.btnNow.Text = "Hide Message";
-            this.btnNow.UseVisualStyleBackColor = true;
             this.btnNow.Click += new System.EventHandler(this.BtnNowClick);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(669, 360);
             this.ControlBox = false;
             this.Controls.Add(this.btnNow);
@@ -116,19 +121,17 @@ namespace FOG {
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
-            this.Text = "Computer Service";
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
 		}
-		private System.Windows.Forms.Button btnNow;
+		private MetroButton btnNow;
 		private System.Windows.Forms.Timer timer;
-		private System.Windows.Forms.TextBox textBox1;
+		private MetroFramework.Controls.MetroTextBox textBox1;
 		private System.Windows.Forms.PictureBox pictureBox1;
-		private System.Windows.Forms.Label label1;
-		private System.Windows.Forms.ProgressBar progressBar1;
-		private System.Windows.Forms.Button btnAbort;
-	}
+		private MetroFramework.Controls.MetroLabel label1;
+		private MetroButton btnAbort;
+        private MetroProgressBar progressBar1;
+    }
 }
