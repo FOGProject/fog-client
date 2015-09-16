@@ -3,11 +3,15 @@
 ########################
 # Variables
 ########################
-# $1 fogURL/with folder $2 useTray $3 https(not required)
+# $1 fogURL/with folder $2 useTray $3 https
 version="0.9.9"
 ########################
 # Perform Installation
 ########################
+
+if (( $# != 3 )); then
+    echo "Illegal number of parameters"
+fi
 
 echo "Checking for existing installations...."
 if [ -f /opt/fog-service/FOGService.exe ]; then
