@@ -27,7 +27,7 @@ installFOGService()
     echo -n "Installing the FOGService Daemon to $initdpath...."
 	installInitScript
     echo "OK"
-    echo  "The installtion has finished!!!"
+    echo  "The installation has finished"
 }
 
 
@@ -205,7 +205,7 @@ installDeps()
                 echo "OK"
         ;;
         "2")
-            echo "  Starting Debian / Ubuntu / Kubuntu / Edubuntu Installtion."
+            echo "  Starting Debian / Ubuntu / Kubuntu / Edubuntu Installation."
             echo -n "Installing dependecies...."
             apt-get install -y $depends >/dev/null 2>&1;
             echo "OK"

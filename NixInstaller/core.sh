@@ -12,7 +12,7 @@ version="0.9.9"
 echo "Checking for existing installations...."
 if [ -f /opt/fog-service/FOGService.exe ]; then
     echo "Existing installation found, now performing uninstallation...."
-    find /opt/fog-service -maxdepth 1 -type f -exec rm {} \;
+    find /opt/fog-service -maxdepth 1 -type f ! -name 'fog.log' -exec rm {} \;
     rm -R /opt/fog-service/Scripts
     echo "Done!"
     
