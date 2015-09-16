@@ -14,7 +14,7 @@ Progress
 | Auto Logout | ✓ | ✓ | ✓ |
 | Auto Updating | ✓ | ✓ |  |
 | Display Manager | ✓ |  |  |
-| GreenFOG | ✓ |  |  |
+| GreenFOG | ✓ | ✓ | ✓ |
 | Rename | ✓ | ✓ | ✓ |
 | Join Active Directory | ✓ |  | ✓ |
 | Join LDAP | ✓ |  | ✓ |
@@ -24,4 +24,4 @@ Progress
 | User Tracker | ✓ | ✓ | ✓ |
 | IP Printers | ✓ |  |  |
 | Network Printers | ✓ |  |  |
-| CUPS Printers |  |  |  |
+| CUPS Printers | ✓ |  | ✓ |
