@@ -12,7 +12,7 @@ Progress
 | Feature | Windows | Linux | OSX |
 |:----------------:|:-------:|:-----:|:---:|
 | Auto Logout | ✓ | ✓ | ✓ |
-| Auto Updating | ✓ |  |  |
+| Auto Updating | ✓ | ✓ |  |
 | Display Manager | ✓ |  |  |
 | GreenFOG | ✓ |  |  |
 | Rename | ✓ | ✓ | ✓ |

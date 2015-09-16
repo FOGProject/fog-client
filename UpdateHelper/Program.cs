@@ -63,10 +63,6 @@ namespace FOG
 
                 var parentDir = Directory.GetParent(Settings.Location).ToString();
 
-                if (File.Exists(Path.Combine(Settings.Location, "settings.json")))
-                    File.Copy(Path.Combine(Settings.Location, "settings.json"), Path.Combine(parentDir, "settings.json"),
-                        true);
-
                 if (File.Exists(Path.Combine(Settings.Location, "token.dat")))
                     File.Copy(Path.Combine(Settings.Location, "token.dat"), Path.Combine(parentDir, "token.dat"), true);
 

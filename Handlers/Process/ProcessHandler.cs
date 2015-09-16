@@ -79,7 +79,7 @@ namespace FOG.Handlers
             if (Settings.OS == Settings.OSType.Windows) return Run(filePath, param, wait);
 
             // Re-write the param information to include mono
-            param = $"-c \"mono {filePath} {param}\"";
+            param = $"mono {filePath} {param}";
             param = param.Trim();
 
             // Create a process with /bin/bash as the FileName so that we can run multiple commands in one line
