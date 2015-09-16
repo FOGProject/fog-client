@@ -16,7 +16,9 @@ Progress
 | Display Manager | ✓ |  |  |
 | GreenFOG | ✓ |  |  |
 | Rename | ✓ | ✓ | ✓ |
-| Join Domain | ✓ |  | ✓ |
+| Join Active Directory | ✓ |  | ✓ |
+| Join LDAP | ✓ |  | ✓ |
+| Join Open Directory | ✓ |  | ✓ |
 | Snapins | ✓ | ✓ | ✓ |
 | Task Reboot | ✓ | ✓ | ✓ |
 | User Tracker | ✓ | ✓ | ✓ |
