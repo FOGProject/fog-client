@@ -11,7 +11,7 @@ version="0.9.9"
 
 if (( $# != 3 )); then
     echo "Illegal number of parameters"
-	exit 1;
+    exit 1;
 fi
 
 echo "Checking for existing installations...."
