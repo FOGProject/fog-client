@@ -38,17 +38,14 @@ namespace FOG.Handlers.Middleware
         /// <returns>The parsed response</returns>
         public static Response GetResponse(string postfix)
         {
-            //ID the service as the new one
-            var newPostfix = postfix + ((postfix.Contains(".php?") ? "&" : "?") + "newService=1");
-
-            Log.Entry(LogName, $"URL: {Configuration.ServerAddress} -- {newPostfix}");
-
             try
             {
-                var rawResponse = GetRawResponse(newPostfix);
+                var rawResponse = GetRawResponse(postfix);
+                Log.Debug(LogName, "Raw: " + rawResponse);
                 var encrypted = rawResponse.StartsWith("#!en");
+                Log.Debug(LogName, "ENCRYPTED: " + encrypted);
 
-                if(encrypted)
+                if (encrypted)
                     rawResponse = Authentication.Decrypt(rawResponse);
 
                 //See if the return code is known
