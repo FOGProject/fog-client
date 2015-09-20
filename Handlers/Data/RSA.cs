@@ -95,7 +95,6 @@ namespace FOG.Handlers.Data
             Log.Debug(LogName, "Authority: " + authority);
             Log.Debug(LogName, "Cert: " + certificate);
 
-
             try
             {
                 var chain = new X509Chain
@@ -150,21 +149,44 @@ namespace FOG.Handlers.Data
             }
         }
 
+        public static bool IsFileSignedBy(X509Certificate2 certificate, string filePath)
+        {
+            return false;
+        }
+
         /// <summary>
         /// </summary>
         /// <returns>The FOG CA root certificate</returns>
-        public static X509Certificate2 GetCACertificate()
+        public static X509Certificate2 ServerCertificate()
+        {
+            return GetRootCertificate("FOG Server CA");
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>The FOG Project root certificate</returns>
+        public static X509Certificate2 FOGProjectCertificate()
+        {
+            return GetRootCertificate("FOG Project");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">The name of the certificate to retrieve</param>
+        /// <returns>Returns the first instance of the certificate matching the name</returns>
+        public static X509Certificate2 GetRootCertificate(string name)
         {
             try
             {
                 X509Certificate2 CAroot = null;
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Server CA", true);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, name, true);
 
                 if (cers.Count > 0)
                 {
-                    Log.Entry(LogName, "CA cert found");
+                    Log.Entry(LogName, name + " cert found");
                     CAroot = cers[0];
                 }
                 store.Close();
@@ -173,7 +195,7 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Unable to get CA");
+                Log.Error(LogName, "Unable to retrieve " + name);
                 Log.Error(LogName, ex);
             }
 
@@ -186,7 +208,9 @@ namespace FOG.Handlers.Data
         /// <param name="caCert">The certificate to add</param>
         public static void InsertCACertificate(X509Certificate2 caCert)
         {
-            Log.Entry(LogName, "Attempting to insert CA cert...");
+            if (caCert == null) return;
+
+            Log.Entry(LogName, "Injecting root CA: " + caCert.FriendlyName);
             try
             {
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
