@@ -36,6 +36,7 @@ namespace FOG
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
             Bus.Subscribe(Bus.Channel.Power, OnPower);
+            ProcessHandler.RunClientEXE("FOGNotificationGUI.exe", "", false);
         }
 
         private static void OnUpdate(dynamic data)

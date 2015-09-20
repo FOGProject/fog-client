@@ -31,7 +31,7 @@ namespace FOG.Handlers.Data
     /// </summary>
     public static class Transform
     {
-        private const string LogName = "EncryptionHandler";
+        private const string LogName = "Data::Transform";
 
         /// <summary>
         ///     Base64 encode a string
@@ -100,60 +100,6 @@ namespace FOG.Handlers.Data
                 bytes[i/2] = Convert.ToByte(hex.Substring(i, 2), 16);
 
             return bytes;
-        }
-
-        /// <summary>
-        ///     Creates an md5 hash of bytes
-        /// </summary>
-        /// <param name="data">The bytes to hash</param>
-        /// <returns></returns>
-        public static string MD5(byte[] data)
-        {
-            if (data == null) return null;
-
-            var sBuilder = new StringBuilder();
-            var md5 = new MD5CryptoServiceProvider();
-            var result = md5.ComputeHash(data);
-            foreach (var hashInt in result)
-                sBuilder.Append(hashInt.ToString("x2"));
-
-            return sBuilder.ToString();
-        }
-
-        /// <summary>
-        ///     Creates an md5 hash of a file
-        /// </summary>
-        /// <param name="filePath">The path to the file</param>
-        /// <returns></returns>
-        public static string MD5(string filePath)
-        {
-            return !File.Exists(filePath) ? null : MD5(File.ReadAllBytes(filePath));
-        }
-
-        /// <summary>
-        ///     Creates a sha512 hash of bytes
-        /// </summary>
-        /// <param name="data">The bytes to hash</param>
-        /// <returns></returns>
-        public static string SHA2(byte[] data)
-        {
-            if (data == null) return null;
-
-            using (var alg = SHA512.Create())
-            {
-                alg.ComputeHash(data);
-                return BitConverter.ToString(alg.Hash).Replace("-", "");
-            }
-        }
-
-        /// <summary>
-        ///     Creates a sha512 hash of a file
-        /// </summary>
-        /// <param name="filePath">The path to the file</param>
-        /// <returns></returns>
-        public static string SHA2(string filePath)
-        {
-            return !File.Exists(filePath) ? null : SHA2(File.ReadAllBytes(filePath));
         }
     }
 }

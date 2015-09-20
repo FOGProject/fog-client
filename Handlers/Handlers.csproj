@@ -138,6 +138,7 @@
   <ItemGroup>
     <Compile Include="Bus\BusClient.cs" />
     <Compile Include="Bus\BusServer.cs" />
+    <Compile Include="Data\Hash.cs" />
     <Compile Include="Eager.cs" />
     <Compile Include="Middleware\Configuration.cs" />
     <Compile Include="Middleware\Authentication.cs" />

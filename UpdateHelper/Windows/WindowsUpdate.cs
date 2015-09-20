@@ -41,7 +41,13 @@ namespace FOG
                 StartInfo =
                 {
                     Arguments =
-                        $"/i \"{Path.Combine(Settings.Location, "FOGService.msi")}\" /quiet USETRAY=\"{useTray}\" HTTPS=\"{https}\" WEBADDRESS=\"{server}\" WEBROOT=\"{webRoot}\" ROOTLOG=\"{logRoot}\""
+                        $"/i \"{Path.Combine(Settings.Location, "FOGService.msi")}\" " +
+                        $"/quiet " +
+                        $"USETRAY=\"{useTray}\" " +
+                        $"HTTPS=\"{https}\" " +
+                        $"WEBADDRESS=\"{server}\" " +
+                        $"WEBROOT=\"{webRoot}\" " +
+                        $"ROOTLOG=\"{logRoot}\""
                 }
             };
             process.StartInfo.CreateNoWindow = true;

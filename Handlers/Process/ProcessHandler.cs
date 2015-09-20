@@ -104,7 +104,7 @@ namespace FOG.Handlers
             {
                 if (sw.BaseStream.CanWrite)
                 {
-                    sw.WriteLine("export DISPLAY=:0;" + param + " > /home/jbob/gui.txt 2>&1");
+                    sw.WriteLine("export DISPLAY=:0;" + param);
                 }
             }
 

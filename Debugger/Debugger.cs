@@ -28,8 +28,6 @@ using FOG.Commands.Core.Settings;
 using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
 using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Middleware;
 
 namespace FOG
 {
