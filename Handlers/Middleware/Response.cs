@@ -155,9 +155,7 @@ namespace FOG.Handlers.Middleware
         {
             Log.Entry(LogName, "Printing values...");
             foreach (var key in Data.Keys)
-            {
                 Log.Entry(LogName, "--> " + key + " = " + Data[key]);
-            }
         }
     }
 }

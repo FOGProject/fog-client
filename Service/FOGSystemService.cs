@@ -44,7 +44,7 @@ namespace FOG
 
         protected override void Load()
         {
-            // Kill the sub-processes
+            // Kill any existing sub-processes
             ProcessHandler.KillAllEXE("FOGUserService");
             ProcessHandler.KillAllEXE("FOGTray");
 
