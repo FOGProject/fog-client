@@ -40,7 +40,7 @@ namespace SetupHelper
         {
             try
             {
-                return MonoHelper.PinCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
+                return MonoHelper.PinServerCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
             }
             catch (Exception ex)
             {
@@ -79,7 +79,7 @@ namespace SetupHelper
         {
             try
             {
-                MonoHelper.UnpinCert();
+                MonoHelper.UnpinServerCert();
             }
             catch (Exception ex)
             {

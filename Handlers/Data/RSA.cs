@@ -206,9 +206,9 @@ namespace FOG.Handlers.Data
         ///     Add a CA certificate to the machine store
         /// </summary>
         /// <param name="caCert">The certificate to add</param>
-        public static void InsertCACertificate(X509Certificate2 caCert)
+        public static bool InjectCA(X509Certificate2 caCert)
         {
-            if (caCert == null) return;
+            if (caCert == null) return false;
 
             Log.Entry(LogName, "Injecting root CA: " + caCert.FriendlyName);
             try
@@ -217,12 +217,15 @@ namespace FOG.Handlers.Data
                 store.Open(OpenFlags.ReadWrite);
                 store.Add(caCert);
                 store.Close();
+                return true;
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Unable to add CA");
+                Log.Error(LogName, "Unable to inject CA");
                 Log.Error(LogName, ex);
             }
+
+            return false;
         }
     }
 }

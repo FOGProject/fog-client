@@ -61,31 +61,28 @@ namespace FOG
 
 
             SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
-            PinCert(Location);
+            PinServerCert(Location);
         }
 
-        public static bool PinCert(string location)
+        public static bool PinServerCert(string location)
         {
             try
             {
-                var cert = RSA.GetCACertificate();
+                var cert = RSA.ServerCertificate();
                 if (cert != null) return false;
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
                 Settings.SetPath(Path.Combine(location + "settings.json"));
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
+
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
                 if (!downloaded)
                     return false;
 
                 cert = new X509Certificate2(keyPath);
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadWrite);
-                store.Add(cert);
 
-                store.Close();
-                return true;
+                return RSA.InjectCA(cert);
             }
             catch (Exception ex)
             {
@@ -132,9 +129,9 @@ namespace FOG
             }
         }
 
-        public static bool UnpinCert()
+        public static bool UnpinServerCert()
         {
-            var cert = RSA.GetCACertificate();
+            var cert = RSA.ServerCertificate();
             if (cert == null) return false;
 
             try
