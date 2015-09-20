@@ -33,15 +33,37 @@ namespace FOG.Handlers
 
         public WebSocket Socket { get; }
 
-        public void Start()
+        public bool Start()
         {
-            Socket.Open();
+            try
+            {
+                Socket.Open();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not start");
+                Log.Error(LogName, ex);
+            }
+
+            return false;
         }
 
-        public void Stop()
+        public bool Stop()
         {
-            Socket.Close();
-            Socket.Dispose();
+            try
+            {
+                Socket.Close();
+                Socket.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not stop");
+                Log.Error(LogName, ex);
+            }
+
+            return false;
         }
 
         /// <summary>

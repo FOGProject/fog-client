@@ -31,6 +31,9 @@ namespace FOG.Handlers
         public BusServer()
         {
             // Load the server configuration from app.config
+            // This is needed to ensure the server is only
+            // broadcasting and accepting connectiosn on 127.0.0.1
+            // for security.
             var bootstrap = BootstrapFactory.CreateBootstrap();
             bootstrap.Initialize();
             bootstrap.Start();
@@ -41,13 +44,34 @@ namespace FOG.Handlers
 
         public bool Start()
         {
-            return Socket.Start();
+            try
+            {
+                return Socket.Start();
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not start");
+                Log.Error(LogName, ex);
+            }
+
+            return false;
         }
 
-        public void Stop()
+        public bool Stop()
         {
-            Socket.Stop();
-            Socket.Dispose();
+            try
+            {
+                Socket.Stop();
+                Socket.Dispose();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not stop");
+                Log.Error(LogName, ex);
+            }
+
+            return false;
         }
 
         /// <summary>
