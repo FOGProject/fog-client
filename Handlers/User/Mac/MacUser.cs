@@ -37,7 +37,7 @@ namespace FOG.Handlers.User
                 StartInfo = new ProcessStartInfo
                 {
                     FileName = "last",
-                    Arguments = @"grep 'logged in'",
+                    Arguments = @"|grep 'logged in'",
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true

@@ -60,7 +60,7 @@ namespace FOG.Commands.Core.Middleware
                     }
 
                     var caCert = new X509Certificate2(keyPath);
-                    RSA.InsertCACertificate(caCert);
+                    RSA.ServerCertificate();
                 }
                 catch (Exception ex)
                 {

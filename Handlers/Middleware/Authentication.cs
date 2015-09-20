@@ -50,7 +50,7 @@ namespace FOG.Handlers.Middleware
                 var certificate = new X509Certificate2(keyPath);
 
                 // Ensure the public key came from the pinned server
-                if (!RSA.IsFromCA(RSA.GetCACertificate(), certificate))
+                if (!RSA.IsFromCA(RSA.ServerCertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
                 Log.Entry(LogName, "Cert OK");
 

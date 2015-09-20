@@ -40,11 +40,11 @@ namespace FOGService.Tests.Handlers.Data
             var testBytes = Encoding.ASCII.GetBytes("TestString");
             const string md5 = "5B56F40F8828701F97FA4511DDCD25FB";
 
-            var calculatedMD5 = Transform.MD5(testBytes);
+            var calculatedMD5 = Hash.MD5(testBytes);
             StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
 
             // Test invalid data
-            Assert.IsNull(Transform.MD5((byte[]) null));
+            Assert.IsNull(Hash.MD5((byte[]) null));
         }
 
         [Test]
@@ -54,11 +54,11 @@ namespace FOGService.Tests.Handlers.Data
             var testBytes = Encoding.ASCII.GetBytes("TestString");
             const string sha2 = "69DFD91314578F7F329939A7EA6BE4497E6FE3909B9C8F308FE711D29D4340D90D77B7FDF359B7D0DBEED940665274F7CA514CD067895FDF59DE0CF142B62336";
 
-            var calculatedSHA2 = Transform.SHA2(testBytes);
+            var calculatedSHA2 = Hash.SHA256(testBytes);
             StringAssert.AreEqualIgnoringCase(sha2, calculatedSHA2);
 
             // Test invalid data
-            Assert.IsNull(Transform.MD5((byte[])null));
+            Assert.IsNull(Hash.MD5((byte[])null));
         }
 
         [Test]

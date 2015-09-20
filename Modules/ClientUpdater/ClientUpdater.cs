@@ -58,7 +58,7 @@ namespace FOG.Modules.ClientUpdater
 
                 // Hash the updater
                 Communication.DownloadFile("/client/" + updater, updaterPath);
-                var sha2 = Transform.SHA2(updaterPath);
+                var sha2 = Hash.SHA256(updaterPath);
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;

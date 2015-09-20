@@ -165,8 +165,9 @@ namespace FOG.Handlers.Power
             // If no user is logged in, skip trying to notify users
             if (!UserHandler.IsUserLoggedIn())
             {
-                CreateTask(parameters);
-                return;
+                Log.Debug(LogName,"No user is logged in. Though you know what? I don't believe you. So I'm going to pretend someone is logged in.");
+                //CreateTask(parameters);
+                //return;
             }
 
             // Check if a task is already in progress

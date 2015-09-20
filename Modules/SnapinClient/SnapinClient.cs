@@ -76,7 +76,7 @@ namespace FOG.Modules.SnapinClient
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
-                    var sha2 = Transform.SHA2(snapinFilePath);
+                    var sha2 = Hash.SHA256(snapinFilePath);
 
                     exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
