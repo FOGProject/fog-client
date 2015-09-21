@@ -72,7 +72,7 @@ namespace FOG
                 if (cert != null) return false;
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
-                Settings.SetPath(Path.Combine(location + "settings.json"));
+                Settings.SetPath(Path.Combine(location, "settings.json"));
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
 
