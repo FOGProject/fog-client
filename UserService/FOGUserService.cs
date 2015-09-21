@@ -18,9 +18,9 @@
  */
 
 using System;
-using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Data;
+using FOG.Core.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.DisplayManager;
@@ -108,7 +108,7 @@ namespace FOG
             Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
 
-            ProcessHandler.RunClientEXE("FOGNotificationGUI.exe", Transform.EncodeBase64(jsonData), false);
+            ProcessHandler.RunClientEXE("FOGShutdownGUI.exe", Transform.EncodeBase64(jsonData), false);
         }
     }
 }

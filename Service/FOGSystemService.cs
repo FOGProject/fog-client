@@ -20,9 +20,9 @@
 
 using System;
 using System.Diagnostics;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 using FOG.Modules;
 using FOG.Modules.ClientUpdater;
 using FOG.Modules.GreenFOG;

@@ -126,9 +126,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Handlers\Handlers.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
-      <Name>Handlers</Name>
+      <Name>Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

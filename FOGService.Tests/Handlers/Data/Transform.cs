@@ -18,8 +18,8 @@
  */
 
 using System.Text;
-using FOG.Handlers;
-using FOG.Handlers.Data;
+using FOG.Core;
+using FOG.Core.Data;
 using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Data

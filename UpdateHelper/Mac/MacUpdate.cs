@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 
 namespace FOG
 {
@@ -31,7 +31,7 @@ namespace FOG
         public void ApplyUpdate()
         {
             ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "core.sh")} {Configuration.ServerAddress}");
+                $"{Path.Combine(Settings.Location, "core.sh")} {Settings.Get("Server")} 0 0");
         }
 
         public void StartService()

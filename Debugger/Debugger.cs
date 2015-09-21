@@ -27,7 +27,7 @@ using FOG.Commands.Core.Process;
 using FOG.Commands.Core.Settings;
 using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG
 {

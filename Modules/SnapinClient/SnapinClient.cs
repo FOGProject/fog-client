@@ -20,10 +20,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Data;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 
 namespace FOG.Modules.SnapinClient
 {

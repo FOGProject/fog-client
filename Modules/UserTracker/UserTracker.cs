@@ -19,8 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 
 namespace FOG.Modules.UserTracker
 {

@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG.Commands.Core.Settings
 {
@@ -36,13 +36,13 @@ namespace FOG.Commands.Core.Settings
 
             if (args[0].Equals("os"))
             {
-                Log.WriteLine("--> " + Handlers.Settings.OS);
+                Log.WriteLine("--> " + FOG.Core.Settings.OS);
                 return true;
             }
 
             if (args[0].Equals("reload"))
             {
-                Handlers.Settings.Reload();
+                FOG.Core.Settings.Reload();
                 Log.WriteLine("--> " + "Reloaded");
 
                 return true;
@@ -52,13 +52,13 @@ namespace FOG.Commands.Core.Settings
 
             if (args[0].Equals("get"))
             {
-                Log.WriteLine("--> " + args[1] + " = \"" + Handlers.Settings.Get(args[0]) + "\"");
+                Log.WriteLine("--> " + args[1] + " = \"" + FOG.Core.Settings.Get(args[0]) + "\"");
                 return true;
             }
 
             if (args[0].Equals("path"))
             {
-                Handlers.Settings.SetPath(args[1]);
+                FOG.Core.Settings.SetPath(args[1]);
                 Log.WriteLine("--> " + "Complete");
                 return true;
             }
@@ -67,7 +67,7 @@ namespace FOG.Commands.Core.Settings
 
             if (args[0].Equals("set"))
             {
-                Handlers.Settings.Set(args[1], args[2]);
+                FOG.Core.Settings.Set(args[1], args[2]);
                 Log.WriteLine("--> " + "Complete");
                 return true;
             }

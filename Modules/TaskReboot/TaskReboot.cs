@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 
 namespace FOG.Modules.TaskReboot
 {

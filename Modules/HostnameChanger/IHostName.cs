@@ -18,7 +18,7 @@
  */
 
 
-using FOG.Handlers.Middleware;
+using FOG.Core.Middleware;
 
 namespace FOG.Modules.HostnameChanger
 {

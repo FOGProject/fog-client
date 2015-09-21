@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Middleware

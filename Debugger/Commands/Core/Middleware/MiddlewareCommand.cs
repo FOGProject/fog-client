@@ -19,7 +19,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG.Commands.Core.Middleware
 {

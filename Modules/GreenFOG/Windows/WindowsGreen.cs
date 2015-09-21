@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using FOG.Handlers;
+using FOG.Core;
 using Microsoft.Win32.TaskScheduler;
 
 namespace FOG.Modules.GreenFOG

@@ -20,10 +20,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Data;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 
 namespace FOG.Modules.ClientUpdater
 {
@@ -77,7 +77,7 @@ namespace FOG.Modules.ClientUpdater
             {
                 "FOGUpdateHelper.exe",
                 "FOGUpdateWaiter.exe",
-                "Handlers.dll",
+                "Core.dll",
                 "Newtonsoft.Json.dll",
                 "settings.json",
                 "token.dat"

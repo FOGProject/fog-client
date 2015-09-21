@@ -20,8 +20,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 
 namespace FOG.Modules.GreenFOG
 {

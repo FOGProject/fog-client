@@ -24,9 +24,9 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 
 namespace FOG.Modules.HostnameChanger.Windows
 {

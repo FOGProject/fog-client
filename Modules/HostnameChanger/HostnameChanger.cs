@@ -18,9 +18,9 @@
  */
 
 using System;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Middleware;
+using FOG.Core.Power;
 using FOG.Modules.HostnameChanger.Linux;
 using FOG.Modules.HostnameChanger.Mac;
 using FOG.Modules.HostnameChanger.Windows;

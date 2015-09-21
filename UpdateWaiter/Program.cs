@@ -21,7 +21,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG
 {

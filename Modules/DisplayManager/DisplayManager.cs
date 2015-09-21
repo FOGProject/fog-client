@@ -19,8 +19,8 @@
 
 using System;
 using System.Collections.Generic;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 using FOG.Modules.DisplayManager.Linux;
 using FOG.Modules.DisplayManager.Mac;
 using FOG.Modules.DisplayManager.Windows;

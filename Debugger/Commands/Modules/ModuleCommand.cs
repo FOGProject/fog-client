@@ -18,7 +18,7 @@
  */
 
 using System.Collections.Generic;
-using FOG.Handlers;
+using FOG.Core;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.ClientUpdater;

@@ -18,7 +18,7 @@
  */
 
 using System;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG.Modules.PrinterManager
 {

@@ -18,7 +18,7 @@
  */
 
 using System;
-using FOG.Handlers;
+using FOG.Core;
 using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.User
@@ -42,7 +42,7 @@ namespace FOGService.Tests.Handlers.User
         [Ignore("Ignore due to CI server configuration")]
         public void GetInactivityTime()
         {
-            if (FOG.Handlers.Settings.OS == FOG.Handlers.Settings.OSType.Windows)
+            if (FOG.Core.Settings.OS == FOG.Core.Settings.OSType.Windows)
                 Assert.IsTrue(UserHandler.GetInactivityTime() != -1);
             else
                 Assert.IsTrue(UserHandler.GetInactivityTime() == -1);

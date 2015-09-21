@@ -18,7 +18,7 @@
  */
 
 using System.IO;
-using FOG.Handlers;
+using FOG.Core;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
@@ -32,7 +32,7 @@ namespace FOGService.Tests.Handlers.Settings
         {
             WriteSettings();
             Log.Output = Log.Mode.Console;
-            FOG.Handlers.Settings.SetPath("settings.json");
+            FOG.Core.Settings.SetPath("settings.json");
         }
 
         [TearDown]
@@ -68,27 +68,27 @@ namespace FOGService.Tests.Handlers.Settings
         [Test]
         public void BadGet()
         {
-            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("NO_EXIST"));
-            Assert.IsNullOrEmpty(FOG.Handlers.Settings.Get("https"));
+            Assert.IsNullOrEmpty(FOG.Core.Settings.Get("NO_EXIST"));
+            Assert.IsNullOrEmpty(FOG.Core.Settings.Get("https"));
         }
 
         [Test]
         public void Get()
         {
-            Assert.AreEqual(Https, FOG.Handlers.Settings.Get("HTTPS"));
-            Assert.AreEqual(Tray, FOG.Handlers.Settings.Get("Tray"));
-            Assert.AreEqual(Server, FOG.Handlers.Settings.Get("Server"));
-            Assert.AreEqual(Webroot, FOG.Handlers.Settings.Get("WebRoot"));
-            Assert.AreEqual(Version, FOG.Handlers.Settings.Get("Version"));
-            Assert.AreEqual(Company, FOG.Handlers.Settings.Get("Company"));
-            Assert.AreEqual(Rootlog, FOG.Handlers.Settings.Get("RootLog"));
+            Assert.AreEqual(Https, FOG.Core.Settings.Get("HTTPS"));
+            Assert.AreEqual(Tray, FOG.Core.Settings.Get("Tray"));
+            Assert.AreEqual(Server, FOG.Core.Settings.Get("Server"));
+            Assert.AreEqual(Webroot, FOG.Core.Settings.Get("WebRoot"));
+            Assert.AreEqual(Version, FOG.Core.Settings.Get("Version"));
+            Assert.AreEqual(Company, FOG.Core.Settings.Get("Company"));
+            Assert.AreEqual(Rootlog, FOG.Core.Settings.Get("RootLog"));
         }
 
         [Test]
         public void Set()
         {
-            FOG.Handlers.Settings.Set("foo", "bar");
-            Assert.AreEqual("bar", FOG.Handlers.Settings.Get("foo"));
+            FOG.Core.Settings.Set("foo", "bar");
+            Assert.AreEqual("bar", FOG.Core.Settings.Get("foo"));
         }
     }
 }

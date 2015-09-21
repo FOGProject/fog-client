@@ -18,7 +18,7 @@
  */
 
 using System.Runtime.InteropServices;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG.Modules.DisplayManager
 {

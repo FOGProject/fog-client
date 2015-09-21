@@ -57,9 +57,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Handlers\Handlers.csproj">
+    <ProjectReference Include="..\Core\Core.csproj">
       <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
-      <Name>Handlers</Name>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>

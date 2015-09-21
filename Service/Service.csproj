@@ -154,9 +154,9 @@
       <Project>{5f592f0c-8c91-473b-841c-29d832a533d1}</Project>
       <Name>AbstractService</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Handlers\Handlers.csproj">
-      <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
-      <Name>Handlers</Name>
+    <ProjectReference Include="..\Core\Core.csproj">
+      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
+      <Name>Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>

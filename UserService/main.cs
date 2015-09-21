@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Handlers;
-using FOG.Handlers.Power;
+using FOG.Core;
+using FOG.Core.Power;
 
 namespace FOG
 {

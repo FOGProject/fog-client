@@ -21,9 +21,9 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
-using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Data;
+using FOG.Core.Middleware;
 
 namespace FOG.Commands.Core.Middleware
 {

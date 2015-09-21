@@ -32,7 +32,7 @@
 
             <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
-            <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
+            <File Id="Core" Name="Core.dll" Source="..\bin\Core.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
 
@@ -43,7 +43,7 @@
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="MonoHelper" Name="MonoHelper.exe" Source="..\bin\MonoHelper.exe" />
-            <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe">
+            <File Id="FOGShutdownGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe">
               <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any" />
             </File>
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">

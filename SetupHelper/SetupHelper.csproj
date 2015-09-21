@@ -59,10 +59,6 @@
     <Content Include="CustomAction.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Handlers\Handlers.csproj">
-      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
-      <Name>Handlers</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MonoHelper\MonoHelper.csproj">
       <Project>{c83c7025-7fd0-4419-b848-3b42d9ded51f}</Project>
       <Name>MonoHelper</Name>

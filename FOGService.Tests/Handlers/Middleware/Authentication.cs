@@ -17,9 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Handlers;
-using FOG.Handlers.Data;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Data;
+using FOG.Core.Middleware;
 using NUnit.Framework;
 
 namespace FOGService.Tests.Handlers.Middleware

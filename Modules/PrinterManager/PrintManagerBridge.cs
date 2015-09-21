@@ -19,7 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG.Modules.PrinterManager
 {

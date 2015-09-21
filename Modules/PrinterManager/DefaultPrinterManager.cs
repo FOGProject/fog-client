@@ -18,8 +18,8 @@
  */
 
 using System.Linq;
-using FOG.Handlers;
-using FOG.Handlers.Middleware;
+using FOG.Core;
+using FOG.Core.Middleware;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 

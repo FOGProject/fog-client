@@ -20,7 +20,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.ServiceProcess;
-using FOG.Handlers;
+using FOG.Core;
 
 namespace FOG
 {
