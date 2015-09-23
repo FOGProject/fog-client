@@ -81,14 +81,13 @@ namespace FOG {
             // 
             // textBox1
             // 
-		    this.textBox1.BackColor = btnAbort.BackColor;
+            this.textBox1.BackColor = this.btnAbort.BackColor;
             this.textBox1.Location = new System.Drawing.Point(12, 167);
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
             this.textBox1.Size = new System.Drawing.Size(645, 90);
             this.textBox1.TabIndex = 5;
-
             // 
             // timer
             // 
@@ -110,7 +109,7 @@ namespace FOG {
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(669, 360);
+            this.ClientSize = new System.Drawing.Size(668, 358);
             this.ControlBox = false;
             this.Controls.Add(this.btnNow);
             this.Controls.Add(this.textBox1);
@@ -123,6 +122,7 @@ namespace FOG {
             this.MinimizeBox = false;
             this.Name = "MainForm";
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);

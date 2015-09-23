@@ -24,13 +24,13 @@
           This is the only place where we can use FotFamily and FontStyle properties. 
           The Regular/Bold/Light variations are triggered by MetroFontWeight - see FontStyle.tt for details.
       -->
-      <property name='*.FontFamily.*' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.*' value='Arial' type='System.String' />
       <property name='*.FontStyle.*' value='Regular' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Regular' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.Regular' value='Arial' type='System.String' />
       <property name='*.FontStyle.Regular' value='Regular' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Bold' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.Bold' value='Arial' type='System.String' />
       <property name='*.FontStyle.Bold' value='Bold' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Light' value='Segoe UI Light' type='System.String' />
+      <property name='*.FontFamily.Light' value='Arial' type='System.String' />
       <property name='*.FontStyle.Light' value='Regular' type='System.Drawing.FontStyle' />
 
       <!-- 
@@ -255,13 +255,13 @@
           This is the only place where we can use FotFamily and FontStyle properties. 
           The Regular/Bold/Light variations are triggered by MetroFontWeight - see FontStyle.tt for details.
       -->
-      <property name='*.FontFamily.*' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.*' value='Arial' type='System.String' />
       <property name='*.FontStyle.*' value='Regular' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Regular' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.Regular' value='Arial' type='System.String' />
       <property name='*.FontStyle.Regular' value='Regular' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Bold' value='Segoe UI' type='System.String' />
+      <property name='*.FontFamily.Bold' value='Arial' type='System.String' />
       <property name='*.FontStyle.Bold' value='Bold' type='System.Drawing.FontStyle' />
-      <property name='*.FontFamily.Light' value='Segoe UI Light' type='System.String' />
+      <property name='*.FontFamily.Light' value='Arial' type='System.String' />
       <property name='*.FontStyle.Light' value='Regular' type='System.Drawing.FontStyle' />
 
       <!-- 

@@ -43,7 +43,6 @@ namespace FOG
             Application.SetCompatibleTextRenderingDefault(false);
 
             bool isFirstInstance;
-            // Please use a unique name for the mutex to prevent conflicts with other programs
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
                 if (!isFirstInstance) return;
@@ -51,7 +50,7 @@ namespace FOG
                 notificationIcon._notifyIcon.Visible = true;
                 Application.Run();
                 notificationIcon._notifyIcon.Dispose();
-            } // releases the Mutex
+            }
         }
 
         #endregion

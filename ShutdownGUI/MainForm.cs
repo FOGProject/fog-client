@@ -98,12 +98,10 @@ namespace FOG
                 progressBar1.Maximum = _gracePeriod - 1;
                 label1.Text = _gracePeriod + " seconds";
                 var workingArea = Screen.GetWorkingArea(this);
-                this.textBox1.Text = "My working Area = " + workingArea.Width + "x" + workingArea.Height;
+                var height = workingArea.Bottom - Size.Height;
+                if (Settings.OS == Settings.OSType.Mac) height = height - 22;
 
-                var height = (Settings.OS == Settings.OSType.Windows)
-                    ? workingArea.Bottom - Size.Height
-                    : Size.Height;
-
+                Location = new Point(workingArea.Right - Size.Width, height);
                 Bus.SetMode(Bus.Mode.Client);
                 Bus.Subscribe(Bus.Channel.Power, onAbort);
             }

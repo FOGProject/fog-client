@@ -64,6 +64,14 @@ namespace FOG.Core
                     OS = OSType.Mac;
                     break;
                 case PlatformID.Unix:
+                    var output = ProcessHandler.GetOutput("uname", "");
+                    if (output != null && output.Length > 1)
+                        if (output[0].ToLower().StartsWith("darwin"))
+                        {
+                            OS = OSType.Mac;
+                            break;
+                        }
+
                     OS = OSType.Linux;
                     break;
                 default:
