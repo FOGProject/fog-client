@@ -4,7 +4,7 @@ using MetroFramework.Controls;
 
 namespace UserNotification
 {
-    partial class UserNotification
+    partial class NotificationGUI
     {
         /// <summary>
         /// Required designer variable.
@@ -32,7 +32,7 @@ namespace UserNotification
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserNotification));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NotificationGUI));
             this.title = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.logButton = new System.Windows.Forms.Button();

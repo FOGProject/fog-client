@@ -6,21 +6,31 @@ using FOG.Core;
 
 namespace UserNotification
 {
-    public partial class UserNotification : Form
+    public partial class NotificationGUI : Form
     {
-        public UserNotification()
+        public NotificationGUI()
         {
-            var args = Environment.GetCommandLineArgs();
-
             InitializeComponent();
 
-            var workingArea = Screen.GetWorkingArea(this);
-            var xPoint = workingArea.Right - Size.Width;
-            var height = (Settings.OS == Settings.OSType.Windows) ? workingArea.Bottom - Size.Height : 0;
-            Location = new Point(xPoint, height);
+            Location = new Point(50, 50);
 
             FadeIn();
             FadeOut();
+        }
+
+        public void UpdateLocation(Point pos)
+        {
+            Location = pos;
+        }
+
+        public void SetTitle(string text)
+        {
+            this.title.Text = text;
+        }
+
+        public void SetBody(string text)
+        {
+            this.bodyLabel.Text = text;
         }
 
         private async Task FadeOut()

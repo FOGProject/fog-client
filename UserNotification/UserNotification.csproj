@@ -78,16 +78,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserNotification.cs">
+    <Compile Include="HiddenForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserNotification.Designer.cs">
-      <DependentUpon>UserNotification.cs</DependentUpon>
+    <Compile Include="HiddenForm.Designer.cs">
+      <DependentUpon>HiddenForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationGUI.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NotificationGUI.Designer.cs">
+      <DependentUpon>NotificationGUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="UserNotification.resx">
-      <DependentUpon>UserNotification.cs</DependentUpon>
+    <EmbeddedResource Include="HiddenForm.resx">
+      <DependentUpon>HiddenForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NotificationGUI.resx">
+      <DependentUpon>NotificationGUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
