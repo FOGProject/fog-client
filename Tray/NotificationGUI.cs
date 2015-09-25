@@ -8,29 +8,14 @@ namespace UserNotification
 {
     public partial class NotificationGUI : Form
     {
-        public NotificationGUI()
+        public NotificationGUI(string title, string body)
         {
             InitializeComponent();
-
             Location = new Point(50, 50);
-
+            this.titleLabel.Text = title;
+            this.bodyLabel.Text = body;
             FadeIn();
             FadeOut();
-        }
-
-        public void UpdateLocation(Point pos)
-        {
-            Location = pos;
-        }
-
-        public void SetTitle(string text)
-        {
-            this.title.Text = text;
-        }
-
-        public void SetBody(string text)
-        {
-            this.bodyLabel.Text = text;
         }
 
         private async Task FadeOut()
@@ -43,7 +28,15 @@ namespace UserNotification
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(5);
             }
-            Application.Exit();
+            this.logButton.Dispose();
+            this.bodyLabel.Dispose();
+            this.titleLabel.Dispose();
+            this.panel1.Dispose();
+            this.logButton = null;
+            this.bodyLabel = null;
+            this.titleLabel = null;
+            this.panel1 = null;
+            this.Close();
         }
 
         private async Task FadeIn()
@@ -62,7 +55,7 @@ namespace UserNotification
         private void SpawnCenter()
         {
             ProcessHandler.RunClientEXE("NotificationCenter.exe", "", false);
-            Application.Exit();
+            this.Close();
         }
 
         private void logButton_Click(object sender, EventArgs e)

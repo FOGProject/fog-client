@@ -18,11 +18,13 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Core;
+using UserNotification;
 
 namespace FOG
 {
@@ -30,8 +32,7 @@ namespace FOG
     {
         //Define variables
         private readonly NotifyIcon _notifyIcon;
-        private Notification _notification;
-
+        private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
         #region Main - Program entry point
 
         /// <summary>Program entry point.</summary>
@@ -50,18 +51,12 @@ namespace FOG
                 notificationIcon._notifyIcon.Visible = true;
                 Application.Run();
                 notificationIcon._notifyIcon.Dispose();
-            }
+            };
+            Application.Run();
         }
 
         #endregion
 
-        #region Event Handlers
-
-        private void IconDoubleClick(object sender, EventArgs e)
-        {
-        }
-
-        #endregion
 
         #region Initialize icon and menu
 
@@ -75,12 +70,73 @@ namespace FOG
             _notifyIcon = new NotifyIcon();
             var notificationMenu = new ContextMenu(InitializeMenu());
 
-            _notifyIcon.DoubleClick += IconDoubleClick;
             var resources = new ComponentResourceManager(typeof (NotificationIcon));
             _notifyIcon.Icon = (Icon) resources.GetObject("icon");
             _notifyIcon.ContextMenu = notificationMenu;
             _notifyIcon.Text = "FOG Client v" + Settings.Get("Version");
-            _notification = new Notification();
+            _notifyIcon.DoubleClick += OnClick;
+        }
+
+        private static void UpdateFormLocation(int index)
+        {
+            var workingArea = Screen.PrimaryScreen.WorkingArea;
+            var height = workingArea.Bottom - _notifications[index].Height;
+            if (Settings.OS == Settings.OSType.Mac) height = height - 22;
+
+            height = (Settings.OS == Settings.OSType.Windows)
+                ? height - (_notifications[index].Height+5)*index
+                : height + (_notifications[index].Height+5)*index;
+
+            try
+            {
+                _notifications[index].Invoke(new MethodInvoker(
+                    delegate { _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height); }));
+            }
+            catch (Exception) { }
+
+            try
+            {
+                _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height);
+            }
+            catch (Exception) { }
+        }
+
+        private void OnClick(object sender, EventArgs e)
+        {
+            SpawnGUIThread("Test Title", "Test Body");
+        }
+
+        private static void SpawnGUIThread(string title, string body)
+        {
+            var notThread = new Thread(() => SpawnForm(title, body))
+            {
+                Priority = ThreadPriority.Normal,
+                IsBackground = false,
+            };
+            notThread.Start();
+        }
+
+        private static void SpawnForm(string title, string body)
+        {
+            var notForm = new NotificationGUI(title, body);
+            _notifications.Add(notForm);
+            notForm.Disposed += delegate
+            {
+                _notifications.Remove(notForm);
+                ReOrderNotifications();
+                notForm.Dispose();
+                notForm = null;
+            };
+            UpdateFormLocation(_notifications.Count-1);
+            Application.Run(notForm);
+        }
+
+        private static void ReOrderNotifications()
+        {
+            for(var i=0; i < _notifications.Count; i++ )
+            {
+                UpdateFormLocation(i);
+            }
         }
 
         private static void OnUpdate(dynamic data)
@@ -94,22 +150,8 @@ namespace FOG
         //Called when a message is recieved from the bus
         private void OnNotification(dynamic data)
         {
-            if (data.title == null || data.message == null || data.duration == null) return;
-            try
-            {
-                _notification.Title = data.title;
-                _notification.Message = data.message;
-                _notification.Duration = data.duration;
-            }
-            catch (Exception)
-            {
-                return;
-            }
-
-            _notifyIcon.BalloonTipTitle = _notification.Title;
-            _notifyIcon.BalloonTipText = _notification.Message;
-            _notifyIcon.ShowBalloonTip(_notification.Duration);
-            _notification = new Notification();
+            if (data.title == null || data.message == null) return;
+            SpawnGUIThread(data.title.ToString(), data.message.ToString());
         }
 
         private static MenuItem[] InitializeMenu()

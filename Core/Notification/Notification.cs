@@ -30,27 +30,23 @@ namespace FOG.Core
         {
             Title = "";
             Message = "";
-            Duration = 10;
         }
 
-        public Notification(string title, string message, int duration)
+        public Notification(string title, string message)
         {
             Title = title;
             Message = message;
-            Duration = duration;
         }
 
         //Define variables
         public string Title { get; set; }
         public string Message { get; set; }
-        public int Duration { get; set; }
 
         public JObject GetJson()
         {
             dynamic json = new JObject();
             json.title = Title;
             json.message = Message;
-            json.duration = Duration;
             return json;
         }
     }

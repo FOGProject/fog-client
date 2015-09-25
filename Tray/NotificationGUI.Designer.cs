@@ -33,29 +33,31 @@ namespace UserNotification
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NotificationGUI));
-            this.title = new System.Windows.Forms.Label();
+            this.titleLabel = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.logButton = new System.Windows.Forms.Button();
             this.bodyLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // title
+            // titleLabel
             // 
-            this.title.AutoSize = true;
-            this.title.Font = new System.Drawing.Font("Open Sans Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.title.Location = new System.Drawing.Point(12, 9);
-            this.title.MaximumSize = new System.Drawing.Size(340, 50);
-            this.title.Name = "title";
-            this.title.Size = new System.Drawing.Size(270, 26);
-            this.title.TabIndex = 0;
-            this.title.Text = "Microsoft Office 2010 Installed";
+            this.titleLabel.AutoSize = true;
+            this.titleLabel.Font = new System.Drawing.Font("Open Sans Light", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.titleLabel.Location = new System.Drawing.Point(16, 11);
+            this.titleLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.titleLabel.MaximumSize = new System.Drawing.Size(453, 62);
+            this.titleLabel.Name = "titleLabel";
+            this.titleLabel.Size = new System.Drawing.Size(46, 26);
+            this.titleLabel.TabIndex = 0;
+            this.titleLabel.Text = "Title";
             // 
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(174)))), ((int)(((byte)(219)))));
-            this.panel1.Location = new System.Drawing.Point(12, 38);
+            this.panel1.Location = new System.Drawing.Point(16, 47);
+            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(344, 5);
+            this.panel1.Size = new System.Drawing.Size(459, 6);
             this.panel1.TabIndex = 1;
             // 
             // logButton
@@ -66,9 +68,10 @@ namespace UserNotification
             this.logButton.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Silver;
             this.logButton.FlatAppearance.MouseOverBackColor = System.Drawing.Color.LightGray;
             this.logButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.logButton.Location = new System.Drawing.Point(329, 5);
+            this.logButton.Location = new System.Drawing.Point(439, 6);
+            this.logButton.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.logButton.Name = "logButton";
-            this.logButton.Size = new System.Drawing.Size(27, 27);
+            this.logButton.Size = new System.Drawing.Size(36, 33);
             this.logButton.TabIndex = 2;
             this.logButton.UseVisualStyleBackColor = true;
             this.logButton.Click += new System.EventHandler(this.logButton_Click);
@@ -77,27 +80,29 @@ namespace UserNotification
             // 
             this.bodyLabel.AutoSize = true;
             this.bodyLabel.Font = new System.Drawing.Font("Open Sans Light", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.bodyLabel.Location = new System.Drawing.Point(14, 46);
+            this.bodyLabel.Location = new System.Drawing.Point(19, 57);
+            this.bodyLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.bodyLabel.Name = "bodyLabel";
-            this.bodyLabel.Size = new System.Drawing.Size(272, 17);
+            this.bodyLabel.Size = new System.Drawing.Size(36, 17);
             this.bodyLabel.TabIndex = 3;
-            this.bodyLabel.Text = "Installation has finished and is now ready for use";
+            this.bodyLabel.Text = "Body";
             // 
-            // UserNotification
+            // NotificationGUI
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(366, 76);
+            this.ClientSize = new System.Drawing.Size(488, 94);
             this.ControlBox = false;
             this.Controls.Add(this.bodyLabel);
             this.Controls.Add(this.logButton);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.title);
+            this.Controls.Add(this.titleLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "UserNotification";
+            this.Name = "NotificationGUI";
             this.Opacity = 0D;
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -110,7 +115,7 @@ namespace UserNotification
 
         #endregion
 
-        private System.Windows.Forms.Label title;
+        private System.Windows.Forms.Label titleLabel;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Button logButton;
         private System.Windows.Forms.Label bodyLabel;
