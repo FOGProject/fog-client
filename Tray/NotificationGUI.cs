@@ -55,12 +55,12 @@ namespace UserNotification
         private void SpawnCenter()
         {
             ProcessHandler.RunClientEXE("NotificationCenter.exe", "", false);
-            this.Close();
         }
 
         private void logButton_Click(object sender, EventArgs e)
         {
             SpawnCenter();
+            this.Close();
         }
     }
 }

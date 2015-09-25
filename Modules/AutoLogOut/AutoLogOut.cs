@@ -56,7 +56,7 @@ namespace FOG.Modules.AutoLogOut
                 if (UserHandler.GetInactivityTime() < timeOut) return;
 
                 var notification = new Notification("You are about to be logged off",
-                    "Due to inactivity you will be logged off if you remain inactive", 20);
+                    "You will be logged off if you remain inactive");
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
