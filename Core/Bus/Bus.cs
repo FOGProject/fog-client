@@ -41,6 +41,14 @@ namespace FOG.Core
             Status,
             Update
         }
+        /// <summary>
+        ///     Protected channels cannot be globally emmited on by clients
+        /// </summary>
+        private static readonly List<Channel> ProtectChannels = new List<Channel>()
+        {
+            Channel.Status,
+            Channel.Update
+        }; 
 
         /// <summary>
         ///     The role of this bus instance. This is only needed for IPC. Note that the Server bus must be initialized before a
@@ -234,6 +242,8 @@ namespace FOG.Core
                 dynamic transport = JObject.Parse(message);
 
                 var channel = (Channel) Enum.Parse(typeof (Channel), transport.channel.ToString());
+                if (_mode == Mode.Server && ProtectChannels.Contains(channel)) return;
+
                 Emit(channel, transport.data.ToString(), transport.bounce != null && !transport.bounce);
             }
             catch (Exception ex)
