@@ -160,8 +160,10 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    $"{taskResponse.GetField("SNAPINRUNWITHARGS").Trim()} \"{snapinPath.Trim()}\" {Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS").Trim())}"
-                        .Trim());
+                    $"{taskResponse.GetField("SNAPINRUNWITHARGS").Trim()} " +
+                    $"\"{snapinPath.Trim()}\" " +
+                    $"{Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))}"
+                    .Trim());
             }
             else
             {
