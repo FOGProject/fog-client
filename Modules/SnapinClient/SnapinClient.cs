@@ -111,7 +111,9 @@ namespace FOG.Modules.SnapinClient
         {
             var notification = new Notification(
                 "Installing" + taskResponse.GetField("SNAPINNAME"),
-                "Please do not shutdown until this is completed");
+                "Please do not shutdown until this is completed",
+                $"snapin-{taskResponse.GetField("SNAPINNAME")}",
+                true);
             Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
             var process = GenerateProcess(taskResponse, snapinPath);
@@ -125,7 +127,9 @@ namespace FOG.Modules.SnapinClient
 
                 notification = new Notification(
                     taskResponse.GetField("SNAPINNAME") + " Installed",
-                    "Installation has finished and is now ready for use", true);
+                    "Installation has finished and is now ready for use",
+                    $"snapin-{taskResponse.GetField("SNAPINNAME")}", 
+                    true);
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
                 return process.ExitCode.ToString();

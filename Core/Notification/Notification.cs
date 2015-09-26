@@ -28,19 +28,22 @@ namespace FOG.Core
     {
         public string Title { get; set; }
         public string Message { get; set; }
+        public string SubjectID { get; set; }
         public bool OnGoing { get; set; }
 
         public Notification()
         {
             Title = "";
             Message = "";
+            SubjectID = "";
             OnGoing = false;
         }
 
-        public Notification(string title, string message, bool onGoing = false)
+        public Notification(string title, string message, string subjectID = "", bool onGoing = false)
         {
             Title = title;
             Message = message;
+            SubjectID = subjectID;
             OnGoing = onGoing;
         }
 
@@ -49,6 +52,7 @@ namespace FOG.Core
             dynamic json = new JObject();
             json.title = Title;
             json.message = Message;
+            json.subjectID = SubjectID;
             json.onGoing = OnGoing;
             return json;
         }
