@@ -26,27 +26,30 @@ namespace FOG.Core
     /// </summary>
     public class Notification
     {
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public bool OnGoing { get; set; }
+
         public Notification()
         {
             Title = "";
             Message = "";
+            OnGoing = false;
         }
 
-        public Notification(string title, string message)
+        public Notification(string title, string message, bool onGoing = false)
         {
             Title = title;
             Message = message;
+            OnGoing = onGoing;
         }
-
-        //Define variables
-        public string Title { get; set; }
-        public string Message { get; set; }
 
         public JObject GetJson()
         {
             dynamic json = new JObject();
             json.title = Title;
             json.message = Message;
+            json.onGoing = OnGoing;
             return json;
         }
     }

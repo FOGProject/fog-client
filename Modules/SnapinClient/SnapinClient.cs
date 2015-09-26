@@ -126,7 +126,7 @@ namespace FOG.Modules.SnapinClient
 
                 notification = new Notification(
                     taskResponse.GetField("SNAPINNAME") + " Installed",
-                    "Installation has finished and is now ready for use");
+                    "Installation has finished and is now ready for use", true);
 
                 Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
                 return process.ExitCode.ToString();
