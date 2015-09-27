@@ -86,7 +86,7 @@ namespace FOG.Modules.SnapinClient
                     {
                         Log.Error(Name, "Hash does not match");
                         Log.Error(Name, "--> Ideal: " + taskResponse.GetField("SNAPINHASH"));
-                        Log.Error(Name, "--> Actual" + sha512);
+                        Log.Error(Name, "--> Actual: " + sha512);
 
                         return;
                     }
