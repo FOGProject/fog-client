@@ -149,9 +149,22 @@ namespace FOG.Core.Data
             }
         }
 
-        public static bool IsFileSignedBy(X509Certificate2 certificate, string filePath)
+        /// <summary>
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns>The certificate used to digitally sign a file</returns>
+        public static X509Certificate2 ExtractDigitalSignature(string filePath)
         {
-            return false;
+            try
+            {
+                var signer = X509Certificate.CreateFromSignedFile(filePath);
+                var certificate = new X509Certificate2(signer);
+                return certificate;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>

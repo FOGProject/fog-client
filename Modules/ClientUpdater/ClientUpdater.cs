@@ -56,9 +56,9 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                // Hash the updater
+                // Ensure the update is authentic
                 Communication.DownloadFile("/client/" + updater, updaterPath);
-                var sha2 = Hash.SHA256(updaterPath);
+                if (!IsAuthenticate(updaterPath)) return;
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;
@@ -68,6 +68,20 @@ namespace FOG.Modules.ClientUpdater
                 Log.Error(Name, "Unable to parse versions");
                 Log.Error(Name, ex);
             }
+        }
+
+        private bool IsAuthenticate(string filePath)
+        {
+            var signeeCert = RSA.ExtractDigitalSignature(filePath);
+            var targetSigner = RSA.FOGProjectCertificate();
+            if (RSA.IsFromCA(targetSigner, signeeCert))
+            {
+                Log.Entry(Name, "Update file is authentic");
+                return true;
+            }
+
+            Log.Error(Name, "Update file is not authentic");
+            return false;
         }
 
         //Prepare the downloaded update
