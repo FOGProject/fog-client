@@ -63,6 +63,11 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, $"    Args: {taskResponse.GetField("SNAPINARGS")}");
                 Log.Entry(Name, $"    Reboot: {taskResponse.GetField("SNAPINBOUNCE")}");
 
+                if (string.IsNullOrEmpty(taskResponse.GetField("SNAPINHASH")))
+                {
+                    Log.Error(Name, "Snapin hash does not exist");
+                    return;
+                }
 
                 var snapinFilePath = Path.Combine(Settings.Location, "tmp", taskResponse.GetField("SNAPINFILENAME"));
 
@@ -76,8 +81,15 @@ namespace FOG.Modules.SnapinClient
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
-                    var sha2 = Hash.SHA256(snapinFilePath);
+                    var sha512 = Hash.SHA512(snapinFilePath);
+                    if (!sha512.Equals(taskResponse.GetField("SNAPINHASH")))
+                    {
+                        Log.Error(Name, "Hash does not match");
+                        Log.Error(Name, "--> Ideal: " + taskResponse.GetField("SNAPINHASH"));
+                        Log.Error(Name, "-->: Actual" + sha512);
 
+                        return;
+                    }
                     exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
