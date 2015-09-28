@@ -1,10 +1,6 @@
-﻿<Properties>
+﻿<Properties StartupItem="Service\Service.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="EncryptionHandler/EncryptionHandler.cs">
-    <Files>
-      <File FileName="EncryptionHandler/EncryptionHandler.cs" Line="71" Column="4" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

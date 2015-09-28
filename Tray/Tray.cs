@@ -24,57 +24,51 @@ using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Core;
+using FOG.Tray.Unix;
+using FOG.Tray.Windows;
 using UserNotification;
 
-namespace FOG
+namespace FOG.Tray
 {
-    public sealed class NotificationIcon
+    public sealed class Tray
     {
         //Define variables
-        private readonly NotifyIcon _notifyIcon;
         private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
-        #region Main - Program entry point
-
+        private static ITray _instance;
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             bool isFirstInstance;
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
                 if (!isFirstInstance) return;
-                var notificationIcon = new NotificationIcon();
-                notificationIcon._notifyIcon.Visible = true;
-                Application.Run();
-                notificationIcon._notifyIcon.Dispose();
-            };
+            }
+
+            var resources = new ComponentResourceManager(typeof(Tray));
+            var icon = (Icon)resources.GetObject("logo");
+            var hoverText = "FOG Client v" + Settings.Get("Version");
+
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Windows:
+                    _instance = new WindowsTray(icon);
+                    break;
+                default:
+                    _instance = new UnixTray("logo.ico");
+                    break;
+            }
+            _instance.SetHover(hoverText);
             Application.Run();
         }
 
-        #endregion
-
-
-        #region Initialize icon and menu
-
-        public NotificationIcon()
+        public Tray()
         {
             Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
-
-            _notifyIcon = new NotifyIcon();
-            var notificationMenu = new ContextMenu(InitializeMenu());
-
-            var resources = new ComponentResourceManager(typeof (NotificationIcon));
-            _notifyIcon.Icon = (Icon) resources.GetObject("icon");
-            _notifyIcon.ContextMenu = notificationMenu;
-            _notifyIcon.Text = "FOG Client v" + Settings.Get("Version");
-            _notifyIcon.DoubleClick += OnClick;
         }
 
         private static void UpdateFormLocation(int index)
@@ -99,11 +93,6 @@ namespace FOG
                 _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height);
             }
             catch (Exception) { }
-        }
-
-        private void OnClick(object sender, EventArgs e)
-        {
-            SpawnGUIThread("Test Title", "Test Body");
         }
 
         private static void SpawnGUIThread(string title, string body)
@@ -159,7 +148,5 @@ namespace FOG
             var menu = new MenuItem[] {};
             return menu;
         }
-
-        #endregion
     }
 }
