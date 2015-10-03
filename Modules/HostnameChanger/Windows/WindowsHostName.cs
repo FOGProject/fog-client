@@ -93,6 +93,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     break;
                 case 2:
                 case 50:
+                case 1355:
                     returnCode = DomainWrapper(response, false,
                         (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
                     break;
