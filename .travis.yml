@@ -6,6 +6,7 @@ install:
   - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
 os:
   - linux
+  - osx
 script:
   - xbuild /p:Configuration=Release FOGService.sln
   - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe ./bin/FOGService.Tests.dll
