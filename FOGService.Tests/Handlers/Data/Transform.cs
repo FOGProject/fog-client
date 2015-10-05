@@ -48,14 +48,14 @@ namespace FOGService.Tests.Handlers.Data
         }
 
         [Test]
-        public void SHA2()
+        public void SHA512()
         {
             // MD5 hash a known byte set
             var testBytes = Encoding.ASCII.GetBytes("TestString");
-            const string sha2 = "69DFD91314578F7F329939A7EA6BE4497E6FE3909B9C8F308FE711D29D4340D90D77B7FDF359B7D0DBEED940665274F7CA514CD067895FDF59DE0CF142B62336";
+            const string sha512 = "69DFD91314578F7F329939A7EA6BE4497E6FE3909B9C8F308FE711D29D4340D90D77B7FDF359B7D0DBEED940665274F7CA514CD067895FDF59DE0CF142B62336";
 
-            var calculatedSHA2 = Hash.SHA256(testBytes);
-            StringAssert.AreEqualIgnoringCase(sha2, calculatedSHA2);
+            var calculatedSHA512 = Hash.SHA512(testBytes);
+            StringAssert.AreEqualIgnoringCase(sha512, calculatedSHA512);
 
             // Test invalid data
             Assert.IsNull(Hash.MD5((byte[])null));
