@@ -69,6 +69,7 @@ namespace FOG.Modules.HostnameChanger
             Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
             Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
             Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
+            Log.Debug(Name, "   ADPW  :" + taskResponse.GetField("#ADPass"));
 
             RenameComputer(taskResponse);
 
