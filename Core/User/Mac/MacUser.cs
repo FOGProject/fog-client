@@ -30,7 +30,7 @@ namespace FOG.Core.User
 
         public List<string> GetUsersLoggedIn()
         {
-            var usersInfo = new List<string>();
+            var usersInfo = new HashSet<string>();
 
             using (var process = new Process
             {
