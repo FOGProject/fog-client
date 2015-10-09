@@ -47,20 +47,22 @@ namespace FOG.Core
         public static void Emit(JObject data, bool onGoing = false, bool global = true)
         {
             if (data["subjectID"] == null) throw new ArgumentNullException();
+            if (onGoingList.ContainsKey(data["subjectID"].ToString()))
+            {
+                Bus.MessageQueue.Remove(onGoingList[data["subjectID"].ToString()].ToString());
+                onGoingList.Remove(data["subjectID"].ToString());
+            }
 
-            onGoingList.Remove(data["subjectID"].ToString());
-
-            if (onGoing)
+            if (global && onGoing)
+            {
                 onGoingList.Add(data["subjectID"].ToString(), data);
-            if(global)
+                Bus.MessageQueue.Add(data.ToString());
+            }
+
+            if (global)
                 Record(data);
 
             Bus.Emit(Bus.Channel.Notification, data, global);
-        }
-
-        public static JObject[] GetOnGoing()
-        {
-            return onGoingList.Values.ToArray();
         }
 
         public static void Record(JObject data)

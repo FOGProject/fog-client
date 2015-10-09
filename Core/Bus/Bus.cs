@@ -66,6 +66,7 @@ namespace FOG.Core
 
         private static readonly Dictionary<Channel, LinkedList<Action<dynamic>>> Registrar =
             new Dictionary<Channel, LinkedList<Action<dynamic>>>();
+        public static readonly HashSet<string> MessageQueue = new HashSet<string>(); 
 
         private static bool _initialized;
         private static BusServer _server;
@@ -98,6 +99,7 @@ namespace FOG.Core
                     {
                         _server = new BusServer();
                         _server.Socket.NewMessageReceived += socket_RecieveMessage;
+                        _server.Socket.NewSessionConnected += client_connect;
                         _server.Start();
                         Log.Entry(LogName, "Became bus server");
                     }
@@ -215,6 +217,15 @@ namespace FOG.Core
             Registrar[channel].Remove(action);
         }
 
+        private static void client_connect(WebSocketSession clientSession)
+        {
+            lock (MessageQueue)
+            {
+                foreach(var msg in MessageQueue)
+                    clientSession.Send(msg);
+            }
+        }
+        
         /// <summary>
         ///     Called when the server socket recieves a message
         ///     It will replay the message to all other instances, including the original sender unless told otherwise
