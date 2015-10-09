@@ -21,40 +21,39 @@ using Newtonsoft.Json.Linq;
 
 namespace FOG.Core
 {
-    /// <summary>
-    ///     Store neccesary notification information
-    /// </summary>
-    public class Notification
+    public static class Notification
     {
-        public string Title { get; set; }
-        public string Message { get; set; }
-        public string SubjectID { get; set; }
-        public bool OnGoing { get; set; }
-
-        public Notification()
-        {
-            Title = "";
-            Message = "";
-            SubjectID = "";
-            OnGoing = false;
-        }
-
-        public Notification(string title, string message, string subjectID = "", bool onGoing = false)
-        {
-            Title = title;
-            Message = message;
-            SubjectID = subjectID;
-            OnGoing = onGoing;
-        }
-
-        public JObject GetJson()
+        public static JObject ToJSON(string title, string message, string subjectID, bool onGoing)
         {
             dynamic json = new JObject();
-            json.title = Title;
-            json.message = Message;
-            json.subjectID = SubjectID;
-            json.onGoing = OnGoing;
+            json.title = title;
+            json.message = message;
+            json.subjectID = subjectID;
+            json.onGoing = onGoing;
             return json;
+        }
+
+        public static void Emit(string title, string message, string subjectID = "", bool onGoing = false, bool global = true)
+        {
+            Emit(ToJSON(title, message, subjectID, onGoing), global);
+        }
+
+        public static void Emit(JObject data, bool global = true)
+        {
+            if(global)
+                Record(data);
+
+            Bus.Emit(Bus.Channel.Notification, data, global);
+        }
+
+        public static void Record(JObject data)
+        {
+            
+        }
+
+        public static void Record(string title)
+        {
+            
         }
     }
 }

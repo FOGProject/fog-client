@@ -33,8 +33,10 @@ namespace UserNotification
             Location = new Point(50, 50);
             this.titleLabel.Text = title;
             this.bodyLabel.Text = body;
+#pragma warning disable 4014
             FadeIn();
             FadeOut();
+#pragma warning restore 4014
         }
 
         private async Task FadeOut()

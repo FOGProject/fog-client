@@ -59,10 +59,10 @@ namespace FOG.Modules.AutoLogOut
 
             if (inactiveTime < timeOut) return;
 
-            var notification = new Notification("You are about to be logged off",
-                    "You will be logged off if you remain inactive");
-
-            Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
+            Notification.Emit(
+              "You are about to be logged off",
+              "You will be logged off if you remain inactive", 
+              global: false);
 
             //Wait 20 seconds and check if the user is no longer inactive
             Thread.Sleep(20000);
