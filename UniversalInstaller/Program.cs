@@ -19,9 +19,8 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Reflection;
 using FOG.Core;
+using System.Windows.Forms;
 
 namespace FOG
 {
@@ -31,19 +30,15 @@ namespace FOG
         private const string Location = "/opt/fog-service";
         private const string Version = "0.10.0";
 
+        [STAThread]
         static void Main(string[] args)
         {
-            Log.Output = Log.Mode.Console;
+            Log.Output = Log.Mode.Quiet;
 
             if (args.Length == 5)
                 ProcessArgs(args);
-            else if (Settings.OS == Settings.OSType.Linux)
-                InteractiveMode();
             else
-                return;
-
-            ExtractFiles();
-            AdjustPermissions();
+                InteractiveMode();
             GenericSetup.PinServerCert(Location);
         }
 
@@ -68,8 +63,6 @@ namespace FOG
             {
                 // ignored
             }
-
-            GenericSetup.SaveSettings(https, tray, baseURL, webRoot, Version, company, rootLog, Location);
         }
 
         private static void PrintBanner()
@@ -102,7 +95,38 @@ namespace FOG
 
         private static void InteractiveMode()
         {
+            try
+            {
+                ShowGUI();
+            }
+            catch (Exception)
+            {
+                PerformCLIInstall();
+            }
+        }
+
+        private static void ShowGUI()
+        {
+            Log.Output = Log.Mode.File;
+            Log.FilePath = Path.Combine(Settings.Location, "FOGService-install.log");
+
+            Application.EnableVisualStyles();
+            var gui = new GUI();
+            Application.Run(gui);
+
+            if(!gui.success)
+                Environment.Exit(1);
+        }
+
+        private static void PerformCLIInstall()
+        {
+            Log.Output = Log.Mode.Console;
+
             PrintBanner();
+            Console.WriteLine("");
+            Console.WriteLine("By installing this software you agree to the GPL v3 license");
+            Console.WriteLine("");
+
 
             var https = "0";
             var tray = "0";
@@ -121,58 +145,7 @@ namespace FOG
 
             Console.WriteLine("Installing....");
 
-            GenericSetup.SaveSettings(https, tray, server, webRoot, Version, company, rootLog, Location);
-        }
-
-        private static void AdjustPermissions()
-        {
-            var logLocation = Path.Combine(Location, "fog.log");
-
-            if (!File.Exists(logLocation))
-                File.Create(logLocation);
-
-            ProcessHandler.Run("chmod", "755 " + logLocation);
-
-            if (Settings.OS != Settings.OSType.Linux)
-                return;
-
-            ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
-            ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1");
-            ProcessHandler.Run("sysv-rc-conf", "FOGService on >/ dev / null 2 > &1");
-        }
-
-        private static void ExtractFiles()
-        {
-            var tmpLocation = Path.Combine("/opt/", "FOGService.zip");
-            ExtractResource("FOGService.zip", tmpLocation);
-            ZipFile.ExtractToDirectory(tmpLocation, Location);
-            File.Delete(tmpLocation);
-
-            if (Settings.OS != Settings.OSType.Linux)
-                return;
-
-           ExtractResource("init-d", "/etc/init.d/FOGService");
-        }
-
-        private static void ExtractResource(string resource, string filePath)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var input = assembly.GetManifestResourceStream(resource))
-            using (var output = File.Create(filePath))
-            {
-                CopyStream(input, output);
-            }
-        }
-
-        private static void CopyStream(Stream input, Stream output)
-        {
-            byte[] buffer = new byte[8192];
-
-            int bytesRead;
-            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, bytesRead);
-            }
+            GenericSetup.PerformInstall(https, tray, server, webRoot, Version, company, rootLog, Location);
         }
     }
 }

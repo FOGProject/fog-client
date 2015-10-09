@@ -19,6 +19,8 @@
 
 using System;
 using System.IO;
+using System.IO.Compression;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using FOG.Core;
 using FOG.Core.Data;
@@ -30,6 +32,31 @@ namespace FOG
     public static class GenericSetup
     {
         private const string LogName = "Installer";
+        private static IInstall _instance;
+
+        static GenericSetup()
+        {
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacInstall();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxInstall();
+                    break;
+                default:
+                    _instance = new WindowsInstall();
+                    break;
+            }
+
+        }
+
+        public static void PerformInstall(string https, string tray, string server, string webRoot, string version,
+            string company, string rootLog, string location)
+        {
+            SaveSettings(https, tray, server, webRoot, version, company, rootLog, location);
+            _instance.Install();
+        }
 
         public static bool PinServerCert(string location)
         {
@@ -114,6 +141,45 @@ namespace FOG
                 Log.Error(LogName, "Could unpin CA cert");
                 Log.Error(LogName, ex);
                 return false;
+            }
+        }
+
+        public static void AdjustPermissions(string location)
+        {
+            var logLocation = Path.Combine(location, "fog.log");
+
+            if (!File.Exists(logLocation))
+                File.Create(logLocation);
+
+            ProcessHandler.Run("chmod", "755 " + logLocation);
+        }
+
+        public static void ExtractFiles(string tmp, string location)
+        {
+            var tmpLocation = Path.Combine(tmp, "FOGService.zip");
+            ExtractResource("FOGService.zip", tmpLocation);
+            ZipFile.ExtractToDirectory(tmpLocation, location);
+            File.Delete(tmpLocation);
+        }
+
+        private static void ExtractResource(string resource, string filePath)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            using (var input = assembly.GetManifestResourceStream(resource))
+            using (var output = File.Create(filePath))
+            {
+                CopyStream(input, output);
+            }
+        }
+
+        private static void CopyStream(Stream input, Stream output)
+        {
+            byte[] buffer = new byte[8192];
+
+            int bytesRead;
+            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
+            {
+                output.Write(buffer, 0, bytesRead);
             }
         }
     }
