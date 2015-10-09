@@ -102,6 +102,7 @@ namespace FOG.Core
                         _server.Socket.NewSessionConnected += client_connect;
                         _server.Start();
                         Log.Entry(LogName, "Became bus server");
+                        _initialized = true;
                     }
                     catch (Exception ex)
                     {
@@ -116,6 +117,7 @@ namespace FOG.Core
                         _client.Socket.MessageReceived += socket_RecieveMessage;
                         _client.Start();
                         Log.Entry(LogName, "Became bus client");
+                        _initialized = true;
                     }
                     catch (Exception ex)
                     {
@@ -124,7 +126,6 @@ namespace FOG.Core
                     }
                     break;
             }
-            _initialized = true;
         }
 
         /// <summary>
