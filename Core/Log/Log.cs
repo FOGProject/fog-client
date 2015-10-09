@@ -50,7 +50,7 @@ namespace FOG.Core
         private const long DefaultMaxLogSize = 502400;
         private const int HeaderLength = 78;
         private const string LogName = "Log";
-        private static object locker = new Object();
+        private static object locker = new object();
 
         static Log()
         {
@@ -117,9 +117,9 @@ namespace FOG.Core
 
         public static void Debug(string caller, string message)
         {
-#if DEBUG
+            #if DEBUG
             Entry(Level.Debug, caller, message);
-#endif
+            #endif
         }
 
         /// <summary>
@@ -256,7 +256,7 @@ namespace FOG.Core
         {
             try
             {
-                //logFile.Delete();
+                logFile.Delete();
             }
             catch (Exception ex)
             {
