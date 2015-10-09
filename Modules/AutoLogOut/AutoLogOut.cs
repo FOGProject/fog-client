@@ -40,35 +40,34 @@ namespace FOG.Modules.AutoLogOut
 
         protected override void DoWork()
         {
-            if (UserHandler.IsUserLoggedIn())
-            {
-                //Get task info
-                var taskResponse = Communication.GetResponse("/service/autologout.php", true);
+			if (!UserHandler.IsUserLoggedIn())
+			{
+				Log.Entry(Name, "No user logged in");
+				return;
+			}
+			var taskResponse = Communication.GetResponse("/service/autologout.php", true);
 
-                if (taskResponse.Error) return;
+            if (taskResponse.Error) return;
 
-                var timeOut = GetTimeOut(taskResponse);
-                if (timeOut <= 0) return;
+            var timeOut = GetTimeOut(taskResponse);
+            if (timeOut <= 0) return;
 
-                Log.Entry(Name, $"Time set to {timeOut} seconds");
-                Log.Entry(Name, $"Inactive for {UserHandler.GetInactivityTime()} seconds");
+			var inactiveTime = UserHandler.GetInactivityTime();
 
-                if (UserHandler.GetInactivityTime() < timeOut) return;
+            Log.Entry(Name, $"Time set to {timeOut} seconds");
+			Log.Entry(Name, $"Inactive for {inactiveTime} seconds");
 
-                var notification = new Notification("You are about to be logged off",
+            if (inactiveTime < timeOut) return;
+
+            var notification = new Notification("You are about to be logged off",
                     "You will be logged off if you remain inactive");
 
-                Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
+            Bus.Emit(Bus.Channel.Notification, notification.GetJson(), true);
 
-                //Wait 20 seconds and check if the user is no longer inactive
-                Thread.Sleep(20000);
-                if (UserHandler.GetInactivityTime() >= timeOut)
-                    Power.LogOffUser();
-            }
-            else
-            {
-                Log.Entry(Name, "No user logged in");
-            }
+            //Wait 20 seconds and check if the user is no longer inactive
+            Thread.Sleep(20000);
+            if (UserHandler.GetInactivityTime() >= timeOut)
+                Power.LogOffUser();
         }
 
         //Get how long a user must be inactive before logging them out
