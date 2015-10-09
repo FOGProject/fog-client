@@ -22,7 +22,6 @@ using FOG.Core;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.ClientUpdater;
-using FOG.Modules.DisplayManager;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -40,7 +39,6 @@ namespace FOG.Commands.Modules
         {
             {"autologout", new AutoLogOut()},
             {"clientupdater", new ClientUpdater()},
-            {"displaymanager", new DisplayManager()},
             {"greenfog", new GreenFOG()},
             {"hostnamechanger", new HostnameChanger()},
             {"printermanager", new PrinterManager()},

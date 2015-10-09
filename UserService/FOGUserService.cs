@@ -23,7 +23,6 @@ using FOG.Core.Data;
 using FOG.Core.Power;
 using FOG.Modules;
 using FOG.Modules.AutoLogOut;
-using FOG.Modules.DisplayManager;
 using FOG.Modules.PrinterManager;
 using Newtonsoft.Json;
 
@@ -69,7 +68,6 @@ namespace FOG
             return new AbstractModule[]
             {
                 new AutoLogOut(),
-                new DisplayManager(),
                 new DefaultPrinterManager()
             };
         }
