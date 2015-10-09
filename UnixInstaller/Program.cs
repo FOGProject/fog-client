@@ -29,19 +29,21 @@ namespace FOG
     {
         private const string LogName = "Installer";
         private const string Location = "/opt/fog-service";
+        private const string Version = "0.10.0";
 
         static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
+
+            if (args.Length == 5)
+                ProcessArgs(args);
+            else if (Settings.OS == Settings.OSType.Linux)
+                InteractiveMode();
+            else
+                return;
+
             ExtractFiles();
             AdjustPermissions();
-
-            if (args.Length == 6)
-                ProcessArgs(args);
-            else
-                InteractiveMode();
-
-
             GenericSetup.PinServerCert(Location);
         }
 
@@ -49,32 +51,77 @@ namespace FOG
         {
             var url = args[0];
             var tray = args[1];
-            var version = args[2];
-            var company = args[3];
-            var rootLog = args[4];
-            var https = args[5];
+            var company = args[2];
+            var rootLog = args[3];
+            var https = args[4];
 
             var baseURL = url;
             var webRoot = "";
             try
             {
-                if (url.Contains("/"))
-                {
-                    baseURL = url.Substring(0, url.IndexOf("/"));
-                    webRoot = url.Substring(url.IndexOf("/"));
-                }
+                if (!url.Contains("/"))
+                    return;
+                baseURL = url.Substring(0, url.IndexOf("/"));
+                webRoot = url.Substring(url.IndexOf("/"));
             }
             catch (Exception)
             {
                 // ignored
             }
 
-            GenericSetup.SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
+            GenericSetup.SaveSettings(https, tray, baseURL, webRoot, Version, company, rootLog, Location);
+        }
+
+        private static void PrintBanner()
+        {
+            Console.WriteLine("                                            ");
+            Console.WriteLine("      ..#######:.    ..,#,..     .::##::.   ");
+            Console.WriteLine(" .:######          .:;####:......;#;..      ");
+            Console.WriteLine(" ...##...        ...##;,;##::::.##...       ");
+            Console.WriteLine("    ,#          ...##.....##:::##     ..::  ");
+            Console.WriteLine("    ##    .::###,,##.   . ##.::#.:######::. ");
+            Console.WriteLine(" ...##:::###::....#. ..  .#...#. #...#:::.  ");
+            Console.WriteLine(" ..:####:..    ..##......##::##  ..  #      ");
+            Console.WriteLine("     #  .      ...##:,;##;:::#: ... ##..    ");
+            Console.WriteLine("    .#  .       .:;####;::::.##:::;#:..     ");
+            Console.WriteLine("     #                     ..:;###..        ");
+            Console.WriteLine("                                            ");
+            Console.WriteLine(" ###########################################");
+            Console.WriteLine(" #     FOG                                 #");
+            Console.WriteLine(" #     Free Computer Imaging Solution      #");
+            Console.WriteLine(" #                                         #");
+            Console.WriteLine(" #     http://www.fogproject.org/          #");
+            Console.WriteLine(" #                                         #");
+            Console.WriteLine(" #     Credits:                            #");
+            Console.WriteLine(" #     http://fogproject.org/Credits       #");
+            Console.WriteLine(" #     GNU GPL Version 3                   #");
+            Console.WriteLine(" ###########################################");
+            Console.WriteLine(" #           FOG SERVICE INSTALLER         #");
+
         }
 
         private static void InteractiveMode()
         {
-            throw new NotImplementedException();
+            PrintBanner();
+
+            var https = "0";
+            var tray = "0";
+            var company = "FOG";
+            var rootLog = "0";
+
+            Console.Write("Enter your FOG Server address:");
+            var server = Console.ReadLine();
+
+            Console.Write("Do you want to enable FOG Tray? [y/n]:");
+            if (Console.ReadLine().Trim().ToLower().Equals("y"))
+                tray = "1";
+
+            Console.Write("Enter the FOG webroot used [example: /fog]:");
+            var webRoot = Console.ReadLine();
+
+            Console.WriteLine("Installing....");
+
+            GenericSetup.SaveSettings(https, tray, server, webRoot, Version, company, rootLog, Location);
         }
 
         private static void AdjustPermissions()
@@ -85,15 +132,26 @@ namespace FOG
                 File.Create(logLocation);
 
             ProcessHandler.Run("chmod", "755 " + logLocation);
+
+            if (Settings.OS != Settings.OSType.Linux)
+                return;
+
+            ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
+            ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1");
+            ProcessHandler.Run("sysv-rc-conf", "FOGService on >/ dev / null 2 > &1");
         }
 
         private static void ExtractFiles()
         {
             var tmpLocation = Path.Combine("/opt/", "FOGService.zip");
-
             ExtractResource("FOGService.zip", tmpLocation);
             ZipFile.ExtractToDirectory(tmpLocation, Location);
             File.Delete(tmpLocation);
+
+            if (Settings.OS != Settings.OSType.Linux)
+                return;
+
+           ExtractResource("init-d", "/etc/init.d/FOGService");
         }
 
         private static void ExtractResource(string resource, string filePath)
