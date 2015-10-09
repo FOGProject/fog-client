@@ -88,11 +88,9 @@ namespace FOG.Core
             if (level == Level.Debug || level == Level.Error)
                 prefix = level.ToString().ToUpper() + ": ";
 
-            lock (locker)
-            {
-                WriteLine(level,
-                    $" {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} {caller} {prefix}{message}");
-            }
+
+            WriteLine(level,
+                $" {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} {caller} {prefix}{message}");
         }
 
         /// <summary>
@@ -194,16 +192,19 @@ namespace FOG.Core
                 default:
                     try
                     {
-                        var logFile = new FileInfo(FilePath);
+                        lock (locker)
+                        {
+                            var logFile = new FileInfo(FilePath);
 
-                        //Delete the log file if it excedes the max log size
-                        if (logFile.Exists && logFile.Length > MaxSize)
-                            CleanLog(logFile);
+                            //Delete the log file if it excedes the max log size
+                            if (logFile.Exists && logFile.Length > MaxSize)
+                                CleanLog(logFile);
 
-                        //Write message to log file
-                        var logWriter = new StreamWriter(FilePath, true);
-                        logWriter.Write(text);
-                        logWriter.Close();
+                            //Write message to log file
+                            var logWriter = new StreamWriter(FilePath, true);
+                            logWriter.Write(text);
+                            logWriter.Close();
+                        }
                     }
                     catch
                     {
