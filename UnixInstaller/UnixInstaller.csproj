@@ -92,9 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <EmbeddedResource Include="Scripts\core.sh" />
     <None Include="packages.config" />
-    <None Include="Scripts\FOGService.sh" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

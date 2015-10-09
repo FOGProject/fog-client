@@ -32,9 +32,21 @@ namespace FOG
 
         static void Main(string[] args)
         {
-            if (args.Length != 6) return;
             Log.Output = Log.Mode.Console;
+            ExtractFiles();
+            AdjustPermissions();
 
+            if (args.Length == 6)
+                ProcessArgs(args);
+            else
+                InteractiveMode();
+
+
+            GenericSetup.PinServerCert(Location);
+        }
+
+        private static void ProcessArgs(string[] args)
+        {
             var url = args[0];
             var tray = args[1];
             var version = args[2];
@@ -57,11 +69,12 @@ namespace FOG
                 // ignored
             }
 
-
-            ExtractFiles();
-            AdjustPermissions();
             GenericSetup.SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
-            GenericSetup.PinServerCert(Location);
+        }
+
+        private static void InteractiveMode()
+        {
+            throw new NotImplementedException();
         }
 
         private static void AdjustPermissions()
