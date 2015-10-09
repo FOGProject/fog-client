@@ -45,7 +45,7 @@ namespace FOG.Modules.ClientUpdater
             {
                 var updater = (Settings.OS == Settings.OSType.Windows)
                                 ? "FOGService.msi"
-                                : "core.sh";
+                                : "UnixInstaller.exe";
                 var updaterPath = Path.Combine(Settings.Location, "tmp", updater);
 
                 if (File.Exists(updaterPath))

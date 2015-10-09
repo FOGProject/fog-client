@@ -29,8 +29,7 @@ namespace FOG
 
         public void ApplyUpdate()
         {
-            ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "core.sh")} {Settings.Get("Server")} 0 0");
+            ProcessHandler.RunClientEXE("UnixInstaller.exe", $"{Settings.Get("Server")} 0 0");
         }
 
         public void StartService()
