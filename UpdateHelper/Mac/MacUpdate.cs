@@ -28,7 +28,8 @@ namespace FOG
 
         public void ApplyUpdate()
         {
-            ProcessHandler.RunClientEXE("UnixInstaller.exe", $"{Settings.Get("Server")} 0 0");
+            ProcessHandler.RunClientEXE("UnixInstaller.exe",
+                $"{Settings.Get("Server")} {Settings.Get("Tray")} {Settings.Get("Company")} {Settings.Get("RootLog")} {Settings.Get("HTTPS")}");
         }
 
         public void StartService()
