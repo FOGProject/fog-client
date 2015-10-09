@@ -17,9 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.IO;
 using FOG.Core;
-using FOG.Core.Middleware;
 
 namespace FOG
 {
