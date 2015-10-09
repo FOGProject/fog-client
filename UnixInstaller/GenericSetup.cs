@@ -27,42 +27,9 @@ using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
-    public static class MonoHelper
+    public static class GenericSetup
     {
         private const string LogName = "Installer";
-        private const string Location = "/opt/fog-service";
-
-        private static void Main(string[] args)
-        {
-            if (args.Length != 6) return;
-
-            var url = args[0];
-            var tray = args[1];
-            var version = args[2];
-            var company = args[3];
-            var rootLog = args[4];
-            var https = args[5];
-
-            var baseURL = url;
-            var webRoot = "";
-
-            try
-            {
-                if (url.Contains("/"))
-                {
-                    baseURL = url.Substring(0, url.IndexOf("/"));
-                    webRoot = url.Substring(url.IndexOf("/"));
-                }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
-
-
-            SaveSettings(https, tray, baseURL, webRoot, version, company, rootLog, Location);
-            PinServerCert(Location);
-        }
 
         public static bool PinServerCert(string location)
         {

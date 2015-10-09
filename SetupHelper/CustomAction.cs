@@ -20,9 +20,9 @@
 using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using FOG;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
+using FOG;
 
 namespace SetupHelper
 {
@@ -40,7 +40,7 @@ namespace SetupHelper
         {
             try
             {
-                return MonoHelper.PinServerCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
+                return GenericSetup.PinServerCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
             }
             catch (Exception ex)
             {
@@ -54,7 +54,7 @@ namespace SetupHelper
         {
             try
             {
-                MonoHelper.SaveSettings(
+                GenericSetup.SaveSettings(
                     session["HTTPS"],
                     session["USETRAY"],
                     session["WEBADDRESS"],
@@ -79,7 +79,7 @@ namespace SetupHelper
         {
             try
             {
-                MonoHelper.UnpinServerCert();
+                GenericSetup.UnpinServerCert();
             }
             catch (Exception ex)
             {

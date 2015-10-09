@@ -59,14 +59,14 @@
     <Content Include="CustomAction.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\MonoHelper\MonoHelper.csproj">
-      <Project>{c83c7025-7fd0-4419-b848-3b42d9ded51f}</Project>
-      <Name>MonoHelper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\UnixInstaller\UnixInstaller.csproj">
+      <Project>{519ffe80-752a-49a7-a858-2e7551dc1722}</Project>
+      <Name>UnixInstaller</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(WixCATargetsPath)" />
