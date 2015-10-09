@@ -50,6 +50,7 @@ namespace FOG.Core
         private const long DefaultMaxLogSize = 502400;
         private const int HeaderLength = 78;
         private const string LogName = "Log";
+        private static object locker = new Object();
 
         static Log()
         {
@@ -77,8 +78,8 @@ namespace FOG.Core
         /// <param name="message">The message to log</param>
         public static void Entry(Level level, string caller, string message)
         {
-#if DEBUG
-#else
+            #if DEBUG
+            #else
             if (level == Level.Debug) return;
             #endif
 
@@ -87,8 +88,11 @@ namespace FOG.Core
             if (level == Level.Debug || level == Level.Error)
                 prefix = level.ToString().ToUpper() + ": ";
 
-            WriteLine(level,
-                $" {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} {caller} {prefix}{message}");
+            lock (locker)
+            {
+                WriteLine(level,
+                    $" {DateTime.Now.ToShortDateString()} {DateTime.Now.ToShortTimeString()} {caller} {prefix}{message}");
+            }
         }
 
         /// <summary>
