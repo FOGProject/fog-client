@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Newtonsoft.Json.Linq;
 
 namespace FOG.Core
@@ -26,27 +28,39 @@ namespace FOG.Core
     public static class Notification
     {
         private static object locker = new object();
-        public static JObject ToJSON(string title, string message, string subjectID, bool onGoing)
+        private static volatile Dictionary<string, JObject> onGoingList = new Dictionary<string, JObject>();
+
+        public static JObject ToJSON(string title, string message, string subjectID)
         {
             dynamic json = new JObject();
             json.title = title;
             json.message = message;
             json.subjectID = subjectID;
-            json.onGoing = onGoing;
             return json;
         }
 
         public static void Emit(string title, string message, string subjectID = "", bool onGoing = false, bool global = true)
         {
-            Emit(ToJSON(title, message, subjectID, onGoing), global);
+            Emit(ToJSON(title, message, subjectID), onGoing, global);
         }
 
-        public static void Emit(JObject data, bool global = true)
+        public static void Emit(JObject data, bool onGoing = false, bool global = true)
         {
+            if (data["subjectID"] == null) throw new ArgumentNullException();
+
+            onGoingList.Remove(data["subjectID"].ToString());
+
+            if (onGoing)
+                onGoingList.Add(data["subjectID"].ToString(), data);
             if(global)
                 Record(data);
 
             Bus.Emit(Bus.Channel.Notification, data, global);
+        }
+
+        public static JObject[] GetOnGoing()
+        {
+            return onGoingList.Values.ToArray();
         }
 
         public static void Record(JObject data)
