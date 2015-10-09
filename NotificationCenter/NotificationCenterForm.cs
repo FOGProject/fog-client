@@ -20,6 +20,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
@@ -61,7 +62,9 @@ namespace NotificationCenter
             using (var sr = new StreamReader(fs, Encoding.Default))
             {
                 eventList.Items.Clear();
-                eventList.Items.AddRange(sr.ReadToEnd().Split(new string[] { Environment.NewLine }, StringSplitOptions.None));
+                var events = sr.ReadToEnd().Split(new string[] {Environment.NewLine}, StringSplitOptions.None);
+                events = (string[]) events.Reverse();
+                eventList.Items.AddRange(events);
             }
         }
 

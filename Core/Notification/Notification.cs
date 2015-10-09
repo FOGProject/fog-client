@@ -17,12 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+using System.IO;
 using Newtonsoft.Json.Linq;
 
 namespace FOG.Core
 {
     public static class Notification
     {
+        private static object locker = new object();
         public static JObject ToJSON(string title, string message, string subjectID, bool onGoing)
         {
             dynamic json = new JObject();
@@ -48,12 +51,25 @@ namespace FOG.Core
 
         public static void Record(JObject data)
         {
-            
+            if(data["title"] != null)
+                Record(data["title"].ToString());
         }
 
         public static void Record(string title)
         {
-            
+            lock (locker)
+            {
+                //Write message to log file
+                var logWriter = new StreamWriter(CalculateLogName(), true);
+                logWriter.WriteLine($"{DateTime.Now.ToShortDateString()} {title}");
+                logWriter.Close();
+            }
+        }
+
+        private static string CalculateLogName()
+        {
+            var logPath = Path.Combine(Settings.Location, "logs", DateTime.Today.ToString("yy-MM-dd"));
+            return logPath;
         }
     }
 }
