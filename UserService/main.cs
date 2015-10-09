@@ -18,7 +18,9 @@
  */
 
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using FOG.Core;
 using FOG.Core.Power;
 
@@ -39,6 +41,14 @@ namespace FOG
             Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "fog_user.log");
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
+
+            // Wait for the main service to spawn
+            while (Process.GetProcessesByName("FOGService").Length == 0)
+            {
+                Thread.Sleep(500);
+            }
+            Thread.Sleep(1000);
+
             Eager.Initalize();
 
             Log.Entry(LogName, "Initializing");
