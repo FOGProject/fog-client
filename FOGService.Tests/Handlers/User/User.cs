@@ -49,6 +49,7 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
+        [Ignore("Ignore due to CI server configuration")]
         public void GetUsersLoggedIn()
         {
             var users = UserHandler.GetUsersLoggedIn();
@@ -57,6 +58,7 @@ namespace FOGService.Tests.Handlers.User
         }
 
         [Test]
+        [Ignore("Ignore due to CI server configuration")]
         public void IsUserLoggedIn()
         {
             Assert.IsTrue(UserHandler.IsUserLoggedIn());
