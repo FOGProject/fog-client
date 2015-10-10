@@ -23,12 +23,22 @@ namespace FOG
 {
     internal class WindowsInstall : IInstall
     {
-        public void Install()
+        public bool PrepareFiles()
         {
             throw new System.NotImplementedException();
         }
 
-        public void Uninstall()
+        public bool Install()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Configure()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public bool Uninstall()
         {
             throw new System.NotImplementedException();
         }

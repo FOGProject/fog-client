@@ -19,9 +19,12 @@
 
 namespace FOG
 {
-    internal interface IInstall
+    public interface IInstall
     {
-        void Install();
-        void Uninstall();
+        bool PrepareFiles();
+        bool Install();
+        bool Configure();
+        string GetLocation();
+        bool Uninstall();
     }
 }

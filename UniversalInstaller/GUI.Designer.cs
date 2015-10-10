@@ -17,6 +17,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
+using System.Drawing;
 using System.Windows.Forms;
 using MetroFramework.Controls;
 
@@ -59,7 +61,7 @@ namespace FOG
             this.agreeBtn = new MetroFramework.Controls.MetroButton();
             this.completedTab = new System.Windows.Forms.TabPage();
             this.settingsTab = new System.Windows.Forms.TabPage();
-            this.progressBar1 = new MetroFramework.Controls.MetroProgressSpinner();
+            this.serverStatusSpinner = new MetroFramework.Controls.MetroProgressSpinner();
             this.label1 = new System.Windows.Forms.Label();
             this.logSwitch = new MetroFramework.Controls.MetroToggle();
             this.httpsSwitch = new MetroFramework.Controls.MetroToggle();
@@ -70,13 +72,23 @@ namespace FOG
             this.addressTxtBox = new MetroFramework.Controls.MetroTextBox();
             this.addressLabel = new System.Windows.Forms.Label();
             this.licenseTab = new System.Windows.Forms.TabPage();
-            this.tabControl = new MetroTabControl();
+            this.tabControl = new System.Windows.Forms.TabControl();
             this.welcomeTab = new System.Windows.Forms.TabPage();
             this.welcomeText = new System.Windows.Forms.TextBox();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new MetroButton();
+            this.beginButton = new MetroFramework.Controls.MetroButton();
             this.progressTab = new System.Windows.Forms.TabPage();
-            this.progressBox = new System.Windows.Forms.RichTextBox();
+            this.logBox = new System.Windows.Forms.RichTextBox();
+            this.nextButton = new MetroFramework.Controls.MetroButton();
+            this.showLogButton = new MetroFramework.Controls.MetroButton();
+            this.encryptionSpinner = new MetroFramework.Controls.MetroProgressSpinner();
+            this.configSpinner = new MetroFramework.Controls.MetroProgressSpinner();
+            this.filesSpinner = new MetroFramework.Controls.MetroProgressSpinner();
+            this.busyWorkSpinner = new MetroFramework.Controls.MetroProgressSpinner();
+            this.encryptLabel = new System.Windows.Forms.Label();
+            this.configuringLabel = new System.Windows.Forms.Label();
+            this.installFileLabel = new System.Windows.Forms.Label();
+            this.busyWorkLabel = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
             this.completedTab.SuspendLayout();
             this.settingsTab.SuspendLayout();
@@ -95,9 +107,9 @@ namespace FOG
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(652, 10);
             this.panel1.TabIndex = 5;
-            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
-            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
+            this.panel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
+            this.panel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
             // 
             // licenseBox
             // 
@@ -135,6 +147,7 @@ namespace FOG
             // 
             // installBtn
             // 
+            this.installBtn.Enabled = false;
             this.installBtn.Location = new System.Drawing.Point(7, 326);
             this.installBtn.Name = "installBtn";
             this.installBtn.Size = new System.Drawing.Size(598, 23);
@@ -168,7 +181,7 @@ namespace FOG
             // settingsTab
             // 
             this.settingsTab.BackColor = System.Drawing.Color.White;
-            this.settingsTab.Controls.Add(this.progressBar1);
+            this.settingsTab.Controls.Add(this.serverStatusSpinner);
             this.settingsTab.Controls.Add(this.label1);
             this.settingsTab.Controls.Add(this.logSwitch);
             this.settingsTab.Controls.Add(this.httpsSwitch);
@@ -187,15 +200,16 @@ namespace FOG
             this.settingsTab.Text = "Configure";
             this.settingsTab.Visible = false;
             // 
-            // progressBar1
+            // serverStatusSpinner
             // 
-            this.progressBar1.Location = new System.Drawing.Point(93, 290);
-            this.progressBar1.Maximum = 100;
-            this.progressBar1.Name = "progressBar1";
-            this.progressBar1.Size = new System.Drawing.Size(25, 25);
-            this.progressBar1.TabIndex = 19;
-            this.progressBar1.Value = 80;
-            this.progressBar1.Spinning = true;
+            this.serverStatusSpinner.EnsureVisible = false;
+            this.serverStatusSpinner.ForeColor = System.Drawing.Color.Crimson;
+            this.serverStatusSpinner.Location = new System.Drawing.Point(93, 290);
+            this.serverStatusSpinner.Maximum = 100;
+            this.serverStatusSpinner.Name = "progressBar1";
+            this.serverStatusSpinner.Size = new System.Drawing.Size(25, 25);
+            this.serverStatusSpinner.TabIndex = 19;
+            this.serverStatusSpinner.Value = 80;
             // 
             // label1
             // 
@@ -225,7 +239,6 @@ namespace FOG
             this.httpsSwitch.TabIndex = 16;
             this.httpsSwitch.Text = "Off";
             this.httpsSwitch.UseVisualStyleBackColor = false;
-
             // 
             // httpsLabel
             // 
@@ -272,7 +285,6 @@ namespace FOG
             this.addressTxtBox.Size = new System.Drawing.Size(464, 22);
             this.addressTxtBox.TabIndex = 9;
             this.addressTxtBox.Text = "fog-server";
-
             // 
             // addressLabel
             // 
@@ -315,7 +327,7 @@ namespace FOG
             // 
             this.welcomeTab.Controls.Add(this.welcomeText);
             this.welcomeTab.Controls.Add(this.pictureBox1);
-            this.welcomeTab.Controls.Add(this.button1);
+            this.welcomeTab.Controls.Add(this.beginButton);
             this.welcomeTab.Location = new System.Drawing.Point(4, 24);
             this.welcomeTab.Name = "welcomeTab";
             this.welcomeTab.Padding = new System.Windows.Forms.Padding(3);
@@ -344,19 +356,29 @@ namespace FOG
             this.pictureBox1.TabIndex = 4;
             this.pictureBox1.TabStop = false;
             // 
-            // button1
+            // beginButton
             // 
-            this.button1.Location = new System.Drawing.Point(6, 326);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(599, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Begin";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.beginButton.Location = new System.Drawing.Point(6, 326);
+            this.beginButton.Name = "beginButton";
+            this.beginButton.Size = new System.Drawing.Size(599, 23);
+            this.beginButton.TabIndex = 0;
+            this.beginButton.Text = "Begin";
+            this.beginButton.UseVisualStyleBackColor = true;
+            this.beginButton.Click += new System.EventHandler(this.beginClick);
             // 
             // progressTab
             // 
-            this.progressTab.Controls.Add(this.progressBox);
+            this.progressTab.Controls.Add(this.logBox);
+            this.progressTab.Controls.Add(this.nextButton);
+            this.progressTab.Controls.Add(this.showLogButton);
+            this.progressTab.Controls.Add(this.encryptionSpinner);
+            this.progressTab.Controls.Add(this.configSpinner);
+            this.progressTab.Controls.Add(this.filesSpinner);
+            this.progressTab.Controls.Add(this.busyWorkSpinner);
+            this.progressTab.Controls.Add(this.encryptLabel);
+            this.progressTab.Controls.Add(this.configuringLabel);
+            this.progressTab.Controls.Add(this.installFileLabel);
+            this.progressTab.Controls.Add(this.busyWorkLabel);
             this.progressTab.Location = new System.Drawing.Point(4, 24);
             this.progressTab.Name = "progressTab";
             this.progressTab.Padding = new System.Windows.Forms.Padding(3);
@@ -365,14 +387,119 @@ namespace FOG
             this.progressTab.Text = "Progress";
             this.progressTab.UseVisualStyleBackColor = true;
             // 
-            // progressBox
+            // logBox
             // 
-            this.progressBox.Location = new System.Drawing.Point(6, 6);
-            this.progressBox.Name = "progressBox";
-            this.progressBox.ReadOnly = true;
-            this.progressBox.Size = new System.Drawing.Size(599, 343);
-            this.progressBox.TabIndex = 11;
-            this.progressBox.Text = "";
+            this.logBox.Location = new System.Drawing.Point(10, 213);
+            this.logBox.Name = "logBox";
+            this.logBox.ReadOnly = true;
+            this.logBox.Size = new System.Drawing.Size(584, 106);
+            this.logBox.TabIndex = 21;
+            this.logBox.Text = "";
+            this.logBox.Visible = false;
+            // 
+            // nextButton
+            // 
+            this.nextButton.Enabled = false;
+            this.nextButton.Location = new System.Drawing.Point(330, 326);
+            this.nextButton.Name = "nextButton";
+            this.nextButton.Size = new System.Drawing.Size(275, 23);
+            this.nextButton.TabIndex = 20;
+            this.nextButton.Text = "Next";
+            this.nextButton.UseVisualStyleBackColor = true;
+            // 
+            // showLogButton
+            // 
+            this.showLogButton.Location = new System.Drawing.Point(6, 326);
+            this.showLogButton.Name = "showLogButton";
+            this.showLogButton.Size = new System.Drawing.Size(275, 23);
+            this.showLogButton.TabIndex = 19;
+            this.showLogButton.Text = "Show Log";
+            this.showLogButton.Click += new EventHandler(this.ToggleLogButtonClick);
+            this.showLogButton.UseVisualStyleBackColor = true;
+            // 
+            // encryptionSpinner
+            // 
+            this.encryptionSpinner.EnsureVisible = false;
+            this.encryptionSpinner.Location = new System.Drawing.Point(569, 111);
+            this.encryptionSpinner.Maximum = 100;
+            this.encryptionSpinner.Name = "encryptionSpinner";
+            this.encryptionSpinner.Size = new System.Drawing.Size(25, 25);
+            this.encryptionSpinner.TabIndex = 17;
+            this.encryptionSpinner.Visible = false;
+            // 
+            // configSpinner
+            // 
+            this.configSpinner.EnsureVisible = false;
+            this.configSpinner.Location = new System.Drawing.Point(569, 80);
+            this.configSpinner.Maximum = 100;
+            this.configSpinner.Name = "configSpinner";
+            this.configSpinner.Size = new System.Drawing.Size(25, 25);
+            this.configSpinner.TabIndex = 16;
+            this.configSpinner.Visible = false;
+            // 
+            // filesSpinner
+            // 
+            this.filesSpinner.EnsureVisible = false;
+            this.filesSpinner.Location = new System.Drawing.Point(569, 49);
+            this.filesSpinner.Maximum = 100;
+            this.filesSpinner.Name = "filesSpinner";
+            this.filesSpinner.Size = new System.Drawing.Size(25, 25);
+            this.filesSpinner.TabIndex = 15;
+            // 
+            // busyWorkSpinner
+            // 
+            this.busyWorkSpinner.EnsureVisible = false;
+            this.busyWorkSpinner.Location = new System.Drawing.Point(569, 18);
+            this.busyWorkSpinner.Maximum = 100;
+            this.busyWorkSpinner.Name = "busyWorkSpinner";
+            this.busyWorkSpinner.Size = new System.Drawing.Size(25, 25);
+            this.busyWorkSpinner.TabIndex = 14;
+            this.busyWorkSpinner.Value = 0;
+            // 
+            // encryptLabel
+            // 
+            this.encryptLabel.AutoSize = true;
+            this.encryptLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.encryptLabel.ForeColor = System.Drawing.Color.Silver;
+            this.encryptLabel.Location = new System.Drawing.Point(6, 114);
+            this.encryptLabel.Name = "encryptLabel";
+            this.encryptLabel.Size = new System.Drawing.Size(226, 22);
+            this.encryptLabel.TabIndex = 12;
+            this.encryptLabel.Text = "Setting Up Encrypted Tunnel";
+            // 
+            // configuringLabel
+            // 
+            this.configuringLabel.AutoSize = true;
+            this.configuringLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.configuringLabel.ForeColor = System.Drawing.Color.Silver;
+            this.configuringLabel.Location = new System.Drawing.Point(6, 83);
+            this.configuringLabel.Name = "configuringLabel";
+            this.configuringLabel.Size = new System.Drawing.Size(183, 22);
+            this.configuringLabel.TabIndex = 11;
+            this.configuringLabel.Text = "Applying Configuration";
+            // 
+            // installFileLabel
+            // 
+            this.installFileLabel.AutoSize = true;
+            this.installFileLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.installFileLabel.ForeColor = System.Drawing.Color.Silver;
+            this.installFileLabel.Location = new System.Drawing.Point(6, 52);
+            this.installFileLabel.Name = "installFileLabel";
+            this.installFileLabel.Size = new System.Drawing.Size(115, 22);
+            this.installFileLabel.TabIndex = 10;
+            this.installFileLabel.Text = "Installing Files";
+            // 
+            // busyWorkLabel
+            // 
+            this.busyWorkLabel.AutoSize = true;
+            this.busyWorkLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.busyWorkLabel.Location = new System.Drawing.Point(6, 18);
+            this.busyWorkLabel.Name = "busyWorkLabel";
+            this.busyWorkLabel.Size = new System.Drawing.Size(170, 22);
+            this.busyWorkLabel.TabIndex = 9;
+            this.busyWorkLabel.Text = "Getting Things Ready";
+            this.busyWorkLabel.ForeColor = System.Drawing.Color.Silver;
+
             // 
             // title
             // 
@@ -382,9 +509,9 @@ namespace FOG
             this.title.Size = new System.Drawing.Size(598, 43);
             this.title.TabIndex = 8;
             this.title.Text = "FOG Service Installer";
-            this.title.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseDown);
-            this.title.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseMove);
-            this.title.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form1_MouseUp);
+            this.title.MouseDown += new System.Windows.Forms.MouseEventHandler(this.Form_MouseDown);
+            this.title.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
+            this.title.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
             // 
             // GUI
             // 
@@ -413,6 +540,7 @@ namespace FOG
             this.welcomeTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.progressTab.ResumeLayout(false);
+            this.progressTab.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -428,7 +556,7 @@ namespace FOG
         private TabPage completedTab;
         private TabPage settingsTab;
         private TabPage licenseTab;
-        private MetroTabControl tabControl;
+        private TabControl tabControl;
         private MetroTextBox addressTxtBox;
         private Label addressLabel;
         private MetroTextBox webRootTxtBox;
@@ -439,12 +567,22 @@ namespace FOG
         private MetroToggle logSwitch;
         private MetroToggle httpsSwitch;
         private TabPage progressTab;
-        private RichTextBox progressBox;
         private TabPage welcomeTab;
-        private MetroButton button1;
+        private MetroButton beginButton;
         private PictureBox pictureBox1;
         private TextBox welcomeText;
         private Label label1;
-        private MetroProgressSpinner progressBar1;
+        private MetroProgressSpinner serverStatusSpinner;
+        private Label configuringLabel;
+        private Label installFileLabel;
+        private Label busyWorkLabel;
+        private Label encryptLabel;
+        private MetroProgressSpinner busyWorkSpinner;
+        private MetroProgressSpinner encryptionSpinner;
+        private MetroProgressSpinner configSpinner;
+        private MetroProgressSpinner filesSpinner;
+        private MetroButton showLogButton;
+        private MetroButton nextButton;
+        private RichTextBox logBox;
     }
 }

@@ -32,33 +32,27 @@ namespace FOG
     public static class GenericSetup
     {
         private const string LogName = "Installer";
-        private static IInstall _instance;
+        private const string ClientVersion = "0.10.0";
+
+        public static IInstall Instance { get;  }
 
         static GenericSetup()
         {
             switch (Settings.OS)
             {
                 case Settings.OSType.Mac:
-                    _instance = new MacInstall();
+                    Instance = new MacInstall();
                     break;
                 case Settings.OSType.Linux:
-                    _instance = new LinuxInstall();
+                    Instance = new LinuxInstall();
                     break;
                 default:
-                    _instance = new WindowsInstall();
+                    Instance = new WindowsInstall();
                     break;
             }
-
         }
 
-        public static void PerformInstall(string https, string tray, string server, string webRoot, string version,
-            string company, string rootLog, string location)
-        {
-            SaveSettings(https, tray, server, webRoot, version, company, rootLog, location);
-            _instance.Install();
-        }
-
-        public static bool PinServerCert(string location)
+        public static bool PinServerCert()
         {
             try
             {
@@ -66,7 +60,7 @@ namespace FOG
                 if (cert != null) return false;
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
-                Settings.SetPath(Path.Combine(location, "settings.json"));
+                Settings.SetPath(Path.Combine(Instance.GetLocation(), "settings.json"));
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
 
@@ -86,17 +80,17 @@ namespace FOG
             }
         }
 
-        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot, string version,
-            string company, string rootLog, string location)
+        public static bool SaveSettings(string https, string usetray, string webaddress, string webroot,
+            string company, string rootLog)
         {
-            var filePath = Path.Combine(location, "settings.json");
+            var filePath = Path.Combine(Instance.GetLocation(), "settings.json");
             try
             {
 
                 if (File.Exists(filePath))
                 {
                     var settings = JObject.Parse(File.ReadAllText(filePath));
-                    settings["Version"] = version;
+                    settings["Version"] = ClientVersion;
                     File.WriteAllText(filePath, settings.ToString());
                 }
                 else
@@ -107,7 +101,7 @@ namespace FOG
                         {"Tray", usetray},
                         {"Server", webaddress},
                         {"WebRoot", webroot},
-                        {"Version", version},
+                        {"Version", ClientVersion},
                         {"Company", company},
                         {"RootLog", rootLog}
                     };

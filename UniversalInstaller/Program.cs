@@ -27,8 +27,6 @@ namespace FOG
     class UnixInstaller
     {
         private const string LogName = "Installer";
-        private const string Location = "/opt/fog-service";
-        private const string Version = "0.10.0";
 
         [STAThread]
         static void Main(string[] args)
@@ -39,7 +37,7 @@ namespace FOG
                 ProcessArgs(args);
             else
                 InteractiveMode();
-            GenericSetup.PinServerCert(Location);
+            GenericSetup.PinServerCert();
         }
 
         private static void ProcessArgs(string[] args)
@@ -143,9 +141,18 @@ namespace FOG
             Console.Write("Enter the FOG webroot used [example: /fog]:");
             var webRoot = Console.ReadLine();
 
-            Console.WriteLine("Installing....");
+            Console.WriteLine("Getting things ready...");
+            GenericSetup.Instance.PrepareFiles();
 
-            GenericSetup.PerformInstall(https, tray, server, webRoot, Version, company, rootLog, Location);
+            Console.WriteLine("Installing files...");
+            GenericSetup.Instance.Install();
+
+            Console.WriteLine("Applying Configuration...");
+            GenericSetup.SaveSettings(https, tray, server, webRoot, company, rootLog);
+            GenericSetup.Instance.Configure();
+
+            Console.WriteLine("Setting Up Encrypted Tunnel...");
+            GenericSetup.PinServerCert(Location);
         }
     }
 }

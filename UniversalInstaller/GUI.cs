@@ -23,6 +23,7 @@ using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Core;
+using MetroFramework.Controls;
 
 namespace FOG
 {
@@ -34,12 +35,11 @@ namespace FOG
         private Point dragCursorPoint;
         private Point dragFormPoint;
         private Thread serverUpThread;
-        private Color defaultSpinnerColor;
+        private Thread installThread;
 
         public GUI()
         {
             InitializeComponent();
-            defaultSpinnerColor = progressBar1.ForeColor;
             UpdateWelcomeText();
 
             serverUpThread = new Thread(UpdateSpinner)
@@ -49,6 +49,73 @@ namespace FOG
                 Name = "server-status"
             };
             serverUpThread.Start();
+
+            installThread = new Thread(InstallClient)
+            {
+                Priority = ThreadPriority.Normal,
+                IsBackground = true,
+                Name = "client-install"
+            };
+        }
+
+        public void InstallClient()
+        {
+            if (!UpdateSection(busyWorkLabel, busyWorkSpinner, GenericSetup.Instance.PrepareFiles))
+                return;
+
+            if (!UpdateSection(installFileLabel, filesSpinner, GenericSetup.Instance.Install))
+                return;
+
+            if (!UpdateSection(configuringLabel, configSpinner, configure))
+                return;
+
+            if (!UpdateSection(encryptLabel, encryptionSpinner, GenericSetup.PinServerCert))
+                return;
+        }
+
+        private bool configure()
+        {
+            GenericSetup.SaveSettings((
+                httpsSwitch.Checked) ? "1" : "0", 
+                "0", addressTxtBox.Text, webRootTxtBox.Text, "FOG", 
+                (logSwitch.Checked) ? "1" : "0");
+            GenericSetup.Instance.Configure();
+            return true;
+        }
+
+
+        private bool UpdateSection(Label label, MetroProgressSpinner spinner, Func<bool> method)
+        {
+            label.ForeColor = System.Drawing.Color.Black;
+
+            var success = false;
+            try
+            {
+                success = method.Invoke();
+            }
+            catch (Exception ex)
+            {
+                logBox.Invoke((MethodInvoker)(() =>
+                {
+                    logBox.AppendText(ex.Message);
+                }));
+                success = false;
+            }
+
+
+            spinner.Invoke((MethodInvoker)(() =>
+            {
+                spinner.Value = 100;
+                spinner.ForeColor = (success) ? Color.ForestGreen : Color.Crimson;
+            }));
+
+            return success;
+        }
+
+        private void ToggleLogButtonClick(object sender, System.EventArgs e)
+        {
+            this.logBox.Visible = !this.logBox.Visible;
+            this.showLogButton.Text = (!this.logBox.Visible) ? "Show Log" : "Hide Log";
         }
 
         public void UpdateWelcomeText()
@@ -59,10 +126,6 @@ namespace FOG
         private void exitButton_Click(object sender, System.EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void ServerChanged(object sender, System.EventArgs e)
-        {
         }
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
@@ -82,6 +145,7 @@ namespace FOG
         {
             logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
+            installThread.Start();
         }
 
         private void FinishBtnOnClick(object sender, EventArgs eventArgs)
@@ -90,14 +154,14 @@ namespace FOG
             Application.Exit();
         }
 
-        private void Form1_MouseDown(object sender, MouseEventArgs e)
+        private void Form_MouseDown(object sender, MouseEventArgs e)
         {
             dragging = true;
             dragCursorPoint = Cursor.Position;
             dragFormPoint = this.Location;
         }
 
-        private void Form1_MouseMove(object sender, MouseEventArgs e)
+        private void Form_MouseMove(object sender, MouseEventArgs e)
         {
             if (dragging)
             {
@@ -106,12 +170,12 @@ namespace FOG
             }
         }
 
-        private void Form1_MouseUp(object sender, MouseEventArgs e)
+        private void Form_MouseUp(object sender, MouseEventArgs e)
         {
             dragging = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void beginClick(object sender, EventArgs e)
         {
             logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
@@ -123,9 +187,9 @@ namespace FOG
             {
                 var serverStatus = CheckServer();
 
-                progressBar1.Invoke((MethodInvoker)(() =>
+                serverStatusSpinner.Invoke((MethodInvoker)(() =>
                 {
-                    progressBar1.ForeColor = (serverStatus) ? Color.ForestGreen : Color.Crimson;
+                    serverStatusSpinner.ForeColor = (serverStatus) ? Color.ForestGreen : Color.Crimson;
                     installBtn.Enabled = (serverStatus);
                 }));
                 Thread.Sleep(100);
@@ -142,7 +206,6 @@ namespace FOG
                     var url = (httpsSwitch.Checked) ? "https://" : "http://";
                     url += addressTxtBox.Text;
                     url += webRootTxtBox.Text;
-                    //url += "/service/getversion.php";
 
                     var response = client.DownloadString(url);
                     return true;
