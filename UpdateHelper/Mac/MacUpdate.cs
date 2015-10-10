@@ -34,12 +34,12 @@ namespace FOG
 
         public void StartService()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService start");
         }
 
         public void StopService()
         {
-            throw new NotImplementedException();
+            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService stop");
         }
     }
 }

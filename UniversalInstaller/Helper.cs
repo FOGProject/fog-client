@@ -64,22 +64,10 @@ namespace FOG
                 rootLog, version, location ?? Instance.GetLocation());
         }
 
-
-        public static void AdjustPermissions(string location)
-        {
-            var logLocation = Path.Combine(location, "fog.log");
-
-            if (!File.Exists(logLocation))
-                File.Create(logLocation);
-
-            ProcessHandler.Run("chmod", "755 " + logLocation);
-        }
-
         public static void ExtractFiles(string tmp, string location)
         {
-            
             var tmpLocation = Path.Combine(tmp, "FOGService.zip");
-            ExtractResource("FOGService.zip", tmpLocation);
+            ExtractResource("FOG.Scripts.FOGService.zip", tmpLocation);
             ZipFile.ExtractToDirectory(tmpLocation, location);
             File.Delete(tmpLocation);
         }
