@@ -38,6 +38,11 @@ namespace FOG
             throw new System.NotImplementedException();
         }
 
+        public string GetLocation()
+        {
+            return "/opt/fog-client";
+        }
+
         public bool Uninstall()
         {
             throw new System.NotImplementedException();

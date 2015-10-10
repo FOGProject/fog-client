@@ -38,6 +38,11 @@ namespace FOG
             throw new System.NotImplementedException();
         }
 
+        public string GetLocation()
+        {
+            throw new System.NotImplementedException();
+        }
+
         public bool Uninstall()
         {
             throw new System.NotImplementedException();

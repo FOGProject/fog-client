@@ -163,11 +163,9 @@ namespace FOG
 
         private void Form_MouseMove(object sender, MouseEventArgs e)
         {
-            if (dragging)
-            {
-                Point dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
-                this.Location = Point.Add(dragFormPoint, new Size(dif));
-            }
+            if (!dragging) return;
+            var dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
+            this.Location = Point.Add(dragFormPoint, new Size(dif));
         }
 
         private void Form_MouseUp(object sender, MouseEventArgs e)

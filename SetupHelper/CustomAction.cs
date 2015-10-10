@@ -40,6 +40,9 @@ namespace SetupHelper
         {
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 return GenericSetup.PinServerCert(session["INSTALLLOCATION"]) ? ActionResult.Success : ActionResult.Failure;
             }
             catch (Exception ex)
@@ -54,6 +57,9 @@ namespace SetupHelper
         {
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 GenericSetup.SaveSettings(
                     session["HTTPS"],
                     session["USETRAY"],
@@ -79,6 +85,9 @@ namespace SetupHelper
         {
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 GenericSetup.UnpinServerCert();
             }
             catch (Exception ex)
@@ -94,6 +103,9 @@ namespace SetupHelper
         {
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 var cert = new X509Certificate2(session.CustomActionData["CAFile"]);
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadWrite);
@@ -116,6 +128,9 @@ namespace SetupHelper
             var cert = new X509Certificate2();
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 X509Certificate2 CAroot = null;
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
@@ -159,6 +174,9 @@ namespace SetupHelper
         {
             try
             {
+                if (session["LIGHT"].Equals("1"))
+                    return ActionResult.Success;
+
                 var taskService = new TaskService();
                 var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
 

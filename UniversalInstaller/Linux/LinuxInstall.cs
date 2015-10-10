@@ -17,8 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.IO;
-using System.IO.Compression;
 using FOG.Core;
 
 namespace FOG
@@ -42,6 +40,11 @@ namespace FOG
         public bool Configure()
         {
             throw new System.NotImplementedException();
+        }
+
+        public string GetLocation()
+        {
+            return "/opt/fog-client";
         }
 
         public bool Uninstall()
