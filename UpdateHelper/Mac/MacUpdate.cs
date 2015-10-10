@@ -34,12 +34,14 @@ namespace FOG
 
         public void StartService()
         {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService start");
+            ProcessHandler.Run("launchctl", "load -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
+            ProcessHandler.Run("launchctl", "load -w /Library/LaunchAgents/org.freeghost.useragent.plist");
         }
 
         public void StopService()
         {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService stop");
+            ProcessHandler.Run("launchctl", "unload -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
+            ProcessHandler.Run("launchctl", "unload -w /Library/LaunchAgents/org.freeghost.useragent.plist");
         }
     }
 }

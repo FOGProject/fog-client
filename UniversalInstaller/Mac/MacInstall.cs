@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.IO;
 using FOG.Core;
 
 namespace FOG
@@ -25,17 +26,29 @@ namespace FOG
     {
         public bool PrepareFiles()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public bool Install()
         {
-            throw new System.NotImplementedException();
+            Helper.ExtractFiles("/opt/", GetLocation());
+
+            var logLocation = Path.Combine(GetLocation(), "fog.log");
+            if (!File.Exists(logLocation))
+                File.Create(logLocation);
+            ProcessHandler.Run("chmod", "755 " + logLocation);
+
+            ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
+            ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
+
+            ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1");
+            ProcessHandler.Run("sysv-rc-conf", "FOGService on >/ dev / null 2 > &1");
+            return true;
         }
 
         public bool Configure()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public string GetLocation()
@@ -45,7 +58,11 @@ namespace FOG
 
         public bool Uninstall()
         {
-            throw new System.NotImplementedException();
+            Directory.Delete(GetLocation());
+            ProcessHandler.Run("systemctl", "disable FOGService >/ dev / null 2 > &1");
+            ProcessHandler.Run("sysv-rc-conf", "FOGService off >/ dev / null 2 > &1");
+            File.Delete("/etc/init.d/FOGService");
+            return true;
         }
     }
 }
