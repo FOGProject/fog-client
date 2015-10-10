@@ -26,6 +26,7 @@ namespace FOG
     internal class Program
     {
         private const string LogName = "UpdateHelper";
+        private static IUpdate _instance;
 
         public static void Main(string[] args)
         {
@@ -36,7 +37,18 @@ namespace FOG
                 Log.FilePath = args[0];
                 Log.Output = Log.Mode.File;
             }
-
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Mac:
+                    _instance = new MacUpdate();
+                    break;
+                case Settings.OSType.Linux:
+                    _instance = new LinuxUpdate();
+                    break;
+                default:
+                    _instance = new WindowsUpdate();
+                    break;
+            }
 
             try
             {

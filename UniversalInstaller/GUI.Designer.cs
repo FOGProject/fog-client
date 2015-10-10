@@ -425,7 +425,8 @@ namespace FOG
             this.encryptionSpinner.Name = "encryptionSpinner";
             this.encryptionSpinner.Size = new System.Drawing.Size(25, 25);
             this.encryptionSpinner.TabIndex = 17;
-            this.encryptionSpinner.Visible = false;
+            this.configSpinner.Value = 0;
+
             // 
             // configSpinner
             // 
@@ -435,7 +436,8 @@ namespace FOG
             this.configSpinner.Name = "configSpinner";
             this.configSpinner.Size = new System.Drawing.Size(25, 25);
             this.configSpinner.TabIndex = 16;
-            this.configSpinner.Visible = false;
+            this.configSpinner.Value = 0;
+
             // 
             // filesSpinner
             // 
@@ -445,6 +447,8 @@ namespace FOG
             this.filesSpinner.Name = "filesSpinner";
             this.filesSpinner.Size = new System.Drawing.Size(25, 25);
             this.filesSpinner.TabIndex = 15;
+            this.busyWorkSpinner.Value = 0;
+
             // 
             // busyWorkSpinner
             // 

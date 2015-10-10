@@ -8,10 +8,11 @@
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>FOG</RootNamespace>
-    <AssemblyName>UnixInstaller</AssemblyName>
+    <AssemblyName>SmartInstaller</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -24,7 +25,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -73,6 +73,9 @@
   <PropertyGroup>
     <StartupObject />
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -103,7 +106,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenericSetup.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -113,14 +116,16 @@
     <Compile Include="IInstall.cs" />
     <Compile Include="Linux\LinuxInstall.cs" />
     <Compile Include="Mac\MacInstall.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="UniversalInstaller.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Windows\WindowsInstall.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="app.manifest" />
     <None Include="packages.config" />
-    <None Include="Scripts\init-d" />
+    <EmbeddedResource Include="Scripts\init-d" />
+    <EmbeddedResource Include="Scripts\FOGService.msi" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
@@ -141,6 +146,12 @@
     <ProjectReference Include="..\Core\Core.csproj">
       <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
       <Name>Core</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+    </ProjectReference>
+    <ProjectReference Include="..\SetupHelper\SetupHelper.csproj">
+      <Project>{1e34afec-035c-45a1-bbe3-4d2d7c67f5c7}</Project>
+      <Name>SetupHelper</Name>
+      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

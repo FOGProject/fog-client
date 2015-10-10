@@ -60,26 +60,26 @@ namespace FOG
 
         public void InstallClient()
         {
-            if (!UpdateSection(busyWorkLabel, busyWorkSpinner, GenericSetup.Instance.PrepareFiles))
+            if (!UpdateSection(busyWorkLabel, busyWorkSpinner, Helper.Instance.PrepareFiles))
                 return;
 
-            if (!UpdateSection(installFileLabel, filesSpinner, GenericSetup.Instance.Install))
+            if (!UpdateSection(installFileLabel, filesSpinner, Helper.Instance.Install))
                 return;
 
             if (!UpdateSection(configuringLabel, configSpinner, configure))
                 return;
 
-            if (!UpdateSection(encryptLabel, encryptionSpinner, GenericSetup.PinServerCert))
+            if (!UpdateSection(encryptLabel, encryptionSpinner, Helper.PinServerCert))
                 return;
         }
 
         private bool configure()
         {
-            GenericSetup.SaveSettings((
+            Helper.SaveSettings((
                 httpsSwitch.Checked) ? "1" : "0", 
                 "0", addressTxtBox.Text, webRootTxtBox.Text, "FOG", 
                 (logSwitch.Checked) ? "1" : "0");
-            GenericSetup.Instance.Configure();
+            Helper.Instance.Configure();
             return true;
         }
 
@@ -87,6 +87,11 @@ namespace FOG
         private bool UpdateSection(Label label, MetroProgressSpinner spinner, Func<bool> method)
         {
             label.ForeColor = System.Drawing.Color.Black;
+
+            spinner.Invoke((MethodInvoker)(() =>
+            {
+                spinner.Value = 20;
+            }));
 
             var success = false;
             try

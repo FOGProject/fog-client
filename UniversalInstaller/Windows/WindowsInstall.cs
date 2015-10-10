@@ -17,35 +17,75 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Core;
+using System;
+using System.Diagnostics;
+using System.IO;
+using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
     internal class WindowsInstall : IInstall
     {
+        private static string jsonFile = Path.Combine(
+                Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.Machine),
+                "session.json");
+
+        private string tmpLocation = Path.GetTempPath();
+
         public bool PrepareFiles()
         {
-            throw new System.NotImplementedException();
+            return Helper.ExtractResource("FOG.Scripts.FOGService.msi", Path.Combine(tmpLocation, "FOGService.msi"));
         }
 
         public bool Install()
         {
-            throw new System.NotImplementedException();
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    Arguments =
+                        $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}\" " +
+                        $"/quiet " +
+                        $"LIGHT=\"1\""
+                }
+            };
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+            process.StartInfo.FileName = "msiexec";
+
+            process.Start();
+            process.WaitForExit();
+
+            return process.ExitCode == 0;
         }
 
         public bool Configure()
         {
-            throw new System.NotImplementedException();
+            return true;
         }
 
         public string GetLocation()
         {
-            throw new System.NotImplementedException();
+            var config = GetSettings();
+            return GetValue("INSTALLDIR", config);
         }
 
         public bool Uninstall()
         {
             throw new System.NotImplementedException();
+        }
+
+        private static JObject GetSettings()
+        {
+            return JObject.Parse(File.ReadAllText(jsonFile));
+        }
+
+        private static string GetValue(string key, JObject config)
+        {
+            var value = config.GetValue(key);
+            return string.IsNullOrEmpty(value.ToString().Trim()) ? string.Empty : value.ToString().Trim();
         }
     }
 }

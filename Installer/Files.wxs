@@ -42,7 +42,6 @@
 
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
-            <File Id="MonoHelper" Name="MonoHelper.exe" Source="..\bin\MonoHelper.exe" />
             <File Id="FOGShutdownGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe">
               <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any" />
             </File>

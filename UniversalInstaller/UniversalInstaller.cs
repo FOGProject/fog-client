@@ -24,7 +24,7 @@ using System.Windows.Forms;
 
 namespace FOG
 {
-    class UnixInstaller
+    class UniversalInstaller
     {
         private const string LogName = "Installer";
 
@@ -37,7 +37,7 @@ namespace FOG
                 ProcessArgs(args);
             else
                 InteractiveMode();
-            GenericSetup.PinServerCert();
+            Helper.PinServerCert();
         }
 
         private static void ProcessArgs(string[] args)
@@ -142,17 +142,17 @@ namespace FOG
             var webRoot = Console.ReadLine();
 
             Console.WriteLine("Getting things ready...");
-            GenericSetup.Instance.PrepareFiles();
+            Helper.Instance.PrepareFiles();
 
             Console.WriteLine("Installing files...");
-            GenericSetup.Instance.Install();
+            Helper.Instance.Install();
 
             Console.WriteLine("Applying Configuration...");
-            GenericSetup.SaveSettings(https, tray, server, webRoot, company, rootLog);
-            GenericSetup.Instance.Configure();
+            Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);
+            Helper.Instance.Configure();
 
             Console.WriteLine("Setting Up Encrypted Tunnel...");
-            GenericSetup.PinServerCert(Location);
+            Helper.PinServerCert();
         }
     }
 }

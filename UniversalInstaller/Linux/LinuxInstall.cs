@@ -30,7 +30,7 @@ namespace FOG
 
         public bool Install()
         {
-            GenericSetup.ExtractFiles("/opt/", "/opt/fog-client");
+            Helper.ExtractFiles("/opt/", "/opt/fog-client");
             ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
             ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1");
             ProcessHandler.Run("sysv-rc-conf", "FOGService on >/ dev / null 2 > &1");

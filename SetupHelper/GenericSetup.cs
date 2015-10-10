@@ -19,8 +19,6 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
-using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using FOG.Core;
 using FOG.Core.Data;
@@ -32,27 +30,8 @@ namespace FOG
     public static class GenericSetup
     {
         private const string LogName = "Installer";
-        private const string ClientVersion = "0.10.0";
 
-        public static IInstall Instance { get;  }
-
-        static GenericSetup()
-        {
-            switch (Settings.OS)
-            {
-                case Settings.OSType.Mac:
-                    Instance = new MacInstall();
-                    break;
-                case Settings.OSType.Linux:
-                    Instance = new LinuxInstall();
-                    break;
-                default:
-                    Instance = new WindowsInstall();
-                    break;
-            }
-        }
-
-        public static bool PinServerCert()
+        public static bool PinServerCert(string location)
         {
             try
             {
@@ -60,7 +39,7 @@ namespace FOG
                 if (cert != null) return false;
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
-                Settings.SetPath(Path.Combine(Instance.GetLocation(), "settings.json"));
+                Settings.SetPath(Path.Combine(location, "settings.json"));
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
 
@@ -81,16 +60,16 @@ namespace FOG
         }
 
         public static bool SaveSettings(string https, string usetray, string webaddress, string webroot,
-            string company, string rootLog)
+            string company, string rootLog, string version, string location)
         {
-            var filePath = Path.Combine(Instance.GetLocation(), "settings.json");
+            var filePath = Path.Combine(location, "settings.json");
             try
             {
 
                 if (File.Exists(filePath))
                 {
                     var settings = JObject.Parse(File.ReadAllText(filePath));
-                    settings["Version"] = ClientVersion;
+                    settings["Version"] = version;
                     File.WriteAllText(filePath, settings.ToString());
                 }
                 else
@@ -101,7 +80,7 @@ namespace FOG
                         {"Tray", usetray},
                         {"Server", webaddress},
                         {"WebRoot", webroot},
-                        {"Version", ClientVersion},
+                        {"Version", version},
                         {"Company", company},
                         {"RootLog", rootLog}
                     };
@@ -135,45 +114,6 @@ namespace FOG
                 Log.Error(LogName, "Could unpin CA cert");
                 Log.Error(LogName, ex);
                 return false;
-            }
-        }
-
-        public static void AdjustPermissions(string location)
-        {
-            var logLocation = Path.Combine(location, "fog.log");
-
-            if (!File.Exists(logLocation))
-                File.Create(logLocation);
-
-            ProcessHandler.Run("chmod", "755 " + logLocation);
-        }
-
-        public static void ExtractFiles(string tmp, string location)
-        {
-            var tmpLocation = Path.Combine(tmp, "FOGService.zip");
-            ExtractResource("FOGService.zip", tmpLocation);
-            ZipFile.ExtractToDirectory(tmpLocation, location);
-            File.Delete(tmpLocation);
-        }
-
-        private static void ExtractResource(string resource, string filePath)
-        {
-            var assembly = Assembly.GetExecutingAssembly();
-            using (var input = assembly.GetManifestResourceStream(resource))
-            using (var output = File.Create(filePath))
-            {
-                CopyStream(input, output);
-            }
-        }
-
-        private static void CopyStream(Stream input, Stream output)
-        {
-            byte[] buffer = new byte[8192];
-
-            int bytesRead;
-            while ((bytesRead = input.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                output.Write(buffer, 0, bytesRead);
             }
         }
     }
