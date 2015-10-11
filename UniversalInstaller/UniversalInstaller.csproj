@@ -125,7 +125,10 @@
     <None Include="app.manifest" />
     <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\init-d" />
-    <EmbeddedResource Include="Scripts\FOGService.msi" />
+    <EmbeddedResource Include="Scripts\fog.agent" />
+    <EmbeddedResource Include="Scripts\fog.daemon" />
+    <EmbeddedResource Include="Scripts\org.freeghost.daemon.plist" />
+    <EmbeddedResource Include="Scripts\org.freeghost.useragent.plist" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
