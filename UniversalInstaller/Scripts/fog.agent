@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+mono /opt/fog-service/FOGUserService.exe
