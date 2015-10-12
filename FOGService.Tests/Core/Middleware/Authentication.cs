@@ -17,16 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.IO;
 using FOG.Core;
+using FOG.Core.Data;
 using FOG.Core.Middleware;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.Middleware
+namespace FOGService.Tests.Core.Middleware
 {
     [TestFixture]
-    public class CommunicationTests
+    public class AuthenticationTests
     {
         [SetUp]
         public void Init()
@@ -39,52 +38,37 @@ namespace FOGService.Tests.Handlers.Middleware
         private const string Server = "http://fog.jbob.io";
         private const string MAC = "1a:2b:3c:4d:5e:6f";
         private const string URL = "/service/Test.php?unit=";
+        private const string PassKeyHex = "66733579595144305635386865727967316e746236395a6c6d48355a39313863";
 
         [Test]
-        public void Contact()
+        public void AESDecryptResponse()
         {
-            var success = Communication.Contact("/index.php");
-            Assert.IsTrue(success);
+            /**
+            * Ensure that decrypting AES responses works correct
+            */
 
-            success = Communication.Contact("/no-exist");
-            Assert.IsFalse(success);
+            Authentication.TestPassKey = Transform.HexStringToByteArray(PassKeyHex);
+            var response1 =
+                Communication.GetResponse($"{URL}AESDecryptionResponse1&key={PassKeyHex}");
+            var response2 =
+                Communication.GetResponse($"{URL}AESDecryptionResponse2&key={PassKeyHex}");
+
+            Assert.IsFalse(response1.Error);
+            Assert.IsTrue(response1.Encrypted);
+            Assert.AreEqual("Foobar22!", response1.GetField("#data"));
+
+            Assert.IsFalse(response2.Error);
+            Assert.IsTrue(response2.Encrypted);
+            Assert.AreEqual("Foobar22!", response2.GetField("#data"));
         }
 
         [Test]
-        public void Download()
+        [Ignore("Ignore test due to lack of FOG CA from build server")]
+        public void Authenticate()
         {
-            /**
-            * Ensure that downloading a file works properly
-            */
-
-            const string phrase = "Foobar22!";
-            var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "test.txt");
-            var success = Communication.DownloadFile(URL + "Download", path);
-
+            Authentication.TestPassKey = null;
+            var success = Authentication.HandShake();
             Assert.IsTrue(success);
-            Assert.IsTrue(File.Exists(path));
-
-            var text = File.ReadAllText(path).Trim();
-            Assert.AreEqual(phrase, text);
-
-            // Test a fail download
-
-            success = Communication.DownloadFile("/no-exist", path);
-
-            Assert.IsFalse(success);
-        }
-
-        [Test]
-        public void GetRawResponse()
-        {
-            /**
-            * Ensure that a raw responses can be obtained
-            */
-
-            const string phrase = "Foobar22!";
-            var response = Communication.GetRawResponse(URL + "RawResponse");
-
-            Assert.AreEqual(phrase, response);
         }
     }
 }

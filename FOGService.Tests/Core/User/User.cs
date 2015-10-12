@@ -17,54 +17,51 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Newtonsoft.Json.Linq;
+using System;
+using FOG.Core;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.Bus
+namespace FOGService.Tests.Core.User
 {
     [TestFixture]
-    public class BusTests
+    public class UserTests
     {
         [SetUp]
         public void Init()
         {
-			FOG.Core.Bus.Subscribe(FOG.Core.Bus.Channel.Debug, RecieveMessage);
-        }
-
-        private string message = "";
-
-        private void RecieveMessage(dynamic data)
-        {
-            message = data.message;
+            Log.Output = Log.Mode.Console;
         }
 
         [Test]
-        public void LocalEmit()
+        public void GetCurrentUser()
         {
-            var expected = "HelloWorld@123$";
-
-            var data = new JObject
-            {
-                {"message", expected}
-            };
-
-            FOG.Core.Bus.Emit(FOG.Core.Bus.Channel.Debug, data);
-			Assert.AreEqual(expected, message);
+            Assert.AreEqual(Environment.UserName, UserHandler.GetCurrentUser());
         }
 
         [Test]
-        public void Unsubscribe()
+        [Ignore("Ignore due to CI server configuration")]
+        public void GetInactivityTime()
         {
-            var expected = "HelloWorld@123555$";
+            if (FOG.Core.Settings.OS == FOG.Core.Settings.OSType.Windows)
+                Assert.IsTrue(UserHandler.GetInactivityTime() != -1);
+            else
+                Assert.IsTrue(UserHandler.GetInactivityTime() == -1);
+        }
 
-            var data = new JObject
-            {
-                {"message", expected}
-            };
+        [Test]
+        [Ignore("Ignore due to CI server configuration")]
+        public void GetUsersLoggedIn()
+        {
+            var users = UserHandler.GetUsersLoggedIn();
+            Assert.IsTrue(users.Count >= 1);
+            Assert.IsTrue(users.Contains(Environment.UserName));
+        }
 
-			FOG.Core.Bus.Unsubscribe(FOG.Core.Bus.Channel.Debug, RecieveMessage);
-            FOG.Core.Bus.Emit(FOG.Core.Bus.Channel.Debug, data);
-            Assert.AreNotEqual(expected, message);
+        [Test]
+        [Ignore("Ignore due to CI server configuration")]
+        public void IsUserLoggedIn()
+        {
+            Assert.IsTrue(UserHandler.IsUserLoggedIn());
         }
     }
 }

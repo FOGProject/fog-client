@@ -22,7 +22,7 @@ using FOG.Core;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.Settings
+namespace FOGService.Tests.Core.Settings
 {
     [TestFixture]
     public class SettingsTests

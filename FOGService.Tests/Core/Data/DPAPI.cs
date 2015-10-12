@@ -22,7 +22,7 @@ using FOG.Core;
 using FOG.Core.Data;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.Data
+namespace FOGService.Tests.Core.Data
 {
     [TestFixture]
     public class DPAPITests

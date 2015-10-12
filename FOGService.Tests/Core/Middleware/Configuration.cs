@@ -17,51 +17,34 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using FOG.Core;
+using FOG.Core.Middleware;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.User
+namespace FOGService.Tests.Core.Middleware
 {
     [TestFixture]
-    public class UserTests
+    public class ConfigurationTests
     {
         [SetUp]
         public void Init()
         {
             Log.Output = Log.Mode.Console;
+            Configuration.TestMAC = MAC;
+        }
+
+        private const string MAC = "1a:2b:3c:4d:5e:6f";
+
+        [Test]
+        public void IPAddress()
+        {
+            Assert.IsNotNullOrEmpty(Configuration.IPAddress());
         }
 
         [Test]
-        public void GetCurrentUser()
+        public void MacAddresses()
         {
-            Assert.AreEqual(Environment.UserName, UserHandler.GetCurrentUser());
-        }
-
-        [Test]
-        [Ignore("Ignore due to CI server configuration")]
-        public void GetInactivityTime()
-        {
-            if (FOG.Core.Settings.OS == FOG.Core.Settings.OSType.Windows)
-                Assert.IsTrue(UserHandler.GetInactivityTime() != -1);
-            else
-                Assert.IsTrue(UserHandler.GetInactivityTime() == -1);
-        }
-
-        [Test]
-        [Ignore("Ignore due to CI server configuration")]
-        public void GetUsersLoggedIn()
-        {
-            var users = UserHandler.GetUsersLoggedIn();
-            Assert.IsTrue(users.Count >= 1);
-            Assert.IsTrue(users.Contains(Environment.UserName));
-        }
-
-        [Test]
-        [Ignore("Ignore due to CI server configuration")]
-        public void IsUserLoggedIn()
-        {
-            Assert.IsTrue(UserHandler.IsUserLoggedIn());
+            Assert.AreEqual(MAC, Configuration.MACAddresses());
         }
     }
 }

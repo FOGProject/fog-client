@@ -17,34 +17,54 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Core;
-using FOG.Core.Middleware;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace FOGService.Tests.Handlers.Middleware
+namespace FOGService.Tests.Core.Bus
 {
     [TestFixture]
-    public class ConfigurationTests
+    public class BusTests
     {
         [SetUp]
         public void Init()
         {
-            Log.Output = Log.Mode.Console;
-            Configuration.TestMAC = MAC;
+			FOG.Core.Bus.Subscribe(FOG.Core.Bus.Channel.Debug, RecieveMessage);
         }
 
-        private const string MAC = "1a:2b:3c:4d:5e:6f";
+        private string message = "";
 
-        [Test]
-        public void IPAddress()
+        private void RecieveMessage(dynamic data)
         {
-            Assert.IsNotNullOrEmpty(Configuration.IPAddress());
+            message = data.message;
         }
 
         [Test]
-        public void MacAddresses()
+        public void LocalEmit()
         {
-            Assert.AreEqual(MAC, Configuration.MACAddresses());
+            var expected = "HelloWorld@123$";
+
+            var data = new JObject
+            {
+                {"message", expected}
+            };
+
+            FOG.Core.Bus.Emit(FOG.Core.Bus.Channel.Debug, data);
+			Assert.AreEqual(expected, message);
+        }
+
+        [Test]
+        public void Unsubscribe()
+        {
+            var expected = "HelloWorld@123555$";
+
+            var data = new JObject
+            {
+                {"message", expected}
+            };
+
+			FOG.Core.Bus.Unsubscribe(FOG.Core.Bus.Channel.Debug, RecieveMessage);
+            FOG.Core.Bus.Emit(FOG.Core.Bus.Channel.Debug, data);
+            Assert.AreNotEqual(expected, message);
         }
     }
 }
