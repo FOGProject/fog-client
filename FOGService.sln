@@ -234,7 +234,6 @@ Global
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Debug|x86.ActiveCfg = Debug|x86
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Development|Any CPU.ActiveCfg = Release|x86
-		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Development|Any CPU.Build.0 = Release|x86
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Development|Mixed Platforms.ActiveCfg = Debug|x86
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Development|Mixed Platforms.Build.0 = Debug|x86
 		{1E34AFEC-035C-45A1-BBE3-4D2D7C67F5C7}.Development|x86.ActiveCfg = Debug|x86
@@ -315,19 +314,15 @@ Global
 		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|x86.Build.0 = Release|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|x86.ActiveCfg = Debug|x86
-		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|x86.Build.0 = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|Any CPU.Build.0 = Debug|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|Mixed Platforms.ActiveCfg = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|Mixed Platforms.Build.0 = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|x86.ActiveCfg = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Development|x86.Build.0 = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{519FFE80-752A-49A7-A858-2E7551DC1722}.Release|Any CPU.Build.0 = Release|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Release|Mixed Platforms.Build.0 = Release|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Release|x86.ActiveCfg = Release|x86

@@ -84,9 +84,9 @@ namespace FOG
                 }
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                Log.Error(LogName, ex.Message);
                 return false;
             }
 

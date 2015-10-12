@@ -414,8 +414,8 @@ namespace FOG
             this.showLogButton.Size = new System.Drawing.Size(275, 23);
             this.showLogButton.TabIndex = 19;
             this.showLogButton.Text = "Show Log";
-            this.showLogButton.Click += new EventHandler(this.ToggleLogButtonClick);
             this.showLogButton.UseVisualStyleBackColor = true;
+            this.showLogButton.Click += new System.EventHandler(this.ToggleLogButtonClick);
             // 
             // encryptionSpinner
             // 
@@ -425,8 +425,6 @@ namespace FOG
             this.encryptionSpinner.Name = "encryptionSpinner";
             this.encryptionSpinner.Size = new System.Drawing.Size(25, 25);
             this.encryptionSpinner.TabIndex = 17;
-            this.configSpinner.Value = 0;
-
             // 
             // configSpinner
             // 
@@ -436,8 +434,6 @@ namespace FOG
             this.configSpinner.Name = "configSpinner";
             this.configSpinner.Size = new System.Drawing.Size(25, 25);
             this.configSpinner.TabIndex = 16;
-            this.configSpinner.Value = 0;
-
             // 
             // filesSpinner
             // 
@@ -447,8 +443,6 @@ namespace FOG
             this.filesSpinner.Name = "filesSpinner";
             this.filesSpinner.Size = new System.Drawing.Size(25, 25);
             this.filesSpinner.TabIndex = 15;
-            this.busyWorkSpinner.Value = 0;
-
             // 
             // busyWorkSpinner
             // 
@@ -458,7 +452,6 @@ namespace FOG
             this.busyWorkSpinner.Name = "busyWorkSpinner";
             this.busyWorkSpinner.Size = new System.Drawing.Size(25, 25);
             this.busyWorkSpinner.TabIndex = 14;
-            this.busyWorkSpinner.Value = 0;
             // 
             // encryptLabel
             // 
@@ -497,13 +490,12 @@ namespace FOG
             // 
             this.busyWorkLabel.AutoSize = true;
             this.busyWorkLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.busyWorkLabel.ForeColor = System.Drawing.Color.Silver;
             this.busyWorkLabel.Location = new System.Drawing.Point(6, 18);
             this.busyWorkLabel.Name = "busyWorkLabel";
             this.busyWorkLabel.Size = new System.Drawing.Size(170, 22);
             this.busyWorkLabel.TabIndex = 9;
             this.busyWorkLabel.Text = "Getting Things Ready";
-            this.busyWorkLabel.ForeColor = System.Drawing.Color.Silver;
-
             // 
             // title
             // 
@@ -522,13 +514,13 @@ namespace FOG
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(648, 468);
+            this.ClientSize = new System.Drawing.Size(650, 470);
             this.ControlBox = false;
             this.Controls.Add(this.title);
             this.Controls.Add(this.tabControl);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.panel1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximumSize = new System.Drawing.Size(650, 470);
             this.MinimizeBox = false;
