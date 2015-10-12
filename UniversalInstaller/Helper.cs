@@ -21,11 +21,7 @@ using System;
 using System.IO;
 using System.IO.Compression;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
 using FOG.Core;
-using FOG.Core.Data;
-using FOG.Core.Middleware;
-using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
