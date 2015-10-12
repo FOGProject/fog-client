@@ -28,6 +28,7 @@ using FOG.Commands.Core.Settings;
 using FOG.Commands.Core.User;
 using FOG.Commands.Modules;
 using FOG.Core;
+using FOG.Core.Data;
 
 namespace FOG
 {
@@ -53,6 +54,15 @@ namespace FOG
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type ? for a list of commands");
             Log.NewLine();
+
+            const string data = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
+            var bytes = Transform.HexStringToByteArray(data);
+            foreach (var byteData in bytes)
+            {
+                Console.WriteLine(byteData);
+
+            }
+
 
             try
             {

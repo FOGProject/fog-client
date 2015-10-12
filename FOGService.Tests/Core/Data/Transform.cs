@@ -62,29 +62,40 @@ namespace FOGService.Tests.Core.Data
         }
 
         [Test]
-        public void RoundTripBase64()
+        public void Base64Encode()
         {
-            // Roundtrip a message by base64 encoding it then decoding it
-            const string message = "The dog jumped over the fence #@//\\\\$";
-
+            const string message = "The dog jumped over the fence #@$";
+            const string expected = "VGhlIGRvZyBqdW1wZWQgb3ZlciB0aGUgZmVuY2UgI0Ak";
             var encoded = Transform.EncodeBase64(message);
-            Assert.IsNotEmpty(encoded);
-            var decoded = Transform.DecodeBase64(encoded);
-
-            Assert.AreEqual(message, decoded);
+            Assert.AreEqual(expected, encoded);
         }
 
         [Test]
-        public void RoundTripHexByteString()
+        public void Base64Decode()
         {
-            // Roundtrip a hex string by converting it to a byte array and then back to a hex string
-            const string message = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
+            const string encoded = "VGhlIGRvZyBqdW1wZWQgb3ZlciB0aGUgZmVuY2UgI0Ak";
+            const string expected = "The dog jumped over the fence #@$";
+            var decoded = Transform.DecodeBase64(encoded);
+            Assert.AreEqual(expected, decoded);
+        }
 
-            var encoded = Transform.HexStringToByteArray(message);
-            Assert.IsNotEmpty(encoded);
-            var decoded = Transform.ByteArrayToHexString(encoded);
+        [Test]
+        public void HexStringToByteArray()
+        {
+            const string data = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
+            var expected = new byte[] {189,178,171,60,64,30,242,54,2,120,110,156,174,178,130,102,193,140,191,6,222,76,99,66,145,235,74,13,81,229,183,187};
 
-            Assert.AreEqual(message, decoded);
+            var bytes = Transform.HexStringToByteArray(data);
+            Assert.AreEqual(expected, bytes);
+        }
+
+        [Test]
+        public void ByteArrayToHexString()
+        {
+            var data = new byte[] {189,178,171,60,64,30,242,54,2,120,110,156,174,178,130,102,193,140,191,6,222,76,99,66,145,235,74,13,81,229,183,187};
+            const string expected = "bdb2ab3c401ef23602786e9caeb28266c18cbf06de4c634291eb4a0d51e5b7bb";
+            var hexString = Transform.ByteArrayToHexString(data);
+            Assert.AreEqual(expected, hexString);
         }
     }
 }
