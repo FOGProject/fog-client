@@ -31,21 +31,5 @@ namespace FOGService.Tests.Core.Data
         {
             Log.Output = Log.Mode.Console;
         }
-
-        [Test]
-        public void GeneratePassword()
-        {
-            /**
-            * Generate 2 random passwords, ensure they are the correct length, and that they are not equal
-            */
-            const int length = 64;
-
-            var pw1 = Generate.Password(length);
-            var pw2 = Generate.Password(length);
-
-            Assert.AreEqual(length, pw1.Length);
-            Assert.AreEqual(length, pw2.Length);
-            Assert.AreNotEqual(pw1, pw2);
-        }
     }
 }
