@@ -38,13 +38,43 @@ namespace FOGService.Tests.Core.Data
         {
             // MD5 hash a known byte set
             var testBytes = Encoding.ASCII.GetBytes("TestString");
-            const string md5 = "5B56F40F8828701F97FA4511DDCD25FB";
+            const string expected = "5b56f40f8828701f97fa4511ddcd25fb";
 
-            var calculatedMD5 = Hash.MD5(testBytes);
-            StringAssert.AreEqualIgnoringCase(md5, calculatedMD5);
+            var calculatedHash = Hash.MD5(testBytes);
+            StringAssert.AreEqualIgnoringCase(expected, calculatedHash);
+        }
 
-            // Test invalid data
-            Assert.IsNull(Hash.MD5((byte[]) null));
+        [Test]
+        public void SHA1()
+        {
+            // MD5 hash a known byte set
+            var testBytes = Encoding.ASCII.GetBytes("TestString");
+            const string expected = "d598b03bee8866ae03b54cb6912efdfef107fd6d";
+
+            var calculatedHash = Hash.SHA1(testBytes);
+            StringAssert.AreEqualIgnoringCase(expected, calculatedHash);
+        }
+
+        [Test]
+        public void SHA256()
+        {
+            // MD5 hash a known byte set
+            var testBytes = Encoding.ASCII.GetBytes("TestString");
+            const string expected = "6dd79f2770a0bb38073b814a5ff000647b37be5abbde71ec9176c6ce0cb32a27";
+
+            var calculatedHash = Hash.SHA256(testBytes);
+            StringAssert.AreEqualIgnoringCase(expected, calculatedHash);
+        }
+
+        [Test]
+        public void SHA384()
+        {
+            // MD5 hash a known byte set
+            var testBytes = Encoding.ASCII.GetBytes("TestString");
+            const string expected = "c0a59eced4822f065701ec5abc51531c948864ae84391ec68e80c135d2f3fe50923445e9b436dfa2afdaa7cefa8367bb";
+
+            var calculatedHash = Hash.SHA384(testBytes);
+            StringAssert.AreEqualIgnoringCase(expected, calculatedHash);
         }
 
         [Test]
@@ -52,13 +82,10 @@ namespace FOGService.Tests.Core.Data
         {
             // MD5 hash a known byte set
             var testBytes = Encoding.ASCII.GetBytes("TestString");
-            const string sha512 = "69DFD91314578F7F329939A7EA6BE4497E6FE3909B9C8F308FE711D29D4340D90D77B7FDF359B7D0DBEED940665274F7CA514CD067895FDF59DE0CF142B62336";
+            const string expected = "69dfd91314578f7f329939a7ea6be4497e6fe3909b9c8f308fe711d29d4340d90d77b7fdf359b7d0dbeed940665274f7ca514cd067895fdf59de0cf142b62336";
 
-            var calculatedSHA512 = Hash.SHA512(testBytes);
-            StringAssert.AreEqualIgnoringCase(sha512, calculatedSHA512);
-
-            // Test invalid data
-            Assert.IsNull(Hash.MD5((byte[])null));
+            var calculatedHash = Hash.SHA512(testBytes);
+            StringAssert.AreEqualIgnoringCase(expected, calculatedHash);
         }
     }
 }
