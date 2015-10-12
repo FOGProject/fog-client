@@ -42,8 +42,11 @@ namespace FOGService.Tests.Core.Data
 
             var pw = Generate.Password(length);
             Assert.AreEqual(length, pw.Length);
+        }
 
-            // Test invalid arguments
+        [Test]
+        public void PasswordInvalidUsage()
+        {
             var nullPW = Generate.Password(-1);
             Assert.IsNull(nullPW);
         }
@@ -51,18 +54,30 @@ namespace FOGService.Tests.Core.Data
         [Test]
         public void Random()
         {
-            // Generatea2 random number, ensure they are in the correct bounds
-            var rng = new RNGCryptoServiceProvider();
-            const int min = -10;
-            const int max = 100;
+            // Generate 2 random numbers, ensure they are in the correct bounds
+            RNGCryptoServiceProvider rng;
+            using (rng = new RNGCryptoServiceProvider())
+            {
+                const int min = -10;
+                const int max = 100;
 
-            var num1 = Generate.Random(rng, min, max);
-            Assert.IsNotNull(num1);
-            Assert.IsTrue(num1 >= min && num1 <= max);
+                var num1 = Generate.Random(rng, min, max);
+                Assert.IsNotNull(num1);
+                Assert.IsTrue(num1 >= min && num1 <= max);
+            }
+        }
 
-            // Test invalid arguments
-            Assert.Throws<ArgumentNullException>(() => Generate.Random(null, min, max));
-            Assert.Throws<ArgumentException>(() => Generate.Random(rng, max, min));
+        [Test]
+        public void RandomInvalidUsage()
+        {
+            RNGCryptoServiceProvider rng;
+            using (rng = new RNGCryptoServiceProvider())
+            {
+                const int min = -10;
+                const int max = 100;
+                Assert.Throws<ArgumentNullException>(() => Generate.Random(null, min, max));
+                Assert.Throws<ArgumentException>(() => Generate.Random(rng, max, min));
+            }
         }
     }
 }
