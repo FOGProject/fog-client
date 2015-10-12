@@ -12,7 +12,7 @@ Progress
 | Feature | Windows | Linux | OSX |
 |:----------------:|:-------:|:-----:|:---:|
 | Auto Logout | ✓ | ✓ | ✓ |
-| Auto Updating | ✓ | ✓ |  |
+| Auto Updating | ✓ | ✓ | ✓ |
 | GreenFOG | ✓ | ✓ | ✓ |
 | Rename | ✓ | ✓ | ✓ |
 | Join Active Directory | ✓ |  | ✓ |
