@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using FOG.Core;
 using Newtonsoft.Json.Linq;
 
 namespace FOG
@@ -74,7 +75,9 @@ namespace FOG
 
         public bool Uninstall()
         {
-            throw new System.NotImplementedException();
+            // TODO: Obtain product codes of installed version(s)
+            //return ProcessHandler.Run("msiexec.exe", "/x " + ProductCode) == 0;
+            throw new NotImplementedException();
         }
 
         private static JObject GetSettings()
