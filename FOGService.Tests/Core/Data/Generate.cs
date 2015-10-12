@@ -55,8 +55,7 @@ namespace FOGService.Tests.Core.Data
         public void Random()
         {
             // Generate 2 random numbers, ensure they are in the correct bounds
-            RNGCryptoServiceProvider rng;
-            using (rng = new RNGCryptoServiceProvider())
+            using (var rng = new RNGCryptoServiceProvider())
             {
                 const int min = -10;
                 const int max = 100;
@@ -70,8 +69,7 @@ namespace FOGService.Tests.Core.Data
         [Test]
         public void RandomInvalidUsage()
         {
-            RNGCryptoServiceProvider rng;
-            using (rng = new RNGCryptoServiceProvider())
+            using (var rng = new RNGCryptoServiceProvider())
             {
                 const int min = -10;
                 const int max = 100;

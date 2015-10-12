@@ -56,11 +56,11 @@ namespace FOG.Core.Data
 
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             var stringChars = new char[length];
-            var random = new RNGCryptoServiceProvider();
-
-            for (var i = 0; i < stringChars.Length; i++)
-                stringChars[i] = chars[Random(random, 1, chars.Length)];
-
+            using (var random = new RNGCryptoServiceProvider())
+            {
+                for (var i = 0; i < stringChars.Length; i++)
+                    stringChars[i] = chars[Random(random, 1, chars.Length)];
+            }
             return new string(stringChars);
         }
     }
