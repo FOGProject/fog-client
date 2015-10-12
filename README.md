@@ -13,7 +13,6 @@ Progress
 |:----------------:|:-------:|:-----:|:---:|
 | Auto Logout | ✓ | ✓ | ✓ |
 | Auto Updating | ✓ | ✓ |  |
-| Display Manager | ✓ |  |  |
 | GreenFOG | ✓ | ✓ | ✓ |
 | Rename | ✓ | ✓ | ✓ |
 | Join Active Directory | ✓ |  | ✓ |
