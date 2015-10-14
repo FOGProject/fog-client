@@ -30,9 +30,8 @@
               <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any" />
             </File>
 
-            <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
+            <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
-            <File Id="Core" Name="Core.dll" Source="..\bin\Core.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
 
@@ -52,15 +51,6 @@
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
                   Source="..\bin\Newtonsoft.Json.dll" />
-            <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
-            <File Id="SuperSocket.Common" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
-            <File Id="SuperSocket.SocketBase" Name="SuperSocket.SocketBase.dll"
-                  Source="..\bin\SuperSocket.SocketBase.dll" />
-            <File Id="SuperSocket.SocketEngine" Name="SuperSocket.SocketEngine.dll"
-                  Source="..\bin\SuperSocket.SocketEngine.dll" />
-            <File Id="SuperWebSocket" Name="SuperWebSocket.dll" Source="..\bin\SuperWebSocket.dll" />
-            <File Id="WebSocket4Net" Name="WebSocket4Net.dll" Source="..\bin\WebSocket4Net.dll" />
-
 
             <ServiceInstall
               Id="ServiceInstaller"
