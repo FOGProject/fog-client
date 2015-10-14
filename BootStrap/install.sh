@@ -149,6 +149,7 @@ installMacDeps(){
     echo "When you are Finished please conitnue"
     echo ""
     echo ""
+		open http://www.mono-project.com/download/
     read -n1 -r -p "Press space to continue..." key
     if [ "$key" = ' ' ]; then
         keyPress=""
