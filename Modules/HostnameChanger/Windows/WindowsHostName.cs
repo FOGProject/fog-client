@@ -24,9 +24,8 @@ using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
-using FOG.Core;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
+using Zazzles;
+using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Windows
 {
@@ -117,7 +116,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
                 if (returnCode.Equals(0))
-                    Power.Restart("Host left active directory, restart needed", Power.FormOption.Delay);
+                    Power.Restart("Host left active directory, restart needed", Power.ShutdownOptions.Delay);
             }
             catch (Exception ex)
             {

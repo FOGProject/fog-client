@@ -20,9 +20,8 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using FOG.Core;
-using FOG.Core.Data;
 using Newtonsoft.Json.Linq;
+using Zazzles;
 
 namespace FOG
 {

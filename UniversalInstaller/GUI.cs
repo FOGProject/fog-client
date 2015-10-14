@@ -22,8 +22,8 @@ using System.Drawing;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Core;
 using MetroFramework.Controls;
+using Zazzles;
 
 namespace FOG
 {

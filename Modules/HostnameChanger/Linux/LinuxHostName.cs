@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Core;
-using FOG.Core.Middleware;
+using Zazzles;
+using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Linux
 {

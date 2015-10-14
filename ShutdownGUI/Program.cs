@@ -19,7 +19,7 @@
 
 using System;
 using System.Windows.Forms;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG
 {

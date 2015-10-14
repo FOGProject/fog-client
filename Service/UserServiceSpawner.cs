@@ -21,7 +21,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG
 {
@@ -44,7 +44,7 @@ namespace FOG
         {
             while (true)
             {
-                var users = UserHandler.GetUsersLoggedIn();
+                var users = User.AllLoggedIn();
 
                 foreach (var user in users)
                 {

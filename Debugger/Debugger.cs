@@ -21,34 +21,22 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FOG.Commands;
-using FOG.Commands.Core.CBus;
-using FOG.Commands.Core.Middleware;
-using FOG.Commands.Core.Process;
-using FOG.Commands.Core.Settings;
-using FOG.Commands.Core.User;
-using FOG.Commands.Modules;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG
 {
     internal class Debugger
     {
         private const string Name = "Console";
-
-        private static readonly Dictionary<string, ICommand> Commands = new Dictionary<string, ICommand>
-        {
-            {"modules", new ModuleCommand()},
-            {"bus", new BusCommand()},
-            {"middleware", new MiddlewareCommand()},
-            {"process", new ProcessCommand()},
-            {"settings", new SettingsCommand()},
-            {"user", new UserCommand()}
-        };
+        private static Zazzles.Debugger _instance;
 
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
             Eager.Initalize();
+
+            _instance = new Zazzles.Debugger();
+            _instance.AddCommand("module", new ModuleCommand());
 
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type ? for a list of commands");
@@ -74,39 +62,10 @@ namespace FOG
                 var input = Console.ReadLine();
 
                 if (string.IsNullOrEmpty(input)) continue;
-                if (ProcessCommand(input.Split(' '))) break;
+                if (_instance.ProcessCommand(input.Split(' '))) break;
                 Log.Divider();
             }
             Bus.Dispose();
-        }
-
-        private static bool ProcessCommand(string[] command)
-        {
-            if (command.Length == 0) return false;
-            if (command.Length == 1 && command[0].Equals("exit")) return true;
-
-            if (command[0].Equals("?") || command[0].Equals("help"))
-            {
-                Help();
-                return false;
-            }
-
-            if (command.Length > 1 && Commands.ContainsKey(command[0]))
-                if (Commands[command[0]].Process(command.Skip(1).ToArray()))
-                    return false;
-
-            Log.Error(Name, "Unknown command");
-
-            return false;
-        }
-
-        private static void Help()
-        {
-            Log.WriteLine("Available commands (append ? to any command for more information)");
-            foreach (var keyword in Commands.Keys)
-            {
-                Log.WriteLine("--> " + keyword);
-            }
         }
 
         private static void OnMessage(dynamic data)

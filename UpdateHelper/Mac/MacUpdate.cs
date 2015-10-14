@@ -18,7 +18,8 @@
  */
 
 using System;
-using FOG.Core;
+using Zazzles;
+using Zazzles.Modules.Updater;
 
 namespace FOG
 {

@@ -17,17 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.IO;
-using FOG.Core;
+using Zazzles;
+using Zazzles.Modules.Updater;
 
 namespace FOG
 {
     internal class Program
     {
-        private const string LogName = "UpdateHelper";
-        private static IUpdate _instance;
-
         public static void Main(string[] args)
         {
             Eager.Initalize();
@@ -37,47 +33,8 @@ namespace FOG
                 Log.FilePath = args[0];
                 Log.Output = Log.Mode.File;
             }
-            switch (Settings.OS)
-            {
-                case Settings.OSType.Mac:
-                    _instance = new MacUpdate();
-                    break;
-                case Settings.OSType.Linux:
-                    _instance = new LinuxUpdate();
-                    break;
-                default:
-                    _instance = new WindowsUpdate();
-                    break;
-            }
 
-            try
-            {
-                Log.Entry(LogName, "Shutting down service...");
-                _instance.StopService();
-
-                Log.Entry(LogName, "Killing remaining FOG processes...");
-                ProcessHandler.KillAllEXE("FOGService");
-                Log.Entry(LogName, "Applying installer...");
-                _instance.ApplyUpdate();
-
-                var parentDir = Directory.GetParent(Settings.Location).ToString();
-
-                if (File.Exists(Path.Combine(Settings.Location, "token.dat")))
-                    File.Copy(Path.Combine(Settings.Location, "token.dat"), Path.Combine(parentDir, "token.dat"), true);
-
-                //Start the service
-
-                Log.Entry(LogName, "Starting service...");
-                _instance.StartService();
-
-                if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info")))
-                    File.Delete(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "updating.info"));
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Could not perform update!");
-                Log.Error(LogName, ex);
-            }
+            UpdaterHelper.ApplyUpdate<WindowsUpdate, MacUpdate, LinuxUpdate>("FOGService");
         }
     }
 }

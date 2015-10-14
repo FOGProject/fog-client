@@ -20,11 +20,6 @@
 
 using System;
 using System.Diagnostics;
-using FOG.Core;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
-using FOG.Modules;
-using FOG.Modules.ClientUpdater;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -32,6 +27,10 @@ using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
 using Newtonsoft.Json.Linq;
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
+using Zazzles.Modules.Updater;
 
 namespace FOG
 {
@@ -82,7 +81,7 @@ namespace FOG
         {
             return new AbstractModule[]
             {
-                new ClientUpdater(),
+                new ClientUpdater(), 
                 new TaskReboot(),
                 new HostnameChanger(),
                 new SnapinClient(),

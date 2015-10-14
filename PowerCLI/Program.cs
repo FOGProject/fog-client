@@ -19,8 +19,8 @@
 
 using System;
 using System.Threading;
-using FOG.Core;
 using Newtonsoft.Json.Linq;
+using Zazzles;
 
 namespace FOG
 {

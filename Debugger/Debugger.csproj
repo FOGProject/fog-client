@@ -120,18 +120,17 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="Zazzles, Version=1.0.5764.34033, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Zazzles.dll</HintPath>
+    </Reference>
+    <Reference Include="ZazzlesDebugger, Version=1.0.5764.34034, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\ZazzlesDebugger.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Core\CBus\BusCommand.cs" />
-    <Compile Include="Commands\Core\Middleware\MiddlewareCommand.cs" />
-    <Compile Include="Commands\Core\Middleware\AuthenticationCommand.cs" />
-    <Compile Include="Commands\Core\Middleware\CommunicationCommand.cs" />
-    <Compile Include="Commands\Core\Middleware\ConfigurationCommand.cs" />
-    <Compile Include="Commands\Core\Process\ProcessCommand.cs" />
-    <Compile Include="Commands\Core\Settings\SettingsCommand.cs" />
-    <Compile Include="Commands\Core\User\UserCommand.cs" />
-    <Compile Include="Commands\ICommand.cs" />
-    <Compile Include="Commands\Modules\ModuleCommand.cs" />
+    <Compile Include="Commands\ModuleCommand.cs" />
     <Compile Include="Debugger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -140,10 +139,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\Core.csproj">
-      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
       <Name>Modules</Name>

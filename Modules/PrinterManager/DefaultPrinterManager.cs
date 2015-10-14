@@ -18,8 +18,9 @@
  */
 
 using System.Linq;
-using FOG.Core;
-using FOG.Core.Middleware;
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
 

@@ -21,8 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using FOG.Core;
-using FOG.Core.Power;
+using Zazzles;
 
 namespace FOG
 {
@@ -54,7 +53,7 @@ namespace FOG
             if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "updating.info")))
             {
                 Log.Entry(LogName, "Update.info found, exiting program");
-                Power.SpawnUpdateWaiter(Settings.Location);
+                UpdateWaiterHelper.SpawnUpdateWaiter(Settings.Location);
                 Environment.Exit(0);
             }
 

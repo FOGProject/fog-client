@@ -19,8 +19,9 @@
 
 using System;
 using System.Collections.Generic;
-using FOG.Core;
-using FOG.Core.Middleware;
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 namespace FOG.Modules.UserTracker
 {
@@ -39,7 +40,7 @@ namespace FOG.Modules.UserTracker
 
         protected override void DoWork()
         {
-            var newUsernames = UserHandler.GetUsersLoggedIn();
+            var newUsernames = User.AllLoggedIn();
 
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in

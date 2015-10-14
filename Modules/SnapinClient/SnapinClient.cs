@@ -20,10 +20,10 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using FOG.Core;
-using FOG.Core.Data;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
+using Zazzles;
+using Zazzles.Data;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 namespace FOG.Modules.SnapinClient
 {
@@ -107,7 +107,7 @@ namespace FOG.Modules.SnapinClient
                     }
                     else
                     {
-                        Power.Restart("Snapin requested shutdown", Power.FormOption.Delay,
+                        Power.Restart("Snapin requested shutdown", Power.ShutdownOptions.Delay,
                             "This computer needs to reboot to apply new software.");
                     }
                 }

@@ -22,7 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG.Modules.PrinterManager
 {

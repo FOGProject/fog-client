@@ -18,7 +18,7 @@
  */
 
 using System;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG.Modules.PrinterManager
 {

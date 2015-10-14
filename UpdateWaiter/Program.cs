@@ -17,11 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.IO;
-using System.Linq;
-using System.Threading;
-using FOG.Core;
+using Zazzles;
+using Zazzles.Modules.Updater;
 
 namespace FOG
 {
@@ -36,24 +34,10 @@ namespace FOG
             if (args.Length <= 0) return;
 
             //Wait for all update files to be applied
-            while (UpdateFilePresent())
-            {
-            }
+            while (UpdaterHelper.Updating()) { }
             //Spawn the process that originally called this program
             if (File.Exists(args[0]))
                 SpawnParentProgram(args[0]);
-        }
-
-        private static bool UpdateFilePresent()
-        {
-            var fileFound = false;
-            foreach (var fileName in Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory)
-                .Where(fileName => fileName.EndsWith("updating.info")))
-                fileFound = true;
-
-            Thread.Sleep(10*1000);
-
-            return fileFound;
         }
 
         private static void SpawnParentProgram(string fileName)

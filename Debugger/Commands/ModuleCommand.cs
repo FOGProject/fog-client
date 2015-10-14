@@ -18,18 +18,18 @@
  */
 
 using System.Collections.Generic;
-using FOG.Core;
-using FOG.Modules;
 using FOG.Modules.AutoLogOut;
-using FOG.Modules.ClientUpdater;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
+using Zazzles;
+using Zazzles.Commands;
+using Zazzles.Modules;
 
-namespace FOG.Commands.Modules
+namespace FOG.Commands
 {
     internal class ModuleCommand : ICommand
     {
@@ -38,7 +38,6 @@ namespace FOG.Commands.Modules
         private readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
         {
             {"autologout", new AutoLogOut()},
-            {"clientupdater", new ClientUpdater()},
             {"greenfog", new GreenFOG()},
             {"hostnamechanger", new HostnameChanger()},
             {"printermanager", new PrinterManager()},

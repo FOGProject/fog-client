@@ -19,9 +19,9 @@
 
 using System;
 using System.Threading;
-using FOG.Core;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 namespace FOG.Modules.AutoLogOut
 {
@@ -40,7 +40,7 @@ namespace FOG.Modules.AutoLogOut
 
         protected override void DoWork()
         {
-			if (!UserHandler.IsUserLoggedIn())
+			if (!User.AnyLoggedIn())
 			{
 				Log.Entry(Name, "No user logged in");
 				return;
@@ -52,7 +52,7 @@ namespace FOG.Modules.AutoLogOut
             var timeOut = GetTimeOut(taskResponse);
             if (timeOut <= 0) return;
 
-			var inactiveTime = UserHandler.GetInactivityTime();
+			var inactiveTime = User.InactivityTime();
 
             Log.Entry(Name, $"Time set to {timeOut} seconds");
 			Log.Entry(Name, $"Inactive for {inactiveTime} seconds");
@@ -66,7 +66,7 @@ namespace FOG.Modules.AutoLogOut
 
             //Wait 20 seconds and check if the user is no longer inactive
             Thread.Sleep(20000);
-            if (UserHandler.GetInactivityTime() >= timeOut)
+            if (User.InactivityTime() >= timeOut)
                 Power.LogOffUser();
         }
 

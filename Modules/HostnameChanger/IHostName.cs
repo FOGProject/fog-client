@@ -18,7 +18,7 @@
  */
 
 
-using FOG.Core.Middleware;
+using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger
 {

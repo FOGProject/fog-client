@@ -18,6 +18,7 @@
  */
 
 using System.ServiceProcess;
+using Zazzles;
 
 namespace FOG
 {

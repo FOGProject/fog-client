@@ -20,10 +20,10 @@
 using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
-using FOG.Core;
-using FOG.Core.Data;
-using FOG.Core.Middleware;
 using Newtonsoft.Json.Linq;
+using Zazzles;
+using Zazzles.Data;
+using Zazzles.Middleware;
 
 namespace FOG
 {

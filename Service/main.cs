@@ -19,7 +19,7 @@
 
 using System;
 using System.ServiceProcess;
-using FOG.Core;
+using Zazzles;
 
 namespace FOG
 {

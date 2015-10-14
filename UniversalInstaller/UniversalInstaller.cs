@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using FOG.Core;
 using System.Windows.Forms;
+using Zazzles;
 
 namespace FOG
 {

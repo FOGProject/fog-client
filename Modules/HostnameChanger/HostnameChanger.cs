@@ -18,12 +18,12 @@
  */
 
 using System;
-using FOG.Core;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
 using FOG.Modules.HostnameChanger.Linux;
 using FOG.Modules.HostnameChanger.Mac;
 using FOG.Modules.HostnameChanger.Windows;
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 namespace FOG.Modules.HostnameChanger
 {
@@ -112,7 +112,7 @@ namespace FOG.Modules.HostnameChanger
                 Log.Error(Name, ex);
             }
 
-            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.FormOption.Delay);
+            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
         }
 
         //Add a host to active directory
@@ -131,7 +131,7 @@ namespace FOG.Modules.HostnameChanger
             try
             {
                 if (_instance.RegisterComputer(response))
-                    Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);
+                    Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
             }
             catch (Exception ex)
             {

@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using FOG.Core;
 using Newtonsoft.Json.Linq;
 
 namespace FOG

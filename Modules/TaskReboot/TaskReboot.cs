@@ -17,9 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using FOG.Core;
-using FOG.Core.Middleware;
-using FOG.Core.Power;
+
+using Zazzles;
+using Zazzles.Middleware;
+using Zazzles.Modules;
 
 namespace FOG.Modules.TaskReboot
 {
@@ -42,7 +43,7 @@ namespace FOG.Modules.TaskReboot
             if (response.Error) return;
 
             Log.Entry(Name, "Restarting computer for task");
-            Power.Restart(Name, ShouldAbort, Power.FormOption.Delay);
+            Power.Restart(Name, ShouldAbort, Power.ShutdownOptions.Delay);
         }
 
         public bool ShouldAbort()

@@ -23,10 +23,10 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Core;
 using FOG.Tray.Unix;
 using FOG.Tray.Windows;
 using UserNotification;
+using Zazzles;
 
 namespace FOG.Tray
 {
