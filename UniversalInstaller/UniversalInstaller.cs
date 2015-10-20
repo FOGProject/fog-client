@@ -48,19 +48,22 @@ namespace FOG
             var rootLog = args[3];
             var https = args[4];
 
-            var baseURL = url;
+            var server = url;
             var webRoot = "";
             try
             {
                 if (!url.Contains("/"))
                     return;
-                baseURL = url.Substring(0, url.IndexOf("/"));
+                server = url.Substring(0, url.IndexOf("/"));
                 webRoot = url.Substring(url.IndexOf("/"));
             }
             catch (Exception)
             {
                 // ignored
             }
+
+            Install(https, tray, server, webRoot, company, rootLog);
+
         }
 
         private static void PrintBanner()
@@ -141,6 +144,11 @@ namespace FOG
             Console.Write("Enter the FOG webroot used [example: /fog]:");
             var webRoot = Console.ReadLine();
 
+            Install(https, tray, server, webRoot, company, rootLog);     
+        }
+
+        private static void Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        {
             Console.WriteLine("Getting things ready...");
             Helper.Instance.PrepareFiles();
 
