@@ -44,7 +44,6 @@ namespace FOG
 
             try
             {
-                Bus.Subscribe(Bus.Channel.Debug, OnMessage);
                 InteractiveShell();
             }
             catch (Exception ex)
@@ -66,15 +65,6 @@ namespace FOG
                 Log.Divider();
             }
             Bus.Dispose();
-        }
-
-        private static void OnMessage(dynamic data)
-        {
-            if (data.content == null) return;
-
-            Log.NewLine();
-            Log.WriteLine("Message recieved: " + data.content.ToString());
-            Log.Write("fog: ");
         }
     }
 }
