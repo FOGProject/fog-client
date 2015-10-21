@@ -17,8 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Zazzles;
 
 namespace FOG.Tray.Windows
 {
@@ -36,6 +38,7 @@ namespace FOG.Tray.Windows
             _notifyIcon.Icon = icon;
             _notifyIcon.ContextMenu = notificationMenu;
             _notifyIcon.Visible = true;
+            _notifyIcon.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
         }
 
         private static MenuItem[] InitializeMenu()
@@ -47,6 +50,11 @@ namespace FOG.Tray.Windows
         public void SetHover(string text)
         {
             _notifyIcon.Text = text;
+        }
+
+        private void notifyIcon1_DoubleClick(object Sender, EventArgs e)
+        {
+            Notification.Emit(Notification.ToJSON("Test", "You double clicked", "55"), false, false);
         }
 
         public void Dispose()

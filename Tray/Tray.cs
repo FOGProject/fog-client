@@ -41,7 +41,7 @@ namespace FOG.Tray
         [STAThread]
         public static void Main(string[] args)
         {
-            Log.Output = Log.Mode.Quiet;
+            Log.FilePath = Path.Combine(Settings.Location, "tray.log");
 
             bool isFirstInstance;
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
