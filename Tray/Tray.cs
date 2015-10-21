@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Tray.Unix;
@@ -40,35 +41,35 @@ namespace FOG.Tray
         [STAThread]
         public static void Main(string[] args)
         {
+            Log.Output = Log.Mode.Quiet;
+
             bool isFirstInstance;
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
                 if (!isFirstInstance) return;
             }
 
-            var resources = new ComponentResourceManager(typeof(Tray));
-            var icon = (Icon)resources.GetObject("logo");
+            Eager.Initalize();
+            Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Notification, OnNotification);
+            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
+
+
             var hoverText = "FOG Client v" + Settings.Get("Version");
 
             switch (Settings.OS)
             {
                 case Settings.OSType.Windows:
+                    var resources = new ComponentResourceManager(typeof(Tray));
+                    var icon = (Icon)resources.GetObject("logo");
                     _instance = new WindowsTray(icon);
                     break;
                 default:
-                    _instance = new UnixTray("logo.ico");
+                    _instance = new UnixTray(Path.Combine(Settings.Location,"logo.ico"));
                     break;
             }
             _instance.SetHover(hoverText);
             Application.Run();
-        }
-
-        public Tray()
-        {
-            Eager.Initalize();
-            Bus.SetMode(Bus.Mode.Client);
-            Bus.Subscribe(Bus.Channel.Notification, OnNotification);
-            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
         }
 
         private static void UpdateFormLocation(int index)
@@ -137,7 +138,7 @@ namespace FOG.Tray
         }
 
         //Called when a message is recieved from the bus
-        private void OnNotification(dynamic data)
+        private static void OnNotification(dynamic data)
         {
             if (data.title == null || data.message == null) return;
             SpawnGUIThread(data.title.ToString(), data.message.ToString());
