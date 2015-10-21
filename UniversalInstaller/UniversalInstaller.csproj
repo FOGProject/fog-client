@@ -80,18 +80,25 @@
     <Reference Include="MetroFramework, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\MetroFramework.dll</HintPath>
+      <EmbedAssembly>true</EmbedAssembly>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MetroFramework.Design, Version=1.3.5.0, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\MetroFramework.Design.dll</HintPath>
+      <EmbedAssembly>true</EmbedAssembly>
+      <Private>False</Private>
     </Reference>
     <Reference Include="MetroFramework.Fonts, Version=1.2.0.3, Culture=neutral, PublicKeyToken=5f91a84759bf584a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\MetroFramework.Fonts.dll</HintPath>
+      <EmbedAssembly>true</EmbedAssembly>
+      <Private>False</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <Private>False</Private>
+      <EmbedAssembly>true</EmbedAssembly>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -107,6 +114,8 @@
     <Reference Include="Zazzles, Version=1.0.5764.34033, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\libs\Zazzles.dll</HintPath>
+      <EmbedAssembly>true</EmbedAssembly>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +142,8 @@
     <EmbeddedResource Include="Scripts\fog.daemon" />
     <EmbeddedResource Include="Scripts\org.freeghost.daemon.plist" />
     <EmbeddedResource Include="Scripts\org.freeghost.useragent.plist" />
+    <EmbeddedResource Include="Scripts\FOGService.msi" />
+    <EmbeddedResource Include="Scripts\FOGService.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
@@ -154,6 +165,8 @@
       <Project>{1e34afec-035c-45a1-bbe3-4d2d7c67f5c7}</Project>
       <Name>SetupHelper</Name>
       <EmbedInteropTypes>False</EmbedInteropTypes>
+      <EmbedAssembly>true</EmbedAssembly>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

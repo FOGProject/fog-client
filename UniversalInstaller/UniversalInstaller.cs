@@ -35,6 +35,8 @@ namespace FOG
 
             if (args.Length == 5)
                 ProcessArgs(args);
+            else if(args.Length == 1 && args[0].Equals("nogui"))
+                PerformCLIInstall();
             else
                 InteractiveMode();
             Helper.PinServerCert();
