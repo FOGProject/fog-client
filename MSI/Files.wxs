@@ -34,6 +34,20 @@
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
+            
+            <File Id="atksharp" Name="atk-sharp.dll" Source="..\bin\atk-sharp.dll" />
+            <File Id="gdksharp" Name="gdk-sharp.dll" Source="..\bin\gdk-sharp.dll" />
+            <File Id="gtksharp" Name="gtk-sharp.dll" Source="..\bin\gtk-sharp.dll" />
+            <File Id="glibsharp" Name="glib-sharp.dll" Source="..\bin\glib-sharp.dll" />
+            <File Id="gtkdotnet" Name="gtk-dotnet.dll" Source="..\bin\gtk-dotnet.dll" />
+            <File Id="pangosharp" Name="pango-sharp.dll" Source="..\bin\pango-sharp.dll" />
+            
+            <File Id="logo" Name="logo.ico" Source="..\bin\logo.ico" />
+            <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
+            <File Id="MetroFramework.Fonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
+            <File Id="NotificationCenter" Name="NotificationCenter.exe" Source="..\bin\NotificationCenter.exe" />
+            <File Id="themes" Name="themes.xml" Source="..\themes.xml" />
+
 
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe">
               <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any" />
@@ -47,10 +61,8 @@
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">
               <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Protocol="udp" Scope="any" />
             </File>
-            <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
-                  Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
-            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
-                  Source="..\bin\Newtonsoft.Json.dll" />
+            <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
+            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\bin\Newtonsoft.Json.dll" />
 
             <ServiceInstall
               Id="ServiceInstaller"
