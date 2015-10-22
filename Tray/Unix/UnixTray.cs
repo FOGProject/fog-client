@@ -18,25 +18,59 @@
  */
 
 using System;
+using System.Windows.Forms;
+using Gdk;
 using Gtk;
+using Zazzles;
+using Application = Gtk.Application;
+using Menu = Gtk.Menu;
 
 namespace FOG.Tray.Unix
 {
-    public sealed class UnixTray: Gtk.Window , ITray
+    public sealed class UnixTray : ITray
     {
-        private readonly StatusIcon _notifyIcon;
+        private StatusIcon _notifyIcon;
 
-        public UnixTray(string icon) : base(Gtk.WindowType.Toplevel)
+        public UnixTray(string icon)
         {
-            _notifyIcon = new StatusIcon(new Gdk.Pixbuf(icon))
+            Application.Init();
+            _notifyIcon = new StatusIcon(new Pixbuf(icon))
             {
                 Visible = true
             };
+            _notifyIcon.Activate += NotifyIconOnActivate;
+            _notifyIcon.PopupMenu += OnTrayIconPopup;
+            Application.Run();
+
+        }
+
+        private void NotifyIconOnActivate(object sender, EventArgs eventArgs)
+        {
+            
+            Notification.Emit(Notification.ToJSON("Test", "You clicked", "55"), false, false);
         }
 
         public void SetHover(string text)
         {
             _notifyIcon.Tooltip = text;
+        }
+
+        public void Dispose()
+        {
+            _notifyIcon.Dispose();
+        }
+
+        static void OnTrayIconPopup(object o, EventArgs args)
+        {
+            Menu popupMenu = new Menu();
+            ImageMenuItem menuItemQuit = new ImageMenuItem("Quit");
+            Gtk.Image appimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
+            menuItemQuit.Image = appimg;
+            popupMenu.Add(menuItemQuit);
+            // Quit the application when quit has been clicked.
+            menuItemQuit.Activated += delegate { Application.Quit(); };
+            popupMenu.ShowAll();
+            popupMenu.Popup();
         }
     }
 }

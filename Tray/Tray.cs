@@ -59,17 +59,16 @@ namespace FOG.Tray
 
             switch (Settings.OS)
             {
-                case Settings.OSType.Windows:
-                    var resources = new ComponentResourceManager(typeof(Tray));
-                    var icon = (Icon)resources.GetObject("logo");
-                    _instance = new WindowsTray(icon);
-                    break;
+                //case Settings.OSType.Windows:
+                //    var resources = new ComponentResourceManager(typeof(Tray));
+                //    var icon = (Icon)resources.GetObject("logo");
+                //    _instance = new WindowsTray(icon);
+                //    break;
                 default:
                     _instance = new UnixTray(Path.Combine(Settings.Location,"logo.ico"));
                     break;
             }
             _instance.SetHover(hoverText);
-            Application.Run();
         }
 
         private static void UpdateFormLocation(int index)
