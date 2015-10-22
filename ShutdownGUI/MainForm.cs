@@ -22,6 +22,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Zazzles;
+using Zazzles.Data;
 
 namespace FOG
 {
@@ -39,39 +40,39 @@ namespace FOG
         {
             try
             {
-                Log.Output = Log.Mode.Console;
+                Log.Output = Log.Mode.Quiet;
 
-                //if (args.Length < 0) Environment.Exit(1);
-                //Log.Entry(LogName, args[0]);
-                //var arg = Transform.DecodeBase64(args[0]);
+                if (args.Length < 0) Environment.Exit(1);
+                Log.Entry(LogName, args[0]);
+                var arg = Transform.DecodeBase64(args[0]);
 
-                //transport = JObject.Parse(arg);
+                transport = JObject.Parse(arg);
 
-                //Log.Entry(LogName, transport.ToString());
-                //Log.Entry(LogName, transport.command.ToString());
+                Log.Entry(LogName, transport.ToString());
+                Log.Entry(LogName, transport.command.ToString());
 
                 InitializeComponent();
 
-                //var options = (Power.FormOption) Enum.Parse(typeof (Power.FormOption), transport.options.ToString());
+                var options = (Power.ShutdownOptions) Enum.Parse(typeof (Power.ShutdownOptions), transport.options.ToString());
 
-                //switch (options)
-                //{
-                //  case Power.FormOption.None:
-                //      btnAbort.Enabled = false;
-                //      break;
-                //  case Power.FormOption.Delay:
-                //      btnAbort.Text = "Delay " + delayTime + " Minutes";
-                //      break;
-                //}
+                switch (options)
+                {
+                  case Power.ShutdownOptions.None:
+                      btnAbort.Enabled = false;
+                      break;
+                  case Power.ShutdownOptions.Delay:
+                      btnAbort.Text = "Delay " + delayTime + " Minutes";
+                      break;
+                }
 
                 string message;
 
                 try
                 {
-                    //if (transport.period == null) return;
-                    //_gracePeriod = (int) transport.period;
+                    if (transport.period == null) return;
+                    _gracePeriod = (int) transport.period;
 
-                    //message = transport.message.ToString();
+                    message = transport.message.ToString();
                 }
                 catch (Exception)
                 {
@@ -128,9 +129,9 @@ namespace FOG
 
         private void BtnAbortClick(object sender, EventArgs e)
         {
-          //transport.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
-          //transport.delay = delayTime;
-          //Bus.Emit(Bus.Channel.Power, transport, true);
+            transport.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
+            transport.delay = delayTime;
+            Bus.Emit(Bus.Channel.Power, transport, true);
             Environment.Exit(1);
         }
 
