@@ -36,7 +36,7 @@ namespace FOG
             try
             {
                 var cert = RSA.ServerCertificate();
-                if (cert != null) return false;
+                if (cert != null) UnpinServerCert();
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
                 Settings.SetPath(Path.Combine(location, "settings.json"));

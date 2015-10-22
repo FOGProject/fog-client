@@ -20,6 +20,7 @@
 using System;
 using System.Drawing;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using MetroFramework.Controls;
@@ -41,6 +42,7 @@ namespace FOG
         {
             InitializeComponent();
             UpdateWelcomeText();
+            Bus.Subscribe(Bus.Channel.Log, OnLog);
 
             serverUpThread = new Thread(UpdateSpinner)
             {
@@ -66,14 +68,24 @@ namespace FOG
             if (!UpdateSection(installFileLabel, filesSpinner, Helper.Instance.Install))
                 return;
 
-            if (!UpdateSection(configuringLabel, configSpinner, configure))
+            if (!UpdateSection(configuringLabel, configSpinner, Configure))
                 return;
 
             if (!UpdateSection(encryptLabel, encryptionSpinner, Helper.PinServerCert))
                 return;
+
+            this.nextButton.Invoke((MethodInvoker)(() =>
+            {
+                nextButton.Enabled = true;
+            }));
         }
 
-        private bool configure()
+        private void OnLog(dynamic data)
+        {
+            this.logBox.Text += data.message;
+        }
+
+        private bool Configure()
         {
             Helper.SaveSettings((
                 httpsSwitch.Checked) ? "1" : "0", 
@@ -151,6 +163,12 @@ namespace FOG
             logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
             installThread.Start();
+        }
+
+        private void NextBtnOnClick(object sender, EventArgs eventArgs)
+        {
+            logicClick = true;
+            tabControl.SelectTab(tabControl.SelectedIndex + 1);
         }
 
         private void FinishBtnOnClick(object sender, EventArgs eventArgs)

@@ -90,6 +90,8 @@ namespace FOG
             this.installFileLabel = new System.Windows.Forms.Label();
             this.busyWorkLabel = new System.Windows.Forms.Label();
             this.title = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.completedTab.SuspendLayout();
             this.settingsTab.SuspendLayout();
             this.licenseTab.SuspendLayout();
@@ -97,6 +99,7 @@ namespace FOG
             this.welcomeTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.progressTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -169,6 +172,8 @@ namespace FOG
             // completedTab
             // 
             this.completedTab.BackColor = System.Drawing.Color.White;
+            this.completedTab.Controls.Add(this.textBox1);
+            this.completedTab.Controls.Add(this.pictureBox2);
             this.completedTab.Controls.Add(this.finishBtn);
             this.completedTab.Location = new System.Drawing.Point(4, 24);
             this.completedTab.Name = "completedTab";
@@ -345,7 +350,8 @@ namespace FOG
             this.welcomeText.ReadOnly = true;
             this.welcomeText.Size = new System.Drawing.Size(598, 193);
             this.welcomeText.TabIndex = 5;
-            this.welcomeText.Text = resources.GetString("welcomeText.Text");
+            this.welcomeText.Text = "Welcome to the FOG Service smart installer. \r\nThis installer has detected that yo" +
+    "u are running {OPERATING_SYSTEM} and has configured itself accordingly.\r\n";
             // 
             // pictureBox1
             // 
@@ -406,6 +412,8 @@ namespace FOG
             this.nextButton.TabIndex = 20;
             this.nextButton.Text = "Next";
             this.nextButton.UseVisualStyleBackColor = true;
+            this.nextButton.Click += new System.EventHandler(this.NextBtnOnClick);
+
             // 
             // showLogButton
             // 
@@ -509,6 +517,26 @@ namespace FOG
             this.title.MouseMove += new System.Windows.Forms.MouseEventHandler(this.Form_MouseMove);
             this.title.MouseUp += new System.Windows.Forms.MouseEventHandler(this.Form_MouseUp);
             // 
+            // textBox1
+            // 
+            this.textBox1.BackColor = System.Drawing.Color.White;
+            this.textBox1.Location = new System.Drawing.Point(7, 127);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(598, 193);
+            this.textBox1.TabIndex = 11;
+            this.textBox1.Text = "FOG Service is installed and ready for use.\r\n";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(-16, 0);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(645, 120);
+            this.pictureBox2.TabIndex = 10;
+            this.pictureBox2.TabStop = false;
+            // 
             // GUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -529,6 +557,7 @@ namespace FOG
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Load += new System.EventHandler(this.FormLoad);
             this.completedTab.ResumeLayout(false);
+            this.completedTab.PerformLayout();
             this.settingsTab.ResumeLayout(false);
             this.settingsTab.PerformLayout();
             this.licenseTab.ResumeLayout(false);
@@ -538,6 +567,7 @@ namespace FOG
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.progressTab.ResumeLayout(false);
             this.progressTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -581,5 +611,7 @@ namespace FOG
         private MetroButton showLogButton;
         private MetroButton nextButton;
         private RichTextBox logBox;
+        private TextBox textBox1;
+        private PictureBox pictureBox2;
     }
 }
