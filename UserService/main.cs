@@ -35,7 +35,7 @@ namespace FOG
 
         public static void Main(string[] args)
         {
-            Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "fog_user.log");
+            Log.FilePath = Path.Combine(Settings.Location, "logs", "user", User.Current() + ".log");
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
 

@@ -59,7 +59,7 @@ namespace FOG
 
         public bool Uninstall()
         {
-            Directory.Delete(GetLocation());
+            Directory.Delete(GetLocation(), true);
             ProcessHandler.Run("systemctl", "disable FOGService >/ dev / null 2 > &1");
             ProcessHandler.Run("sysv-rc-conf", "FOGService off >/ dev / null 2 > &1");
             File.Delete("/etc/init.d/FOGService");

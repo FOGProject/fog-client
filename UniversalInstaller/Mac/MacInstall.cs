@@ -60,7 +60,7 @@ namespace FOG
 
         public bool Uninstall()
         {
-            Directory.Delete(GetLocation());
+            Directory.Delete(GetLocation(), true);
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchAgents/org.freeghost.useragent.plist");
             File.Delete("/Library/LaunchAgents/com.freeghost.useragent.plist");

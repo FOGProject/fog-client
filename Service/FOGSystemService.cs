@@ -20,6 +20,7 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -38,6 +39,7 @@ namespace FOG
     {
         public FOGSystemService()
         {
+            Log.FilePath = Path.Combine(Settings.Location, "logs", "fog.log");
             Bus.SetMode(Bus.Mode.Server);
         }
 
