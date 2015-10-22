@@ -37,9 +37,11 @@ namespace FOG
         {
             Log.Output = Log.Mode.Quiet;
             Log.FilePath = Path.Combine(Settings.Location, "logs", "user", User.Current() + ".log");
+            Log.Output = Log.Mode.File;
+            Log.Entry(LogName, "Initializing - phase 1");
+
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
-            Log.Output = Log.Mode.File;
 
             // Wait for the main service to spawn
             if(Settings.OS == Settings.OSType.Windows)
@@ -47,11 +49,9 @@ namespace FOG
                 {
                     Thread.Sleep(500);
                 }
-            Thread.Sleep(1000);
-
             Eager.Initalize();
 
-            Log.Entry(LogName, "Initializing");
+            Log.Entry(LogName, "Initializing - phase 2");
 
             if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "updating.info")))
             {
