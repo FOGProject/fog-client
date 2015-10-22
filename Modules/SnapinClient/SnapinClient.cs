@@ -122,7 +122,7 @@ namespace FOG.Modules.SnapinClient
         private string StartSnapin(Response taskResponse, string snapinPath)
         {
             Notification.Emit(
-                "Installing" + taskResponse.GetField("SNAPINNAME"),
+                "Installing " + taskResponse.GetField("SNAPINNAME"),
                 "Please do not shutdown until this is completed",
                 $"snapin-{taskResponse.GetField("SNAPINNAME")}",
                 true);
