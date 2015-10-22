@@ -23,6 +23,9 @@ Invoke-Expression ($nuget + "restore")
 Write-Host "Building Solution"
 Invoke-Expression ($msbuild + $solutionConfig)
 
+Write-Host "Copying Theme to build"
+Copy-Item "$PSScriptRoot\themes.xml" "$PSScriptRoot\bin\themes.xml"
+
 Write-Host "Zipping Build for installer"
 $InstallerZip = "$PSScriptRoot\UniversalInstaller\Scripts\FOGService.zip"
 
@@ -38,5 +41,3 @@ Copy-Item "$PSScriptRoot\bin\FOGService.msi" $InstallerMSI
 Write-Host "Building Installer"
 Invoke-Expression ($msbuild + $installerConfig)
 
-Write-Host "Copying Theme to build"
-Copy-Item "$PSScriptRoot\themes.xml" "$PSScriptRoot\bin\themes.xml"
