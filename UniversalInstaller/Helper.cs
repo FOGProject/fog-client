@@ -68,7 +68,7 @@ namespace FOG
             File.Delete(tmpLocation);
         }
 
-        public static bool ExtractResource(string resource, string filePath)
+        public static bool ExtractResource(string resource, string filePath, bool dos2Unix=false)
         {
             try
             {
@@ -78,6 +78,9 @@ namespace FOG
                 {
                     CopyStream(input, output);
                 }
+                if(dos2Unix)
+                    Dos2Unix(filePath);
+
                 return true;
             }
             catch (Exception ex)
@@ -102,6 +105,13 @@ namespace FOG
         public static bool PinServerCert()
         {
             return PinServerCert(null);
+        }
+
+        public static void Dos2Unix(string fileName)
+        {
+            var fileData = File.ReadAllText(fileName);
+            fileData = fileData.Replace("\r\n", "\n");
+            File.WriteAllText(fileName, fileData);
         }
     }
 }

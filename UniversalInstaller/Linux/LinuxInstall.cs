@@ -38,7 +38,7 @@ namespace FOG
                 File.Create(logLocation);
             ProcessHandler.Run("chmod", "755 " + logLocation);
 
-            Helper.ExtractResource("FOG.Scripts.init-d", "/etc/init.d/FOGService");
+            Helper.ExtractResource("FOG.Scripts.init-d", "/etc/init.d/FOGService", true);
             ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
 
             if(ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1") != 0)
