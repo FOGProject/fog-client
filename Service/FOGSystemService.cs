@@ -39,7 +39,7 @@ namespace FOG
     {
         public FOGSystemService()
         {
-            Log.FilePath = Path.Combine(Settings.Location, "logs", "fog.log");
+            Log.FilePath = Path.Combine(Settings.Location, "fog.log");
             Bus.SetMode(Bus.Mode.Server);
         }
 
