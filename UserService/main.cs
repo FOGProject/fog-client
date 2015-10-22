@@ -36,7 +36,7 @@ namespace FOG
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Quiet;
-            Log.FilePath = Path.Combine(Settings.Location, "logs", "user", User.Current() + ".log");
+            Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fog_user.log");
             Log.Output = Log.Mode.File;
             Log.Entry(LogName, "Initializing - phase 1");
 
