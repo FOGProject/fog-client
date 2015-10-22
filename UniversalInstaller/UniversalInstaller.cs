@@ -37,9 +37,10 @@ namespace FOG
                 ProcessArgs(args);
             else if(args.Length == 1 && args[0].Equals("nogui"))
                 PerformCLIInstall();
+            else if(args.Length == 2 && args[0].Equals("nogui") && args[1].Equals("uninstall"))
+                PerformCLIUninstall();
             else
                 InteractiveMode();
-            Helper.PinServerCert();
         }
 
         private static void ProcessArgs(string[] args)
@@ -119,6 +120,13 @@ namespace FOG
 
             if(!gui.success)
                 Environment.Exit(1);
+        }
+
+        private static void PerformCLIUninstall()
+        {
+            Log.Output = Log.Mode.Console;
+            PrintBanner();
+            Helper.Instance.Uninstall();
         }
 
         private static void PerformCLIInstall()
