@@ -35,9 +35,11 @@ namespace FOG
 
         public static void Main(string[] args)
         {
+            Log.Output = Log.Mode.Quiet;
             Log.FilePath = Path.Combine(Settings.Location, "logs", "user", User.Current() + ".log");
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
+            Log.Output = Log.Mode.File;
 
             // Wait for the main service to spawn
             while (Process.GetProcessesByName("FOGService").Length == 0)
