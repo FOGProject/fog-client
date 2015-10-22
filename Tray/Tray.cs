@@ -19,13 +19,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Tray.Unix;
-using FOG.Tray.Windows;
+using FOG.Tray.GTK;
 using UserNotification;
 using Zazzles;
 
@@ -33,7 +31,6 @@ namespace FOG.Tray
 {
     public sealed class Tray
     {
-        //Define variables
         private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
         private static ITray _instance;
         /// <summary>Program entry point.</summary>
@@ -59,13 +56,8 @@ namespace FOG.Tray
 
             switch (Settings.OS)
             {
-                //case Settings.OSType.Windows:
-                //    var resources = new ComponentResourceManager(typeof(Tray));
-                //    var icon = (Icon)resources.GetObject("logo");
-                //    _instance = new WindowsTray(icon);
-                //    break;
                 default:
-                    _instance = new UnixTray(Path.Combine(Settings.Location,"logo.ico"));
+                    _instance = new GTKTray(Path.Combine(Settings.Location,"logo.ico"));
                     break;
             }
             _instance.SetHover(hoverText);

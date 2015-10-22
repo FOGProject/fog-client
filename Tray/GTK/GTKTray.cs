@@ -18,20 +18,18 @@
  */
 
 using System;
-using System.Windows.Forms;
 using Gdk;
 using Gtk;
 using Zazzles;
 using Application = Gtk.Application;
-using Menu = Gtk.Menu;
 
-namespace FOG.Tray.Unix
+namespace FOG.Tray.GTK
 {
-    public sealed class UnixTray : ITray
+    public sealed class GTKTray : ITray
     {
         private StatusIcon _notifyIcon;
 
-        public UnixTray(string icon)
+        public GTKTray(string icon)
         {
             Application.Init();
             _notifyIcon = new StatusIcon(new Pixbuf(icon))
@@ -39,7 +37,6 @@ namespace FOG.Tray.Unix
                 Visible = true
             };
             _notifyIcon.Activate += NotifyIconOnActivate;
-            _notifyIcon.PopupMenu += OnTrayIconPopup;
             Application.Run();
 
         }
@@ -58,19 +55,6 @@ namespace FOG.Tray.Unix
         public void Dispose()
         {
             _notifyIcon.Dispose();
-        }
-
-        static void OnTrayIconPopup(object o, EventArgs args)
-        {
-            Menu popupMenu = new Menu();
-            ImageMenuItem menuItemQuit = new ImageMenuItem("Quit");
-            Gtk.Image appimg = new Gtk.Image(Stock.Quit, IconSize.Menu);
-            menuItemQuit.Image = appimg;
-            popupMenu.Add(menuItemQuit);
-            // Quit the application when quit has been clicked.
-            menuItemQuit.Activated += delegate { Application.Quit(); };
-            popupMenu.ShowAll();
-            popupMenu.Popup();
         }
     }
 }

@@ -148,8 +148,7 @@
     </Compile>
     <Compile Include="Tray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Unix\UnixTray.cs" />
-    <Compile Include="Windows\WindowsTray.cs" />
+    <Compile Include="GTK\GTKTray.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NotificationGUI.resx">
