@@ -199,6 +199,15 @@ namespace FOG
             }
         }
 
+        private void FormLoad(object sender, EventArgs e)
+        {
+            this.MinimumSize = new System.Drawing.Size(this.Width, this.Height);
+
+            this.MaximumSize = new System.Drawing.Size(this.MinimumSize.Width + 500, this.MinimumSize.Height + 500);
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        }
+
         private bool CheckServer()
         {
             using (var client = new HeadClient())

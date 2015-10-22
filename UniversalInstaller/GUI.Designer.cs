@@ -67,9 +67,9 @@ namespace FOG
             this.httpsSwitch = new MetroFramework.Controls.MetroToggle();
             this.httpsLabel = new System.Windows.Forms.Label();
             this.rootLogLabel = new System.Windows.Forms.Label();
-            this.webRootTxtBox = new MetroFramework.Controls.MetroTextBox();
+            this.webRootTxtBox = new System.Windows.Forms.TextBox();
             this.webRootLabel = new System.Windows.Forms.Label();
-            this.addressTxtBox = new MetroFramework.Controls.MetroTextBox();
+            this.addressTxtBox = new System.Windows.Forms.TextBox();
             this.addressLabel = new System.Windows.Forms.Label();
             this.licenseTab = new System.Windows.Forms.TabPage();
             this.tabControl = new System.Windows.Forms.TabControl();
@@ -244,7 +244,7 @@ namespace FOG
             // 
             this.httpsLabel.AutoSize = true;
             this.httpsLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.httpsLabel.Location = new System.Drawing.Point(6, 91);
+            this.httpsLabel.Location = new System.Drawing.Point(6, 94);
             this.httpsLabel.Name = "httpsLabel";
             this.httpsLabel.Size = new System.Drawing.Size(59, 22);
             this.httpsLabel.TabIndex = 14;
@@ -514,7 +514,7 @@ namespace FOG
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(650, 470);
+            this.ClientSize = new System.Drawing.Size(670, 470);
             this.ControlBox = false;
             this.Controls.Add(this.title);
             this.Controls.Add(this.tabControl);
@@ -522,11 +522,12 @@ namespace FOG
             this.Controls.Add(this.panel1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximumSize = new System.Drawing.Size(650, 470);
+            this.MaximumSize = new System.Drawing.Size(670, 470);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(650, 470);
+            this.MinimumSize = new System.Drawing.Size(670, 470);
             this.Name = "GUI";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Load += new System.EventHandler(this.FormLoad);
             this.completedTab.ResumeLayout(false);
             this.settingsTab.ResumeLayout(false);
             this.settingsTab.PerformLayout();
@@ -553,9 +554,9 @@ namespace FOG
         private TabPage settingsTab;
         private TabPage licenseTab;
         private TabControl tabControl;
-        private MetroTextBox addressTxtBox;
+        private TextBox addressTxtBox;
         private Label addressLabel;
-        private MetroTextBox webRootTxtBox;
+        private TextBox webRootTxtBox;
         private Label webRootLabel;
         private Label rootLogLabel;
         private Label httpsLabel;
