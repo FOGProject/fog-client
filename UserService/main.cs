@@ -42,10 +42,11 @@ namespace FOG
             Log.Output = Log.Mode.File;
 
             // Wait for the main service to spawn
-            while (Process.GetProcessesByName("FOGService").Length == 0)
-            {
-                Thread.Sleep(500);
-            }
+            if(Settings.OS == Settings.OSType.Windows)
+                while (Process.GetProcessesByName("FOGService").Length == 0)
+                {
+                    Thread.Sleep(500);
+                }
             Thread.Sleep(1000);
 
             Eager.Initalize();
