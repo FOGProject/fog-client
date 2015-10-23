@@ -9,7 +9,7 @@ Write-Host $PSScriptRoot
 
 $nuget = "$PSScriptRoot\.nuget\NuGet.exe "
 $msbuild = "msbuild.exe "
-$buildMode = "/verbosity:minimal /p:configuration=Release"
+$buildMode = "/verbosity:minimal /p:configuration=Debug"
 $solutionConfig = "$PSScriptRoot\FOGService.sln $buildMode"
 $installerConfig = "$PSScriptRoot\UniversalInstaller\UniversalInstaller.csproj $buildMode"
 $msiConfig = "$PSScriptRoot\MSI\MSI.wixproj $buildMode"
