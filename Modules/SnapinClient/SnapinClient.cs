@@ -82,7 +82,7 @@ namespace FOG.Modules.SnapinClient
                 if (downloaded)
                 {
                     var sha512 = Hash.SHA512(snapinFilePath);
-                    if (!sha512.Equals(taskResponse.GetField("SNAPINHASH")))
+                    if (!sha512.ToUpper().Equals(taskResponse.GetField("SNAPINHASH").ToUpper()))
                     {
                         Log.Error(Name, "Hash does not match");
                         Log.Error(Name, "--> Ideal: " + taskResponse.GetField("SNAPINHASH"));
