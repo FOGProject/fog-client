@@ -27,17 +27,30 @@ namespace UserNotification
 {
     public partial class NotificationGUI : Form
     {
-        public NotificationGUI(string title, string body)
+        public NotificationGUI()
         {
             InitializeComponent();
             Location = new Point(50, 50);
+        }
+
+        public void SetTitle(string title)
+        {
             this.titleLabel.Text = title;
+        }
+
+        public void SetBody(string body)
+        {
             this.bodyLabel.Text = body;
+        }
+
+        public void StartFade()
+        {
 #pragma warning disable 4014
             FadeIn();
             FadeOut();
 #pragma warning restore 4014
         }
+
 
         private async Task FadeOut()
         {
@@ -49,21 +62,16 @@ namespace UserNotification
                 Application.DoEvents();
                 System.Threading.Thread.Sleep(5);
             }
-            this.logButton.Dispose();
-            this.bodyLabel.Dispose();
-            this.titleLabel.Dispose();
-            this.panel1.Dispose();
-            this.logButton = null;
-            this.bodyLabel = null;
-            this.titleLabel = null;
-            this.panel1 = null;
-            this.Close();
+
+            this.Opacity = 0;
+            this.Hide();
         }
 
         private async Task FadeIn()
         {
             await Task.Delay(500);
-
+            this.Opacity = 0;
+            this.Show();
             for (var i = 0.0; i <= 1.0; i = i + 0.01)
             {
                 this.Opacity = i;

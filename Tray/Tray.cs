@@ -19,26 +19,31 @@
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Tray.GTK;
-using UserNotification;
 using Zazzles;
 
 namespace FOG.Tray
 {
     public sealed class Tray
     {
-        private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
+        private static List<NotificationInvoker> _notifications = new List<NotificationInvoker>();
+        private static Form contextForm;
+
         private static ITray _instance;
+
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
-            Log.Output = Log.Mode.Quiet;
+            Log.Output = Log.Mode.Console;
+
+            contextForm = new Form();
+            contextForm.Show();
+            contextForm.Hide();
 
             bool isFirstInstance;
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
@@ -51,7 +56,6 @@ namespace FOG.Tray
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
-
             var hoverText = "FOG Client v" + Settings.Get("Version");
 
             switch (Settings.OS)
@@ -63,63 +67,6 @@ namespace FOG.Tray
             _instance.SetHover(hoverText);
         }
 
-        private static void UpdateFormLocation(int index)
-        {
-            var workingArea = Screen.PrimaryScreen.WorkingArea;
-            var height = workingArea.Bottom - _notifications[index].Height;
-            if (Settings.OS == Settings.OSType.Mac) height = height - 22;
-
-            height = (Settings.OS == Settings.OSType.Windows)
-                ? height - (_notifications[index].Height+5)*index
-                : height + (_notifications[index].Height+5)*index;
-
-            try
-            {
-                _notifications[index].Invoke(new MethodInvoker(
-                    delegate { _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height); }));
-            }
-            catch (Exception) { }
-
-            try
-            {
-                _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height);
-            }
-            catch (Exception) { }
-        }
-
-        private static void SpawnGUIThread(string title, string body)
-        {
-            var notThread = new Thread(() => SpawnForm(title, body))
-            {
-                Priority = ThreadPriority.Normal,
-                IsBackground = false,
-            };
-            notThread.Start();
-        }
-
-        private static void SpawnForm(string title, string body)
-        {
-            var notForm = new NotificationGUI(title, body);
-            _notifications.Add(notForm);
-            notForm.Disposed += delegate
-            {
-                _notifications.Remove(notForm);
-                ReOrderNotifications();
-                notForm.Dispose();
-                notForm = null;
-            };
-            UpdateFormLocation(_notifications.Count-1);
-            Application.Run(notForm);
-        }
-
-        private static void ReOrderNotifications()
-        {
-            for(var i=0; i < _notifications.Count; i++ )
-            {
-                UpdateFormLocation(i);
-            }
-        }
-
         private static void OnUpdate(dynamic data)
         {
             if (data.action == null) return;
@@ -128,17 +75,14 @@ namespace FOG.Tray
                 Application.Exit();
         }
 
-        //Called when a message is recieved from the bus
         private static void OnNotification(dynamic data)
         {
             if (data.title == null || data.message == null) return;
-            SpawnGUIThread(data.title.ToString(), data.message.ToString());
-        }
-
-        private static MenuItem[] InitializeMenu()
-        {
-            var menu = new MenuItem[] {};
-            return menu;
+            var invoker = new NotificationInvoker(contextForm);
+            invoker.UpdateText(data.title.ToString(), data.message.ToString());
+            _notifications.Add(invoker);
+            invoker.UpdatePosition(_notifications.IndexOf(invoker));
+            invoker.Show();
         }
     }
 }

@@ -134,6 +134,7 @@
     <Compile Include="NotificationGUI.Designer.cs">
       <DependentUpon>NotificationGUI.cs</DependentUpon>
     </Compile>
+    <Compile Include="NotificationInvoker.cs" />
     <Compile Include="Tray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GTK\GTKTray.cs" />
