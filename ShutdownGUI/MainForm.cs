@@ -42,7 +42,7 @@ namespace FOG
             {
                 Log.Output = Log.Mode.Quiet;
 
-                if (args.Length < 0) Environment.Exit(1);
+                if (args.Length == 0) Environment.Exit(1);
                 Log.Entry(LogName, args[0]);
                 var arg = Transform.DecodeBase64(args[0]);
 
@@ -65,19 +65,18 @@ namespace FOG
                       break;
                 }
 
-                string message;
+                string message = (transport.message != null)
+                    ? transport.message.ToString()
+                    : "This computer needs to perform maintenance.";
 
                 try
                 {
                     if (transport.period == null) return;
                     _gracePeriod = (int) transport.period;
-
-                    message = transport.message.ToString();
                 }
                 catch (Exception)
                 {
                 }
-                message = "This computer needs to perform maintenance.";
 
                 Log.Entry(LogName, _gracePeriod.ToString());
                 if (_gracePeriod == 0)
