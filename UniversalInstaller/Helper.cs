@@ -85,6 +85,7 @@ namespace FOG
             }
             catch (Exception ex)
             {
+                Log.Error(LogName, "Could not extract resource");
                 Log.Error(LogName, ex.Message);
                 return false;
             }
