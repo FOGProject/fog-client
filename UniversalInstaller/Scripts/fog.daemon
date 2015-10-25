@@ -1,7 +1,2 @@
 #!/usr/bin/env bash
-if [ -f /opt/fog-service/service.lock ]; then
-	myPID="$(cat /opt/fog-service/service.lock)"
-	kill $myPID
-	rm /opt/fog-service/service.lock
-fi
-/usr/bin/mono-service -d:/opt/fog-service/ -l:/opt/fog-service/service.lock /opt/fog-service/FOGService.exe
+/opt/fog-service/control.sh start

@@ -45,6 +45,10 @@ namespace FOG
             ProcessHandler.Run("chown", "root /Library/LaunchDaemons/com.freeghost.daemon.plist");
             Helper.ExtractResource("FOG.Scripts.com.freeghost.useragent.plist", "/Library/LaunchAgents/com.freeghost.useragent.plist", true);
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/com.freeghost.useragent.plist");
+
+            Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
+
             return true;
         }
 

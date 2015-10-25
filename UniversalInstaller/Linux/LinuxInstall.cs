@@ -38,12 +38,43 @@ namespace FOG
                 File.Create(logLocation);
             ProcessHandler.Run("chmod", "755 " + logLocation);
 
-            Helper.ExtractResource("FOG.Scripts.init-d", "/etc/init.d/FOGService", true);
-            ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
+            Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
 
-            if(ProcessHandler.Run("systemctl", "enable FOGService >/ dev / null 2 > &1") != 0)
-                ProcessHandler.Run("sysv-rc-conf", "FOGService on >/ dev / null 2 > &1");
+            return AddControlScripts();
+        }
 
+        private bool AddControlScripts()
+        {
+            var systemd = ProcessHandler.Run("pidof", "systemd");
+            var initd = ProcessHandler.Run("pidof", "init");
+
+            if (systemd == 1 && initd == 1) return false;
+
+            if (systemd == 0)
+            {
+                var path = "";
+                var path1 = "/lib/systemd/system";
+                var path2 = "/usr/lib/systemd/system";
+
+                if (Directory.Exists(path1))
+                    path = path1;
+                else if (Directory.Exists(path2))
+                    path = path2;
+                else
+                    return false;
+
+                Helper.ExtractResource("FOG.Scripts.systemd", Path.Combine(path,"FOGService.service"), true);
+                ProcessHandler.Run("chmod", "755 " + Path.Combine(path,"FOGService.service"));
+                ProcessHandler.Run("systemctl", "enable FOGService.service");
+            }
+            else if (initd == 0)
+            {
+                Helper.ExtractResource("FOG.Scripts.init-d", "/etc/init.d/FOGService", true);
+                ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
+                if(ProcessHandler.Run("sysv-rc-conf", "FOGService on") != 0)
+                    ProcessHandler.Run("chkconfig", "FOGService on");
+            }
             return true;
         }
 

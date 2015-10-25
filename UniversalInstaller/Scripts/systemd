@@ -1,0 +1,25 @@
+### BEGIN INIT INFO
+### BEGIN INIT INFO
+# Provides: FOGService
+# Required-Start: $local_fs $syslog $remote_fs
+# Required-Stop: $local_fs $syslog $remote_fs
+# Default-Start: 3 4 5
+# Default-Stop: 0 1 6
+# Short-Description: Start/Stop FOGService
+# Long-Description: Created by Tom Elliott
+# Used to stop and start the FOGService which is a linux/mac
+# client similar to the Windows FOG CLient.
+### END INIT INFO
+
+[Unit]
+Description=FOGService
+After=syslog.target network.target
+
+[Service]
+PrivateTmp=true
+ExecStart=/opt/fog-service/control.sh start &
+ExecReload=/opt/fog-service/control.sh stop && /bin/kill -HUP $MAINPID
+KillSignal=SIGINT
+
+[Install]
+WantedBy=multi-user.target
