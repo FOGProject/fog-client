@@ -139,10 +139,6 @@
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
       <Name>Service</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Tray\Tray.csproj">
-      <Project>{3E31CCE4-D06A-4F02-A3E8-981B9033CA32}</Project>
-      <Name>Tray</Name>
-    </ProjectReference>
     <ProjectReference Include="..\UpdateWaiter\UpdateWaiter.csproj">
       <Project>{C7113642-59C8-41C0-BF64-2F29BAE45910}</Project>
       <Name>UpdateWaiter</Name>
