@@ -35,13 +35,6 @@
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
             
-            <File Id="atksharp" Name="atk-sharp.dll" Source="..\bin\atk-sharp.dll" />
-            <File Id="gdksharp" Name="gdk-sharp.dll" Source="..\bin\gdk-sharp.dll" />
-            <File Id="gtksharp" Name="gtk-sharp.dll" Source="..\bin\gtk-sharp.dll" />
-            <File Id="glibsharp" Name="glib-sharp.dll" Source="..\bin\glib-sharp.dll" />
-            <File Id="gtkdotnet" Name="gtk-dotnet.dll" Source="..\bin\gtk-dotnet.dll" />
-            <File Id="pangosharp" Name="pango-sharp.dll" Source="..\bin\pango-sharp.dll" />
-            
             <File Id="logo" Name="logo.ico" Source="..\bin\logo.ico" />
             <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
             <File Id="MetroFramework.Fonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
