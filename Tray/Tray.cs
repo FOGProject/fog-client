@@ -19,52 +19,54 @@
 
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Tray.GTK;
 using Zazzles;
-
+using UserNotification;
 namespace FOG.Tray
 {
     public sealed class Tray
     {
         private static List<NotificationInvoker> _notifications = new List<NotificationInvoker>();
         private static Form contextForm;
+        private static Thread trayThread;
+        private static object locker = new object();
 
-        private static ITray _instance;
-
-        /// <summary>Program entry point.</summary>
-        /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
 
             contextForm = new Form();
-            contextForm.Show();
-            contextForm.Hide();
+            contextForm.Size = new Size(0, 0);
+            contextForm.Opacity = 0;
+            contextForm.Enabled = false;
+            contextForm.ShowInTaskbar = false;
 
-            bool isFirstInstance;
-            using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
-            {
-                if (!isFirstInstance) return;
-            }
-
-            Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
-            var hoverText = "FOG Client v" + Settings.Get("Version");
+            trayThread = new Thread(() => ShowTray());
+            trayThread.Start();
 
+            contextForm.Show();
+            Application.Run();
+        }
+
+        private static void ShowTray()
+        {
+            ITray _instance;
             switch (Settings.OS)
             {
                 default:
-                    _instance = new GTKTray(Path.Combine(Settings.Location,"logo.ico"));
+                    _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;
             }
-            _instance.SetHover(hoverText);
+            _instance.SetHover("FOG Client v" + Settings.Get("Version"));
         }
 
         private static void OnUpdate(dynamic data)
@@ -72,7 +74,18 @@ namespace FOG.Tray
             if (data.action == null) return;
 
             if (data.action.Equals("start"))
+            {
                 Application.Exit();
+                Environment.Exit(0);
+            }
+        }
+
+        private static void ReOrderNotifications()
+        {
+            for (var i = 0; i < _notifications.Count; i++)
+            {
+                _notifications[i].UpdatePosition(i);
+            }
         }
 
         private static void OnNotification(dynamic data)
@@ -80,8 +93,21 @@ namespace FOG.Tray
             if (data.title == null || data.message == null) return;
             var invoker = new NotificationInvoker(contextForm);
             invoker.UpdateText(data.title.ToString(), data.message.ToString());
-            _notifications.Add(invoker);
-            invoker.UpdatePosition(_notifications.IndexOf(invoker));
+
+            lock (locker)
+            {
+                _notifications.Add(invoker);
+                invoker.UpdatePosition(_notifications.IndexOf(invoker));
+            }
+
+            invoker.GUI.Disposed += delegate
+            {
+                lock (locker)
+                {
+                    _notifications.Remove(invoker);
+                    ReOrderNotifications();
+                }
+            };
             invoker.Show();
         }
     }

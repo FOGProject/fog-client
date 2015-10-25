@@ -25,23 +25,23 @@ using Zazzles;
 
 namespace FOG
 {
-    class NotificationInvoker : IDisposable
+    class NotificationInvoker
     {
-        private NotificationGUI notification;
+        public NotificationGUI GUI {get; }
         private Form context;
 
         public NotificationInvoker(Form context)
         {
             this.context = context;
-            notification = new NotificationGUI();
+            GUI = new NotificationGUI();
         }
 
         public void UpdateText(string title, string body)
         {
             context.Invoke(new MethodInvoker(delegate
             {
-                notification.SetTitle(title);
-                notification.SetBody(body);
+                GUI.SetTitle(title);
+                GUI.SetBody(body);
             }));
         }
 
@@ -49,37 +49,33 @@ namespace FOG
         {
             context.Invoke(new MethodInvoker(delegate
                 {
-                    notification.StartFade();
+                    GUI.StartFade();
                 }));
         }
 
         public void UpdatePosition(int index)
         {
             var workingArea = Screen.PrimaryScreen.WorkingArea;
-            var height = workingArea.Bottom - notification.Height;
-            if (Settings.OS == Settings.OSType.Mac) height = height - 22;
+            var height = workingArea.Bottom - GUI.Height;
 
             height = (Settings.OS == Settings.OSType.Windows)
-                ? height - (notification.Height + 5) * index
-                : height + (notification.Height + 5) * index;
+                ? height - (GUI.Height + 5) * index
+                :  (GUI.Height + 5) * index;
+
+            if (Settings.OS != Settings.OSType.Windows) height += 22;
 
             try
             {
-                notification.Invoke(new MethodInvoker(
-                    delegate { notification.Location = new Point(workingArea.Right - notification.Width, height); }));
+                GUI.Invoke(new MethodInvoker(
+                    delegate { GUI.Location = new Point(workingArea.Right - GUI.Width, height); }));
             }
             catch (Exception) { }
 
             try
             {
-                notification.Location = new Point(workingArea.Right - notification.Width, height);
+                GUI.Location = new Point(workingArea.Right - GUI.Width, height);
             }
             catch (Exception) { }
-        }
-
-        public void Dispose()
-        {
-            //notification.Dispose();
         }
     }
 }

@@ -64,7 +64,7 @@ namespace UserNotification
             }
 
             this.Opacity = 0;
-            this.Hide();
+            this.Close();
         }
 
         private async Task FadeIn()
