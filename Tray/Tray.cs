@@ -24,14 +24,16 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Tray.GTK;
+using NotificationCenter;
 using Zazzles;
-using UserNotification;
+
 namespace FOG.Tray
 {
     public sealed class Tray
     {
         private static List<NotificationInvoker> _notifications = new List<NotificationInvoker>();
         private static Form contextForm;
+        private static NotificationCenterForm notificationCenter;
         private static Thread trayThread;
         private static object locker = new object();
 
@@ -88,8 +90,23 @@ namespace FOG.Tray
             }
         }
 
+        private static void ShowCenter()
+        {
+            contextForm.Invoke(new MethodInvoker(delegate
+            {
+                GUI.SetTitle(title);
+                GUI.SetBody(body);
+            }));
+        }
+
         private static void OnNotification(dynamic data)
         {
+            if (data.showCenter != null && data.showCenter == true)
+            {
+                ShowCenter();
+                return;
+            }
+
             if (data.title == null || data.message == null) return;
             var invoker = new NotificationInvoker(contextForm);
             invoker.UpdateText(data.title.ToString(), data.message.ToString());

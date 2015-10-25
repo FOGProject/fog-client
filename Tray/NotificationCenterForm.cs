@@ -46,13 +46,12 @@ namespace NotificationCenter
 
             Location = new Point(workingArea.Right - Size.Width, height);
 
-            Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
         }
 
         private void exitButton_Click(object sender, EventArgs e)
         {
-            Application.Exit();
+            Close();
         }
 
         private void LoadLog()

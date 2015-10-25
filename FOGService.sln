@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PowerCLI", "PowerCLI\PowerC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShutdownGUI", "ShutdownGUI\ShutdownGUI.csproj", "{C83363D0-6686-419C-AA0B-09EE999EC3EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationCenter", "NotificationCenter\NotificationCenter.csproj", "{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniversalInstaller", "UniversalInstaller\UniversalInstaller.csproj", "{519FFE80-752A-49A7-A858-2E7551DC1722}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MSI", "MSI\MSI.wixproj", "{B364328D-CB64-4B22-93DC-FD1732064818}"
@@ -155,18 +153,6 @@ Global
 		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|Mixed Platforms.Build.0 = Release|x86
 		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|x86.ActiveCfg = Release|x86
 		{C83363D0-6686-419C-AA0B-09EE999EC3EA}.Release|x86.Build.0 = Release|x86
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|x86.ActiveCfg = Debug|x86
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Debug|x86.Build.0 = Debug|x86
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|x86.ActiveCfg = Release|Any CPU
-		{8C9E0863-7A39-46A9-A436-1148BEAD1F8A}.Release|x86.Build.0 = Release|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{519FFE80-752A-49A7-A858-2E7551DC1722}.Debug|x86.ActiveCfg = Debug|x86

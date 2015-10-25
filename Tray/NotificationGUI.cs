@@ -21,6 +21,7 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Newtonsoft.Json.Linq;
 using Zazzles;
 
 namespace UserNotification
@@ -81,15 +82,9 @@ namespace UserNotification
             this.Opacity = 1.0;
         }
 
-        private void SpawnCenter()
-        {
-            ProcessHandler.RunClientEXE("NotificationCenter.exe", "", false);
-        }
-
         private void logButton_Click(object sender, EventArgs e)
         {
-            SpawnCenter();
-            this.Close();
+            Close();
         }
     }
 }

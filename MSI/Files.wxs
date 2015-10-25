@@ -38,7 +38,6 @@
             <File Id="logo" Name="logo.ico" Source="..\bin\logo.ico" />
             <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
             <File Id="MetroFramework.Fonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
-            <File Id="NotificationCenter" Name="NotificationCenter.exe" Source="..\bin\NotificationCenter.exe" />
             <File Id="themes" Name="themes.xml" Source="..\themes.xml" />
 
 
