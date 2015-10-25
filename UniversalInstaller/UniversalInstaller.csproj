@@ -144,6 +144,8 @@
     <EmbeddedResource Include="Scripts\org.freeghost.useragent.plist" />
     <EmbeddedResource Include="Scripts\FOGService.msi" />
     <EmbeddedResource Include="Scripts\FOGService.zip" />
+    <EmbeddedResource Include="Scripts\control.sh" />
+    <EmbeddedResource Include="Scripts\systemd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />
