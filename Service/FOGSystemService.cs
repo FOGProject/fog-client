@@ -87,8 +87,8 @@ namespace FOG
                 new TaskReboot(),
                 new HostnameChanger(),
                 new SnapinClient(),
-                new PrinterManager(),
-                new GreenFOG(),
+                //new PrinterManager(),
+                //new GreenFOG(),
                 new UserTracker()
             };
         }
