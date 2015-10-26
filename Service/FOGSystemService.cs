@@ -83,7 +83,7 @@ namespace FOG
         {
             return new AbstractModule[]
             {
-                new ClientUpdater(), 
+                //new ClientUpdater(), 
                 new TaskReboot(),
                 new HostnameChanger(),
                 new SnapinClient(),
