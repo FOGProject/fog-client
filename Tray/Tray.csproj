@@ -154,6 +154,7 @@
     <Compile Include="Tray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GTK\GTKTray.cs" />
+    <Compile Include="Windows\WindowsTray.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="NotificationCenterForm.resx">

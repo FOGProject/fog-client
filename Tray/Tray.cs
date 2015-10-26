@@ -62,6 +62,9 @@ namespace FOG.Tray
             ITray _instance;
             switch (Settings.OS)
             {
+                case Settings.OSType.Windows:
+                    _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
+                    break;
                 default:
                     _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;

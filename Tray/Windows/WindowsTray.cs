@@ -17,29 +17,37 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Gdk;
-using Gtk;
-using Application = Gtk.Application;
+using System.Drawing;
+using System.Windows.Forms;
 
-namespace FOG.Tray.GTK
+namespace FOG.Tray
 {
-    public sealed class GTKTray : ITray
+    public sealed class WindowsTray : ITray
     {
-        private StatusIcon _notifyIcon;
+        private readonly NotifyIcon _notifyIcon;
 
-        public GTKTray(string icon)
+        public WindowsTray(string iconPath)
         {
-            Application.Init();
-            _notifyIcon = new StatusIcon(new Pixbuf(icon))
-            {
-                Visible = true
-            };
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            _notifyIcon = new NotifyIcon();
+            var notificationMenu = new ContextMenu(InitializeMenu());
+
+            _notifyIcon.Icon = new Icon(iconPath);
+            _notifyIcon.ContextMenu = notificationMenu;
+            _notifyIcon.Visible = true;
             Application.Run();
+        }
+
+        private static MenuItem[] InitializeMenu()
+        {
+            var menu = new MenuItem[] { };
+            return menu;
         }
 
         public void SetHover(string text)
         {
-            _notifyIcon.Tooltip = text;
+            _notifyIcon.Text = text;
         }
 
         public void Dispose()
