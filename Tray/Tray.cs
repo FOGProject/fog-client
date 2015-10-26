@@ -43,7 +43,6 @@ namespace FOG.Tray
 
             contextForm = new NotificationGUI
             {
-                Size = new Size(10, 10),
                 Opacity = 0,
                 ShowInTaskbar = false
             };
