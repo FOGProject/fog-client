@@ -31,7 +31,7 @@ namespace UserNotification
         public NotificationGUI()
         {
             InitializeComponent();
-            Location = new Point(50, 50);
+            Location = new Point(0, 0);
         }
 
         public void SetTitle(string title)

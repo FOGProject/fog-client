@@ -24,6 +24,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Tray.GTK;
+using UserNotification;
 using Zazzles;
 
 namespace FOG.Tray
@@ -40,11 +41,12 @@ namespace FOG.Tray
         {
             Log.Output = Log.Mode.Console;
 
-            contextForm = new Form();
-            contextForm.Size = new Size(0, 0);
-            contextForm.Opacity = 0;
-            contextForm.Enabled = false;
-            contextForm.ShowInTaskbar = false;
+            contextForm = new NotificationGUI
+            {
+                Size = new Size(10, 10),
+                Opacity = 0,
+                ShowInTaskbar = false
+            };
 
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
