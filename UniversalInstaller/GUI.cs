@@ -20,7 +20,6 @@
 using System;
 using System.Drawing;
 using System.Net;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Windows.Forms;
 using MetroFramework.Controls;
@@ -30,13 +29,14 @@ namespace FOG
 {
     public partial class GUI : Form
     {
-        public bool success = false;
-        private volatile bool logicClick = false;
-        private bool dragging = false;
-        private Point dragCursorPoint;
-        private Point dragFormPoint;
-        private Thread serverUpThread;
-        private Thread installThread;
+        public bool Success = false;
+        private volatile bool _logicClick = false;
+        private bool _dragging = false;
+        private Point _dragCursorPoint;
+        private Point _dragFormPoint;
+        private Thread _serverUpThread;
+        private Thread _installThread;
+        private volatile bool _checkServer = false;
 
         public GUI()
         {
@@ -44,15 +44,14 @@ namespace FOG
             UpdateWelcomeText();
             Bus.Subscribe(Bus.Channel.Log, OnLog);
 
-            serverUpThread = new Thread(UpdateSpinner)
+            _serverUpThread = new Thread(UpdateSpinner)
             {
                 Priority = ThreadPriority.Normal,
                 IsBackground = true,
                 Name = "server-status"
             };
-            serverUpThread.Start();
 
-            installThread = new Thread(InstallClient)
+            _installThread = new Thread(InstallClient)
             {
                 Priority = ThreadPriority.Normal,
                 IsBackground = true,
@@ -147,64 +146,67 @@ namespace FOG
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
-            if(!logicClick)
+            if(!_logicClick)
                 e.Cancel = true;
-            logicClick = false;
+            _logicClick = false;
         }
 
         private void AgreeBtnOnClick(object sender, EventArgs eventArgs)
         {
-            logicClick = true;
+            _logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
         }
 
         private void InstallBtnOnClick(object sender, EventArgs eventArgs)
         {
-            logicClick = true;
+            _logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
-            installThread.Start();
+            _installThread.Start();
         }
 
         private void NextBtnOnClick(object sender, EventArgs eventArgs)
         {
-            logicClick = true;
+            _logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
+            _checkServer = (tabControl.SelectedTab == settingsTab);
+            if(_checkServer)
+                _serverUpThread.Start();
         }
 
         private void FinishBtnOnClick(object sender, EventArgs eventArgs)
         {
-            success = true;
+            Success = true;
             Application.Exit();
         }
 
         private void Form_MouseDown(object sender, MouseEventArgs e)
         {
-            dragging = true;
-            dragCursorPoint = Cursor.Position;
-            dragFormPoint = this.Location;
+            _dragging = true;
+            _dragCursorPoint = Cursor.Position;
+            _dragFormPoint = this.Location;
         }
 
         private void Form_MouseMove(object sender, MouseEventArgs e)
         {
-            if (!dragging) return;
-            var dif = Point.Subtract(Cursor.Position, new Size(dragCursorPoint));
-            this.Location = Point.Add(dragFormPoint, new Size(dif));
+            if (!_dragging) return;
+            var dif = Point.Subtract(Cursor.Position, new Size(_dragCursorPoint));
+            this.Location = Point.Add(_dragFormPoint, new Size(dif));
         }
 
         private void Form_MouseUp(object sender, MouseEventArgs e)
         {
-            dragging = false;
+            _dragging = false;
         }
 
         private void beginClick(object sender, EventArgs e)
         {
-            logicClick = true;
+            _logicClick = true;
             tabControl.SelectTab(tabControl.SelectedIndex + 1);
         }
 
         private void UpdateSpinner()
         {
-            while (true)
+            while (_checkServer)
             {
                 var serverStatus = CheckServer();
 
