@@ -47,32 +47,16 @@ namespace UserNotification
         public void StartFade()
         {
 #pragma warning disable 4014
-            FadeIn();
-            FadeOut();
+            Fade();
 #pragma warning restore 4014
         }
 
-
-        private async Task FadeOut()
-        {
-            await Task.Delay(6500);
-
-            for (var i = 1.0; i > 0; i = i - 0.01)
-            {
-                this.Opacity = i;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(5);
-            }
-
-            this.Opacity = 0;
-            this.Close();
-        }
-
-        private async Task FadeIn()
+        private async void Fade()
         {
             await Task.Delay(500);
-            this.Opacity = 0;
+            this.Opacity = 0.01;
             this.Show();
+
             for (var i = 0.0; i <= 1.0; i = i + 0.01)
             {
                 this.Opacity = i;
@@ -80,6 +64,17 @@ namespace UserNotification
                 System.Threading.Thread.Sleep(5);
             }
             this.Opacity = 1.0;
+
+            await Task.Delay(3000);
+
+            for (var i = 1.0; i > 0.02; i = i - 0.01)
+            {
+                this.Opacity = i;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(5);
+            }
+
+            this.Close();
         }
 
         private void logButton_Click(object sender, EventArgs e)
