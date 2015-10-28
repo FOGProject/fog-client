@@ -119,6 +119,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GenricUnixInstall.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="GUI.cs">
       <SubType>Form</SubType>

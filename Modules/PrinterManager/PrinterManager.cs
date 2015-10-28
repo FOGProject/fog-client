@@ -38,6 +38,7 @@ namespace FOG.Modules.PrinterManager
 
         public PrinterManager()
         {
+            Compatiblity = Settings.OSType.Windows;
             Name = "PrinterManager";
             LogName = Name;
 

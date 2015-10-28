@@ -67,7 +67,7 @@ namespace FOG
             return new AbstractModule[]
             {
                 new AutoLogOut(),
-                //new DefaultPrinterManager()
+                new DefaultPrinterManager()
             };
         }
 

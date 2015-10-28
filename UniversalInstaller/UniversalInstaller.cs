@@ -118,7 +118,7 @@ namespace FOG
             var gui = new GUI();
             Application.Run(gui);
 
-            if(!gui.success)
+            if(!gui.Success)
                 Environment.Exit(1);
         }
 
@@ -137,7 +137,6 @@ namespace FOG
             Console.WriteLine("");
             Console.WriteLine("By installing this software you agree to the GPL v3 license");
             Console.WriteLine("");
-
 
             var https = "0";
             var tray = "0";
@@ -168,7 +167,7 @@ namespace FOG
             Console.WriteLine("Applying Configuration...");
             Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);
             Helper.Instance.Configure();
-
+            
             Console.WriteLine("Setting Up Encrypted Tunnel...");
             Helper.PinServerCert();
         }
