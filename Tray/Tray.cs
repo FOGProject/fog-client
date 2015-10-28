@@ -41,9 +41,9 @@ namespace FOG.Tray
         {
             Log.Output = Log.Mode.Console;
 
-            contextForm = new NotificationGUI
+            contextForm = new Form
             {
-                Opacity = 0,
+                Visible = false,
                 ShowInTaskbar = false
             };
 
@@ -60,17 +60,17 @@ namespace FOG.Tray
 
         private static void ShowTray()
         {
-            ITray _instance;
+            ITray _instance = null;
             switch (Settings.OS)
             {
                 case Settings.OSType.Windows:
                     _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;
                 default:
-                    _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
+                    // _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;
             }
-            _instance.SetHover("FOG Client v" + Settings.Get("Version"));
+            _instance?.SetHover("FOG Client v" + Settings.Get("Version"));
         }
 
         private static void OnUpdate(dynamic data)
