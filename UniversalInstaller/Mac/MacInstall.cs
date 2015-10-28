@@ -31,6 +31,8 @@ namespace FOG
 
         public bool Install()
         {
+            if (Directory.Exists(GetLocation())) GenricUnixInstall.PrepareUpgrade(this);
+
             Helper.ExtractFiles("/opt/", GetLocation());
 
             var logLocation = Path.Combine(GetLocation(), "fog.log");

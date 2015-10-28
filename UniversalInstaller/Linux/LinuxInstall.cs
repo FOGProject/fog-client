@@ -31,6 +31,8 @@ namespace FOG
 
         public bool Install()
         {
+            if (Directory.Exists(GetLocation())) GenricUnixInstall.PrepareUpgrade(this);
+
             Helper.ExtractFiles("/opt/", GetLocation());
 
             var logLocation = Path.Combine(GetLocation(), "fog.log");
@@ -90,7 +92,9 @@ namespace FOG
 
         public bool Uninstall()
         {
-            Directory.Delete(GetLocation(), true);
+            if(Directory.Exists(GetLocation()))
+                Directory.Delete(GetLocation(), true);
+
             ProcessHandler.Run("systemctl", "disable FOGService");
             ProcessHandler.Run("sysv-rc-conf", "FOGService off");
             ProcessHandler.Run("chkconfig", "FOGService off");
