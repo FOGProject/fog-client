@@ -147,6 +147,7 @@
     <EmbeddedResource Include="Scripts\FOGService.zip" />
     <EmbeddedResource Include="Scripts\control.sh" />
     <EmbeddedResource Include="Scripts\systemd" />
+    <EmbeddedResource Include="Scripts\fog.ca.cer" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

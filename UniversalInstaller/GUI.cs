@@ -70,7 +70,7 @@ namespace FOG
             if (!UpdateSection(configuringLabel, configSpinner, Configure))
                 return;
 
-            if (!UpdateSection(encryptLabel, encryptionSpinner, Helper.PinServerCert))
+            if (!UpdateSection(encryptLabel, encryptionSpinner, InstallCerts))
                 return;
 
             this.nextButton.Invoke((MethodInvoker)(() =>
@@ -82,6 +82,13 @@ namespace FOG
         private void OnLog(dynamic data)
         {
             this.logBox.Text += data.message;
+        }
+
+        private bool InstallCerts()
+        {
+            Helper.PinServerCert();
+            Helper.PinFOGCert();
+            return true;
         }
 
         private bool Configure()

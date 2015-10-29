@@ -170,6 +170,7 @@ namespace FOG
             
             Console.WriteLine("Setting Up Encrypted Tunnel...");
             Helper.PinServerCert();
+            Helper.PinFOGCert();
         }
     }
 }

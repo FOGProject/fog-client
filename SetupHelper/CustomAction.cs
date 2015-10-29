@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
 using FOG;
@@ -137,13 +136,7 @@ namespace SetupHelper
                 if (GetValue("LIGHT", config).Equals("1"))
                     return ActionResult.Success;
 
-                var cert = new X509Certificate2(session.CustomActionData["CAFile"]);
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadWrite);
-                store.Add(cert);
-
-                store.Close();
-
+                GenericSetup.InstallFOGCert(session.CustomActionData["CAFile"]);
                 return ActionResult.Success;
             }
             catch (Exception ex)
@@ -156,49 +149,20 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult UninstallFOGCert(Session session)
         {
-            var cert = new X509Certificate2();
             try
             {
                 var config = GetSettings();
                 if (GetValue("LIGHT", config).Equals("1"))
                     return ActionResult.Success;
 
-                X509Certificate2 CAroot = null;
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
-
-                if (cers.Count > 0)
-                {
-                    CAroot = cers[0];
-                }
-                store.Close();
-
-                cert = CAroot;
+                GenericSetup.UninstallFOGCert();
             }
             catch (Exception ex)
             {
                 DisplayMSIError(session, "Unable to remove FOG Project CA certficate: " + ex.Message);
-                return ActionResult.Success;
             }
 
-            if (cert == null) return ActionResult.Success;
-
-            try
-            {
-
-                var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
-                store.Open(OpenFlags.ReadWrite);
-                store.Remove(cert);
-                store.Close();
-                return ActionResult.Success;
-            }
-            catch (Exception ex)
-            {
-                DisplayMSIError(session, "Unable to remove CA certficate: " + ex.Message);
-                return ActionResult.Success;
-            }
-
+            return ActionResult.Success;
         }
 
 

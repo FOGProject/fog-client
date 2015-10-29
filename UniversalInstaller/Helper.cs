@@ -108,6 +108,14 @@ namespace FOG
             return PinServerCert(null);
         }
 
+        public static void PinFOGCert()
+        {
+            var certPath = Path.Combine(Instance.GetLocation(), "fog.ca.cer");
+
+            ExtractResource("FOG.Scripts.fog.ca.cer", certPath , true);
+            GenericSetup.InstallFOGCert(certPath);
+        }
+
         public static void Dos2Unix(string fileName)
         {
             var fileData = File.ReadAllText(fileName);
