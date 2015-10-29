@@ -81,9 +81,10 @@ namespace FOG
 
         protected override AbstractModule[] GetModules()
         {
+            var upgradeFiles = new string[] {"FOGUpdateHelper.exe", "FOGUpdateWaiter.exe"};
             return new AbstractModule[]
             {
-                new ClientUpdater(), 
+                new ClientUpdater(upgradeFiles), 
                 new TaskReboot(),
                 new HostnameChanger(),
                 new SnapinClient(),
