@@ -35,9 +35,7 @@ namespace FOG
 
             if (args.Length == 5)
                 ProcessArgs(args);
-            else if(args.Length == 1 && args[0].Equals("nogui"))
-                PerformCLIInstall();
-            else if(args.Length == 2 && args[0].Equals("nogui") && args[1].Equals("uninstall"))
+            else if(args.Length == 1 && args[1].Equals("uninstall"))
                 PerformCLIUninstall();
             else
                 InteractiveMode();
@@ -99,14 +97,13 @@ namespace FOG
 
         private static void InteractiveMode()
         {
-            try
+            if (Settings.OS == Settings.OSType.Windows)
             {
-                ShowGUI();
+                Helper.Instance.PrepareFiles();
+                Helper.Instance.Install();
             }
-            catch (Exception)
-            {
+            else
                 PerformCLIInstall();
-            }
         }
 
         private static void ShowGUI()
@@ -145,10 +142,6 @@ namespace FOG
 
             Console.Write("Enter your FOG Server address:");
             var server = Console.ReadLine();
-
-            Console.Write("Do you want to enable FOG Tray? [y/n]:");
-            if (Console.ReadLine().Trim().ToLower().Equals("y"))
-                tray = "1";
 
             Console.Write("Enter the FOG webroot used [example: /fog]:");
             var webRoot = Console.ReadLine();
