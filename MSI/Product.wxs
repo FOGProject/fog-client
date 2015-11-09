@@ -33,11 +33,11 @@
     <InstallExecuteSequence>
 
       
-      <Custom Action="DumpConfig" Before="InstallFiles"></Custom>
+      <Custom Action="DumpConfig" Before="InstallFinalize"></Custom>
       <Custom Action="SaveSettings" After="DumpConfig">NOT REMOVE="ALL"</Custom>
-      <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
+      <Custom Action="InstallCert" After="SaveSettings">NOT REMOVE="ALL"</Custom>
       <Custom Action="SetFOGCAProp" Before="InstallFOGCA" />
-      <Custom Action="InstallFOGCA" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
+      <Custom Action="InstallFOGCA" After="SaveSettings">NOT REMOVE="ALL"</Custom>
       <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
       <Custom Action="UninstallFOGCA" After="InstallFiles">REMOVE="ALL"</Custom>
       <Custom Action="CleanTasks" After="InstallFiles"></Custom>
