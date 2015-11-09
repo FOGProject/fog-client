@@ -23,7 +23,6 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Tray.GTK;
 using UserNotification;
 using Zazzles;
 
@@ -31,48 +30,93 @@ namespace FOG.Tray
 {
     public sealed class Tray
     {
-        private static List<NotificationInvoker> _notifications = new List<NotificationInvoker>();
-        private static Form contextForm;
-        private static Thread trayThread;
-        private static object locker = new object();
-
+        private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
+        private static ITray _instance;
+        /// <summary>Program entry point.</summary>
+        /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
-            Log.Output = Log.Mode.Console;
+            Log.Output = Log.Mode.Quiet;
 
-            contextForm = new Form
+            bool isFirstInstance;
+            using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
-                Size = new Size(0,0),
-                Opacity = 0,
-                Visible = false,
-                ShowInTaskbar = false
-            };
+                if (!isFirstInstance) return;
+            }
 
+            Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
-            trayThread = new Thread(() => ShowTray());
-            trayThread.Start();
 
-            contextForm.Show();
-            Application.Run();
-        }
+            var hoverText = "FOG Client v" + Settings.Get("Version");
 
-        private static void ShowTray()
-        {
-            ITray _instance = null;
             switch (Settings.OS)
             {
-                case Settings.OSType.Windows:
+                default:
                     _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;
-                default:
-                    // _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
-                    break;
             }
-            _instance?.SetHover("FOG Client v" + Settings.Get("Version"));
+            _instance.SetHover(hoverText);
+        }
+
+        private static void UpdateFormLocation(int index)
+        {
+            var workingArea = Screen.PrimaryScreen.WorkingArea;
+            var height = workingArea.Bottom - _notifications[index].Height;
+            if (Settings.OS == Settings.OSType.Mac) height = height - 22;
+
+            height = (Settings.OS == Settings.OSType.Windows)
+                ? height - (_notifications[index].Height + 5) * index
+                : height + (_notifications[index].Height + 5) * index;
+
+            try
+            {
+                _notifications[index].Invoke(new MethodInvoker(
+                    delegate { _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height); }));
+            }
+            catch (Exception) { }
+
+            try
+            {
+                _notifications[index].Location = new Point(workingArea.Right - _notifications[index].Width, height);
+            }
+            catch (Exception) { }
+        }
+
+        private static void SpawnGUIThread(string title, string body)
+        {
+            var notThread = new Thread(() => SpawnForm(title, body))
+            {
+                Priority = ThreadPriority.Normal,
+                IsBackground = false,
+            };
+            notThread.Start();
+        }
+
+        private static void SpawnForm(string title, string body)
+        {
+            var notForm = new NotificationGUI(title, body);
+            _notifications.Add(notForm);
+            notForm.Disposed += delegate
+            {
+                _notifications.Remove(notForm);
+                ReOrderNotifications();
+                notForm.Dispose();
+                notForm = null;
+            };
+            UpdateFormLocation(_notifications.Count - 1);
+            Application.Run(notForm);
+        }
+
+        private static void ReOrderNotifications()
+        {
+            for (var i = 0; i < _notifications.Count; i++)
+            {
+                UpdateFormLocation(i);
+            }
         }
 
         private static void OnUpdate(dynamic data)
@@ -80,41 +124,20 @@ namespace FOG.Tray
             if (data.action == null) return;
 
             if (data.action.Equals("start"))
-            {
                 Application.Exit();
-                Environment.Exit(0);
-            }
         }
 
-        private static void ReOrderNotifications()
-        {
-            for (var i = 0; i < _notifications.Count; i++)
-            {
-                _notifications[i].UpdatePosition(i);
-            }
-        }
-
+        //Called when a message is recieved from the bus
         private static void OnNotification(dynamic data)
         {
             if (data.title == null || data.message == null) return;
-            var invoker = new NotificationInvoker(contextForm);
-            invoker.UpdateText(data.title.ToString(), data.message.ToString());
+            SpawnGUIThread(data.title.ToString(), data.message.ToString());
+        }
 
-            lock (locker)
-            {
-                _notifications.Add(invoker);
-                invoker.UpdatePosition(_notifications.IndexOf(invoker));
-            }
-
-            invoker.GUI.Disposed += delegate
-            {
-                lock (locker)
-                {
-                    _notifications.Remove(invoker);
-                    ReOrderNotifications();
-                }
-            };
-            invoker.Show();
+        private static MenuItem[] InitializeMenu()
+        {
+            var menu = new MenuItem[] { };
+            return menu;
         }
     }
 }

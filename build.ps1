@@ -25,8 +25,8 @@ Invoke-Expression ($nuget + "restore")
 Write-Host "Building Solution"
 Invoke-Expression ($msbuild + $solutionConfig)
 
-Write-Host "Rebuilding Tray with mono"
-Invoke-Expression ($xbuild + $trayConfig)
+#Write-Host "Rebuilding Tray with mono"
+#Invoke-Expression ($xbuild + $trayConfig)
 
 Write-Host "Copying Theme to build"
 Copy-Item "$PSScriptRoot\themes.xml" "$PSScriptRoot\bin\themes.xml"

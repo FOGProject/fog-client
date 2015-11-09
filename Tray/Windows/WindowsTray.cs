@@ -39,6 +39,11 @@ namespace FOG.Tray
             Application.Run();
         }
 
+        public NotifyIcon GetForm()
+        {
+            return this._notifyIcon; 
+        }
+
         private static MenuItem[] InitializeMenu()
         {
             var menu = new MenuItem[] { };

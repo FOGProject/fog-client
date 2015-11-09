@@ -97,21 +97,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtk-dotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -138,28 +123,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ITray.cs" />
-    <Compile Include="NotificationCenterForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="NotificationCenterForm.Designer.cs">
-      <DependentUpon>NotificationCenterForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="NotificationGUI.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="NotificationGUI.Designer.cs">
       <DependentUpon>NotificationGUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="NotificationInvoker.cs" />
     <Compile Include="Tray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="GTK\GTKTray.cs" />
     <Compile Include="Windows\WindowsTray.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NotificationCenterForm.resx">
-      <DependentUpon>NotificationCenterForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="NotificationGUI.resx">
       <DependentUpon>NotificationGUI.cs</DependentUpon>
     </EmbeddedResource>

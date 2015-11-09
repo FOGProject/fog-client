@@ -21,41 +21,48 @@ using System;
 using System.Drawing;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Newtonsoft.Json.Linq;
 using Zazzles;
 
 namespace UserNotification
 {
     public partial class NotificationGUI : Form
     {
-        public NotificationGUI()
+        public NotificationGUI(string title, string body)
         {
             InitializeComponent();
-            Location = new Point(0, 0);
-        }
-
-        public void SetTitle(string title)
-        {
+            Location = new Point(50, 50);
             this.titleLabel.Text = title;
-        }
-
-        public void SetBody(string body)
-        {
             this.bodyLabel.Text = body;
-        }
-
-        public void StartFade()
-        {
 #pragma warning disable 4014
-            Fade();
+            FadeIn();
+            FadeOut();
 #pragma warning restore 4014
         }
 
-        private async void Fade()
+        private async Task FadeOut()
+        {
+            await Task.Delay(6500);
+
+            for (var i = 1.0; i > 0; i = i - 0.01)
+            {
+                this.Opacity = i;
+                Application.DoEvents();
+                System.Threading.Thread.Sleep(5);
+            }
+            this.logButton.Dispose();
+            this.bodyLabel.Dispose();
+            this.titleLabel.Dispose();
+            this.panel1.Dispose();
+            this.logButton = null;
+            this.bodyLabel = null;
+            this.titleLabel = null;
+            this.panel1 = null;
+            this.Close();
+        }
+
+        private async Task FadeIn()
         {
             await Task.Delay(500);
-            this.Opacity = 0.01;
-            this.Show();
 
             for (var i = 0.0; i <= 1.0; i = i + 0.01)
             {
@@ -64,22 +71,17 @@ namespace UserNotification
                 System.Threading.Thread.Sleep(5);
             }
             this.Opacity = 1.0;
+        }
 
-            await Task.Delay(3000);
-
-            for (var i = 1.0; i > 0.02; i = i - 0.01)
-            {
-                this.Opacity = i;
-                Application.DoEvents();
-                System.Threading.Thread.Sleep(5);
-            }
-
-            this.Close();
+        private void SpawnCenter()
+        {
+            ProcessHandler.RunClientEXE("NotificationCenter.exe", "", false);
         }
 
         private void logButton_Click(object sender, EventArgs e)
         {
-            Close();
+            SpawnCenter();
+            this.Close();
         }
     }
 }
