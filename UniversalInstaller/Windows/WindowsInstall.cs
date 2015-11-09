@@ -53,6 +53,29 @@ namespace FOG
             return process.ExitCode == 0;
         }
 
+        public bool Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        {
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    Arguments =
+                        $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}\" " +
+                        $"/quiet " +
+                        $"USETRAY=\"{tray}\" " +
+                        $"WEBROOT=\"{webRoot}\" " +
+                        $"ROOTLOG=\"{rootLog}\" " +
+                        $"WEBADDRESS=\"{server}\" " +
+                        $"HTTPS=\"{https}\""
+                }
+            };
+            process.StartInfo.FileName = "msiexec";
+
+            process.Start();
+
+            return process.ExitCode == 0;
+        }
+
         public bool Configure()
         {
             return true;

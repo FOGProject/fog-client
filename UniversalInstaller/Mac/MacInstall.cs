@@ -54,6 +54,11 @@ namespace FOG
             return true;
         }
 
+        public bool Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        {
+            return Install();
+        }
+
         public bool Configure()
         {
             return true;

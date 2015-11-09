@@ -155,7 +155,7 @@ namespace FOG
             Helper.Instance.PrepareFiles();
 
             Console.WriteLine("Installing files...");
-            Helper.Instance.Install();
+            Helper.Instance.Install(https, tray, server, webRoot, company, rootLog);
 
             Console.WriteLine("Applying Configuration...");
             Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);

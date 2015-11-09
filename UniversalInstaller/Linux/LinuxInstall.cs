@@ -46,6 +46,11 @@ namespace FOG
             return AddControlScripts();
         }
 
+        public bool Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        {
+            return Install();
+        }
+
         private bool AddControlScripts()
         {
             var systemd = ProcessHandler.Run("pidof", "systemd");
