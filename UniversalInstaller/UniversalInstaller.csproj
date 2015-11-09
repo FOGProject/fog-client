@@ -103,12 +103,6 @@
   <ItemGroup>
     <Compile Include="GenricUnixInstall.cs" />
     <Compile Include="Helper.cs" />
-    <None Include="GUI.cs">
-      <SubType>Form</SubType>
-    </None>
-    <Compile Include="GUI.Designer.cs">
-      <DependentUpon>GUI.cs</DependentUpon>
-    </Compile>
     <Compile Include="IInstall.cs" />
     <Compile Include="Linux\LinuxInstall.cs" />
     <Compile Include="Mac\MacInstall.cs" />
@@ -154,11 +148,6 @@
       <EmbedAssembly>true</EmbedAssembly>
       <Private>False</Private>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GUI.resx">
-      <DependentUpon>GUI.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
