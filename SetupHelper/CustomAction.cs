@@ -46,11 +46,12 @@ namespace SetupHelper
                 "ROOTLOG", "INSTALLDIR", "ProductVersion", "LIGHT" };
             try
             {
+                if(File.Exists(jsonFile))
+                    File.Delete(jsonFile);
                 var json = new JObject();
 
                 foreach (var prop in properties)
                     json[prop] = session[prop];
-
                 File.WriteAllText(jsonFile, json.ToString());
                 return ActionResult.Success;
             }
@@ -67,10 +68,10 @@ namespace SetupHelper
             try
             {
                 var config = GetSettings();
-                if(GetValue("LIGHT", config).Equals("1"))
+                if (GetValue("LIGHT", config).Equals("1"))
                     return ActionResult.Success;
 
-                return GenericSetup.PinServerCert(GetValue("INSTALLLOCATION", config)) ? ActionResult.Success : ActionResult.Failure;
+                return GenericSetup.PinServerCert(GetValue("INSTALLDIR", config)) ? ActionResult.Success : ActionResult.Failure;
             }
             catch (Exception ex)
             {
@@ -95,8 +96,8 @@ namespace SetupHelper
                     GetValue("WEBROOT", config),
                     "FOG",
                     GetValue("ROOTLOG", config),
-                    GetValue("INSTALLLOCATION", config),
-                    GetValue("ProductVersion", config));
+                    GetValue("ProductVersion", config),
+                     GetValue("INSTALLDIR", config));
 
                 return ActionResult.Success;
             }

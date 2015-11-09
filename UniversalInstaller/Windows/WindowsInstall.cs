@@ -43,20 +43,12 @@ namespace FOG
             {
                 StartInfo =
                 {
-                    Arguments =
-                        $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}\" " +
-                        $"/quiet " +
-                        $"LIGHT=\"1\""
+                    Arguments = $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}"
                 }
             };
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
             process.StartInfo.FileName = "msiexec";
 
             process.Start();
-            process.WaitForExit();
 
             return process.ExitCode == 0;
         }

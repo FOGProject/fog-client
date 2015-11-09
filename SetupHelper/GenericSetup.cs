@@ -53,9 +53,9 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Could not pin CA");
+                Log.Error(LogName, "Could not pin server CA");
                 Log.Error(LogName, ex);
-                return false;
+                throw;
             }
         }
 
@@ -92,7 +92,7 @@ namespace FOG
             {
                 Log.Error(LogName, "Could not save settings");
                 Log.Error(LogName, ex);
-                return false;
+                throw;
             }
         }
 
@@ -111,9 +111,9 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Could unpin CA cert");
+                Log.Error(LogName, "Could unpin server CA cert");
                 Log.Error(LogName, ex);
-                return false;
+                throw;
             }
         }
 
