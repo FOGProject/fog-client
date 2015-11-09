@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.IO;
-using System.Windows.Forms;
 using Zazzles;
 
 namespace FOG
@@ -106,7 +104,7 @@ namespace FOG
                 PerformCLIInstall();
         }
 
-        private static void ShowGUI()
+/*        private static void ShowGUI()
         {
             Log.Output = Log.Mode.File;
             Log.FilePath = Path.Combine(Settings.Location, "FOGService-install.log");
@@ -118,6 +116,7 @@ namespace FOG
             if(!gui.Success)
                 Environment.Exit(1);
         }
+*/
 
         private static void PerformCLIUninstall()
         {
