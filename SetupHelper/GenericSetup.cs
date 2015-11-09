@@ -156,7 +156,7 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Could not find FOG CA cert");
+                Log.Error(LogName, "Could not find FOG Project CA cert");
                 Log.Error(LogName, ex);
                 throw;
             }
@@ -173,7 +173,7 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Could not remove FOG CA cert");
+                Log.Error(LogName, "Could not remove FOG Project CA cert");
                 Log.Error(LogName, ex);
                 throw;
             }

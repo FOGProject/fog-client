@@ -112,7 +112,7 @@ namespace FOG
         {
             var certPath = Path.Combine(Instance.GetLocation(), "fog.ca.cer");
 
-            ExtractResource("FOG.Scripts.fog.ca.cer", certPath , true);
+            ExtractResource("FOG.Scripts.fog-ca.cer", certPath , true);
             GenericSetup.InstallFOGCert(certPath);
         }
 
