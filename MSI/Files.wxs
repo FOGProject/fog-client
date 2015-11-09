@@ -34,7 +34,7 @@
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
-            <File Id="FOGCA" Name="fog.ca.cer" Source="..\UniversalInstaller\Scripts\fog.ca.cer" />
+            <File Id="FOGCA" Name="fog.ca.cer" Source="..\UniversalInstaller\Scripts\fog-ca.cer" />
 
             <File Id="logo" Name="logo.ico" Source="..\bin\logo.ico" />
             <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
