@@ -29,6 +29,8 @@
             <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe">
               <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any" />
             </File>
+            
+            <File Id="FOGServiceConfig" Name="FOGService.exe.config" Source="..\bin\FOGService.exe.config" />
 
             <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
