@@ -43,6 +43,8 @@ namespace FOG.Tray
 
             contextForm = new Form
             {
+                Size = new Size(0,0),
+                Opacity = 0,
                 Visible = false,
                 ShowInTaskbar = false
             };
