@@ -51,7 +51,7 @@ namespace FOG.Handlers.Middleware
 
                 var certificate = new X509Certificate2(keyPath);
 
-                if (!Data.RSA.IsFromCA(Data.RSA.GetCACertificate(), certificate))
+                if (!Data.RSA.IsFromCA(Data.RSA.GetRootCertificate(), certificate))
                     throw new Exception("Certificate is not from FOG CA");
 
                 Log.Entry(LogName, "Cert OK");

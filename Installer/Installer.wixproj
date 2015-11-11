@@ -41,8 +41,8 @@
     <Compile Include="Product.wxs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="icon.ico" />
     <Content Include="license.rtf" />
+    <Content Include="logo.ico" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

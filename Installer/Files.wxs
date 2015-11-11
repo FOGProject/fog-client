@@ -37,7 +37,10 @@
             <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe" />
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
-            <File Id="FOGNotificationGUI" Name="FOGNotificationGUI.exe" Source="..\bin\FOGNotificationGUI.exe" />
+            <File Id="FOGNotificationGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe" />
+            <File Id="theme" Name="themes.xml" Source="..\themes.xml" />
+            <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
+            <File Id="MetroFrameworkFonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe" />
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
                   Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />

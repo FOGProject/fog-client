@@ -92,6 +92,12 @@ namespace FOG.Modules.HostnameChanger
 
             if (taskResponse.Error) return;
 
+            if (!taskResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             RenameComputer(taskResponse);
 
             if (!Power.ShuttingDown && !Power.Requested)
@@ -122,7 +128,7 @@ namespace FOG.Modules.HostnameChanger
             UnRegisterComputer(response);
             if (Power.ShuttingDown || Power.Requested) return;
 
-           Log.Entry(Name, "Updating registry");
+            Log.Entry(Name, "Updating registry");
 
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
                 response.GetField("#hostname"));
@@ -173,15 +179,21 @@ namespace FOG.Modules.HostnameChanger
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-            if (returnCode == 2224)
-                returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
-            else if (returnCode == 2 || returnCode == 50)
-                returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            switch (returnCode)
+            {
+                case 2224:
+                    returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
+                    break;
+                case 2:
+                case 50:
+                case 1355:
+                    returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                    break;
+            }
 
             // Entry the results
-            Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                : "Unknown Return Code: "), returnCode));
+            Log.Entry(Name,
+                           $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
             if (returnCode.Equals(0))
                 Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);

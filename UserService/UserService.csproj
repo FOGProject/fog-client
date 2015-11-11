@@ -97,8 +97,8 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -144,6 +144,10 @@
     <ProjectReference Include="..\Service\Service.csproj">
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
       <Name>Service</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShutdownGUI\ShutdownGUI.csproj">
+      <Project>{ddf7fd1e-8e0e-422f-bac2-f31810dfaa9a}</Project>
+      <Name>ShutdownGUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\Tray\Tray.csproj">
       <Project>{3E31CCE4-D06A-4F02-A3E8-981B9033CA32}</Project>

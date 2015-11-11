@@ -20,14 +20,14 @@
 -->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
-  <Product Id="*" Name="FOG Service" Language="1033" Version="0.9.5" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
+  <Product Id="*" Name="FOG Service" Language="1033" Version="0.9.6" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
            Manufacturer="FOG">
     <Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="300" Compressed="yes"
              InstallScope="perMachine" />
     <!-- Remove old versions -->
     <Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">
       <UpgradeVersion OnlyDetect="yes" Minimum="0.0.0" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.9.4" Property="OLDERVERSIONBEINGUPGRADED"
+      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.9.5" Property="OLDERVERSIONBEINGUPGRADED"
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
@@ -43,7 +43,7 @@
     </InstallExecuteSequence>
     <!-- Setup the UI -->
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
-    <Icon Id="icon.ico" SourceFile="icon.ico" />
+    <Icon Id="icon.ico" SourceFile="logo.ico" />
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     <Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
     <Property Id="USETRAY" Value="1" />

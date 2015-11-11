@@ -95,7 +95,8 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -123,10 +124,12 @@
     <ProjectReference Include="..\Handlers\Handlers.csproj">
       <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
       <Name>Handlers</Name>
+      <Private>True</Private>
     </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
       <Name>Modules</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

@@ -46,6 +46,12 @@ namespace FOG.Modules.GreenFOG
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (response.Error) return;
 
+            if (!response.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             var tasks = response.GetList("#task", false);
 
             //Filter existing tasks

@@ -40,7 +40,13 @@ namespace FOG.Modules.TaskReboot
 
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (response.Error) return;
-            
+
+            if (!response.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             Log.Entry(Name, "Restarting computer for task");
 
             Power.Restart(Name, ShouldAbort, Power.FormOption.Delay);

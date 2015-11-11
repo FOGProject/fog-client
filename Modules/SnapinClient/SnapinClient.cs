@@ -21,6 +21,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
@@ -47,6 +48,13 @@ namespace FOG.Modules.SnapinClient
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
+
+                if (!taskResponse.Encrypted)
+                {
+                    Log.Error(Name, "Response was not encrypted");
+                    return;
+                }
+
                 Log.Entry(Name, "Snapin Found:");
                 Log.Entry(Name, string.Format("    ID: {0}", taskResponse.GetField("JOBTASKID")));
                 Log.Entry(Name, string.Format("    RunWith: {0}", taskResponse.GetField("SNAPINRUNWITH")));
@@ -56,6 +64,12 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, string.Format("    Created: {0}", taskResponse.GetField("JOBCREATION")));
                 Log.Entry(Name, string.Format("    Args: {0}", taskResponse.GetField("SNAPINARGS")));
                 Log.Entry(Name, string.Format("    Reboot: {0}", taskResponse.GetField("SNAPINBOUNCE")));
+
+                if (string.IsNullOrEmpty(taskResponse.GetField("SNAPINHASH")))
+                {
+                    Log.Error(Name, "Snapin hash does not exist");
+                    return;
+                }
 
                 var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
 
@@ -67,6 +81,16 @@ namespace FOG.Modules.SnapinClient
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
+                    var sha512 = Transform.SHA512(snapinFilePath);
+                    if (!sha512.ToUpper().Equals(taskResponse.GetField("SNAPINHASH").ToUpper()))
+                    {
+                        Log.Error(Name, "Hash does not match");
+                        Log.Error(Name, "--> Ideal: " + taskResponse.GetField("SNAPINHASH"));
+                        Log.Error(Name, "--> Actual: " + sha512);
+
+                        return;
+                    }
+
                     exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
@@ -149,8 +173,10 @@ namespace FOG.Modules.SnapinClient
                     taskResponse.GetField("SNAPINRUNWITH"));
 
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(
-                    string.Format("{0} \"{1} \"{2}", taskResponse.GetField("SNAPINRUNWITHARGS"), 
-                        snapinPath, Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))));
+                    $"{taskResponse.GetField("SNAPINRUNWITHARGS").Trim()} " +
+                    $"\"{snapinPath.Trim()}\" " +
+                    $"{Environment.ExpandEnvironmentVariables(taskResponse.GetField("SNAPINARGS"))}"
+                    .Trim());
             }
             else
             {

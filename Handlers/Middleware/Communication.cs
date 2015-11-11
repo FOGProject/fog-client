@@ -47,7 +47,10 @@ namespace FOG.Handlers.Middleware
                 try
                 {
                     var rawResponse = webClient.DownloadString(Configuration.ServerAddress + postfix);
-                    rawResponse = Authentication.Decrypt(rawResponse);
+                    var encrypted = rawResponse.StartsWith("#!en");
+
+                    if (encrypted)
+                        rawResponse = Authentication.Decrypt(rawResponse);
 
                     //See if the return code is known
                     var messageFound = false;
@@ -62,7 +65,7 @@ namespace FOG.Handlers.Middleware
                         Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
 
 
-                    if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse);
+                    if (!rawResponse.StartsWith("#!ihc")) return new Response(rawResponse, encrypted);
 
                     return Authentication.HandShake() ? GetResponse(postfix) : new Response();
                 }
@@ -130,7 +133,10 @@ namespace FOG.Handlers.Middleware
                     var rawResponse = webClient.UploadString(Configuration.ServerAddress + postfix, param);
                     Log.Debug(LogName, rawResponse);
 
-                    rawResponse = Authentication.Decrypt(rawResponse);
+                    var encrypted = rawResponse.StartsWith("#!en");
+
+                    if (encrypted)
+                        rawResponse = Authentication.Decrypt(rawResponse);
 
                     var messageFound = false;
                     foreach (var returnMessage in Response.Codes.Keys.Where(returnMessage => rawResponse.StartsWith(returnMessage)))
@@ -143,7 +149,7 @@ namespace FOG.Handlers.Middleware
                     if (!messageFound)
                         Log.Entry(LogName, string.Format("Unknown Response: {0}", rawResponse.Replace("\n", "")));
 
-                    return new Response(rawResponse);
+                    return new Response(rawResponse, encrypted);
                 }
             }
             catch (Exception ex)

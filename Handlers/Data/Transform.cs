@@ -129,5 +129,74 @@ namespace FOG.Handlers.Data
         {
             return !File.Exists(filePath) ? null : MD5Hash(File.ReadAllBytes(filePath));
         }
+
+        /// <summary>
+        ///     Creates a sha512 hash of bytes
+        /// </summary>
+        /// <param name="data">The bytes to hash</param>
+        /// <returns></returns>
+        public static string SHA512(byte[] data)
+        {
+            using (var alg = System.Security.Cryptography.SHA512.Create())
+                return HashBytes(alg, data);
+        }
+
+        /// <summary>
+        ///     Creates a sha512 hash of a file
+        /// </summary>
+        /// <param name="filePath">The path to the file</param>
+        /// <returns></returns>
+        public static string SHA512(string filePath)
+        {
+            using (var alg = System.Security.Cryptography.SHA512.Create())
+                return HashFile(alg, filePath);
+        }
+
+        /// <summary>
+        /// Hash a set of bytes with a given algorithm, digested to hex form
+        /// </summary>
+        /// <param name="alg">The hash to use</param>
+        /// <param name="data">The bytes to hash</param>
+        /// <returns>A hex encoded hash</returns>
+        private static string HashBytes(HashAlgorithm alg, byte[] data)
+        {
+            if (data == null) return null;
+
+            try
+            {
+                alg.ComputeHash(data);
+                return BitConverter.ToString(alg.Hash).Replace("-", "");
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to hash bytes");
+                Log.Error(LogName, ex);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Hash a file with a given algorithm, digested to hex form
+        /// </summary>
+        /// <param name="alg">The hash to use</param>
+        /// <param name="filePath">The file to hash</param>
+        /// <returns>A hex encoded hash</returns>
+        private static string HashFile(HashAlgorithm alg, string filePath)
+        {
+            if (filePath == null) return null;
+
+            try
+            {
+                return !File.Exists(filePath) ? null : HashBytes(alg, File.ReadAllBytes(filePath));
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to hash file: " + filePath);
+                Log.Error(LogName, ex);
+            }
+
+            return null;
+        }
     }
 }
