@@ -47,12 +47,6 @@ namespace FOG.Modules.PrinterManager
             //Get printers
             var printerResponse = Communication.GetResponse("/service/Printers.php", true);
 
-            if (!printerResponse.Encrypted)
-            {
-                Log.Error(Name, "Response was not encrypted");
-                return;
-            }
-
             if (printerResponse.GetField("#mode").Equals("0")) return;
 
             if (printerResponse.Error && printerResponse.ReturnCode.Equals("#!np"))
@@ -61,6 +55,12 @@ namespace FOG.Modules.PrinterManager
                 return;
             }
             if (printerResponse.Error) return;
+
+            if (!printerResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
 
             Log.Entry(Name, "Creating list of printers");
             var printerIDs = printerResponse.GetList("#printer", false);
