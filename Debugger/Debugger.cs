@@ -127,9 +127,9 @@ namespace FOG
             else if (command.Length == 1 && command[0].Equals("help"))
             {
                 Log.WriteLine(" authenticate <-- Authenticates the debugger shell");
-                Log.WriteLine(" configue server ____ <-- Sets the server address");
-                Log.WriteLine(" configue mac ____ <-- Sets the mac address");
-                Log.WriteLine(" configue default <-- Sets the default testing mac and server address");
+                Log.WriteLine(" configure server ____ <-- Sets the server address");
+                Log.WriteLine(" configure mac ____ <-- Sets the mac address");
+                Log.WriteLine(" configure default <-- Sets the default testing mac and server address");
                 foreach (var module in _modules.Keys)
                 {
                     Log.WriteLine(" " + module + "<-- Runs this specific module");
