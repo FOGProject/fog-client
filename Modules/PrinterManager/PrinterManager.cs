@@ -56,12 +56,6 @@ namespace FOG.Modules.PrinterManager
             }
             if (printerResponse.Error) return;
 
-            if (!printerResponse.Encrypted)
-            {
-                Log.Error(Name, "Response was not encrypted");
-                return;
-            }
-
             Log.Entry(Name, "Creating list of printers");
             var printerIDs = printerResponse.GetList("#printer", false);
             Log.Entry(Name, "Creating printer objects");
