@@ -58,7 +58,7 @@ There are three printer management modes
 2. **FOG Managed Printers** The module will only remove printers from a computer if FOG is set to manage it. For example, if a person has personal printer attached to their computer, this module will not touch it.
 3. **Only Assigned Printers** This mode should be used with caution. If selected, this module will only allow assigned printers to be added to a computer. For example, if a person has a personal printer, this module will prevent the user from adding it, unless a FOG administrator adds the printer to the list of managed.
 
-### SnapinClient
+#### SnapinClient
 Snapins are executables push out via the FOG server. A snapin can also be set to reboot after finishing. With this module you can push out MSIs, EXEs, batch scripts, shell scripts, or any other file capable of being executed.
 
 #### TaskReboot
