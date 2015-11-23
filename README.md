@@ -29,8 +29,30 @@ Windows      | Linux       | OSX
 | Network Printers | ✓ |  |  |
 | CUPS Printers |  | ✓ | ✓ |
 
+## Building
+
+#### Environment
+
+To build the entire client (including the Installer) Windows is required. This is due to the MSI for network deployment and the Universal Installer. The following dependencies must be installed and included in PATH
+* [WiX Toolset](http://wixtoolset.org/)
+* Powershell
+* [.NET v4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
+* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) **(Included with Visual Studios 2015)**
+
+Powershell must be configured to allow scripts to be run on the machine. Open CMD as adminstrator and run
+```
+powershell "Set-ExecutionPolicy RemoteSigned"
+```
+
+#### Build Command
+```
+powershell "C:\path\to\fog-client\build.ps1"
+```
+
+The binaries will be in `C:\path\to\fog-client\bin`
+
 ## Modules
-The client's functionality derives from Modules. Each module has 1 specific goal, and is isolated from every other module. Each module is executed in a sandbox-like environment, preventing bad code from crashing the service. Since each module is isolated, the client's server can choose which modules to enable or disable.
+The client's functionality derives from modules. Each module has 1 specific goal, and is isolated from every other module. Each module is executed in a sandbox-like environment, preventing bad code from crashing the service. Since each module is isolated, the client's server can choose which modules to enable or disable.
 
 #### AutoLogOut
 AutoLogOut is responsible for automatically logging out users after a set inactivity period. Once that time period is reached, the user is notified that if they remain inactive they will be logged out.
@@ -66,26 +88,4 @@ TaskReboot will automatically restart a computer if the client's server has task
 
 #### UserTracker
 UserTracker will automatically report to the FOG server any logins or logouts that occur on the computer.
-
-## Building
-
-#### Environment
-
-To build the entire client (including the Installer) Windows is required. This is due to the MSI for network deployment and the Universal Installer. The following dependencies must be installed and included in PATH
-* [WiX Toolset](http://wixtoolset.org/)
-* Powershell
-* [.NET v4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
-* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) **(Included with Visual Studios 2015)**
-
-Powershell must be configured to allow scripts to be run on the machine. Open CMD as adminstrator and run
-```
-powershell "Set-ExecutionPolicy RemoteSigned"
-```
-
-#### Build Command
-```
-powershell "C:\path\to\fog-client\build.ps1"
-```
-
-The binaries will be in `C:\path\to\fog-client\bin`
 
