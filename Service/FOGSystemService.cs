@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net.Security;
+using System.Threading;
 using FOG.Handlers;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
@@ -34,12 +36,6 @@ namespace FOG
             dynamic json = new JObject();
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);
-
-            Log.NewLine();
-            Log.PaddedHeader("Authentication");
-            Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
-            if (!Authentication.HandShake()) return;
-            Log.NewLine();
         }
 
 
@@ -74,10 +70,28 @@ namespace FOG
 
         protected override void ModuleLooper()
         {
+            Authenticate();
+
             base.ModuleLooper();
 
             if (Power.Updating)
                 UpdateHandler.BeginUpdate();
+        }
+
+        private void Authenticate()
+        {
+            while (true)
+            {
+                Log.NewLine();
+                Log.PaddedHeader("Authentication");
+                Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+                if(Authentication.HandShake()) break;
+
+
+                Log.Entry(Name, "Sleeping for 120 seconds");
+                Thread.Sleep(120 * 1000);
+            }
+            Log.NewLine();
         }
 
         protected override int? GetSleepTime()
