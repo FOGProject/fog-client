@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -56,12 +57,6 @@ namespace FOG
             // Start the UserServiceSpawner
             if (Settings.OS == Settings.OSType.Linux)
                 UserServiceSpawner.Start();
-
-            Log.NewLine();
-            Log.PaddedHeader("Authentication");
-            Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
-            if (!Authentication.HandShake()) return;
-            Log.NewLine();
         }
 
         protected override void Unload()
@@ -96,12 +91,29 @@ namespace FOG
 
         protected override void ModuleLooper()
         {
+            Authenticate();
+
             base.ModuleLooper();
 
             if (Power.Updating)
                 UpdateHandler.BeginUpdate();
 
             Process.GetCurrentProcess().Kill();
+        }
+
+        private void Authenticate()
+        {
+            while (true)
+            {
+                Log.NewLine();
+                Log.PaddedHeader("Authentication");
+                Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
+                if (Authentication.HandShake()) break;
+
+                Log.Entry(Name, "Sleeping for 120 seconds");
+                Thread.Sleep(120 * 1000);
+            }
+            Log.NewLine();
         }
 
         protected override int? GetSleepTime()
