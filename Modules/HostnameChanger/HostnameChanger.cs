@@ -255,7 +255,7 @@ namespace FOG.Modules.HostnameChanger
 
             if (key.EndsWith(partialKey))
             {
-                if (WinActivation.IsActivated())
+                if (!WinActivation.IsActivated())
                 {
                     Log.Entry(Name, "Windows has correct key but is not licensed");
                 }
