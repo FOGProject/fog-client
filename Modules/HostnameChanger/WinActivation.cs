@@ -78,7 +78,7 @@ namespace FOG.Modules.HostnameChanger
         private static string[] GetSLMGROutput(params string[] args)
         {
             var slmgrLoc = Path.Combine(Environment.SystemDirectory, "slmgr.vbs");
-            var procArg = $@"/B /Nologo {slmgrLoc} {string.Join(" ", args)}";
+            var procArg = $@"{slmgrLoc} {string.Join(" ", args)}";
 
             return ProcessHandler.GetOutput("cscript", procArg);
         }

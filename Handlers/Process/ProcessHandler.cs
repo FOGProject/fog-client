@@ -39,7 +39,9 @@ namespace FOG.Handlers
             {
                 FileName = filePath,
                 Arguments = string.Join(" ", args),
-                WindowStyle = ProcessWindowStyle.Hidden
+                WindowStyle = ProcessWindowStyle.Hidden,
+                RedirectStandardOutput = true,
+                UseShellExecute = false
             };
 
             Log.Debug(LogName, "Running process...");
@@ -49,8 +51,8 @@ namespace FOG.Handlers
             using (var proc = new Process { StartInfo =  procInfo })
             {
                 proc.Start();
-                var output = proc.StandardOutput.ReadToEnd();
                 proc.WaitForExit();
+                var output = proc.StandardOutput.ReadToEnd();
                 return output.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
             }
         }
