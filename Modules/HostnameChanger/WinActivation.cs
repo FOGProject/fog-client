@@ -64,7 +64,14 @@ namespace FOG.Modules.HostnameChanger
         private static bool ActivateInstalledKey()
         {
             Log.Entry(LogName, "Activating Product key");
-            return RunSLMGR("/ato") == 0;
+            var exitCode = RunSLMGR("/ato");
+
+            if (exitCode == -1073430520)
+            {
+                Log.Error(LogName, "Windows rejected product key");
+            }
+
+            return exitCode == 0;
         }
 
         private static int RunSLMGR(params string[] args)
