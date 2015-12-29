@@ -126,40 +126,29 @@ namespace FOG.Modules.HostnameChanger.Windows
 
         public void ActivateComputer(string key)
         {
+            Log.Entry(Name, "Checking Product Key Activation");
             if (key.Length != 29)
             {
-                Log.Error(Name, "Invalid product key");
+                Log.Error(Name, "Invalid product key provided by server");
                 return;
             }
 
-            try
-            {
-                using (var process = new Process
-                {
-                    StartInfo =
-                    {
-                        FileName = @"cscript",
-                        Arguments = $"//B //Nologo {Environment.SystemDirectory}\\slmgr.vbs /ipk {key}",
-                        WindowStyle = ProcessWindowStyle.Hidden
-                    }
-                })
-                {
-                    //Give windows the new key
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
+            var partialKey = WinActivation.GetPartialKey();
 
-                    //Try and activate the new key
-                    process.StartInfo.Arguments = $"//B //Nologo {Environment.SystemDirectory}\\slmgr.vbs /ato";
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
+            if (key.EndsWith(partialKey))
+            {
+                if (!WinActivation.IsActivated())
+                {
+                    Log.Entry(Name, "Windows has correct key but is not licensed");
+                }
+                else
+                {
+                    Log.Entry(Name, "Already activated with correct key");
+                    return;
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(Name, ex);
-            }
+
+            WinActivation.SetProductKey(key);
         }
 
         //Import dll methods

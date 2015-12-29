@@ -166,8 +166,6 @@ namespace FOG.Modules.HostnameChanger
             if (!response.IsFieldValid("#Key"))
                 return;
 
-            Log.Entry(Name, "Activing host with product key");
-
             try
             {
                 _instance.ActivateComputer(response.GetField("#Key"));
