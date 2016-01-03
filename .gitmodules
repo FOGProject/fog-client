@@ -1,4 +1,3 @@
 [submodule "libs/zazzles"]
 	path = libs/zazzles
 	url = https://github.com/FOGProject/zazzles.git
-	branch = websocket
