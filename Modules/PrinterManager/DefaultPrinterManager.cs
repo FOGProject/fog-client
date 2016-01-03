@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,9 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Zazzles;
-using Zazzles.Middleware;
 using Zazzles.Modules;
 
 // ReSharper disable ParameterTypeCanBeEnumerable.Local
@@ -29,13 +30,17 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class DefaultPrinterManager : AbstractModule
+    public sealed class DefaultPrinterManager : PolicyModule<PrinterMessage>
     {
+        public override string Name { get; protected set; }
+        public override Settings.OSType Compatiblity { get; protected set; }
+
         private readonly PrintManagerBridge _instance;
 
         public DefaultPrinterManager()
         {
             Name = "PrinterManager";
+            Compatiblity = Settings.OSType.All;
 
             switch (Settings.OS)
             {
@@ -48,14 +53,10 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected override void DoWork()
+        protected override void OnEvent(PrinterMessage message)
         {
-            //Get printers
-            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
-            if (printerResponse.Error || printerResponse.GetField("#mode").Equals("0")) return;
-
             Log.Entry(Name, "Creating list of printers");
-            var printerIDs = printerResponse.GetList("#printer", false);
+            var printerIDs = data["printers"].ToObject<List<string>>();
             Log.Entry(Name, "Creating printer objects");
             var printers = PrinterManager.CreatePrinters(printerIDs);
 

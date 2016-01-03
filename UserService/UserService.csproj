@@ -120,10 +120,6 @@
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="Zazzles, Version=1.0.5764.34033, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Zazzles.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FOGUserService.cs" />
@@ -131,6 +127,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\libs\zazzles\Zazzles\Zazzles.csproj">
+      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
+      <Name>Zazzles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{D6372438-04EA-439C-8F7C-EE06446D9284}</Project>
       <Name>Modules</Name>

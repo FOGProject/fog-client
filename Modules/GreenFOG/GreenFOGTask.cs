@@ -17,16 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using Newtonsoft.Json;
 
-using Newtonsoft.Json.Linq;
-
-namespace FOG.Modules.HostnameChanger
+namespace FOG.Modules.GreenFOG
 {
-    internal interface IHostName
+    public class GreenFOGTask
     {
-        void RenameComputer(string hostname);
-        bool RegisterComputer(HostNameMessage data);
-        void UnRegisterComputer(HostNameMessage data);
-        void ActivateComputer(string key);
+        [JsonProperty(Required = Required.Always)]
+        public int Minutes { get; private set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public int Hours { get; private set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public bool Reboot { get; private set; }
     }
 }

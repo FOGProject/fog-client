@@ -1,6 +1,6 @@
 /*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
+using Newtonsoft.Json.Linq;
 using Zazzles;
-using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Mac
 {
@@ -35,19 +35,15 @@ namespace FOG.Modules.HostnameChanger.Mac
             ProcessHandler.Run("scutil", "--set ComputerName " + hostname);
         }
 
-        public bool RegisterComputer(Response response)
+        public bool RegisterComputer(HostNameMessage data)
         {
-            var domain = response.GetField("#ADDom");
-            var ou = response.GetField("#ADOU");
-            var adadmin = response.GetField("#ADUser");
-            var adpass = response.GetField("#ADPass");
             var returnCode = ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "/Scripts/Mac/osxADBind.sh")} {domain} {ou} {adadmin} {adpass}");
+                $"{Path.Combine(Settings.Location, "/Scripts/Mac/osxADBind.sh")} {data.Domain} {data.OU} {data.User} {data.User}");
 
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(Response response)
+        public void UnRegisterComputer(HostNameMessage data)
         {
             throw new NotImplementedException();
         }

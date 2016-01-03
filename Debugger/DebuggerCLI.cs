@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,25 +18,22 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using FOG.Commands;
 using Zazzles;
+using Zazzles.Debugger;
 
 namespace FOG
 {
-    internal class Debugger
+    internal class DebuggerCLI
     {
         private const string Name = "Console";
-        private static Zazzles.Debugger _instance;
+        private static Debugger _instance;
 
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
             Eager.Initalize();
 
-            _instance = new Zazzles.Debugger();
-            _instance.AddCommand("module", new ModuleCommand());
+            _instance = new Debugger();
 
             Log.PaddedHeader("FOG Console");
             Log.Entry(Name, "Type ? for a list of commands");

@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
@@ -50,42 +51,6 @@ namespace FOG.Modules.PrinterManager
                 default:
                     _instance = new UnixPrinterManager();
                     break;
-            }
-        }
-
-        protected override void DoWork()
-        {
-            //Get printers
-            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
-
-            if (printerResponse.GetField("#mode").Equals("0")) return;
-
-            if (printerResponse.Error && printerResponse.ReturnCode.Equals("#!np"))
-            {
-                RemoveExtraPrinters(new List<Printer>(), printerResponse.GetField("#mode").Equals("ar"));
-                return;
-            }
-            if (printerResponse.Error) return;
-            if (!printerResponse.Encrypted)
-            {
-                Log.Error(Name, "Response was not encrypted");
-                return;
-            }
-
-            Log.Entry(Name, "Creating list of printers");
-            var printerIDs = printerResponse.GetList("#printer", false);
-            Log.Entry(Name, "Creating printer objects");
-            var printers = CreatePrinters(printerIDs);
-
-            RemoveExtraPrinters(printers, printerResponse.GetField("#mode").Equals("ar"));
-
-            Log.Entry(Name, "Adding printers");
-            foreach (var printer in printers)
-            {
-                if (!PrinterExists(printer.Name))
-                    printer.Add(_instance);
-                else
-                    Log.Entry(Name, printer.Name + " already exists");
             }
         }
 
@@ -176,6 +141,42 @@ namespace FOG.Modules.PrinterManager
                     printerData.GetField("#default").Equals("1"));
 
             return null;
+        }
+
+        public override void ProcessEvent(JObject data)
+        {
+            //Get printers
+            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
+
+            if (printerResponse.GetField("#mode").Equals("0")) return;
+
+            if (printerResponse.Error && printerResponse.ReturnCode.Equals("#!np"))
+            {
+                RemoveExtraPrinters(new List<Printer>(), printerResponse.GetField("#mode").Equals("ar"));
+                return;
+            }
+            if (printerResponse.Error) return;
+            if (!printerResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
+            Log.Entry(Name, "Creating list of printers");
+            var printerIDs = printerResponse.GetList("#printer", false);
+            Log.Entry(Name, "Creating printer objects");
+            var printers = CreatePrinters(printerIDs);
+
+            RemoveExtraPrinters(printers, printerResponse.GetField("#mode").Equals("ar"));
+
+            Log.Entry(Name, "Adding printers");
+            foreach (var printer in printers)
+            {
+                if (!PrinterExists(printer.Name))
+                    printer.Add(_instance);
+                else
+                    Log.Entry(Name, printer.Name + " already exists");
+            }
         }
     }
 }

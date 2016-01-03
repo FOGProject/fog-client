@@ -1,6 +1,6 @@
 ﻿/*
- * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Zazzles : A cross platform service framework
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,19 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.GreenFOG
-{
-    internal class Task
-    {
-        public Task(int minutes, int hours, bool reboot)
-        {
-            Minutes = minutes;
-            Hours = hours;
-            Reboot = reboot;
-        }
 
-        public int Minutes { get; private set; }
-        public int Hours { get; private set; }
-        public bool Reboot { get; private set; }
+using Newtonsoft.Json;
+
+namespace FOG.Modules.HostnameChanger
+{
+    public class HostNameMessage
+    {
+        [JsonProperty(Required = Required.Always)]
+        public string HostName { get; private set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public bool ActiveDirectory { get; private set; }
+
+        public string ProductKey { get; private set; }
+        public string Domain { get; private set; }
+        public string OU { get; private set; }
+        public string User { get; private set; }
+        public string Password { get; private set; }
     }
 }

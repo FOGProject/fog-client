@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,7 +22,6 @@ using FOG.Modules.HostnameChanger.Linux;
 using FOG.Modules.HostnameChanger.Mac;
 using FOG.Modules.HostnameChanger.Windows;
 using Zazzles;
-using Zazzles.Middleware;
 using Zazzles.Modules;
 
 namespace FOG.Modules.HostnameChanger
@@ -30,13 +29,16 @@ namespace FOG.Modules.HostnameChanger
     /// <summary>
     ///     Rename a host, register with AD, and activate the windows key
     /// </summary>
-    public class HostnameChanger : AbstractModule
+    public sealed class HostnameChanger : PolicyModule<HostNameMessage>
     {
         private readonly IHostName _instance;
+        public override string Name { get; protected set; }
+        public override Settings.OSType Compatiblity { get; protected set; }
 
         public HostnameChanger()
         {
             Name = "HostnameChanger";
+            Compatiblity = Settings.OSType.All;
 
             switch (Settings.OS)
             {
@@ -52,60 +54,26 @@ namespace FOG.Modules.HostnameChanger
             }
         }
 
-        protected override void DoWork()
-        {
-            //Get task info
-            var taskResponse = Communication.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
-            if (taskResponse.Error) return;
-            if (!taskResponse.Encrypted)
-            {
-                Log.Error(Name, "Response was not encrypted");
-                return;
-            }
-
-            Log.Debug(Name, "AD Settings");
-            Log.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
-            Log.Debug(Name, "   AD:" + taskResponse.GetField("#AD"));
-            Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
-            Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
-            Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
-            Log.Debug(Name, "   ADPW  :" + taskResponse.GetField("#ADPass"));
-
-            RenameComputer(taskResponse);
-
-            UnRegisterComputer(taskResponse);
-            if (Power.ShuttingDown || Power.Requested) return;
-
-            if (!Power.ShuttingDown && !Power.Requested)
-                RegisterComputer(taskResponse);
-            if (!Power.ShuttingDown && !Power.Requested)
-                ActivateComputer(taskResponse);
-        }
-
         //Rename the computer and remove it from active directory
-        private void RenameComputer(Response response)
+        private void RenameComputer(HostNameMessage data)
         {
             Log.Entry(Name, "Checking Hostname");
-            if (!response.IsFieldValid("#hostname"))
-            {
-                Log.Error(Name, "Hostname is not specified");
-                return;
-            }
-            if (Environment.MachineName.ToLower().Equals(response.GetField("#hostname").ToLower()))
+
+            if (Environment.MachineName.ToLower().Equals(data.HostName.ToLower()))
             {
                 Log.Entry(Name, "Hostname is correct");
                 return;
             }
 
             //First unjoin it from active directory
-            UnRegisterComputer(response);
+            UnRegisterComputer(data);
             if (Power.ShuttingDown || Power.Requested) return;
 
-            Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
+            Log.Entry(Name, $"Renaming host to {data.HostName}");
 
             try
             {
-                _instance.RenameComputer(response.GetField("#hostname"));
+                _instance.RenameComputer(data.HostName.ToString());
             }
             catch (Exception ex)
             {
@@ -116,21 +84,14 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Add a host to active directory
-        private void RegisterComputer(Response response)
+        private void RegisterComputer(HostNameMessage data)
         {
-            if (response.GetField("#AD") != "1")
+            if (data.ActiveDirectory == false)
                 return;
-
-            if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") ||
-                !response.IsFieldValid("#ADPass"))
-            {
-                Log.Error(Name, "Required Domain Joining information is missing");
-                return;
-            }
 
             try
             {
-                if (_instance.RegisterComputer(response))
+                if (_instance.RegisterComputer(data))
                     Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
             }
             catch (Exception ex)
@@ -140,19 +101,13 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Remove the host from active directory
-        private void UnRegisterComputer(Response response)
+        private void UnRegisterComputer(HostNameMessage data)
         {
             Log.Entry(Name, "Removing host from active directory");
 
-            if (!response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
-            {
-                Log.Error(Name, "Required Domain information is missing");
-                return;
-            }
-
             try
             {
-                _instance.UnRegisterComputer(response);
+                _instance.UnRegisterComputer(data);
             }
             catch (Exception ex)
             {
@@ -161,19 +116,37 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Active a computer with a product key
-        private void ActivateComputer(Response response)
+        private void ActivateComputer(HostNameMessage data)
         {
-            if (!response.IsFieldValid("#Key"))
-                return;
-
             try
             {
-                _instance.ActivateComputer(response.GetField("#Key"));
+                _instance.ActivateComputer(data.ProductKey);
             }
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
             }
+        }
+
+        protected override void OnEvent(HostNameMessage message)
+        {
+            Log.Debug(Name, "AD Settings");
+            Log.Debug(Name, "   Hostname:" + message.HostName);
+            Log.Debug(Name, "   AD:" + message.ActiveDirectory);
+            Log.Debug(Name, "   ADDom:" + message.Domain);
+            Log.Debug(Name, "   ADOU:" + message.OU);
+            Log.Debug(Name, "   ADUser:" + message.User);
+            Log.Debug(Name, "   ADPW  :" + message.Password);
+
+            RenameComputer(message);
+
+            UnRegisterComputer(message);
+            if (Power.ShuttingDown || Power.Requested) return;
+
+            if (!Power.ShuttingDown && !Power.Requested)
+                RegisterComputer(message);
+            if (!Power.ShuttingDown && !Power.Requested)
+                ActivateComputer(message);
         }
     }
 }

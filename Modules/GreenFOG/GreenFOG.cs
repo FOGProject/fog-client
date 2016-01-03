@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,9 +19,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Zazzles;
-using Zazzles.Middleware;
 using Zazzles.Modules;
 
 
@@ -30,14 +28,16 @@ namespace FOG.Modules.GreenFOG
     /// <summary>
     ///     Perform cron style power tasks
     /// </summary>
-    public class GreenFOG : AbstractModule
+    public sealed class GreenFOG : PolicyModule<GreenFOGMessage>
     {
+        public override string Name { get; protected set; }
+        public override Settings.OSType Compatiblity { get; protected set; }
         private readonly IGreen _instance;
 
         public GreenFOG()
         {
-            Compatiblity = Settings.OSType.Windows;
             Name = "GreenFOG";
+            Compatiblity = Settings.OSType.All;
 
             switch (Settings.OS)
             {
@@ -48,37 +48,6 @@ namespace FOG.Modules.GreenFOG
                     _instance = new UnixGreen();
                     break;
             }
-        }
-
-        protected override void DoWork()
-        {
-            //Get actions
-            var response = Communication.GetResponse("/service/greenfog.php", true);
-
-            //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (response.Error) return;
-
-            if (!response.Encrypted)
-            {
-                Log.Error(Name, "Response was not encrypted");
-                return;
-            }
-
-            var rawTasks = response.GetList("#task", false);
-
-            ClearAll();
-            //Add new tasks
-            var tasks = CastTasks(rawTasks);
-            CreateTasks(tasks);
-        }
-
-        private List<Task> CastTasks(List<string> rawTasks)
-        {
-            return (from task in rawTasks
-                select task.Split('@')
-                into taskData
-                where taskData.Length == 3
-                select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
         }
 
         private void ClearAll()
@@ -94,14 +63,7 @@ namespace FOG.Modules.GreenFOG
             }
         }
 
-        public new bool IsEnabled()
-        {
-            var moduleActiveResponse = Communication.GetResponse($"{EnabledURL}?moduleid={Name.ToLower()}", true);
-
-            return !moduleActiveResponse.Error;
-        }
-
-        private void CreateTasks(IEnumerable<Task> tasks)
+        private void CreateTasks(IEnumerable<GreenFOGTask> tasks)
         {
             foreach (var task in tasks)
             {
@@ -116,6 +78,12 @@ namespace FOG.Modules.GreenFOG
                     Log.Error(Name, ex);
                 }
             }
+        }
+
+        protected override void OnEvent(GreenFOGMessage message)
+        {
+            ClearAll();
+            CreateTasks(message.Tasks);
         }
     }
 }

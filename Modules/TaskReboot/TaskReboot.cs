@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@
 
 
 using Zazzles;
-using Zazzles.Middleware;
 using Zazzles.Modules;
 
 namespace FOG.Modules.TaskReboot
@@ -27,29 +26,31 @@ namespace FOG.Modules.TaskReboot
     /// <summary>
     ///     Reboot the computer if a task needs to
     /// </summary>
-    public class TaskReboot : AbstractModule
+    public sealed class TaskReboot : AbstractModule<string>
     {
+        public override string Name { get; protected set; }
+        public override Settings.OSType Compatiblity { get; protected set; }
+        public override EventProcessorType Type { get; protected set; }
+
         public TaskReboot()
         {
             Name = "TaskReboot";
+            Compatiblity = Settings.OSType.All;
+            Type = EventProcessorType.Synchronous;
         }
 
-        protected override void DoWork()
-        {
-            //Get task info
-            var response = Communication.GetResponse("/service/jobs.php", true);
-
-            //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (response.Error) return;
-
-            Log.Entry(Name, "Restarting computer for task");
-            Power.Restart(Name, ShouldAbort, Power.ShutdownOptions.Delay);
-        }
-
+        //TODO: deprecate ShouldAbort
         public bool ShouldAbort()
         {
-            var response = Communication.GetResponse("/service/jobs.php", true);
-            return (response.Error);
+            //var response = Communication.GetResponse("/service/jobs.php", true);
+            //return (response.Error);
+            return false;
+        }
+
+        protected override void OnEvent(string message)
+        {
+            Log.Entry(Name, "Restarting computer. " + message );
+            Power.Restart(Name, ShouldAbort, Power.ShutdownOptions.Delay);
         }
     }
 }

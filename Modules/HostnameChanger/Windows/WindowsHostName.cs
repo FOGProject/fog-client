@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,13 +19,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
+using Newtonsoft.Json.Linq;
 using Zazzles;
-using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Windows
 {
@@ -58,7 +57,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                 "ComputerName", hostname);
         }
 
-        public bool RegisterComputer(Response response)
+        public bool RegisterComputer(HostNameMessage data)
         {
             // Check if the host is already part of the set domain by checking server IPs
             try
@@ -66,7 +65,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                 using (var domain = Domain.GetComputerDomain())
                 {
                     var currentIP = Dns.GetHostAddresses(domain.Name);
-                    var targetIP = Dns.GetHostAddresses(response.GetField("#ADDom"));
+                    var targetIP = Dns.GetHostAddresses(data.Domain);
 
                     if (currentIP.Intersect(targetIP).Any())
                     {
@@ -82,18 +81,18 @@ namespace FOG.Modules.HostnameChanger.Windows
             }
 
             // Attempt to join the domain
-            var returnCode = DomainWrapper(response, true,
+            var returnCode = DomainWrapper(data, true,
                 (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
             switch (returnCode)
             {
                 case 2224:
-                    returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
+                    returnCode = DomainWrapper(data, true, JoinOptions.NetsetupJoinDomain);
                     break;
                 case 2:
                 case 50:
                 case 1355:
-                    returnCode = DomainWrapper(response, false,
+                    returnCode = DomainWrapper(data, false,
                         (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
                     break;
             }
@@ -105,12 +104,11 @@ namespace FOG.Modules.HostnameChanger.Windows
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(Response response)
+        public void UnRegisterComputer(HostNameMessage data)
         {
             try
             {
-                var returnCode = NetUnjoinDomain(null, response.GetField("#ADUser"),
-                    response.GetField("#ADPass"), UnJoinOptions.NetsetupAccountDelete);
+                var returnCode = NetUnjoinDomain(null, data.User, data.Password, UnJoinOptions.NetsetupAccountDelete);
 
                 Log.Entry(Name,
                     $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
@@ -160,13 +158,13 @@ namespace FOG.Modules.HostnameChanger.Windows
         private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
             UnJoinOptions fUnjoinOptions);
 
-        private static int DomainWrapper(Response response, bool ou, JoinOptions options)
+        private static int DomainWrapper(HostNameMessage data, bool ou, JoinOptions options)
         {
             return NetJoinDomain(null,
-                response.GetField("#ADDom"),
-                ou ? response.GetField("#ADOU") : null,
-                response.GetField("#ADUser"),
-                response.GetField("#ADPass"),
+                data.Domain,
+                ou ? data.OU : null,
+                data.User,
+                data.Password,
                 options);
         }
 

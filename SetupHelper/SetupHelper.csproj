@@ -52,10 +52,6 @@
     <Reference Include="Microsoft.Deployment.WindowsInstaller">
       <Private>True</Private>
     </Reference>
-    <Reference Include="Zazzles, Version=1.0.5764.34033, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Zazzles.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CustomAction.cs" />
@@ -66,6 +62,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libs\zazzles\Zazzles\Zazzles.csproj">
+      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
+      <Name>Zazzles</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(WixCATargetsPath)" />

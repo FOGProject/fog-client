@@ -1,5 +1,5 @@
 ﻿/*
- * FOG Service : A computer management client for the FOG Project
+ * Zazzles : A cross platform service framework
  * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
@@ -17,16 +17,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Collections.Generic;
+using Newtonsoft.Json;
 
-using Newtonsoft.Json.Linq;
-
-namespace FOG.Modules.HostnameChanger
+namespace FOG.Modules.GreenFOG
 {
-    internal interface IHostName
+    public class GreenFOGMessage
     {
-        void RenameComputer(string hostname);
-        bool RegisterComputer(HostNameMessage data);
-        void UnRegisterComputer(HostNameMessage data);
-        void ActivateComputer(string key);
+        [JsonProperty(Required = Required.Always)]
+        public List<GreenFOGTask> Tasks { get; private set; }
     }
 }
