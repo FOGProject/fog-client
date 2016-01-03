@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System;
+using Newtonsoft.Json;
 using Zazzles;
 
 namespace FOG.Modules.PrinterManager
@@ -26,20 +27,24 @@ namespace FOG.Modules.PrinterManager
     {
         public enum PrinterType
         {
-            // ReSharper disable once InconsistentNaming
             iPrint,
             Network,
             Local
         }
 
-        //Basic variables for printers
+        [JsonProperty(Required = Required.Always)]
+        public string Name { get; protected set; }
+        [JsonProperty(Required = Required.Always)]
+        public bool Default { get; protected set; }
+
+        [JsonProperty(Required = Required.Always)]
+        public PrinterType Type { get; protected set; }
+
+        public string IP { get; protected set; }
         public string Port { get; protected set; }
         public string File { get; protected set; }
         public string Model { get; protected set; }
-        public string Name { get; protected set; }
-        public string IP { get; protected set; }
-        public bool Default { get; protected set; }
-        public PrinterType Type { get; protected set; }
+
         public static string LogName { get; protected set; }
         public abstract void Add(PrintManagerBridge instance);
 

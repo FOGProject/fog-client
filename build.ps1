@@ -11,6 +11,7 @@ $nuget = "$PSScriptRoot\.nuget\NuGet.exe "
 $msbuild = "msbuild.exe "
 $buildMode = "/verbosity:minimal /p:configuration=Debug"
 $solutionConfig = "$PSScriptRoot\FOGService.sln $buildMode"
+$zazzlesConfig = "$PSScriptRoot\libs\zazzles\Zazzles.sln $buildMode"
 $installerConfig = "$PSScriptRoot\UniversalInstaller\UniversalInstaller.csproj $buildMode"
 $msiConfig = "$PSScriptRoot\MSI\MSI.wixproj $buildMode"
 $xbuild = "xbuild.bat "
@@ -19,8 +20,8 @@ $trayConfig = "$PSScriptRoot\Tray\Tray.csproj"
 Write-Host "Cleaning build directory"
 If (Test-Path "$PSScriptRoot\bin"){ Remove-Item -Recurse "$PSScriptRoot\bin" }
 
-Write-Host "Restoring Packages"
-Invoke-Expression ($nuget + "restore")
+Write-Host "Building Zazzles"
+Invoke-Expression ($msbuild + $zazzlesConfig)
 
 Write-Host "Building Solution"
 Invoke-Expression ($msbuild + $solutionConfig)

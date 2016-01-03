@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,8 +18,7 @@
  */
 
 
-using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using FOG.Modules.GreenFOG;
@@ -27,7 +26,6 @@ using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
-using FOG.Modules.UserTracker;
 using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Middleware;
@@ -50,9 +48,7 @@ namespace FOG
             ProcessHandler.KillAllEXE("FOGUserService");
             ProcessHandler.KillAllEXE("FOGTray");
 
-            dynamic json = new JObject();
-            json.action = "load";
-            Bus.Emit(Bus.Channel.Status, json, true);
+            Bus.Emit(Bus.Channel.Status, new JObject { { "action", "load" } }, true);
 
             // Start the UserServiceSpawner
             if (Settings.OS == Settings.OSType.Linux)
@@ -63,9 +59,7 @@ namespace FOG
         {
             UserServiceSpawner.Stop();
 
-            dynamic json = new JObject();
-            json.action = "unload";
-            Bus.Emit(Bus.Channel.Status, json, true);
+            Bus.Emit(Bus.Channel.Status, new JObject { { "action", "unload" } }, true);
             Bus.Dispose();
 
             // Kill the sub-processes
@@ -74,31 +68,25 @@ namespace FOG
             ProcessHandler.KillAllEXE("FOGTray");
         }
 
-        protected override AbstractModule[] GetModules()
+        protected override Dictionary<string, IEventProcessor> GetModules()
         {
-            var upgradeFiles = new string[] {"FOGUpdateHelper.exe", "FOGUpdateWaiter.exe"};
-            return new AbstractModule[]
+            var upgradeFiles = new[] {"FOGUpdateHelper.exe", "FOGUpdateWaiter.exe"};
+            var updater = new ClientUpdater(upgradeFiles);
+            var taskReboot = new TaskReboot();
+            var hostnameChanger = new HostnameChanger();
+            var snapinClient = new SnapinClient();
+            var printerManager = new PrinterManager();
+            var greenFOG = new GreenFOG();
+
+            return new Dictionary<string, IEventProcessor>
             {
-                new ClientUpdater(upgradeFiles), 
-                new TaskReboot(),
-                new HostnameChanger(),
-                new SnapinClient(),
-                new PrinterManager(),
-                new GreenFOG(),
-                new UserTracker()
+                {updater.Name, updater},
+                {taskReboot.Name, taskReboot},
+                {hostnameChanger.Name, hostnameChanger},
+                {snapinClient.Name, snapinClient},
+                {printerManager.Name, printerManager},
+                {greenFOG.Name, greenFOG},
             };
-        }
-
-        protected override void ModuleLooper()
-        {
-            Authenticate();
-
-            base.ModuleLooper();
-
-            if (Power.Updating)
-                UpdateHandler.BeginUpdate();
-
-            Process.GetCurrentProcess().Kill();
         }
 
         private void Authenticate()
@@ -114,37 +102,6 @@ namespace FOG
                 Thread.Sleep(120 * 1000);
             }
             Log.NewLine();
-        }
-
-        protected override int? GetSleepTime()
-        {
-            var response = Communication.GetResponse("/management/index.php?node=client&sub=configure");
-
-            if (response.Error) return null;
-
-            // Set the shutdown graceperiod
-            Settings.Set("gracePeriod", response.GetField("#promptTime"));
-
-            if (!response.IsFieldValid("#sleep")) return null;
-
-            try
-            {
-                var sleepTime = int.Parse(response.GetField("#sleep"));
-                if (sleepTime >= DefaultSleepTime)
-                {
-                    Settings.Set("Sleep", sleepTime.ToString());
-                    return sleepTime;
-                }
-
-                Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Unable to parse sleep time");
-                Log.Error(Name, ex);
-            }
-            return null;
         }
     }
 }

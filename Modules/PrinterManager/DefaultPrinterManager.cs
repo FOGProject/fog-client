@@ -17,13 +17,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections.Generic;
 using System.Linq;
-using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Modules;
-
-// ReSharper disable ParameterTypeCanBeEnumerable.Local
 
 namespace FOG.Modules.PrinterManager
 {
@@ -55,13 +51,8 @@ namespace FOG.Modules.PrinterManager
 
         protected override void OnEvent(PrinterMessage message)
         {
-            Log.Entry(Name, "Creating list of printers");
-            var printerIDs = data["printers"].ToObject<List<string>>();
-            Log.Entry(Name, "Creating printer objects");
-            var printers = PrinterManager.CreatePrinters(printerIDs);
-
             Log.Entry(Name, "Checking defaults");
-            foreach (var printer in printers.Where(printer => printer.Default))
+            foreach (var printer in message.Printers.Where(printer => printer.Default))
                 printer.SetDefault(_instance);
         }
     }

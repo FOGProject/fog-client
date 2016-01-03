@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,9 +18,11 @@
  */
 
 using System;
+using System.Collections.Generic;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.PrinterManager;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
 using Zazzles.Modules;
@@ -36,12 +38,12 @@ namespace FOG
             Bus.Subscribe(Bus.Channel.Power, OnPower);
         }
 
-        private static void OnUpdate(dynamic data)
+        private static void OnUpdate(JObject data)
         {
-            if (data.action == null) return;
+            if (data["action"] == null) return;
             Log.Entry("User Service", data.ToString());
 
-            if (!data.action.ToString().Equals("start")) return;
+            if (!data["action"].ToString().Equals("start")) return;
 
             if (Settings.OS != Settings.OSType.Linux)
             {
@@ -53,21 +55,25 @@ namespace FOG
             Environment.Exit(0);
         }
 
-        private static void OnPower(dynamic data)
+        private static void OnPower(JObject data)
         {
-            if (data.action == null) return;
-            string action = data.action.ToString();
+            if (data["action"] == null) return;
+            var action = data["action"].ToString();
 
             if (action.Trim().Equals("request"))
                 ShutdownNotification(data);
         }
 
-        protected override AbstractModule[] GetModules()
+        protected override Dictionary<string, IEventProcessor> GetModules()
         {
-            return new AbstractModule[]
+
+            var alo = new AutoLogOut();
+            var defaultPrinter = new DefaultPrinterManager();
+
+            return new Dictionary<string, IEventProcessor>
             {
-                new AutoLogOut(),
-                new DefaultPrinterManager()
+                {alo.Name, alo},
+                {defaultPrinter.Name, defaultPrinter}
             };
         }
 
@@ -77,27 +83,6 @@ namespace FOG
 
         protected override void Unload()
         {
-        }
-
-        protected override int? GetSleepTime()
-        {
-            try
-            {
-                var sleepTimeStr = Settings.Get("Sleep");
-                var sleepTime = int.Parse(sleepTimeStr);
-                if (sleepTime >= DefaultSleepTime)
-                    return sleepTime;
-
-                Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Unable to parse sleep time");
-                Log.Error(Name, ex);
-            }
-
-            return null;
         }
 
         private static void ShutdownNotification(dynamic data)

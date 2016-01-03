@@ -17,6 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace FOG.Modules.PrinterManager
@@ -24,24 +25,12 @@ namespace FOG.Modules.PrinterManager
     public class PrinterMessage
     {
         [JsonProperty(Required = Required.Always)]
-        public string Name { get; private set; }
+        public ManagementLevel Level { get; private set; }
 
         [JsonProperty(Required = Required.Always)]
-        public string File { get; private set; }
+        public List<Printer> Printers { get; private set; }
 
         [JsonProperty(Required = Required.Always)]
-        public string Hash { get; private set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public string RunWith { get; private set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public string RunWithArgs { get; private set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public string Args { get; private set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public bool Restart { get; private set; }
+        public List<Printer> UnManagedPrinters { get; private set; }
     }
 }
