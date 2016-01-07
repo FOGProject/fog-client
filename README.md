@@ -25,7 +25,7 @@ Windows      | Linux       | OSX
 | Snapins | ✓ | ✓ | ✓ |
 | Task Reboot | ✓ | ✓ | ✓ |
 | User Tracker | ✓ | ✓ | ✓ |
-| IP Printers | ✓ |  |  |
+| TCP/IP Printers | ✓ |  |  |
 | Network Printers | ✓ |  |  |
 | CUPS Printers |  | ✓ | ✓ |
 
