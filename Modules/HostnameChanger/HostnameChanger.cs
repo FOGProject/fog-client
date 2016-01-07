@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Net;
@@ -92,6 +91,12 @@ namespace FOG.Modules.HostnameChanger
 
             if (taskResponse.Error) return;
 
+            if (!taskResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             RenameComputer(taskResponse);
 
             if (!Power.ShuttingDown && !Power.Requested)
@@ -122,7 +127,7 @@ namespace FOG.Modules.HostnameChanger
             UnRegisterComputer(response);
             if (Power.ShuttingDown || Power.Requested) return;
 
-           Log.Entry(Name, "Updating registry");
+            Log.Entry(Name, "Updating registry");
 
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters","NV Hostname",
                 response.GetField("#hostname"));
@@ -173,15 +178,21 @@ namespace FOG.Modules.HostnameChanger
             // Attempt to join the domain
             var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
 
-            if (returnCode == 2224)
-                returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
-            else if (returnCode == 2 || returnCode == 50)
-                returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+            switch (returnCode)
+            {
+                case 2224:
+                    returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
+                    break;
+                case 2:
+                case 50:
+                case 1355:
+                    returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                    break;
+            }
 
             // Entry the results
-            Log.Entry(Name, string.Format("{0} {1}", (_returnCodes.ContainsKey(returnCode)
-                ? string.Format("{0}, code = ", _returnCodes[returnCode])
-                : "Unknown Return Code: "), returnCode));
+            Log.Entry(Name,
+                           $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
             if (returnCode.Equals(0))
                 Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);
@@ -229,42 +240,33 @@ namespace FOG.Modules.HostnameChanger
         //Active a computer with a product key
         private void ActivateComputer(Response response)
         {
-            Log.Entry(Name, "Activing host with product key");
-
             if (!response.IsFieldValid("#Key"))
                 return;
-            if (response.GetField("#Key").Length != 29)
+
+            Log.Entry(Name, "Checking Product Key Activation");
+            var key = response.GetField("#Key");
+            if (key.Length != 29)
             {
-                Log.Error(Name, "Invalid product key");
+                Log.Error(Name, "Invalid product key provided by server");
                 return;
             }
 
-            try
-            {
-                using(var process = new Process { StartInfo = {
-                            FileName = @"cscript",
-                            Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ipk {1}", 
-                                Environment.SystemDirectory, response.GetField("#Key")),
-                            WindowStyle = ProcessWindowStyle.Hidden
-                        }
-                    })
-                {
-                    //Give windows the new key
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close();
+            var partialKey = WinActivation.GetPartialKey();
 
-                    //Try and activate the new key
-                    process.StartInfo.Arguments = string.Format("//B //Nologo {0}\\slmgr.vbs /ato", Environment.SystemDirectory);
-                    process.Start();
-                    process.WaitForExit();
-                    process.Close(); 
+            if (key.EndsWith(partialKey))
+            {
+                if (!WinActivation.IsActivated())
+                {
+                    Log.Entry(Name, "Windows has correct key but is not licensed");
+                }
+                else
+                {
+                    Log.Entry(Name, "Already activated with correct key");
+                    return;
                 }
             }
-            catch (Exception ex)
-            {
-                Log.Error(Name, ex);
-            }
+
+            WinActivation.SetProductKey(key);
         }
     }
 }

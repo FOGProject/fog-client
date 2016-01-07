@@ -53,8 +53,15 @@ namespace FOG.Handlers.Middleware
             {"#!er", "General error"}
         };
 
-        public Response(string rawData)
+
+        public bool Error { get; set; }
+        public bool Encrypted { get; private set; }
+        public Dictionary<string, string> Data { get; set; }
+        public string ReturnCode { get; set; }
+
+        public Response(string rawData, bool encrypted)
         {
+            Encrypted = encrypted;
             var data = rawData.Split('\n'); //Split the response at every new line
             var parsedData = new Dictionary<string, string>();
             try
@@ -80,6 +87,24 @@ namespace FOG.Handlers.Middleware
             }
         }
 
+
+        public Response(bool error, Dictionary<string, string> data, string returnCode, bool encrypted)
+        {
+            Encrypted = encrypted;
+            Error = error;
+            Data = data;
+            ReturnCode = returnCode;
+        }
+
+        public Response()
+        {
+            Error = true;
+            Data = new Dictionary<string, string>();
+            ReturnCode = "";
+            Encrypted = false;
+        }
+
+
         /// <summary>
         ///     Parse a Response for an array of objects
         ///     <param name="identifier">The string identifier infront of the elements</param>
@@ -103,24 +128,6 @@ namespace FOG.Handlers.Middleware
 
             return items;
         }
-
-        public Response(bool error, Dictionary<string, string> data, string returnCode)
-        {
-            Error = error;
-            Data = data;
-            ReturnCode = returnCode;
-        }
-
-        public Response()
-        {
-            Error = true;
-            Data = new Dictionary<string, string>();
-            ReturnCode = "";
-        }
-
-        public bool Error { get; set; }
-        public Dictionary<string, string> Data { get; set; }
-        public string ReturnCode { get; set; }
 
         /// <summary>
         ///     Return the value stored at a specified key

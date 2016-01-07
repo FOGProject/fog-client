@@ -147,19 +147,47 @@ namespace FOG.Handlers.Data
 
         /// <summary>
         /// </summary>
-        /// <returns>The FOG CA root certificate</returns>
-        public static X509Certificate2 GetCACertificate()
+        /// <param name="filePath"></param>
+        /// <returns>The certificate used to digitally sign a file</returns>
+        public static X509Certificate2 ExtractDigitalSignature(string filePath)
+        {
+            try
+            {
+                var signer = X509Certificate.CreateFromSignedFile(filePath);
+                var certificate = new X509Certificate2(signer);
+                return certificate;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <returns>The FOG Project root certificate</returns>
+        public static X509Certificate2 FOGProjectCertificate()
+        {
+            return GetRootCertificate("FOG Project");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name">The name of the certificate to retrieve</param>
+        /// <returns>Returns the first instance of the certificate matching the name</returns>
+        public static X509Certificate2 GetRootCertificate(string name = "FOG Server CA")
         {
             try
             {
                 X509Certificate2 CAroot = null;
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Server CA", true);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, name, true);
 
                 if (cers.Count > 0)
                 {
-                    Log.Entry(LogName, "CA cert found");
+                    Log.Entry(LogName, name + " cert found");
                     CAroot = cers[0];
                 }
                 store.Close();
@@ -168,7 +196,7 @@ namespace FOG.Handlers.Data
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, "Unable to get CA");
+                Log.Error(LogName, "Unable to retrieve " + name);
                 Log.Error(LogName, ex);
             }
 

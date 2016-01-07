@@ -46,6 +46,12 @@ namespace FOG.Modules.GreenFOG
             //Shutdown if a task is avaible and the user is logged out or it is forced
             if (response.Error) return;
 
+            if (!response.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             var tasks = response.GetList("#task", false);
 
             //Filter existing tasks
@@ -54,15 +60,14 @@ namespace FOG.Modules.GreenFOG
             CreateTasks(tasks);
         }
 
-        new public bool IsEnabled()
+        public override bool IsEnabled()
         {
-            var moduleActiveResponse = Communication.GetResponse(string.Format("{0}?moduleid={1}",
-                EnabledURL, Name.ToLower()), true);
+            var enabled = base.IsEnabled();
 
-            if (moduleActiveResponse.Error)
+            if (!enabled)
                 FilterTasks(new List<string>());
 
-            return !moduleActiveResponse.Error;
+            return enabled;
         }
 
         private List<string> FilterTasks(List<string> newTasks)

@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.ComponentModel;
-using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
 using FOG.Handlers;
@@ -77,8 +75,7 @@ namespace FOG
             var notificationMenu = new ContextMenu(InitializeMenu());
 
             _notifyIcon.DoubleClick += IconDoubleClick;
-            var resources = new ComponentResourceManager(typeof (NotificationIcon));
-            _notifyIcon.Icon = (Icon) resources.GetObject("icon");
+            _notifyIcon.Icon = Properties.Resources.logo;
             _notifyIcon.ContextMenu = notificationMenu;
             _notifyIcon.Text = "FOG Client v" + RegistryHandler.GetSystemSetting("Version");
             _notification = new Notification();

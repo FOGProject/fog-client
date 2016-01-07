@@ -21,7 +21,7 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult InstallCert(Session session)
         {
-            var cert = RSA.GetCACertificate();
+            var cert = RSA.GetRootCertificate();
             if (cert != null) return ActionResult.Success;
 
             var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -55,7 +55,7 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult UninstallCert(Session session)
         {
-            var cert = RSA.GetCACertificate();
+            var cert = RSA.GetRootCertificate();
             if (cert == null) return ActionResult.Success;
 
             try

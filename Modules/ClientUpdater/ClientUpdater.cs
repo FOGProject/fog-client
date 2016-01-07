@@ -20,6 +20,7 @@
 using System;
 using System.IO;
 using FOG.Handlers;
+using FOG.Handlers.Data;
 using FOG.Handlers.Middleware;
 using FOG.Handlers.Power;
 
@@ -47,11 +48,14 @@ namespace FOG.Modules.ClientUpdater
 
                 if (server <= local) return;
 
-                if (File.Exists(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory)))
-                    File.Delete(string.Format("{0}\\tmp\\FOGService.msi", AppDomain.CurrentDomain.BaseDirectory));
+                var updaterPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "tmp", "FOGService.msi");
 
-                Communication.DownloadFile("/client/FOGService.msi",
-                    AppDomain.CurrentDomain.BaseDirectory + @"\tmp\FOGService.msi");
+                if (File.Exists(updaterPath))
+                    File.Delete(updaterPath);
+
+                Communication.DownloadFile("/client/FOGService.msi", updaterPath);
+
+                if (!IsAuthenticate(updaterPath)) return;
 
                 PrepareUpdateHelpers();
                 Power.Updating = true;
@@ -94,6 +98,20 @@ namespace FOG.Modules.ClientUpdater
                 Log.Error(Name, "Unable to prepare update helpers");
                 Log.Error(Name, ex);
             }
+        }
+
+        private bool IsAuthenticate(string filePath)
+        {
+            var signeeCert = RSA.ExtractDigitalSignature(filePath);
+            var targetSigner = RSA.FOGProjectCertificate();
+            if (RSA.IsFromCA(targetSigner, signeeCert))
+            {
+                Log.Entry(Name, "Update file is authentic");
+                return true;
+            }
+
+            Log.Error(Name, "Update file is not authentic");
+            return false;
         }
     }
 }
