@@ -136,8 +136,9 @@ namespace FOG.Handlers.Power
         private static void CreateTask(string parameters)
         {
             shouldAbortFunc = null;
-
             requestData = new JObject();
+
+            ShuttingDown = true;
 
             Log.Entry(LogName, "Creating shutdown request");
             Log.Entry(LogName, string.Format("Parameters: {0}", parameters));
@@ -149,6 +150,7 @@ namespace FOG.Handlers.Power
         {
             if (!UserHandler.IsUserLoggedIn())
             {
+                Log.Entry(LogName, "No active users detected");
                 CreateTask(parameters);
                 return;
             }
