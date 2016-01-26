@@ -1,0 +1,122 @@
+﻿<?xml version="1.0"?>
+
+<!--
+ FOG Service : A computer management client for the FOG Project
+ Copyright (C) 2014-2015 FOG Project
+
+ This program is free software; you can redistribute it and/or
+ modify it under the terms of the GNU General Public License
+ as published by the Free Software Foundation; either version 3
+ of the License, or (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+  
+ You should have received a copy of the GNU General Public License
+ along with this program; if not, write to the Free Software
+ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Fragment>
+    <DirectoryRef Id="TARGETDIR">
+      <Directory Id="ProgramFilesFolder" Name="PFiles">
+        <Directory Id="INSTALLDIR" Name="FOG">
+          <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
+            <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe" />
+            <File Id="FOGCA" Name="fog.ca.cer" Source="..\bin\fog.ca.cer" />
+            <File Id="AbstractService" Name="AbstractService.dll" Source="..\bin\AbstractService.dll" />
+            <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
+            <File Id="Handlers" Name="Handlers.dll" Source="..\bin\Handlers.dll" />
+            <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
+            <File Id="PipeClient" Name="PipeClient.dll" Source="..\bin\PipeClient.dll" />
+            <File Id="PipeServer" Name="PipeServer.dll" Source="..\bin\PipeServer.dll" />
+            <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
+            <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe" />
+            <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
+            <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
+            <File Id="FOGNotificationGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe" />
+            <File Id="theme" Name="themes.xml" Source="..\themes.xml" />
+            <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
+            <File Id="MetroFrameworkFonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
+            <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe" />
+            <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll"
+                  Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
+            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll"
+                  Source="..\bin\Newtonsoft.Json.dll" />
+            
+
+            <ServiceInstall
+              Id="ServiceInstaller"
+              Type="ownProcess"
+              Name="FOGService"
+              DisplayName="FOGService"
+              Description="Perform tasks for the FOG Server"
+              Start="auto"
+              ErrorControl="normal">
+              <ServiceDependency Id="SENS" /> <ServiceDependency Id="COMSysApp" />
+            </ServiceInstall>
+            <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
+          </Component>
+          <Component Id="ServerRegistry" Guid="5914aedb-e02d-4a6a-8622-b0ba561041e1">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="Server" Type="string" Value="[WEBADDRESS]" />
+            </RegistryKey>
+          </Component>
+          <Component Id="TrayRegistry" Guid="d5b010c4-d72a-410d-a865-901afdcc97ba">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="Tray" Type="string" Value="[USETRAY]" />
+            </RegistryKey>
+          </Component>
+          <Component Id="CompanyRegistery" Guid="95d55abe-d91e-4fc7-a44b-598a7ab4f9a3">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="Company" Type="string" Value="FOG" />
+            </RegistryKey>
+          </Component>
+          <Component Id="GraceRegistry" Guid="4e7bd6a9-076a-41ad-9cdc-a8579c89d17f">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="gracePeriod" Type="string" Value="60" />
+            </RegistryKey>
+          </Component>
+          <Component Id="SleepRegistry" Guid="38598781-967c-401d-ad7e-6e7669724f4c">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="Sleep" Type="string" Value="60" />
+            </RegistryKey>
+          </Component>        
+          
+          <Component Id="WebRootRegistry" Guid="4d726fa5-f228-4efa-b006-872efa673881">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="WebRoot" Type="string" Value="[WEBROOT]" />
+            </RegistryKey>
+          </Component>
+          <Component Id="HttpsRegistry" Guid="ca9bbfbd-4c14-49ad-9a6e-ecb329197561">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="HTTPS" Type="string" Value="[HTTPS]" />
+            </RegistryKey>
+          </Component>
+          <Component Id="VersionRegistry" Guid="32919e48-2937-4624-b991-c81fa438f327">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="Version" Type="string" Value="[ProductVersion]" />
+            </RegistryKey>
+          </Component>
+          <Component Id="LogRootRegistry" Guid="f775111d-9db9-45f7-9284-6e9ae8e98b4a">
+            <RegistryKey Root="HKLM" Key="SOFTWARE\FOG">
+              <RegistryValue Name="RootLog" Type="string" Value="[ROOTLOG]" />
+            </RegistryKey>
+          </Component>
+        </Directory>
+      </Directory>
+      <Directory Id="StartupFolder" Name="Startup">
+        <Component Id="FOGUserServiceShortcutComponenet" Guid="73817c16-d1fd-49e4-8f86-4fa3ae1dc203">
+          <Shortcut Id="FOGUserServiceShortcut" Name="FOG User Service" Description="A FOG Service for the user"
+                    Target="[INSTALLDIR]FOGUserService.exe" WorkingDirectory="INSTALLFOLDER" />
+          <RegistryValue Root="HKCU"
+                         Key="Software\FOG" Name="installed" Type="integer" Value="1" KeyPath="yes" />
+        </Component>
+      </Directory>
+    </DirectoryRef>
+  </Fragment>
+
+</Wix>

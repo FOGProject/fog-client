@@ -102,9 +102,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+<<<<<<< HEAD
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+=======
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+>>>>>>> refs/remotes/FOGProject/v0.9.x
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -139,6 +145,17 @@
       <Project>{5c3289ab-b65d-42f8-bfd0-21c61619729a}</Project>
       <Name>Service</Name>
     </ProjectReference>
+<<<<<<< HEAD
+=======
+    <ProjectReference Include="..\ShutdownGUI\ShutdownGUI.csproj">
+      <Project>{ddf7fd1e-8e0e-422f-bac2-f31810dfaa9a}</Project>
+      <Name>ShutdownGUI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Tray\Tray.csproj">
+      <Project>{3E31CCE4-D06A-4F02-A3E8-981B9033CA32}</Project>
+      <Name>Tray</Name>
+    </ProjectReference>
+>>>>>>> refs/remotes/FOGProject/v0.9.x
     <ProjectReference Include="..\UpdateWaiter\UpdateWaiter.csproj">
       <Project>{C7113642-59C8-41C0-BF64-2F29BAE45910}</Project>
       <Name>UpdateWaiter</Name>

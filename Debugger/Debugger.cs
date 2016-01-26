@@ -66,5 +66,82 @@ namespace FOG
             }
             Bus.Dispose();
         }
+<<<<<<< HEAD
+=======
+
+        private static bool ProcessCommand(string[] command)
+        {
+            if (command.Length == 0) return false;
+            if (command.Length == 1 && command[0].Equals("exit")) return true;
+
+            // Check modules
+            if (_modules.ContainsKey(command[0]))
+            {
+                _modules[command[0]].Start();
+                Log.NewLine();
+            }
+
+            // Check custom commands
+            else if (command[0].Equals("authenticate"))
+                Authentication.HandShake();
+            else if (command[0].Equals("info"))
+            {
+                Log.Entry(Name, "Server: " + Configuration.ServerAddress);
+                Log.Entry(Name, "MAC: " + Configuration.MACAddresses());
+            }
+
+            else if (command.Length == 3 && command[0].Equals("configure"))
+            {
+                if (command[1].Equals("server"))
+                    Configuration.ServerAddress = command[2];
+                else if (command[1].Equals("mac"))
+                    Configuration.TestMAC = command[2];
+            }
+
+            else if (command.Length == 2 && command[0].Equals("configure") && command[1].Equals("default"))
+            {
+                Configuration.ServerAddress = Server;
+                Configuration.TestMAC = MAC;
+            }
+
+            else if (command.Length == 1 && command[0].Equals("help"))
+            {
+                Log.WriteLine(" authenticate <-- Authenticates the debugger shell");
+                Log.WriteLine(" configure server ____ <-- Sets the server address");
+                Log.WriteLine(" configure mac ____ <-- Sets the mac address");
+                Log.WriteLine(" configure default <-- Sets the default testing mac and server address");
+                foreach (var module in _modules.Keys)
+                {
+                    Log.WriteLine(" " + module + "<-- Runs this specific module");
+                }
+                Log.WriteLine(" exit <-- Exits the console");
+            }
+            else if (command.Length == 3 && command[0].Equals("bus") && command[1].Equals("mode"))
+            {
+                if(command[2].Equals("server"))
+                    Bus.SetMode(Bus.Mode.Server);
+                else if (command[2].Equals("client"))
+                    Bus.SetMode(Bus.Mode.Client);
+            }
+            else if (command.Length >= 2 && command[0].Equals("bus"))
+            {
+                Power.Restart("Foobar", Power.FormOption.Delay, "Test post, please ignore.", 120);
+            }
+            else
+                Log.Entry(Name, "Unknown command");
+
+            return false;
+        }
+
+        private static void OnMessage(dynamic data)
+        {
+            if (data.content == null) return;
+
+            Log.NewLine();
+            Log.WriteLine("Message recieved: " + data.content.ToString());
+            Log.Write("fog: ");
+        }
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
     }
 }

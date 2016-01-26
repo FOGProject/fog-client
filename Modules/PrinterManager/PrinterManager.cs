@@ -91,7 +91,7 @@ namespace FOG.Modules.PrinterManager
 
         private void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
         {
-            Log.Debug(Name, "Removing extra printers...");
+            Log.Entry(Name, "Removing extra printers...");
 
 
             Log.Debug(Name, "Stripping printer data");

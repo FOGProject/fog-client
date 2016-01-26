@@ -20,10 +20,18 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+<<<<<<< HEAD
 using Zazzles;
 using Zazzles.Data;
 using Zazzles.Middleware;
 using Zazzles.Modules;
+=======
+using FOG.Handlers;
+using FOG.Handlers.Data;
+using FOG.Handlers.Middleware;
+using FOG.Handlers.Power;
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
 namespace FOG.Modules.SnapinClient
 {
@@ -47,6 +55,10 @@ namespace FOG.Modules.SnapinClient
                 //Download the snapin file if there was a response and run it
                 if (taskResponse.Error) return;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
                 if (!taskResponse.Encrypted)
                 {
                     Log.Error(Name, "Response was not encrypted");
@@ -69,7 +81,17 @@ namespace FOG.Modules.SnapinClient
                     return;
                 }
 
+<<<<<<< HEAD
                 var snapinFilePath = Path.Combine(Settings.Location, "tmp", taskResponse.GetField("SNAPINFILENAME"));
+=======
+                if (string.IsNullOrEmpty(taskResponse.GetField("SNAPINHASH")))
+                {
+                    Log.Error(Name, "Snapin hash does not exist");
+                    return;
+                }
+
+                var snapinFilePath = string.Format("{0}tmp\\{1}", AppDomain.CurrentDomain.BaseDirectory, taskResponse.GetField("SNAPINFILENAME"));
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
                 var downloaded =
                     Communication.DownloadFile(
@@ -81,7 +103,11 @@ namespace FOG.Modules.SnapinClient
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
                 if (downloaded)
                 {
+<<<<<<< HEAD
                     var sha512 = Hash.SHA512(snapinFilePath);
+=======
+                    var sha512 = Transform.SHA512(snapinFilePath);
+>>>>>>> refs/remotes/FOGProject/v0.9.x
                     if (!sha512.ToUpper().Equals(taskResponse.GetField("SNAPINHASH").ToUpper()))
                     {
                         Log.Error(Name, "Hash does not match");
@@ -90,6 +116,10 @@ namespace FOG.Modules.SnapinClient
 
                         return;
                     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
                     exitCode = StartSnapin(taskResponse, snapinFilePath);
                     if (File.Exists(snapinFilePath))
                         File.Delete(snapinFilePath);
