@@ -63,12 +63,6 @@ namespace FOG.Modules.PrinterManager
             var proc = Process.Start("rundll32.exe",
                 $" printui.dll,PrintUIEntry /if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
             proc?.WaitForExit(120000);
-
-            if (printer.Config != null) {
-                var proc = Process.Start("rundll32.exe",
-                    $" printui.dll,PrintUIEntry /Sr /q /n \"{printer.Name}\" /a \"{printer.Config}\"");
-                proc?.WaitForExit(120000);                
-            }
         }
 
         protected override void AddNetwork(NetworkPrinter printer)
