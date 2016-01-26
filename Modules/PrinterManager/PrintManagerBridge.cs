@@ -42,6 +42,8 @@ namespace FOG.Modules.PrinterManager
                 Log.Entry(LogName, $"--> File = {printer.File}");
             if (printer.Model != null)
                 Log.Entry(LogName, $"--> Model = {printer.Model}");
+            if (printer.ConfigFile != null)
+                Log.Entry(LogName, $"--> ConfigFile = {printer.ConfigFile}");
 
             try
             {

@@ -21,7 +21,7 @@ namespace FOG.Modules.PrinterManager
 {
     public class LocalPrinter : Printer
     {
-        public LocalPrinter(string name, string file, string port, string ip, string model, bool defaulted)
+        public LocalPrinter(string name, string file, string port, string ip, string model, bool defaulted, string configFile)
         {
             Name = name;
             Port = port;
@@ -29,6 +29,7 @@ namespace FOG.Modules.PrinterManager
             Model = model;
             Default = defaulted;
             IP = ip;
+            ConfigFile = configFile;
             LogName = "LocalPrinter";
         }
 

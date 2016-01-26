@@ -38,6 +38,7 @@ namespace FOG.Modules.PrinterManager
         public string Model { get; protected set; }
         public string Name { get; protected set; }
         public string IP { get; protected set; }
+        public string ConfigFile { get; protected set; }
         public bool Default { get; protected set; }
         public PrinterType Type { get; protected set; }
         public static string LogName { get; protected set; }
