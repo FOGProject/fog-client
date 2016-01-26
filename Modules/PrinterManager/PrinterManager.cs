@@ -173,6 +173,7 @@ namespace FOG.Modules.PrinterManager
                     printerData.GetField("#port"),
                     printerData.GetField("#ip"),
                     printerData.GetField("#model"),
+                    printerData.GetField("#configFile"),                    
                     printerData.GetField("#default").Equals("1"));
 
             return null;
