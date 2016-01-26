@@ -20,8 +20,18 @@
 
 using System;
 using System.Diagnostics;
+<<<<<<< HEAD
 using System.IO;
 using System.Threading;
+=======
+using System.Net.Security;
+using System.Threading;
+using FOG.Handlers;
+using FOG.Handlers.Middleware;
+using FOG.Handlers.Power;
+using FOG.Modules;
+using FOG.Modules.ClientUpdater;
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -53,10 +63,13 @@ namespace FOG
             dynamic json = new JObject();
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);
+<<<<<<< HEAD
 
             // Start the UserServiceSpawner
             if (Settings.OS == Settings.OSType.Linux)
                 UserServiceSpawner.Start();
+=======
+>>>>>>> refs/remotes/FOGProject/v0.9.x
         }
 
         protected override void Unload()
@@ -109,6 +122,22 @@ namespace FOG
                 Log.PaddedHeader("Authentication");
                 Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
                 if (Authentication.HandShake()) break;
+
+                Log.Entry(Name, "Sleeping for 120 seconds");
+                Thread.Sleep(120 * 1000);
+            }
+            Log.NewLine();
+        }
+
+        private void Authenticate()
+        {
+            while (true)
+            {
+                Log.NewLine();
+                Log.PaddedHeader("Authentication");
+                Log.Entry("Client-Info", string.Format("Version: {0}", RegistryHandler.GetSystemSetting("Version")));
+                if(Authentication.HandShake()) break;
+
 
                 Log.Entry(Name, "Sleeping for 120 seconds");
                 Thread.Sleep(120 * 1000);

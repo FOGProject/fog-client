@@ -104,8 +104,14 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+<<<<<<< HEAD
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+=======
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\libs\Newtonsoft.Json.dll</HintPath>
+>>>>>>> refs/remotes/FOGProject/v0.9.x
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -139,9 +145,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
+=======
+    <ProjectReference Include="..\Handlers\Handlers.csproj">
+      <Project>{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}</Project>
+      <Name>Handlers</Name>
+      <Private>True</Private>
+    </ProjectReference>
+>>>>>>> refs/remotes/FOGProject/v0.9.x
     <ProjectReference Include="..\Modules\Modules.csproj">
       <Project>{d6372438-04ea-439c-8f7c-ee06446d9284}</Project>
       <Name>Modules</Name>
+      <Private>True</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

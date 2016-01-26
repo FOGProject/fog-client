@@ -42,6 +42,7 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult DumpConfig(Session session)
         {
+<<<<<<< HEAD
             var properties = new string[] { "HTTPS", "USETRAY", "WEBADDRESS", "WEBROOT",
                 "ROOTLOG", "INSTALLDIR", "ProductVersion", "LIGHT" };
             try
@@ -49,6 +50,12 @@ namespace SetupHelper
                 if(File.Exists(jsonFile))
                     File.Delete(jsonFile);
                 var json = new JObject();
+=======
+            var cert = RSA.GetRootCertificate();
+            if (cert != null) return ActionResult.Success;
+
+            var tempDirectory = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
                 foreach (var prop in properties)
                     json[prop] = session[prop];
@@ -83,6 +90,12 @@ namespace SetupHelper
         [CustomAction]
         public static ActionResult SaveSettings(Session session)
         {
+<<<<<<< HEAD
+=======
+            var cert = RSA.GetRootCertificate();
+            if (cert == null) return ActionResult.Success;
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
             try
             {
                 var config = GetSettings();

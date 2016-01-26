@@ -105,7 +105,20 @@ namespace FOG
             Log.Entry("Service", "Prompting user");
             string jsonData = JsonConvert.SerializeObject(data);
 
+<<<<<<< HEAD
             ProcessHandler.RunClientEXE("FOGShutdownGUI.exe", Transform.EncodeBase64(jsonData), false);
+=======
+            var notificationProcess = new Process
+            {
+                StartInfo =
+                {
+                    UseShellExecute = false,
+                    FileName = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"\FOGShutdownGUI.exe",
+                    Arguments = Transform.EncodeBase64(jsonData.ToString())
+                }
+            };
+            notificationProcess.Start();
+>>>>>>> refs/remotes/FOGProject/v0.9.x
         }
     }
 }

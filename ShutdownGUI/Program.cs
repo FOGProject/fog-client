@@ -19,7 +19,11 @@
 
 using System;
 using System.Windows.Forms;
+<<<<<<< HEAD
 using Zazzles;
+=======
+using FOG.Handlers;
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
 namespace FOG
 {

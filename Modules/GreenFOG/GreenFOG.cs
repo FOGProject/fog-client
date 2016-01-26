@@ -64,7 +64,11 @@ namespace FOG.Modules.GreenFOG
                 return;
             }
 
+<<<<<<< HEAD
             var rawTasks = response.GetList("#task", false);
+=======
+            var tasks = response.GetList("#task", false);
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
             ClearAll();
             //Add new tasks
@@ -72,6 +76,7 @@ namespace FOG.Modules.GreenFOG
             CreateTasks(tasks);
         }
 
+<<<<<<< HEAD
         private List<Task> CastTasks(List<string> rawTasks)
         {
             return (from task in rawTasks
@@ -79,6 +84,16 @@ namespace FOG.Modules.GreenFOG
                 into taskData
                 where taskData.Length == 3
                 select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
+=======
+        public override bool IsEnabled()
+        {
+            var enabled = base.IsEnabled();
+
+            if (!enabled)
+                FilterTasks(new List<string>());
+
+            return enabled;
+>>>>>>> refs/remotes/FOGProject/v0.9.x
         }
 
         private void ClearAll()

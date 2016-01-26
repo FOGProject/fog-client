@@ -20,9 +20,16 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+<<<<<<< HEAD
 using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
+=======
+using FOG.Handlers;
+using FOG.Handlers.Data;
+using FOG.Handlers.Power;
+using Newtonsoft.Json.Linq;
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
 namespace FOG
 {
@@ -53,6 +60,7 @@ namespace FOG
 
                 InitializeComponent();
 
+<<<<<<< HEAD
                 var options = (Power.ShutdownOptions) Enum.Parse(typeof (Power.ShutdownOptions), transport.options.ToString());
 
                 switch (options)
@@ -61,6 +69,16 @@ namespace FOG
                       btnAbort.Enabled = false;
                       break;
                   case Power.ShutdownOptions.Delay:
+=======
+                var options = (Power.FormOption) Enum.Parse(typeof (Power.FormOption), transport.options.ToString());
+
+                switch (options)
+                {
+                  case Power.FormOption.None:
+                      btnAbort.Enabled = false;
+                      break;
+                  case Power.FormOption.Delay:
+>>>>>>> refs/remotes/FOGProject/v0.9.x
                       btnAbort.Text = "Delay " + delayTime + " Minutes";
                       break;
                 }
@@ -98,7 +116,10 @@ namespace FOG
                 label1.Text = _gracePeriod + " seconds";
                 var workingArea = Screen.GetWorkingArea(this);
                 var height = workingArea.Bottom - Size.Height;
+<<<<<<< HEAD
                 if (Settings.OS == Settings.OSType.Mac) height = height - 22;
+=======
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
                 Location = new Point(workingArea.Right - Size.Width, height);
                 Bus.SetMode(Bus.Mode.Client);

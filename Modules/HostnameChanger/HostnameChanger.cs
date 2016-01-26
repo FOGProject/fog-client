@@ -18,12 +18,24 @@
  */
 
 using System;
+<<<<<<< HEAD
 using FOG.Modules.HostnameChanger.Linux;
 using FOG.Modules.HostnameChanger.Mac;
 using FOG.Modules.HostnameChanger.Windows;
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
+=======
+using System.Collections.Generic;
+using System.DirectoryServices.ActiveDirectory;
+using System.Linq;
+using System.Net;
+using System.Runtime.InteropServices;
+using FOG.Handlers;
+using FOG.Handlers.Middleware;
+using FOG.Handlers.Power;
+
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
 namespace FOG.Modules.HostnameChanger
 {
@@ -71,6 +83,12 @@ namespace FOG.Modules.HostnameChanger
             Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
             Log.Debug(Name, "   ADPW  :" + taskResponse.GetField("#ADPass"));
 
+            if (!taskResponse.Encrypted)
+            {
+                Log.Error(Name, "Response was not encrypted");
+                return;
+            }
+
             RenameComputer(taskResponse);
 
             UnRegisterComputer(taskResponse);
@@ -101,7 +119,11 @@ namespace FOG.Modules.HostnameChanger
             UnRegisterComputer(response);
             if (Power.ShuttingDown || Power.Requested) return;
 
+<<<<<<< HEAD
             Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
+=======
+            Log.Entry(Name, "Updating registry");
+>>>>>>> refs/remotes/FOGProject/v0.9.x
 
             try
             {
@@ -137,6 +159,42 @@ namespace FOG.Modules.HostnameChanger
             {
                 Log.Error(Name, ex);
             }
+<<<<<<< HEAD
+=======
+
+
+            // Attempt to join the domain
+            var returnCode = DomainWrapper(response, true, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+
+            switch (returnCode)
+            {
+                case 2224:
+                    returnCode = DomainWrapper(response, true, JoinOptions.NetsetupJoinDomain);
+                    break;
+                case 2:
+                case 50:
+                case 1355:
+                    returnCode = DomainWrapper(response, false, (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                    break;
+            }
+
+            // Entry the results
+            Log.Entry(Name,
+                           $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
+
+            if (returnCode.Equals(0))
+                Power.Restart("Host joined to Active Directory, restart required", Power.FormOption.Delay);
+        }
+
+        private static int DomainWrapper(Response response, bool ou, JoinOptions options)
+        {
+            return NetJoinDomain(null,
+                response.GetField("#ADDom"),
+                ou ? response.GetField("#ADOU") :  null,
+                response.GetField("#ADUser"),
+                response.GetField("#ADPass"),
+                options);           
+>>>>>>> refs/remotes/FOGProject/v0.9.x
         }
 
         //Remove the host from active directory
@@ -165,15 +223,38 @@ namespace FOG.Modules.HostnameChanger
         {
             if (!response.IsFieldValid("#Key"))
                 return;
+<<<<<<< HEAD
+=======
 
-            try
+            Log.Entry(Name, "Checking Product Key Activation");
+            var key = response.GetField("#Key");
+            if (key.Length != 29)
             {
+                Log.Error(Name, "Invalid product key provided by server");
+                return;
+            }
+>>>>>>> refs/remotes/FOGProject/v0.9.x
+
+            var partialKey = WinActivation.GetPartialKey();
+
+            if (key.EndsWith(partialKey))
+            {
+<<<<<<< HEAD
                 _instance.ActivateComputer(response.GetField("#Key"));
+=======
+                if (!WinActivation.IsActivated())
+                {
+                    Log.Entry(Name, "Windows has correct key but is not licensed");
+                }
+                else
+                {
+                    Log.Entry(Name, "Already activated with correct key");
+                    return;
+                }
+>>>>>>> refs/remotes/FOGProject/v0.9.x
             }
-            catch (Exception ex)
-            {
-                Log.Error(Name, ex);
-            }
+
+            WinActivation.SetProductKey(key);
         }
     }
 }
