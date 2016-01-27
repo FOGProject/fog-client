@@ -145,6 +145,7 @@ namespace FOG.Modules.PrinterManager
             if (printerData.GetField("#type").Equals("Local"))
                 return new LocalPrinter(printerData.GetField("#name"),
                     printerData.GetField("#file"),
+                    printerData.GetField("#configFile"),
                     printerData.GetField("#port"),
                     printerData.GetField("#ip"),
                     printerData.GetField("#model"),
