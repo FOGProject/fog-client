@@ -7,11 +7,12 @@ namespace FOG.Modules.PrinterManager
 {
     class LocalPrinter : Printer
     {
-        public LocalPrinter(string name, string file, string port, string ip, string model, bool defaulted)
+        public LocalPrinter(string name, string file, string configFile, string port, string ip, string model, bool defaulted)
         {
             Name = name;
             Port = port;
             File = file;
+            ConfigFile = configFile;
             Model = model;
             Default = defaulted;
             IP = ip;
@@ -26,6 +27,7 @@ namespace FOG.Modules.PrinterManager
                 Log.Entry(LogName, string.Format("--> IP = {0}", IP));
             Log.Entry(LogName, string.Format("--> Port = {0}", Port));
             Log.Entry(LogName, string.Format("--> File = {0}", File));
+            Log.Entry(LogName, string.Format("--> ConfigFile = {0}", ConfigFile));
             Log.Entry(LogName, string.Format("--> Model = {0}", Model));
 
             if (IP != null)
@@ -34,6 +36,13 @@ namespace FOG.Modules.PrinterManager
             var proc = Process.Start("rundll32.exe", 
                 string.Format(" printui.dll,PrintUIEntry /if /q /b \"{0}\" /f \"{1}\" /r \"{2}\" /m \"{3}\"", Name, File, Port, Model));
             if (proc != null) proc.WaitForExit(120000);
+
+            if (ConfigFile != null) 
+            {
+                var procConfig = Process.Start("rundll32.exe",
+                    string.Format(" printui.dll,PrintUIEntry /Sr /q /n \"{0}\" /a \"{1}\"", Name, ConfigFile));
+                if(procConfig != null) procConfig.WaitForExit(120000);   
+            }
 
             Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
