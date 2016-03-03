@@ -58,7 +58,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, string.Format("Could not retrieve {0}{1}", keyPath, keyName));
+                Log.Error(LogName, $"Could not retrieve {keyPath}\\{keyName}");
                 Log.Error(LogName, ex);
             }
             return null;
@@ -77,7 +77,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, string.Format("Could not set {0}{1}", keyPath, keyName));
+                Log.Error(LogName, $"Could not set {keyPath}\\{keyName}");
                 Log.Error(LogName, ex);
             }
 
@@ -97,7 +97,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, string.Format("Could not delete {0}", path));
+                Log.Error(LogName, $"Could not delete {path}");
                 Log.Error(LogName, ex);
             }
 
@@ -117,7 +117,7 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
-                Log.Error(LogName, string.Format("Could not delete {0}", keyPath));
+                Log.Error(LogName, $"Could not delete {keyPath}");
                 Log.Error(LogName, ex);
             }
 
@@ -144,22 +144,22 @@ namespace FOG.Handlers
 
         public static string GetModuleSetting(string module, string keyName)
         {
-            return GetRegisitryValue(string.Format("{0}\\{1}", GetRoot(), module), keyName);
+            return GetRegisitryValue($"{GetRoot()}\\{module}", keyName);
         }
 
         public static bool SetModuleSetting(string module, string keyName, string value)
         {
-            return SetRegistryValue(string.Format("{0}\\{1}", GetRoot(), module), keyName, value);
+            return SetRegistryValue($"{GetRoot()}\\{module}", keyName, value);
         }
 
         public static bool DeleteModuleSetting(string module, string keyName)
         {
-            return DeleteKey(string.Format("{0}\\{1}", GetRoot(), module), keyName);
+            return DeleteKey($"{GetRoot()}\\{module}", keyName);
         }
 
         public static bool DeleteModule(string module)
         {
-            return DeleteFolder(string.Format("{0}\\{1}", GetRoot(), module));
+            return DeleteFolder($"{GetRoot()}\\{module}");
         }
     }
 }

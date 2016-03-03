@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -87,7 +87,6 @@ namespace FOG.Handlers.Middleware
             }
         }
 
-
         public Response(bool error, Dictionary<string, string> data, string returnCode, bool encrypted)
         {
             Encrypted = encrypted;
@@ -103,7 +102,6 @@ namespace FOG.Handlers.Middleware
             ReturnCode = "";
             Encrypted = false;
         }
-
 
         /// <summary>
         ///     Parse a Response for an array of objects
@@ -142,6 +140,11 @@ namespace FOG.Handlers.Middleware
         public bool IsFieldValid(string id)
         {
             return !string.IsNullOrEmpty(GetField(id));
+        }
+
+        public bool AreFieldsValid(params string[] ids)
+        {
+            return ids.All(id => !string.IsNullOrEmpty(GetField(id)));
         }
     }
 }

@@ -115,6 +115,7 @@
     <Compile Include="DisplayManager\User_32.cs" />
     <Compile Include="GreenFOG\GreenFOG.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
+    <Compile Include="HostnameChanger\WinDomain.cs" />
     <Compile Include="HostnameChanger\WinActivation.cs" />
     <Compile Include="PrinterManager\LocalPrinter.cs" />
     <Compile Include="PrinterManager\iPrintPrinter.cs" />
