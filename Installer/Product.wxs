@@ -2,7 +2,7 @@
 
 <!--
  FOG Service : A computer management client for the FOG Project
- Copyright (C) 2014-2015 FOG Project
+ Copyright (C) 2014-2016 FOG Project
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -31,6 +31,9 @@
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
+
+      <Custom Action="CheckForLegacy" Before="InstallFiles">NOT REMOVE="ALL"</Custom>
+
       <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="UninstallCert" After="InstallFiles">REMOVE="ALL"</Custom>
       <Custom Action="CleanTasks" After="InstallFiles"></Custom>
@@ -54,6 +57,9 @@
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
     <Binary Id="SetupHelper.CA.dll" SourceFile="..\bin\SetupHelper.CA.dll" />
+
+
+    <CustomAction Id="CheckForLegacy" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="CheckForLegacy" />
     <CustomAction Id="InstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="InstallCert" />
     <CustomAction Id="UninstallCert" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="UninstallCert" />
     <CustomAction Id="CleanTasks" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll" DllEntry="CleanTasks" />
