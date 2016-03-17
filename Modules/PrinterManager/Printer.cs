@@ -20,7 +20,6 @@ namespace FOG.Modules.PrinterManager
         //Basic variables for printers
         public string Port { get; protected set; }
         public string File { get; protected set; }
-        public string ConfigFile { get; protected set; }
         public string Model { get; protected set; }
         public string Name { get; protected set; }
         public string IP { get; protected set; }
