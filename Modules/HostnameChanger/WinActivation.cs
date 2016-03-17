@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,20 +20,49 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using FOG.Handlers;
+using SLID = System.Guid;
 
 namespace FOG.Modules.HostnameChanger
 {
-    class WinActivation
+    public class WinActivation
     {
         private static string LogName = "WinActivation";
+        private enum SL_GENUINE_STATE
+        {
+            SL_GEN_STATE_IS_GENUINE = 0,
+            SL_GEN_STATE_INVALID_LICENSE = 1,
+            SL_GEN_STATE_TAMPERED = 2,
+            SL_GEN_STATE_LAST = 3
+        }
+
+        //https://theroadtodelphi.wordpress.com/2009/10/12/determine-genuine-windows-installation-in-c/
+        [DllImport("Slwga.dll", EntryPoint = "SLIsGenuineLocal", CharSet = CharSet.None, ExactSpelling = false, 
+            SetLastError = false, PreserveSig = true, CallingConvention = CallingConvention.Winapi, 
+            BestFitMapping = false, ThrowOnUnmappableChar = false)]
+        [PreserveSigAttribute()]
+        private static extern uint SLIsGenuineLocal(ref SLID slid, [In, Out] ref SL_GENUINE_STATE genuineState, IntPtr val3);
 
         public static bool IsActivated()
         {
-            var info = GetSLMGROutput("/dli");
-            var flattenedInfo = string.Join(" ", info);
+            var windowsGUID = new Guid("55c92734-d682-4d71-983e-d6ec3f16059f");
+            SLID windowsSLID = (Guid)windowsGUID;
 
-            return flattenedInfo.Contains("Licensed");
+            try
+            {
+                var genuineState = SL_GENUINE_STATE.SL_GEN_STATE_LAST;
+                var result = SLIsGenuineLocal(ref windowsSLID, ref genuineState, IntPtr.Zero);
+                if(result == 0)
+                    return genuineState == SL_GENUINE_STATE.SL_GEN_STATE_IS_GENUINE;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Unable to check activation state");
+                Log.Error(LogName, ex);
+            }
+
+            return false;
         }
 
         public static string GetPartialKey()
