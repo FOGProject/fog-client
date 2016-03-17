@@ -26,7 +26,7 @@ using SLID = System.Guid;
 
 namespace FOG.Modules.HostnameChanger
 {
-    public class WinActivation
+    class WinActivation
     {
         private static string LogName = "WinActivation";
         private enum SL_GENUINE_STATE
