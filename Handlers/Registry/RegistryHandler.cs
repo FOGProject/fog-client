@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,6 +58,11 @@ namespace FOG.Handlers
             }
             catch (Exception ex)
             {
+                if (keyPath.EndsWith("\\"))
+                {
+                    keyPath = keyPath.Substring(0, keyPath.Length - 1);
+                }
+
                 Log.Error(LogName, $"Could not retrieve {keyPath}\\{keyName}");
                 Log.Error(LogName, ex);
             }
