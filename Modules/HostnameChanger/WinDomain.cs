@@ -68,10 +68,6 @@ namespace FOG.Modules.HostnameChanger
         private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
             DomainOptions fUnjoinOptions);
 
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetRenameMachineInDomain(string lpServer, string lpNewMachineName, 
-            string lpAccount, string lpPassword, DomainOptions fRenameOptions);
-
 
         public static int Join(Response response)
         {
@@ -100,16 +96,6 @@ namespace FOG.Modules.HostnameChanger
                 response.GetField("#ADUser"),
                 response.GetField("#ADPass"),
                 options);
-        }
-
-        public static int RenameMachine(Response response)
-        {
-            return NetRenameMachineInDomain(
-                response.GetField("#ADDom"),
-                response.GetField("#hostname"),
-                response.GetField("#ADUser"),
-                response.GetField("#ADPass"),
-                DomainOptions.NETSETUP_ACCT_CREATE);
         }
 
         public static int Leave(Response response)

@@ -86,25 +86,7 @@ namespace FOG.Modules.HostnameChanger
             
             Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
 
-            if (response.GetField("#AD").Equals("1"))
-            {
-                if (WinDomain.InCorrectDomain(response))
-                {
-                    Log.Entry(Name, "Initiating domain rename request from server");
-
-                    var returnCode = WinDomain.RenameMachine(response);
-                    Log.Entry(Name, "Domain Join return code = " + returnCode);
-
-                    if (WinDomain.ReturnCodes.ContainsKey(returnCode))
-                        Log.Entry(Name, WinDomain.ReturnCodes[returnCode]);
-
-                    Power.Restart(RegistryHandler.GetSystemSetting("Company") + " needs to rename your computer", Power.FormOption.Delay);
-                }
-                else
-                {
-                    UnRegisterComputer(response);
-                }
-            }
+            UnRegisterComputer(response);
 
             if (Power.ShuttingDown || Power.Requested) return;
             UpdateHostnameRegistry(response.GetField("#hostname"));
