@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FOG.Commands;
+
 using Zazzles;
 
 namespace FOG
@@ -28,14 +29,14 @@ namespace FOG
     internal class Debugger
     {
         private const string Name = "Console";
-        private static Zazzles.Debugger _instance;
+        private static Zazzles.Debugger.Debugger _instance;
 
         public static void Main(string[] args)
         {
             Log.Output = Log.Mode.Console;
             Eager.Initalize();
 
-            _instance = new Zazzles.Debugger();
+            _instance = new Zazzles.Debugger.Debugger();
             _instance.AddCommand("module", new ModuleCommand());
 
             Log.PaddedHeader("FOG Console");

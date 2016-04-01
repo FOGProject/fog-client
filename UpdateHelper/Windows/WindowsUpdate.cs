@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,52 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Diagnostics;
-using System.IO;
 using System.ServiceProcess;
-using Zazzles;
-using Zazzles.Modules.Updater;
 
 namespace FOG
 {
-    internal class WindowsUpdate : IUpdate
+    internal class WindowsUpdate : AbstractUpdate
     {
-        private const string LogName = "UpdateHelper";
-
-        public void ApplyUpdate()
-        {
-            var useTray = Settings.Get("Tray");
-            var https = Settings.Get("HTTPS");
-            var webRoot = Settings.Get("WebRoot");
-            var server = Settings.Get("Server");
-            var logRoot = Settings.Get("RootLog");
-
-            var process = new Process
-            {
-                StartInfo =
-                {
-                    Arguments =
-                        $"/i \"{Path.Combine(Settings.Location, "FOGService.msi")}\" " +
-                        $"/quiet " +
-                        $"USETRAY=\"{useTray}\" " +
-                        $"HTTPS=\"{https}\" " +
-                        $"WEBADDRESS=\"{server}\" " +
-                        $"WEBROOT=\"{webRoot}\" " +
-                        $"ROOTLOG=\"{logRoot}\""
-                }
-            };
-            process.StartInfo.CreateNoWindow = true;
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-            process.StartInfo.FileName = "msiexec";
-
-            Log.Entry(LogName, "--> " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
-            process.Start();
-            process.WaitForExit();
-        }
-
-        public void StartService()
+        public override void StartService()
         {
             using (var service = new ServiceController("fogservice"))
             {
@@ -71,7 +32,7 @@ namespace FOG
             }
         }
 
-        public void StopService()
+        public override void StopService()
         {
             using (var service = new ServiceController("fogservice"))
             {

@@ -31,7 +31,7 @@ namespace FOG
     {
         private const string LogName = "Installer";
 
-        public static bool PinServerCert(string location)
+        public static bool PinServerCert(string location, bool presetSettings = false)
         {
             try
             {
@@ -39,7 +39,10 @@ namespace FOG
                 if (cert != null) UnpinServerCert();
 
                 var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
-                Settings.SetPath(Path.Combine(location, "settings.json"));
+
+                if (!presetSettings)
+                    Settings.SetPath(Path.Combine(location, "settings.json"));
+
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
 

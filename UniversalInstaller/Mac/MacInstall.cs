@@ -31,7 +31,8 @@ namespace FOG
 
         public bool Install()
         {
-            if (Directory.Exists(GetLocation())) GenricUnixInstall.PrepareUpgrade(this);
+            if (Directory.Exists(GetLocation()))
+                Uninstall();
 
             Helper.ExtractFiles("/opt/", GetLocation());
 
@@ -71,7 +72,20 @@ namespace FOG
 
         public bool Uninstall()
         {
-            Directory.Delete(GetLocation(), true);
+            if (Directory.Exists(GetLocation()))
+            {
+                if (Settings.Location.Contains(GetLocation()))
+                {
+                    var filePaths = Directory.GetFiles(GetLocation(), "*", SearchOption.TopDirectoryOnly);
+                    foreach (var filePath in filePaths)
+                        File.Delete(filePath);
+                }
+                else
+                {
+                    Directory.Delete(GetLocation(), true);
+                }
+            }
+
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchAgents/org.freeghost.useragent.plist");
             File.Delete("/Library/LaunchAgents/com.freeghost.useragent.plist");

@@ -18,6 +18,7 @@
  */
 
 using System.IO;
+using System.Linq;
 using Zazzles;
 
 namespace FOG
@@ -31,7 +32,8 @@ namespace FOG
 
         public bool Install()
         {
-            if (Directory.Exists(GetLocation())) GenricUnixInstall.PrepareUpgrade(this);
+            if (Directory.Exists(GetLocation()))
+                Uninstall();
 
             Helper.ExtractFiles("/opt/", GetLocation());
 
@@ -97,8 +99,21 @@ namespace FOG
 
         public bool Uninstall()
         {
-            if(Directory.Exists(GetLocation()))
-                Directory.Delete(GetLocation(), true);
+            if (Directory.Exists(GetLocation()))
+            {
+                if (Settings.Location.Contains(GetLocation()))
+                {
+                    var filePaths = Directory.GetFiles(GetLocation(),"*",SearchOption.TopDirectoryOnly);
+                    foreach (var filePath in filePaths.Where(filePath => !filePath.ToLower().EndsWith("fog.log")))
+                    {
+                        File.Delete(filePath);
+                    }
+                }
+                else
+                {
+                    Directory.Delete(GetLocation(), true);
+                }
+            }
 
             ProcessHandler.Run("systemctl", "disable FOGService");
             ProcessHandler.Run("sysv-rc-conf", "FOGService off");

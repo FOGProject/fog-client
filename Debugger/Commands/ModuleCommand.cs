@@ -26,7 +26,7 @@ using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
 using Zazzles;
-using Zazzles.Commands;
+using Zazzles.Debugger.Commands;
 using Zazzles.Modules;
 
 namespace FOG.Commands

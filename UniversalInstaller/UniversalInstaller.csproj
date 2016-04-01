@@ -64,7 +64,7 @@
     <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
+    <DebugType>none</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
@@ -77,10 +77,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>False</Private>
-      <EmbedAssembly>true</EmbedAssembly>
+    <Reference Include="Newtonsoft.Json, Version=8.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -101,7 +100,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GenricUnixInstall.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="IInstall.cs" />
     <Compile Include="Linux\LinuxInstall.cs" />
@@ -113,7 +111,6 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="app.manifest" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\init-d" />
     <EmbeddedResource Include="Scripts\fog.agent" />
     <EmbeddedResource Include="Scripts\fog.daemon" />
@@ -124,6 +121,7 @@
     <EmbeddedResource Include="Scripts\control.sh" />
     <EmbeddedResource Include="Scripts\systemd" />
     <EmbeddedResource Include="Scripts\fog-ca.cer" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

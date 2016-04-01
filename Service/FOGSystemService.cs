@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -50,11 +50,17 @@ namespace FOG
             ProcessHandler.KillAllEXE("FOGUserService");
             ProcessHandler.KillAllEXE("FOGTray");
 
+            // Delete any tmp files from last session
+            var tmpDir = Path.Combine(Settings.Location, "tmp");
+            if (Directory.Exists(tmpDir))
+            {
+                Directory.Delete(tmpDir, true);
+            }
+
             dynamic json = new JObject();
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);
 
-            // Start the UserServiceSpawner
             if (Settings.OS == Settings.OSType.Linux)
                 UserServiceSpawner.Start();
         }
@@ -107,7 +113,9 @@ namespace FOG
             {
                 Log.NewLine();
                 Log.PaddedHeader("Authentication");
-                Log.Entry("Client-Info", string.Format("Version: {0}", Settings.Get("Version")));
+                Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
+                Log.Entry("Client-Info", $"OS:      {Settings.OS}");
+
                 if (Authentication.HandShake()) break;
 
                 Log.Entry(Name, "Sleeping for 120 seconds");

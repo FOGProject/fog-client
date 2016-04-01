@@ -87,7 +87,9 @@ namespace FOG.Modules.HostnameChanger.Windows
             var slmgrLoc = Path.Combine(Environment.SystemDirectory, "slmgr.vbs");
             var procArg = $@"{slmgrLoc} {string.Join(" ", args)}";
 
-            return ProcessHandler.GetOutput("cscript", procArg);
+            string[] stdout;
+            ProcessHandler.Run("cscript", procArg, true, out stdout);
+            return stdout;
         }
     }
 }

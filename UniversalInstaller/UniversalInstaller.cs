@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,10 @@
  */
 
 using System;
+using System.IO;
+using Newtonsoft.Json.Linq;
 using Zazzles;
+using Zazzles.Data;
 
 namespace FOG
 {
@@ -33,8 +36,10 @@ namespace FOG
 
             if (args.Length == 5)
                 ProcessArgs(args);
-            else if(args.Length == 1 && args[1].Equals("uninstall"))
+            else if (args.Length == 1 && args[0].Equals("uninstall"))
                 PerformCLIUninstall();
+            else if (args.Length == 1 && args[0].Equals("upgrade"))
+                PerformUpgrade();
             else
                 InteractiveMode();
         }
@@ -62,6 +67,23 @@ namespace FOG
             }
 
             Install(https, tray, server, webRoot, company, rootLog);
+        }
+
+        private static void PerformUpgrade()
+        {
+            var settingsFile = Path.Combine(Settings.Location, "settings.json");
+
+            Settings.SetPath(settingsFile);
+            Settings.Set("Version", Helper.ClientVersion);
+
+            Install(Settings.Get("HTTPS"), Settings.Get("Tray"), Settings.Get("Server"), 
+                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"), 
+                true);
+
+            File.Copy(settingsFile, 
+                Path.Combine(Helper.Instance.GetLocation(), "settings.json"), true);
+            File.Copy(Path.Combine(Settings.Location, "token.dat"), 
+                Path.Combine(Helper.Instance.GetLocation(), "token.dat"), true);
 
         }
 
@@ -139,16 +161,17 @@ namespace FOG
             var company = "FOG";
             var rootLog = "0";
 
-            Console.Write("Enter your FOG Server address:");
+            Console.Write("Enter your FOG Server address: ");
             var server = Console.ReadLine();
 
-            Console.Write("Enter the FOG webroot used [example: /fog]:");
+            Console.Write("Enter the FOG webroot used [example: /fog]: ");
             var webRoot = Console.ReadLine();
 
             Install(https, tray, server, webRoot, company, rootLog);     
         }
 
-        private static void Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        private static void Install(string https, string tray, string server, 
+            string webRoot, string company, string rootLog, bool skipSave= false)
         {
             Console.WriteLine("Getting things ready...");
             Helper.Instance.PrepareFiles();
@@ -157,11 +180,12 @@ namespace FOG
             Helper.Instance.Install(https, tray, server, webRoot, company, rootLog);
 
             Console.WriteLine("Applying Configuration...");
-            Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);
+            if(!skipSave)
+                Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);
             Helper.Instance.Configure();
             
             Console.WriteLine("Setting Up Encrypted Tunnel...");
-            Helper.PinServerCert();
+            Helper.PinServerCert(Helper.Instance.GetLocation(), skipSave);
             Helper.PinFOGCert();
         }
     }

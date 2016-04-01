@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,29 +17,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using Zazzles;
-using Zazzles.Modules.Updater;
 
 namespace FOG
 {
-    internal class MacUpdate : IUpdate
+    internal class MacUpdate : AbstractUpdate
     {
-        private const string LogName = "UpdateHelper";
-
-        public void ApplyUpdate()
-        {
-            ProcessHandler.RunClientEXE("UnixInstaller.exe",
-                $"{Settings.Get("Server")} {Settings.Get("Tray")} {Settings.Get("Company")} {Settings.Get("RootLog")} {Settings.Get("HTTPS")}");
-        }
-
-        public void StartService()
+        public override void StartService()
         {
             ProcessHandler.Run("launchctl", "load -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("launchctl", "load -w /Library/LaunchAgents/org.freeghost.useragent.plist");
         }
 
-        public void StopService()
+        public override void StopService()
         {
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("launchctl", "unload -w /Library/LaunchAgents/org.freeghost.useragent.plist");

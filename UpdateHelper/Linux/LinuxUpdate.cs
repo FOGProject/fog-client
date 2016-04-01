@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,28 +19,19 @@
 
 
 using Zazzles;
-using Zazzles.Modules.Updater;
 
 namespace FOG
 {
-    internal class LinuxUpdate : IUpdate
+    internal class LinuxUpdate : AbstractUpdate
     {
-        private const string LogName = "UpdateHelper";
-
-        public void ApplyUpdate()
+        public override void StartService()
         {
-            ProcessHandler.RunClientEXE("UnixInstaller.exe", 
-                $"{Settings.Get("Server")} {Settings.Get("Tray")} {Settings.Get("Company")} {Settings.Get("RootLog")} {Settings.Get("HTTPS")}");
+            ProcessHandler.Run("/bin/bash", "/opt/fog-service/control.sh start");
         }
 
-        public void StartService()
+        public override void StopService()
         {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService start");
-        }
-
-        public void StopService()
-        {
-            ProcessHandler.Run("/bin/bash", "/etc/init.d/FOGService stop");
+            ProcessHandler.Run("/bin/bash", "/opt/fog-service/control.sh stop");
         }
     }
 }

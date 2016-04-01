@@ -27,8 +27,9 @@ namespace FOG.Modules.PrinterManager
     {
         public override List<string> GetPrinters()
         {
-            var output = ProcessHandler.GetOutput("lpstat",  "-p | awk '{ print $2}' ");
-            return new List<string>(output);
+            string[] stdout;
+            ProcessHandler.Run("lpstat",  "-p | awk '{ print $2}' ", true, out stdout);
+            return new List<string>(stdout);
         }
 
         protected override void AddiPrint(iPrintPrinter printer)
@@ -48,7 +49,10 @@ namespace FOG.Modules.PrinterManager
 
         protected override void AddCUPS(CUPSPrinter printer)
         {
-            var portName = ProcessHandler.GetOutput("echo", $"{printer.Name} | tr ' ' '_'");
+            string[] stdout;
+            ProcessHandler.Run("echo", $"{printer.Name} | tr ' ' '_'", true, out stdout);
+            var portName = stdout[0];
+
             var lpdAddress = $"lpd://{printer.IP}";
             ProcessHandler.Run("lpadmin",
                 $"-p {portName} -E -v {lpdAddress} -P {printer.File} -D {printer.Name}");

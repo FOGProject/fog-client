@@ -28,7 +28,7 @@ namespace FOG
     public static class Helper
     {
         private const string LogName = "Installer";
-        private const string ClientVersion = "0.10.0";
+        public const string ClientVersion = "0.11.3";
 
         public static IInstall Instance { get;  }
 
@@ -48,9 +48,9 @@ namespace FOG
             }
         }
 
-        public static bool PinServerCert(string location = null)
+        public static bool PinServerCert(string location, bool preset = false)
         {
-            return GenericSetup.PinServerCert(location ?? Instance.GetLocation());
+            return GenericSetup.PinServerCert(location, preset);
         }
 
         public static bool SaveSettings(string https, string usetray, string webaddress, string webroot,
