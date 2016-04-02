@@ -112,7 +112,7 @@
     <None Include="App.config" />
     <None Include="app.manifest" />
     <EmbeddedResource Include="Scripts\init-d" />
-    <EmbeddedResource Include="Scripts\fog.agent" />
+    <None Include="Scripts\fog.agent" />
     <EmbeddedResource Include="Scripts\fog.daemon" />
     <EmbeddedResource Include="Scripts\org.freeghost.daemon.plist" />
     <EmbeddedResource Include="Scripts\org.freeghost.useragent.plist" />

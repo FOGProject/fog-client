@@ -23,6 +23,7 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using FOG.Tray.GTK;
 using UserNotification;
 using Zazzles;
 
@@ -32,6 +33,8 @@ namespace FOG.Tray
     {
         private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
         private static ITray _instance;
+        private static Thread _trayThread;
+
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
@@ -50,16 +53,23 @@ namespace FOG.Tray
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
+            _trayThread = new Thread(ShowTray);
+            _trayThread.Start();
+        }
 
-            var hoverText = "FOG Client v" + Settings.Get("Version");
-
+        private static void ShowTray()
+        {
+            ITray _instance;
             switch (Settings.OS)
             {
-                default:
+                case Settings.OSType.Windows:
                     _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
                     break;
+                default:
+                    _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
+                    break;
             }
-            _instance.SetHover(hoverText);
+            _instance.SetHover("FOG Client v" + Settings.Get("Version"));
         }
 
         private static void UpdateFormLocation(int index)
