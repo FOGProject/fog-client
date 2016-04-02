@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,7 @@
  */
 
 using System.IO;
+using System.Linq;
 using Zazzles;
 
 namespace FOG
@@ -39,15 +40,16 @@ namespace FOG
             var logLocation = Path.Combine(GetLocation(), "fog.log");
             if (!File.Exists(logLocation))
                 File.Create(logLocation);
+
             ProcessHandler.Run("chmod", "755 " + logLocation);
-            Helper.ExtractResource("FOG.Scripts.fog.useragent", Path.Combine(GetLocation(), "fog.useragent"), true);
-            ProcessHandler.Run("chmod", "755 "+ Path.Combine(GetLocation(), "fog.useragent"));
+            Helper.ExtractResource("FOG.Scripts.fog.agent", Path.Combine(GetLocation(), "fog.agent"), true);
+            ProcessHandler.Run("chmod", "755 "+ Path.Combine(GetLocation(), "fog.agent"));
             Helper.ExtractResource("FOG.Scripts.fog.daemon", Path.Combine(GetLocation(), "fog.daemon"), true);
             ProcessHandler.Run("chmod", "755 "+ Path.Combine(GetLocation(), "fog.daemon"));
-            Helper.ExtractResource("FOG.Scripts.com.freeghost.daemon.plist", "/Library/LaunchDaemons/com.freeghost.daemon.plist", true);
-            ProcessHandler.Run("chown", "root /Library/LaunchDaemons/com.freeghost.daemon.plist");
-            Helper.ExtractResource("FOG.Scripts.com.freeghost.useragent.plist", "/Library/LaunchAgents/com.freeghost.useragent.plist", true);
-            ProcessHandler.Run("chown", "root /Library/LaunchAgents/com.freeghost.useragent.plist");
+            Helper.ExtractResource("FOG.Scripts.org.freeghost.daemon.plist", "/Library/LaunchDaemons/org.freeghost.daemon.plist", true);
+            ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
+            Helper.ExtractResource("FOG.Scripts.org.freeghost.useragent.plist", "/Library/LaunchAgents/org.freeghost.useragent.plist", true);
+            ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
 
             Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
@@ -77,7 +79,7 @@ namespace FOG
                 if (Settings.Location.Contains(GetLocation()))
                 {
                     var filePaths = Directory.GetFiles(GetLocation(), "*", SearchOption.TopDirectoryOnly);
-                    foreach (var filePath in filePaths)
+                    foreach (var filePath in filePaths.Where(filePath => !filePath.ToLower().EndsWith("fog.log")))
                         File.Delete(filePath);
                 }
                 else
