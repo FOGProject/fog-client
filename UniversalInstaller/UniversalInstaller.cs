@@ -19,9 +19,7 @@
 
 using System;
 using System.IO;
-using Newtonsoft.Json.Linq;
 using Zazzles;
-using Zazzles.Data;
 
 namespace FOG
 {
@@ -105,14 +103,13 @@ namespace FOG
             Console.WriteLine(" #     FOG                                 #");
             Console.WriteLine(" #     Free Computer Imaging Solution      #");
             Console.WriteLine(" #                                         #");
-            Console.WriteLine(" #     http://www.fogproject.org/          #");
+            Console.WriteLine(" #     https://www.fogproject.org/         #");
             Console.WriteLine(" #                                         #");
             Console.WriteLine(" #     Credits:                            #");
-            Console.WriteLine(" #     http://fogproject.org/Credits       #");
+            Console.WriteLine(" #     https://fogproject.org/Credits      #");
             Console.WriteLine(" #     GNU GPL Version 3                   #");
             Console.WriteLine(" ###########################################");
             Console.WriteLine(" #           FOG SERVICE INSTALLER         #");
-
         }
 
         private static void InteractiveMode()
@@ -154,6 +151,9 @@ namespace FOG
             PrintBanner();
             Console.WriteLine("");
             Console.WriteLine("By installing this software you agree to the GPL v3 license");
+            Console.WriteLine("");
+            Console.WriteLine("Version: " + Helper.ClientVersion);
+            Console.WriteLine("OS:      " + Settings.OS);
             Console.WriteLine("");
 
             var https = "0";
