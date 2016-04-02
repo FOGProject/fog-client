@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -72,14 +72,12 @@ namespace FOG.Modules.HostnameChanger
             Log.Debug(Name, "   ADPW  :" + taskResponse.GetField("#ADPass"));
 
             RenameComputer(taskResponse);
-
-            UnRegisterComputer(taskResponse);
             if (Power.ShuttingDown || Power.Requested) return;
 
-            if (!Power.ShuttingDown && !Power.Requested)
-                RegisterComputer(taskResponse);
-            if (!Power.ShuttingDown && !Power.Requested)
-                ActivateComputer(taskResponse);
+            RegisterComputer(taskResponse);
+            if (Power.ShuttingDown || Power.Requested) return;
+
+            ActivateComputer(taskResponse);
         }
 
         //Rename the computer and remove it from active directory
@@ -102,7 +100,6 @@ namespace FOG.Modules.HostnameChanger
             if (Power.ShuttingDown || Power.Requested) return;
 
             Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
-
             try
             {
                 _instance.RenameComputer(response.GetField("#hostname"));
