@@ -122,5 +122,31 @@ namespace FOG
             fileData = fileData.Replace("\r\n", "\n");
             File.WriteAllText(fileName, fileData);
         }
+
+        public static void CreateRuntime()
+        {
+            var outputFile = Path.Combine(Instance.GetLocation(), "runtime");
+
+            try
+            {
+
+                string[] stdout;
+                ProcessHandler.Run("which", "mono-service", true, out stdout);
+                if (stdout != null)
+                {
+                    var runtime = string.Join(" ", stdout).Trim();
+                    var runtimeDir = Path.GetDirectoryName(runtime);
+                    if (runtimeDir != null && !runtimeDir.EndsWith("/"))
+                        runtimeDir = runtimeDir + "/";
+                    File.WriteAllText(outputFile, runtimeDir);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not detect runtime");
+                Log.Error(LogName, ex);
+                File.Create(outputFile);
+            }
+        }
     }
 }

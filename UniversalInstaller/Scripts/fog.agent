@@ -1,2 +1,6 @@
 #!/usr/bin/env bash
-mono /opt/fog-service/FOGUserService.exe
+
+WORKINGDIR=/opt/fog-service/
+RUNTIME="`cat ${WORKINGDIR}runtime`"
+
+${RUNTIME}mono /opt/fog-service/FOGUserService.exe

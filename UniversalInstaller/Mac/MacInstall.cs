@@ -43,16 +43,19 @@ namespace FOG
 
             ProcessHandler.Run("chmod", "755 " + logLocation);
             Helper.ExtractResource("FOG.Scripts.fog.agent", Path.Combine(GetLocation(), "fog.agent"), true);
-            ProcessHandler.Run("chmod", "755 "+ Path.Combine(GetLocation(), "fog.agent"));
             Helper.ExtractResource("FOG.Scripts.fog.daemon", Path.Combine(GetLocation(), "fog.daemon"), true);
-            ProcessHandler.Run("chmod", "755 "+ Path.Combine(GetLocation(), "fog.daemon"));
             Helper.ExtractResource("FOG.Scripts.org.freeghost.daemon.plist", "/Library/LaunchDaemons/org.freeghost.daemon.plist", true);
-            ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             Helper.ExtractResource("FOG.Scripts.org.freeghost.useragent.plist", "/Library/LaunchAgents/org.freeghost.useragent.plist", true);
+            Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
+
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "fog.daemon"));
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "fog.agent"));
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
+            ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
 
-            Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
-            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
+
+            Helper.CreateRuntime();
 
             return true;
         }

@@ -6,6 +6,7 @@ WORKINGDIR=/opt/fog-service/
 LOCK=service.lock
 FOGSERVICE=FOGService.exe
 PID="`cat ${WORKINGDIR}${LOCK}`"
+RUNTIME="`cat ${WORKINGDIR}runtime`"
 
 case "$1" in
         start)
@@ -21,7 +22,7 @@ case "$1" in
                     rm ${WORKINGDIR}${LOCK}
                 else
                   echo "starting ${NAME}"
-                  ${DAEMON} ${WORKINGDIR}${FOGSERVICE} -d:${WORKINGDIR} -l:${WORKINGDIR}${LOCK}
+                  ${RUNTIME}${DAEMON} ${WORKINGDIR}${FOGSERVICE} -d:${WORKINGDIR} -l:${WORKINGDIR}${LOCK}
                   echo "${NAME} started"
                 fi
         ;;
