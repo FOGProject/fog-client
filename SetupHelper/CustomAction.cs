@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,6 +23,7 @@ using System.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
 using FOG;
+using Microsoft.Win32;
 using Newtonsoft.Json.Linq;
 
 namespace SetupHelper
@@ -166,6 +167,24 @@ namespace SetupHelper
             return ActionResult.Success;
         }
 
+        [CustomAction]
+        public static ActionResult CheckForLegacy(Session session)
+        {
+            try
+            {
+                var software =
+                    Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall").GetSubKeyNames();
+
+                if (software.Contains("{91C5D423-B6AB-4EAB-8F17-2BB3AE162CA1}"))
+                {
+                    DisplayMSIError(session, "Please uninstall the legacy client and re-run this installer");
+                    return ActionResult.Failure;
+                }
+            }
+            catch (Exception) { }
+
+            return ActionResult.Success;
+        }
 
         [CustomAction]
         public static ActionResult CleanTasks(Session session)
