@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -39,6 +39,8 @@ namespace FOG.Modules.PrinterManager
             if (printer.Port != null)
                 Log.Entry(LogName, $"--> Port = {printer.Port}");
             if (printer.File != null)
+                Log.Entry(LogName, $"--> File = {printer.File}");
+            if (printer.ConfigFile != null)
                 Log.Entry(LogName, $"--> File = {printer.File}");
             if (printer.Model != null)
                 Log.Entry(LogName, $"--> Model = {printer.Model}");

@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,6 +63,13 @@ namespace FOG.Modules.PrinterManager
             var proc = Process.Start("rundll32.exe",
                 $" printui.dll,PrintUIEntry /if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
             proc?.WaitForExit(120000);
+
+            if (printer.ConfigFile != null)
+            {
+                var procConfig = Process.Start("rundll32.exe",
+                    string.Format(" printui.dll,PrintUIEntry /Sr /q /n \"{0}\" /a \"{1}\" m f g p", printer.Name, printer.ConfigFile));
+                procConfig?.WaitForExit(120000);
+            }
         }
 
         protected override void AddNetwork(NetworkPrinter printer)
