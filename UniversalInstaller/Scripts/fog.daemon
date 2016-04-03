@@ -1,2 +1,18 @@
-#!/usr/bin/env bash
-/opt/fog-service/control.sh start
+﻿#!/bin/bash
+​
+function startDaemon() {
+	/opt/fog-service/control.sh start
+  	tail -f /dev/null &
+  	wait $!
+}
+​
+​
+function killDaemon() {
+	/opt/fog-service/control.sh stop	
+	exit 0
+}
+​
+trap killDaemon SIGTERM
+trap killDaemon SIGKill
+​
+startDaemon;

@@ -2,19 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AbandonProcessGroup</key>
-	<true/>
 	<key>Label</key>
 	<string>org.freeghost.daemon</string>
 	<key>ProgramArguments</key>
 	<array>
 		<string>/opt/fog-service/fog.daemon</string>
 	</array>
-	<key>QueueDirectories</key>
-	<array/>
 	<key>RunAtLoad</key>
 	<true/>
-	<key>WatchPaths</key>
-	<array/>
+	<key>AbandonProcessGroup</key>
+	<true/>
+	<key>EnableTransactions</key>
+	<false/>
 </dict>
 </plist>
