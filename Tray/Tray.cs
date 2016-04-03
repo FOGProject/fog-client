@@ -33,7 +33,7 @@ namespace FOG.Tray
     {
         private static volatile List<NotificationGUI> _notifications = new List<NotificationGUI>();
         private static ITray _instance;
-        private static Thread _trayThread;
+        //private static Thread _trayThread;
 
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
@@ -53,8 +53,9 @@ namespace FOG.Tray
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
-            _trayThread = new Thread(ShowTray);
-            _trayThread.Start();
+            //_trayThread = new Thread(ShowTray);
+            //_trayThread.Start();
+            ShowTray();
         }
 
         private static void ShowTray()
@@ -140,8 +141,12 @@ namespace FOG.Tray
         //Called when a message is recieved from the bus
         private static void OnNotification(dynamic data)
         {
-            if (data.title == null || data.message == null) return;
-            SpawnGUIThread(data.title.ToString(), data.message.ToString());
+            if (data.title == null || data.message == null)
+                return;
+
+            _instance.Notification(data.title, data.message, 10*1000);
+
+            //SpawnGUIThread(data.title.ToString(), data.message.ToString());
         }
 
         private static MenuItem[] InitializeMenu()

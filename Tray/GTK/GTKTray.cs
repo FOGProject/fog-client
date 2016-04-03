@@ -42,6 +42,10 @@ namespace FOG.Tray.GTK
             _notifyIcon.Tooltip = text;
         }
 
+        public void Notification(string title, string body, int duration)
+        {
+        }
+
         public void Dispose()
         {
             _notifyIcon.Dispose();

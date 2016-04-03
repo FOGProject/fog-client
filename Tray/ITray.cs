@@ -22,6 +22,7 @@ namespace FOG
     interface ITray
     {
         void SetHover(string text);
+        void Notification(string title, string body, int duration);
         void Dispose();
     }
 }
