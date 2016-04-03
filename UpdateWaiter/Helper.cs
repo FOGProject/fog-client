@@ -9,11 +9,11 @@ namespace FOG
         ///     Spawn an update waiter
         /// </summary>
         /// <param name="fileName">The file that the update waiter should spawn once the update is complete</param>
-        public static void SpawnUpdateWaiter(string fileName)
+        public static void SpawnUpdateWaiter(string fileName, string param = "")
         {
             Log.Entry("UserService", "Spawning update waiter");
 
-            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", $"\"{fileName}\"");
+            ProcessHandler.RunClientEXE("FOGUpdateWaiter.exe", $"\"{fileName}\" \"{param}\"");
         }
     }
 }

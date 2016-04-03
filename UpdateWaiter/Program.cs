@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.IO;
 using Zazzles;
 using Zazzles.Modules.Updater;
 
@@ -36,13 +35,16 @@ namespace FOG
             //Wait for all update files to be applied
             while (UpdaterHelper.Updating()) { }
             //Spawn the process that originally called this program
-            if (File.Exists(args[0]))
-                SpawnParentProgram(args[0]);
+            var param = "";
+            if (args.Length > 1)
+                param = args[1];
+
+            SpawnParentProgram(args[0], param);
         }
 
-        private static void SpawnParentProgram(string fileName)
+        private static void SpawnParentProgram(string fileName, string param)
         {
-            ProcessHandler.RunEXE(fileName, "", false);
+            ProcessHandler.RunEXE(fileName, param, false);
         }
     }
 }
