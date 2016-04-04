@@ -72,6 +72,7 @@ namespace FOG
             process.StartInfo.FileName = "msiexec";
 
             process.Start();
+            process.WaitForExit();
 
             return process.ExitCode == 0;
         }

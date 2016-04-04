@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Windows.Forms;
 using Zazzles;
 
 namespace FOG
@@ -31,7 +32,6 @@ namespace FOG
         static void Main(string[] args)
         {
             Log.Output = Log.Mode.Quiet;
-
             if (args.Length == 5)
                 ProcessArgs(args);
             else if (args.Length == 1 && args[0].Equals("uninstall"))
@@ -114,16 +114,17 @@ namespace FOG
 
         private static void InteractiveMode()
         {
-            if (Settings.OS == Settings.OSType.Windows)
+            try
             {
-                Helper.Instance.PrepareFiles();
-                Helper.Instance.Install();
+                ShowGUI();
             }
-            else
+            catch (Exception ex)
+            {
                 PerformCLIInstall();
+            }
         }
 
-/*        private static void ShowGUI()
+        private static void ShowGUI()
         {
             Log.Output = Log.Mode.File;
             Log.FilePath = Path.Combine(Settings.Location, "FOGService-install.log");
@@ -131,11 +132,8 @@ namespace FOG
             Application.EnableVisualStyles();
             var gui = new GUI();
             Application.Run(gui);
-
-            if(!gui.Success)
-                Environment.Exit(1);
         }
-*/
+
 
         private static void PerformCLIUninstall()
         {
@@ -166,6 +164,11 @@ namespace FOG
 
             Console.Write("Enter the FOG webroot used [example: /fog]: ");
             var webRoot = Console.ReadLine();
+
+            Console.Write("Enable tray icon? [y/n]: ");
+            var rawTray = Console.ReadLine();
+            if (rawTray.Trim().ToLower().Equals("y"))
+                tray = "1";
 
             Install(https, tray, server, webRoot, company, rootLog);     
         }
