@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,7 +23,6 @@ using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
-using FOG.Tray.GTK;
 using UserNotification;
 using Zazzles;
 
@@ -60,16 +59,7 @@ namespace FOG.Tray
 
         private static void ShowTray()
         {
-            ITray _instance;
-            switch (Settings.OS)
-            {
-                case Settings.OSType.Windows:
-                    _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
-                    break;
-                default:
-                    _instance = new GTKTray(Path.Combine(Settings.Location, "logo.ico"));
-                    break;
-            }
+            _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
             _instance.SetHover("FOG Client v" + Settings.Get("Version"));
         }
 
