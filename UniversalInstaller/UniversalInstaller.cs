@@ -120,12 +120,21 @@ namespace FOG
             }
             catch (Exception ex)
             {
-                PerformCLIInstall();
+                if (Settings.OS == Settings.OSType.Windows)
+                {
+                    Helper.Instance.Install();
+                }
+                else
+                {
+                    PerformCLIInstall();
+                }
             }
         }
 
         private static void ShowGUI()
         {
+            throw new NotImplementedException();
+
             Log.Output = Log.Mode.File;
             Log.FilePath = Path.Combine(Settings.Location, "FOGService-install.log");
 
