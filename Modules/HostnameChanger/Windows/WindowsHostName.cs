@@ -50,11 +50,11 @@ namespace FOG.Modules.HostnameChanger.Windows
         public void RenameComputer(string hostname)
         {
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "NV Hostname",
-                hostname);
+                hostname, false);
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName",
-                "ComputerName", hostname);
+                "ComputerName", hostname, false);
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
-                "ComputerName", hostname);
+                "ComputerName", hostname, false);
         }
 
         public bool RegisterComputer(Response response)
