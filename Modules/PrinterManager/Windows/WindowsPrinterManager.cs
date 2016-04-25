@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.Runtime.InteropServices;
 using Zazzles;
 
 namespace FOG.Modules.PrinterManager
@@ -29,6 +30,23 @@ namespace FOG.Modules.PrinterManager
     internal class WindowsPrinterManager : PrintManagerBridge
     {
         private const string LogName = "PrinterManager";
+
+        [DllImport("printui.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern void PrintUIEntryW(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow);
+
+
+        private void PrintUI(string cmdLine)
+        {
+            try
+            {
+                PrintUIEntryW(IntPtr.Zero, IntPtr.Zero, cmdLine, 0);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Failed on PrintUI " + cmdLine);
+                Log.Error(LogName, ex);
+            }
+        }
 
         public override List<string> GetPrinters()
         {
@@ -60,9 +78,7 @@ namespace FOG.Modules.PrinterManager
             if (printer.IP != null)
                 AddIPPort(printer, "9100");
 
-            var proc = Process.Start("rundll32.exe",
-                $" printui.dll,PrintUIEntry /if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
-            proc?.WaitForExit(120000);
+            PrintUI($"/if / q / b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
 
             if (printer.ConfigFile != null)
             {
@@ -75,11 +91,9 @@ namespace FOG.Modules.PrinterManager
         protected override void AddNetwork(NetworkPrinter printer)
         {
             // Add per machine printer connection
-            var proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /ga /n " + printer.Name);
-            proc?.WaitForExit(120000);
+            PrintUI($"/ga /n \"{printer.Name}\"");
             // Add printer network connection, download the drivers from the print server
-            proc = Process.Start("rundll32.exe", " printui.dll,PrintUIEntry /in /n " + printer.Name);
-            proc?.WaitForExit(120000);
+            PrintUI($"/in /n \"{printer.Name}\"");
         }
 
         protected override void AddCUPS(CUPSPrinter printer)
@@ -90,25 +104,12 @@ namespace FOG.Modules.PrinterManager
         public override void Remove(string name)
         {
             Log.Entry("Printer", "Removing printer: " + name);
-            var proc = name.StartsWith("\\\\")
-                ? Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry /gd /q /n \"{name}\"")
-                : Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry /dl /q /n \"{name}\"");
-
-            if (proc == null) return;
-            proc.Start();
-            proc.WaitForExit(120000);
+            PrintUI(name.StartsWith("\\\\") ? $"/gd /q /n \"{name}\"" : $"/dl /q /n \"{name}\"");
         }
 
         public override void Default(string name)
         {
-            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_Printer");
-            var collection = searcher.Get();
-
-            foreach (
-                var currentObject in
-                    collection.Cast<ManagementObject>()
-                        .Where(currentObject => currentObject["name"].ToString().Equals(name)))
-                currentObject.InvokeMethod("SetDefaultPrinter", new object[] {name});
+            PrintUI($"/y /n \"{name}\"");
         }
 
         private void AddIPPort(Printer printer, string remotePort)
