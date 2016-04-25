@@ -25,8 +25,8 @@ namespace FOG
     {
         public override void StartService()
         {
+            StopService();
             ProcessHandler.Run("launchctl", "load -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
-            ProcessHandler.Run("launchctl", "load -w /Library/LaunchAgents/org.freeghost.useragent.plist");
         }
 
         public override void StopService()

@@ -57,6 +57,15 @@ namespace FOG
                 Directory.Delete(tmpDir, true);
             }
 
+            // Update the Runtime variable
+            var runtimeFile = Path.Combine(Settings.Location, "runtime");
+
+            if (File.Exists(runtimeFile))
+            {
+                var runtime = File.ReadAllText(runtimeFile).Trim();
+                Settings.Set("Runtime", runtime);
+            }
+
             dynamic json = new JObject();
             json.action = "load";
             Bus.Emit(Bus.Channel.Status, json, true);

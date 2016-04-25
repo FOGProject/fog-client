@@ -135,9 +135,14 @@ namespace FOG
                 if (stdout != null)
                 {
                     var runtime = string.Join(" ", stdout).Trim();
+                    if (string.IsNullOrEmpty(runtime))
+                    {
+                        return;
+                    }
                     var runtimeDir = Path.GetDirectoryName(runtime);
                     if (runtimeDir != null && !runtimeDir.EndsWith("/"))
                         runtimeDir = runtimeDir + "/";
+
                     File.WriteAllText(outputFile, runtimeDir);
                 }
             }

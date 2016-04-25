@@ -83,6 +83,9 @@ namespace FOG
             File.Copy(Path.Combine(Settings.Location, "token.dat"), 
                 Path.Combine(Helper.Instance.GetLocation(), "token.dat"), true);
 
+            var runtime = Settings.Get("Runtime");
+            if(!string.IsNullOrEmpty(runtime))
+                File.WriteAllText(Path.Combine(Helper.Instance.GetLocation(), "runtime"), runtime);
         }
 
         private static void PrintBanner()
