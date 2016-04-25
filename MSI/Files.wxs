@@ -2,7 +2,7 @@
 
 <!--
  FOG Service : A computer management client for the FOG Project
- Copyright (C) 2014-2015 FOG Project
+ Copyright (C) 2014-2016 FOG Project
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -26,38 +26,46 @@
         <Directory Id="INSTALLDIR" Name="FOG">
           <Component Id="StandardComponent" Guid="6B3603AE-3C03-4322-AA6F-6BA7B2417304" DiskId="1">
 
-            <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe">
-              <fire:FirewallException Id="FOGServiceFW" Name="FOGService" Protocol="udp" Scope="any" />
-            </File>
+            <File Id="FOGService" Name="FOGService.exe" Source="..\bin\FOGService.exe"/>
             
-            <File Id="FOGServiceConfig" Name="FOGService.exe.config" Source="..\bin\FOGService.exe.config" />
-
-            <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
+            <File Id="FOGCA" Name="fog.ca.cer" Source="..\UniversalInstaller\Scripts\fog-ca.cer" />            
             <File Id="LicenseFile" Name="license.rtf" Source="license.rtf" />
-            <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
-            <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
-            <File Id="FOGCA" Name="fog.ca.cer" Source="..\UniversalInstaller\Scripts\fog-ca.cer" />
 
             <File Id="logo" Name="logo.ico" Source="..\bin\logo.ico" />
             <File Id="MetroFramework" Name="MetroFramework.dll" Source="..\bin\MetroFramework.dll" />
             <File Id="MetroFramework.Fonts" Name="MetroFramework.Fonts.dll" Source="..\bin\MetroFramework.Fonts.dll" />
             <File Id="themes" Name="themes.xml" Source="..\themes.xml" />
 
-
-            <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe">
-              <fire:FirewallException Id="FOGTrayFW" Name="FOGTray" Protocol="udp" Scope="any" />
-            </File>
-
+            <File Id="FOGTray" Name="FOGTray.exe" Source="..\bin\FOGTray.exe"/>
             <File Id="FOGUpdateHelper" Name="FOGUpdateHelper.exe" Source="..\bin\FOGUpdateHelper.exe" />
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
-            <File Id="FOGShutdownGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe">
-              <fire:FirewallException Id="FOGTNGUIFW" Name="FOGNGUI" Protocol="udp" Scope="any" />
-            </File>
-            <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe">
-              <fire:FirewallException Id="FOGUserServiceFW" Name="FOGUserService" Protocol="udp" Scope="any" />
-            </File>
+            <File Id="FOGShutdownGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe"/>
+            <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe"/>
+            <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
+            
+            <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
+            <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
+            
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\bin\Newtonsoft.Json.dll" />
+            <File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll" />
+            <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
+            <File Id="SuperSocketCommon" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
+            <File Id="SuperSocketSocketBase" Name="SuperSocket.SocketBase.dll" Source="..\bin\SuperSocket.SocketBase.dll" />
+            <File Id="SuperSocketSocketEngine" Name="SuperSocket.SocketEngine.dll" Source="..\bin\SuperSocket.SocketEngine.dll" />
+            <File Id="SuperWebSocket" Name="SuperWebSocket.dll" Source="..\bin\SuperWebSocket.dll" />
+            <File Id="WebSocket4Net" Name="WebSocket4Net.dll" Source="..\bin\WebSocket4Net.dll" />
+            <File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="..\bin\ProcessPrivileges.dll" />
+            
+            <File Id="FOGShutdownGUIconf" Name="FOGShutdownGUI.exe.config" Source="..\bin\FOGShutdownGUI.exe.config" />
+            <File Id="FOGTrayconf" Name="FOGTray.exe.config" Source="..\bin\FOGTray.exe.config" />
+            <File Id="FOGUpdateHelperconf" Name="FOGUpdateHelper.exe.config" Source="..\bin\FOGUpdateHelper.exe.config" />
+            <File Id="FOGUpdateWaiterconf" Name="FOGUpdateWaiter.exe.config" Source="..\bin\FOGUpdateWaiter.exe.config" />
+            <File Id="FOGUserServiceconf" Name="FOGUserService.exe.config" Source="..\bin\FOGUserService.exe.config" />
+            <File Id="Powerconf" Name="Power.exe.config" Source="..\bin\Power.exe.config" />
+            <File Id="Zazzlesconf" Name="Zazzles.dll.config" Source="..\bin\Zazzles.dll.config" />
+            <File Id="Modulesconf" Name="Modules.dll.config" Source="..\bin\Modules.dll.config" />
+            <File Id="FOGServiceconf" Name="FOGService.exe.config" Source="..\bin\FOGService.exe.config" />
 
             <ServiceInstall
               Id="ServiceInstaller"
