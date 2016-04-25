@@ -26,7 +26,7 @@ namespace FOG.Tray
     {
         private readonly NotifyIcon _notifyIcon;
 
-        public WindowsTray(string iconPath)
+        public WindowsTray(string iconPath, string hoverText)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -35,6 +35,7 @@ namespace FOG.Tray
 
             _notifyIcon.Icon = new Icon(iconPath);
             _notifyIcon.ContextMenu = notificationMenu;
+            _notifyIcon.Text = hoverText;
             _notifyIcon.Visible = true;
             Application.Run();
         }
@@ -48,11 +49,6 @@ namespace FOG.Tray
         {
             var menu = new MenuItem[] { };
             return menu;
-        }
-
-        public void SetHover(string text)
-        {
-            _notifyIcon.Text = text;
         }
 
         public void Notification(string title, string body, int duration)

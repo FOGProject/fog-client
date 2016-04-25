@@ -59,8 +59,7 @@ namespace FOG.Tray
 
         private static void ShowTray()
         {
-            _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"));
-            _instance.SetHover("FOG Client v" + Settings.Get("Version"));
+            _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"), "FOG Client v" + Settings.Get("Version"));
         }
 
         private static void UpdateFormLocation(int index)
