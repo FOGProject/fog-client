@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,7 +19,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
@@ -30,7 +29,7 @@ namespace FOG.Modules.GreenFOG
     /// <summary>
     ///     Perform cron style power tasks
     /// </summary>
-    public class GreenFOG : AbstractModule
+    public class GreenFOG : AbstractModule<GreenFOGMessage>
     {
         private readonly IGreen _instance;
 
@@ -50,35 +49,21 @@ namespace FOG.Modules.GreenFOG
             }
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, GreenFOGMessage msg)
         {
-            //Get actions
-            var response = Communication.GetResponse("/service/greenfog.php", true);
-
             //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (response.Error) return;
+            if (data.Error) return;
 
-            if (!response.Encrypted)
+            if (!data.Encrypted)
             {
                 Log.Error(Name, "Response was not encrypted");
                 return;
             }
 
-            var rawTasks = response.GetList("#task", false);
-
             ClearAll();
-            //Add new tasks
-            var tasks = CastTasks(rawTasks);
-            CreateTasks(tasks);
-        }
 
-        private List<Task> CastTasks(List<string> rawTasks)
-        {
-            return (from task in rawTasks
-                select task.Split('@')
-                into taskData
-                where taskData.Length == 3
-                select new Task(int.Parse(taskData[2]), int.Parse(taskData[1]), taskData[2].Equals("r"))).ToList();
+            //Add new tasks
+            CreateTasks(msg.Tasks);
         }
 
         private void ClearAll()
@@ -94,21 +79,14 @@ namespace FOG.Modules.GreenFOG
             }
         }
 
-        public new bool IsEnabled()
-        {
-            var moduleActiveResponse = Communication.GetResponse($"{EnabledURL}?moduleid={Name.ToLower()}", true);
-
-            return !moduleActiveResponse.Error;
-        }
-
         private void CreateTasks(IEnumerable<Task> tasks)
         {
             foreach (var task in tasks)
             {
                 try
                 {
-                    _instance.AddTask(task.Minutes, task.Hours, task.Reboot);
-                    Log.Entry(Name, "Registered task: " + task);
+                    _instance.AddTask(task.Min, task.Hour, task.Action.Equals("reboot"));
+                    Log.Entry(Name, "Registered task: " + task.Action + " at " + task.Hour + ":" + task.Min);
                 }
                 catch (Exception ex)
                 {

@@ -1,7 +1,7 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
- * 
+ * Copyright (C) 2014-2016 FOG Project
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
@@ -19,17 +19,10 @@
 
 namespace FOG.Modules.GreenFOG
 {
-    internal class Task
+    public class Task
     {
-        public Task(int minutes, int hours, bool reboot)
-        {
-            Minutes = minutes;
-            Hours = hours;
-            Reboot = reboot;
-        }
-
-        public int Minutes { get; private set; }
-        public int Hours { get; private set; }
-        public bool Reboot { get; private set; }
+        public int Min = -1;
+        public int Hour = -1;
+        public string Action = "";
     }
 }

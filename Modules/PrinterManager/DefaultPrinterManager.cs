@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Linq;
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
@@ -29,7 +28,7 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class DefaultPrinterManager : AbstractModule
+    public class DefaultPrinterManager : AbstractModule<DefaultPrinterMessage>
     {
         private readonly PrintManagerBridge _instance;
 
@@ -48,20 +47,14 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, DefaultPrinterMessage msg)
         {
             //Get printers
-            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
-            if (printerResponse.Error || printerResponse.GetField("#mode").Equals("0")) return;
-
-            Log.Entry(Name, "Creating list of printers");
-            var printerIDs = printerResponse.GetList("#printer", false);
-            Log.Entry(Name, "Creating printer objects");
-            var printers = PrinterManager.CreatePrinters(printerIDs);
+            if (data.Error || data.GetField("#mode").Equals("0")) return;
 
             Log.Entry(Name, "Checking defaults");
-            foreach (var printer in printers.Where(printer => printer.Default))
-                printer.SetDefault(_instance);
+            var printer = new Printer {Name = msg.Name};
+            printer.SetDefault(_instance);
         }
     }
 }

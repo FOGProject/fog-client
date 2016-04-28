@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,23 +17,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.PrinterManager
-{
-    // ReSharper disable once InconsistentNaming
-    public class iPrintPrinter : Printer
-    {
-        public iPrintPrinter(string name, string ip, string port, bool defaulted)
-        {
-            Name = name;
-            IP = ip;
-            Port = port;
-            Default = defaulted;
-            LogName = "iPrinter";
-        }
+using System.Collections.Generic;
 
-        public override void Add(PrintManagerBridge instance)
-        {
-            instance.Add(this);
-        }
+namespace FOG.Modules.SnapinClient
+{
+    public class SnapinMessage
+    {
+        public List<Snapin> Snapins = new List<Snapin>();
     }
 }

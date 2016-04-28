@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,32 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
-using System.IO;
-using System.ServiceProcess;
-using Zazzles;
-
-namespace FOG
+namespace FOG.Modules.HostnameChanger
 {
-    internal static class Program
+    public class HostnameChangerMessage
     {
-        /// <summary>
-        ///     Start the FOG Service
-        /// </summary>
-        private static void Main()
-        {
-            Log.FilePath = Path.Combine(Settings.Location, "fog.log");
-
-            if (Settings.Get("RootLog").Equals("1") && Settings.OS == Settings.OSType.Windows)
-            {
-                Log.FilePath = @"C:\fog.log";
-            }
-
-            Log.Entry("Main", "Overriding exception handling");
-            AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
-
-            Log.Entry("Main", "Bootstrapping Zazzles");
-            ServiceBase.Run(new Service());
-        }
+        public string Hostname = "";
+        public string Key = "";
+        public bool AD = false;
+        public bool Enforce = true;
+        public string ADDom = "";
+        public string ADOU = "";
+        public string ADUser = "";
+        public string ADPass = "";
     }
 }

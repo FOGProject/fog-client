@@ -17,25 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.PrinterManager
+namespace FOG.Modules.TaskReboot
 {
-    public class LocalPrinter : Printer
+    public class TaskRebootMessage
     {
-        public LocalPrinter(string name, string file, string configFile, string port, string ip, string model, bool defaulted)
-        {
-            Name = name;
-            Port = port;
-            File = file;
-            ConfigFile = configFile;
-            Model = model;
-            Default = defaulted;
-            IP = ip;
-            LogName = "LocalPrinter";
-        }
-
-        public override void Add(PrintManagerBridge instance)
-        {
-            instance.Add(this);
-        }
+        public bool Job = false;
     }
 }

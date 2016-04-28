@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System;
 using System.Threading;
 using Zazzles;
 using Zazzles.Middleware;
@@ -28,7 +27,7 @@ namespace FOG.Modules.AutoLogOut
     /// <summary>
     ///     Automatically log out the user after a given duration of inactivity
     /// </summary>
-    public class AutoLogOut : AbstractModule
+    public class AutoLogOut : AbstractModule<AutoLogOutMessage>
     {
         private readonly int _minimumTime;
 
@@ -38,18 +37,15 @@ namespace FOG.Modules.AutoLogOut
             _minimumTime = 300;
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, AutoLogOutMessage msg)
         {
 			if (!User.AnyLoggedIn())
 			{
 				Log.Entry(Name, "No user logged in");
 				return;
 			}
-			var taskResponse = Communication.GetResponse("/service/autologout.php", true);
 
-            if (taskResponse.Error) return;
-
-            var timeOut = GetTimeOut(taskResponse);
+            var timeOut = GetTimeOut(msg);
             if (timeOut <= 0) return;
 
 			var inactiveTime = User.InactivityTime();
@@ -71,23 +67,9 @@ namespace FOG.Modules.AutoLogOut
         }
 
         //Get how long a user must be inactive before logging them out
-        private int GetTimeOut(Response taskResponse)
+        private int GetTimeOut(AutoLogOutMessage msg)
         {
-            try
-            {
-                var timeOut = int.Parse(taskResponse.GetField("#time"));
-                if (timeOut >= _minimumTime)
-                    return timeOut;
-
-                Log.Entry(Name, "Time set is less than 1 minute");
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Unable to parse time set");
-                Log.Error(Name, ex);
-            }
-
-            return 0;
+            return msg.Time >= _minimumTime ? msg.Time : 0;
         }
     }
 }

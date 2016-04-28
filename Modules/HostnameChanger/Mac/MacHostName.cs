@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using Zazzles;
-using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Mac
 {
@@ -35,19 +34,15 @@ namespace FOG.Modules.HostnameChanger.Mac
             ProcessHandler.Run("scutil", "--set ComputerName " + hostname);
         }
 
-        public bool RegisterComputer(Response response)
+        public bool RegisterComputer(HostnameChangerMessage msg)
         {
-            var domain = response.GetField("#ADDom");
-            var ou = response.GetField("#ADOU");
-            var adadmin = response.GetField("#ADUser");
-            var adpass = response.GetField("#ADPass");
             var returnCode = ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "osxbind.sh")} {domain} {ou} {adadmin} {adpass}");
+                $"{Path.Combine(Settings.Location, "osxbind.sh")} {msg.ADDom} {msg.ADOU} {msg.ADUser} {msg.ADPass}");
 
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(Response response)
+        public void UnRegisterComputer(HostnameChangerMessage msg)
         {
             throw new NotImplementedException();
         }

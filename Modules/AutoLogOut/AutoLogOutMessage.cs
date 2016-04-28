@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,22 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.PrinterManager
+namespace FOG.Modules.AutoLogOut
 {
-    public class CUPSPrinter : Printer
+    public class AutoLogOutMessage
     {
-        public CUPSPrinter(string name, string file, string ip, bool defaulted)
-        {
-            Name = name;
-            File = file;
-            Default = defaulted;
-            IP = ip;
-            LogName = "CUPSPrinter";
-        }
-
-        public override void Add(PrintManagerBridge instance)
-        {
-            instance.Add(this);
-        }
+        public int Time = -1;
     }
 }

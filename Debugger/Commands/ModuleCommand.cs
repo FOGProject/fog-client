@@ -35,7 +35,7 @@ namespace FOG.Commands
     {
         private const string LogName = "Console::Modules";
 
-        private readonly Dictionary<string, AbstractModule> _modules = new Dictionary<string, AbstractModule>
+        private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>
         {
             {"autologout", new AutoLogOut()},
             {"greenfog", new GreenFOG()},
@@ -56,13 +56,13 @@ namespace FOG.Commands
 
             if (_modules.ContainsKey(args[0].ToLower()))
             {
-                _modules[args[0]].Start();
+                //_modules[args[0]].Start();
                 return true;
             }
 
             if (!_modules.ContainsKey(args[0].ToLower())) return false;
 
-            _modules[args[0]].Start();
+            //_modules[args[0]].Start();
             return true;
         }
 

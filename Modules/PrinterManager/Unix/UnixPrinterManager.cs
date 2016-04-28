@@ -32,22 +32,22 @@ namespace FOG.Modules.PrinterManager
             return new List<string>(stdout);
         }
 
-        protected override void AddiPrint(iPrintPrinter printer)
+        protected override void AddiPrint(Printer printer)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddLocal(LocalPrinter printer)
+        protected override void AddLocal(Printer printer)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddNetwork(NetworkPrinter printer)
+        protected override void AddNetwork(Printer printer)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddCUPS(CUPSPrinter printer)
+        protected override void AddCUPS(Printer printer)
         {
             string[] stdout;
             ProcessHandler.Run("echo", $"{printer.Name} | tr ' ' '_'", true, out stdout);

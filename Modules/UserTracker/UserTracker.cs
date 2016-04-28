@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -28,7 +28,7 @@ namespace FOG.Modules.UserTracker
     /// <summary>
     ///     Report what users log on or off and at what time
     /// </summary>
-    public class UserTracker : AbstractModule
+    public class UserTracker : AbstractModule<object>
     {
         private List<string> _usernames;
 
@@ -38,10 +38,9 @@ namespace FOG.Modules.UserTracker
             _usernames = new List<string>();
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, object msg)
         {
             var newUsernames = User.AllLoggedIn();
-
             foreach (var username in newUsernames)
                 // Remove users that are have remained logged in
                 if (!_usernames.Contains(username))

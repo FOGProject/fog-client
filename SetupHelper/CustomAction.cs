@@ -31,7 +31,7 @@ namespace SetupHelper
     public class CustomActions
     {
         private static string jsonFile = Path.Combine(
-            Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.Machine),
+            Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.User),
             "session.json");
         private static void DisplayMSIError(Session session, string msg)
         {
@@ -44,11 +44,9 @@ namespace SetupHelper
         public static ActionResult DumpConfig(Session session)
         {
             var properties = new string[] { "HTTPS", "USETRAY", "WEBADDRESS", "WEBROOT",
-                "ROOTLOG", "INSTALLDIR", "ProductVersion", "LIGHT" };
+                "ROOTLOG", "INSTALLDIR", "ProductVersion" };
             try
             {
-                if(File.Exists(jsonFile))
-                    File.Delete(jsonFile);
                 var json = new JObject();
 
                 foreach (var prop in properties)
@@ -69,15 +67,21 @@ namespace SetupHelper
             try
             {
                 var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
 
-                return GenericSetup.PinServerCert(GetValue("INSTALLDIR", config)) ? ActionResult.Success : ActionResult.Failure;
+                if (GenericSetup.PinServerCert(GetValue("INSTALLDIR", config)))
+                {
+                    return ActionResult.Success;
+                }
+                else
+                {
+                    DisplayMSIError(session, "Unable to install CA certificate");
+                    return ActionResult.Failure;
+                }
             }
             catch (Exception ex)
             {
                 DisplayMSIError(session, "Unable to install CA certificate: " + ex.Message);
-                return ActionResult.Success;
+                return ActionResult.Failure;
             }
         }
 
@@ -87,8 +91,7 @@ namespace SetupHelper
             try
             {
                 var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
+
 
                 GenericSetup.SaveSettings(
                     GetValue("HTTPS", config),
@@ -115,10 +118,6 @@ namespace SetupHelper
         {
             try
             {
-                var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
-
                 GenericSetup.UnpinServerCert();
             }
             catch (Exception ex)
@@ -134,10 +133,6 @@ namespace SetupHelper
         {
             try
             {
-                var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
-
                 GenericSetup.InstallFOGCert(session.CustomActionData["CAFile"]);
                 return ActionResult.Success;
             }
@@ -153,10 +148,6 @@ namespace SetupHelper
         {
             try
             {
-                var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
-
                 GenericSetup.UninstallFOGCert();
             }
             catch (Exception ex)
@@ -191,10 +182,6 @@ namespace SetupHelper
         {
             try
             {
-                var config = GetSettings();
-                if (GetValue("LIGHT", config).Equals("1"))
-                    return ActionResult.Success;
-
                 var taskService = new TaskService();
                 var existingTasks = taskService.GetFolder("FOG").AllTasks.ToList();
 

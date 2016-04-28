@@ -18,31 +18,34 @@
  */
 
 using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Zazzles;
 
 namespace FOG.Modules.PrinterManager
 {
-    public abstract class Printer
+    public class Printer
     {
+        [JsonConverter(typeof(StringEnumConverter))]
         public enum PrinterType
         {
-            // ReSharper disable once InconsistentNaming
             iPrint,
             Network,
-            Local
+            Local,
+            CUPS
         }
 
         //Basic variables for printers
-        public string Port { get; protected set; }
-        public string File { get; protected set; }
-        public string ConfigFile { get; protected set; }
-        public string Model { get; protected set; }
-        public string Name { get; protected set; }
-        public string IP { get; protected set; }
-        public bool Default { get; protected set; }
-        public PrinterType Type { get; protected set; }
-        public static string LogName { get; protected set; }
-        public abstract void Add(PrintManagerBridge instance);
+        public string Port;
+        public string File ;
+        public string ConfigFile;
+        public string Model;
+        public string Name;
+        public string IP;
+        public static string LogName = "Printer";
+
+        [JsonConverter(typeof (StringEnumConverter))]
+        public PrinterType Type;
 
         public void Remove(PrintManagerBridge instance)
         {
@@ -67,6 +70,19 @@ namespace FOG.Modules.PrinterManager
             catch (Exception ex)
             {
                 Log.Error("Printer", ex);
+            }
+        }
+
+        public void Add(PrintManagerBridge instance)
+        {
+            try
+            {
+                instance.Add(this);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Could not add");
+                Log.Error(LogName, ex);
             }
         }
     }

@@ -21,7 +21,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PrinterManager;
@@ -38,25 +37,66 @@ namespace FOG
 {
     public class FOGSystemService : AbstractService
     {
-        public FOGSystemService()
+        protected override Response GetLoopData()
         {
-            Log.FilePath = Path.Combine(Settings.Location, "fog.log");
-            Bus.SetMode(Bus.Mode.Server);
+
+            try
+            {
+                var response = Communication.GetResponse("/management/index.php?sub=requestClientInfo", true);
+
+                // Construct the clientupdater data regardless of encryption
+                var srvClientVersion = Communication.GetRawResponse("/service/getversion.php?clientver");
+                var srvVersion = Communication.GetRawResponse("/service/getversion.php");
+
+                var clientUpdaterData = new JObject { ["version"] = srvClientVersion };
+                response.Data["clientupdater"] = clientUpdaterData;
+
+                Log.NewLine();
+                Log.Entry(Name, "Creating user agent cache");
+
+                // Dump user-service configuration to the settings file
+                var alo = response.GetSubResponse("autologout");
+                Settings.Set("alo-time", alo.GetField("time"));
+
+                var pDefault = response.GetSubResponse("printermanager");
+                Settings.Set("printer-default", pDefault.GetField("default"));
+
+                Settings.Set("server-version", srvVersion);
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Unable to get cycle data");
+                Log.Error(Name, ex);
+            }
+
+
+            return new Response();
         }
 
         protected override void Load()
         {
-            // Kill any existing sub-processes
-            ProcessHandler.KillAllEXE("FOGUserService");
-            ProcessHandler.KillAllEXE("FOGTray");
 
-            // Delete any tmp files from last session
-            var tmpDir = Path.Combine(Settings.Location, "tmp");
-            if (Directory.Exists(tmpDir))
+            try
             {
-                Directory.Delete(tmpDir, true);
-            }
+                // Kill any existing sub-processes
+                ProcessHandler.KillAllEXE("FOGUserService");
+                ProcessHandler.KillAllEXE("FOGTray");
 
+                // Delete any tmp files from last session
+                var tmpDir = Path.Combine(Settings.Location, "tmp");
+                if (Directory.Exists(tmpDir))
+                {
+                    Directory.Delete(tmpDir, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Could not clear last session data");
+                Log.Error(Name, ex);
+            }
+            
             // Update the Runtime variable
             var runtimeFile = Path.Combine(Settings.Location, "runtime");
 
@@ -65,6 +105,8 @@ namespace FOG
                 var runtime = File.ReadAllText(runtimeFile).Trim();
                 Settings.Set("Runtime", runtime);
             }
+
+            Bus.SetMode(Bus.Mode.Server);
 
             dynamic json = new JObject();
             json.action = "load";
@@ -89,10 +131,10 @@ namespace FOG
             ProcessHandler.KillAllEXE("FOGTray");
         }
 
-        protected override AbstractModule[] GetModules()
+        protected override IModule[] GetModules()
         {
             var upgradeFiles = new string[] {"FOGUpdateHelper.exe", "FOGUpdateWaiter.exe"};
-            return new AbstractModule[]
+            return new IModule[]
             {
                 new ClientUpdater(upgradeFiles), 
                 new TaskReboot(),
@@ -118,7 +160,8 @@ namespace FOG
 
         private void Authenticate()
         {
-            while (true)
+            var maxTries = 5;
+            for(int i = 0; i < maxTries; i ++)
             {
                 Log.NewLine();
                 Log.PaddedHeader("Authentication");
@@ -126,35 +169,39 @@ namespace FOG
                 Log.Entry("Client-Info", $"OS:      {Settings.OS}");
 
                 if (Authentication.HandShake()) break;
-
-                Log.Entry(Name, "Sleeping for 120 seconds");
-                Thread.Sleep(120 * 1000);
             }
             Log.NewLine();
         }
 
         protected override int? GetSleepTime()
         {
-            var response = Communication.GetResponse("/management/index.php?node=client&sub=configure");
+            Response response;
+            try
+            {
+                response = Communication.GetResponse("/management/index.php?sub=requestClientInfo&configure");
+                if (response.Error) return null;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Unable to retrieve configuration");
+                Log.Error(Name, ex);
+                return null;
+            }
 
-            if (response.Error) return null;
-
-            // Set the shutdown graceperiod
-            Settings.Set("gracePeriod", response.GetField("#promptTime"));
-
-            if (!response.IsFieldValid("#sleep")) return null;
+            Settings.Set("gracePeriod", response.GetField("promptTime"));
+            if (!response.IsFieldValid("sleep")) return null;
 
             try
             {
-                var sleepTime = int.Parse(response.GetField("#sleep"));
-                if (sleepTime >= DefaultSleepTime)
+                var sleepTime = int.Parse(response.GetField("sleep"));
+                if (sleepTime >= MinSleepTime)
                 {
                     Settings.Set("Sleep", sleepTime.ToString());
                     return sleepTime;
                 }
 
                 Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
+                    $"Sleep time set on the server is below the minimum of {MinSleepTime}");
             }
             catch (Exception ex)
             {

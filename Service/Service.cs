@@ -31,6 +31,7 @@ namespace FOG
 
         public Service()
         {
+            Log.Entry("Controller", "Initialize");
             //Initialize everything
             _fogService = new FOGSystemService();
         }
@@ -38,12 +39,14 @@ namespace FOG
         //Called when the service starts
         protected override void OnStart(string[] args)
         {
+            Log.Entry("Controller", "Start");
             _fogService.Start();
         }
 
         //Called when the service stops
         protected override void OnStop()
         {
+            Log.Entry("Controller", "Stop");
             _fogService.Stop();
         }
     }

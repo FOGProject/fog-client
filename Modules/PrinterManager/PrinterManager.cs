@@ -31,7 +31,7 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class PrinterManager : AbstractModule
+    public class PrinterManager : AbstractModule<PrinterMessage>
     {
         private static string LogName;
         private readonly PrintManagerBridge _instance;
@@ -53,34 +53,27 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, PrinterMessage msg)
         {
             //Get printers
-            var printerResponse = Communication.GetResponse("/service/Printers.php", true);
+            if (msg.Mode.Equals("0")) return;
 
-            if (printerResponse.GetField("#mode").Equals("0")) return;
-
-            if (printerResponse.Error && printerResponse.ReturnCode.Equals("#!np"))
+            if (data.Error && data.ReturnCode.Equals("np"))
             {
-                RemoveExtraPrinters(new List<Printer>(), printerResponse.GetField("#mode").Equals("ar"));
+                RemoveExtraPrinters(new List<Printer>(), msg);
                 return;
             }
-            if (printerResponse.Error) return;
-            if (!printerResponse.Encrypted)
+            if (data.Error) return;
+            if (!data.Encrypted)
             {
                 Log.Error(Name, "Response was not encrypted");
                 return;
             }
 
-            Log.Entry(Name, "Creating list of printers");
-            var printerIDs = printerResponse.GetList("#printer", false);
-            Log.Entry(Name, "Creating printer objects");
-            var printers = CreatePrinters(printerIDs);
-
-            RemoveExtraPrinters(printers, printerResponse.GetField("#mode").Equals("ar"));
+            RemoveExtraPrinters(msg.Printers, msg);
 
             Log.Entry(Name, "Adding printers");
-            foreach (var printer in printers)
+            foreach (var printer in msg.Printers)
             {
                 if (!PrinterExists(printer.Name))
                     printer.Add(_instance);
@@ -89,10 +82,9 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        private void RemoveExtraPrinters(List<Printer> newPrinters, bool removeAll = false)
+        private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg)
         {
             Log.Debug(Name, "Removing extra printers...");
-
 
             Log.Debug(Name, "Stripping printer data");
 
@@ -103,13 +95,9 @@ namespace FOG.Modules.PrinterManager
                 managedPrinters.Add(printer.Name);
             }
 
-            if (!removeAll)
+            if (!msg.Mode.Equals("ar"))
             {
-                var allPrinters = Communication.GetResponse("/service/printerlisting.php");
-
-                if (allPrinters.Error) return;
-                var printerNames = allPrinters.GetList("#printer", false);
-                foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
+                foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
                     _instance.Remove(name);
             }
             else
@@ -133,50 +121,6 @@ namespace FOG.Modules.PrinterManager
             }
 
             return false;
-        }
-
-        public static List<Printer> CreatePrinters(List<string> printerIDs)
-        {
-            try
-            {
-                return
-                    printerIDs.Select(
-                        id => Communication.GetResponse($"/service/Printers.php?id={id}", true))
-                        .Select(PrinterFactory)
-                        .Where(printer => printer != null)
-                        .ToList();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, ex);
-                return new List<Printer>();
-            }
-        }
-
-        public static Printer PrinterFactory(Response printerData)
-        {
-            if (printerData.GetField("#type").Equals("iPrint"))
-                return new iPrintPrinter(printerData.GetField("#name"),
-                    printerData.GetField("#ip"),
-                    printerData.GetField("#port"),
-                    printerData.GetField("#default").Equals("1"));
-
-            if (printerData.GetField("#type").Equals("Network"))
-                return new NetworkPrinter(printerData.GetField("#name"),
-                    printerData.GetField("#ip"),
-                    printerData.GetField("#port"),
-                    printerData.GetField("#default").Equals("1"));
-
-            if (printerData.GetField("#type").Equals("Local"))
-                return new LocalPrinter(printerData.GetField("#name"),
-                    printerData.GetField("#file"),
-                    printerData.GetField("#configFile"),
-                    printerData.GetField("#port"),
-                    printerData.GetField("#ip"),
-                    printerData.GetField("#model"),
-                    printerData.GetField("#default").Equals("1"));
-
-            return null;
         }
     }
 }

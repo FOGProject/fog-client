@@ -43,7 +43,7 @@ namespace FOG
             {
                 StartInfo =
                 {
-                    Arguments = $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}"
+                    Arguments = $"/i \"{Path.Combine(tmpLocation, "FOGService.msi")}\""
                 }
             };
             process.StartInfo.FileName = "msiexec";

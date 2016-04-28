@@ -31,15 +31,12 @@ namespace FOG.Modules.PrinterManager
     {
         private const string LogName = "PrinterManager";
 
-        [DllImport("printui.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern void PrintUIEntryW(IntPtr hwnd, IntPtr hinst, string lpszCmdLine, int nCmdShow);
-
-
         private void PrintUI(string cmdLine)
         {
             try
             {
-                PrintUIEntryW(IntPtr.Zero, IntPtr.Zero, cmdLine, 0);
+                var proc = Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry {cmdLine}");
+                proc?.WaitForExit(30*1000);
             }
             catch (Exception ex)
             {
@@ -56,7 +53,7 @@ namespace FOG.Modules.PrinterManager
                     select printer.GetPropertyValue("name").ToString()).ToList();
         }
 
-        protected override void AddiPrint(iPrintPrinter printer)
+        protected override void AddiPrint(Printer printer)
         {
             var proc = new Process
             {
@@ -73,7 +70,7 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
-        protected override void AddLocal(LocalPrinter printer)
+        protected override void AddLocal(Printer printer)
         {
             if (printer.IP != null)
                 AddIPPort(printer, "9100");
@@ -82,13 +79,11 @@ namespace FOG.Modules.PrinterManager
 
             if (printer.ConfigFile != null)
             {
-                var procConfig = Process.Start("rundll32.exe",
-                    string.Format(" printui.dll,PrintUIEntry /Sr /q /n \"{0}\" /a \"{1}\" m f g p", printer.Name, printer.ConfigFile));
-                procConfig?.WaitForExit(120000);
+                PrintUI($"/Sr /q /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p");
             }
         }
 
-        protected override void AddNetwork(NetworkPrinter printer)
+        protected override void AddNetwork(Printer printer)
         {
             // Add per machine printer connection
             PrintUI($"/ga /n \"{printer.Name}\"");
@@ -96,7 +91,7 @@ namespace FOG.Modules.PrinterManager
             PrintUI($"/in /n \"{printer.Name}\"");
         }
 
-        protected override void AddCUPS(CUPSPrinter printer)
+        protected override void AddCUPS(Printer printer)
         {
             throw new NotImplementedException();
         }

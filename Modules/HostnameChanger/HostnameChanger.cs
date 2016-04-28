@@ -30,7 +30,7 @@ namespace FOG.Modules.HostnameChanger
     /// <summary>
     ///     Rename a host, register with AD, and activate the windows key
     /// </summary>
-    public class HostnameChanger : AbstractModule
+    public class HostnameChanger : AbstractModule<HostnameChangerMessage>
     {
         private readonly IHostName _instance;
 
@@ -52,57 +52,62 @@ namespace FOG.Modules.HostnameChanger
             }
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, HostnameChangerMessage msg)
         {
-            //Get task info
-            var taskResponse = Communication.GetResponse("/service/hostname.php?moduleid=" + Name.ToLower(), true);
-            if (taskResponse.Error) return;
-            if (!taskResponse.Encrypted)
+            if (data.Error) return;
+            if (!data.Encrypted)
             {
                 Log.Error(Name, "Response was not encrypted");
                 return;
             }
 
             Log.Debug(Name, "AD Settings");
-            Log.Debug(Name, "   Hostname:" + taskResponse.GetField("#hostname"));
-            Log.Debug(Name, "   AD:" + taskResponse.GetField("#AD"));
-            Log.Debug(Name, "   ADDom:" + taskResponse.GetField("#ADDom"));
-            Log.Debug(Name, "   ADOU:" + taskResponse.GetField("#ADOU"));
-            Log.Debug(Name, "   ADUser:" + taskResponse.GetField("#ADUser"));
-            Log.Debug(Name, "   ADPW  :" + taskResponse.GetField("#ADPass"));
+            Log.Debug(Name, "   Hostname:" + msg.Hostname);
+            Log.Debug(Name, "   AD:" + msg.AD);
+            Log.Debug(Name, "   ADDom:" + msg.ADDom);
+            Log.Debug(Name, "   ADOU:" + msg.ADOU);
+            Log.Debug(Name, "   ADUser:" + msg.ADUser);
+            Log.Debug(Name, "   ADPW  :" + msg.ADPass);
+            Log.Debug(Name, "   Enforce  :" + msg.Enforce);
 
-            RenameComputer(taskResponse);
+            ActivateComputer(msg);
+
+            if (!msg.Enforce && User.AnyLoggedIn())
+            {
+                Log.Entry(Name, "Users still logged in and enforce is disabled, delaying any further actions");
+                return;
+            }
+
+            RenameComputer(msg);
             if (Power.ShuttingDown || Power.Requested) return;
 
-            RegisterComputer(taskResponse);
+            RegisterComputer(msg);
             if (Power.ShuttingDown || Power.Requested) return;
-
-            ActivateComputer(taskResponse);
         }
 
         //Rename the computer and remove it from active directory
-        private void RenameComputer(Response response)
+        private void RenameComputer(HostnameChangerMessage msg)
         {
             Log.Entry(Name, "Checking Hostname");
-            if (!response.IsFieldValid("#hostname"))
+            if (string.IsNullOrEmpty(msg.Hostname))
             {
                 Log.Error(Name, "Hostname is not specified");
                 return;
             }
-            if (Environment.MachineName.ToLower().Equals(response.GetField("#hostname").ToLower()))
+            if (Environment.MachineName.ToLower().Equals(msg.Hostname.ToLower()))
             {
                 Log.Entry(Name, "Hostname is correct");
                 return;
             }
 
             //First unjoin it from active directory
-            UnRegisterComputer(response);
+            UnRegisterComputer(msg);
             if (Power.ShuttingDown || Power.Requested) return;
 
-            Log.Entry(Name, $"Renaming host to {response.GetField("#hostname")}");
+            Log.Entry(Name, $"Renaming host to {msg.Hostname}");
             try
             {
-                _instance.RenameComputer(response.GetField("#hostname"));
+                _instance.RenameComputer(msg.Hostname);
             }
             catch (Exception ex)
             {
@@ -113,21 +118,21 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Add a host to active directory
-        private void RegisterComputer(Response response)
+        private void RegisterComputer(HostnameChangerMessage msg)
         {
-            if (response.GetField("#AD") != "1")
+            if (!msg.AD)
                 return;
 
-            if (!response.IsFieldValid("#ADDom") || !response.IsFieldValid("#ADUser") ||
-                !response.IsFieldValid("#ADPass"))
+            if (string.IsNullOrEmpty(msg.ADDom) || string.IsNullOrEmpty(msg.ADUser) ||
+                string.IsNullOrEmpty(msg.ADPass))
             {
-                Log.Error(Name, "Required Domain Joining information is missing");
+                Log.Error(Name, "Required ADDom Joining information is missing");
                 return;
             }
 
             try
             {
-                if (_instance.RegisterComputer(response))
+                if (_instance.RegisterComputer(msg))
                     Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
             }
             catch (Exception ex)
@@ -137,19 +142,19 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Remove the host from active directory
-        private void UnRegisterComputer(Response response)
+        private void UnRegisterComputer(HostnameChangerMessage msg)
         {
             Log.Entry(Name, "Removing host from active directory");
 
-            if (!response.IsFieldValid("#ADUser") || !response.IsFieldValid("#ADPass"))
+            if (string.IsNullOrEmpty(msg.ADUser) || string.IsNullOrEmpty(msg.ADPass))
             {
-                Log.Error(Name, "Required Domain information is missing");
+                Log.Error(Name, "Required ADDom information is missing");
                 return;
             }
 
             try
             {
-                _instance.UnRegisterComputer(response);
+                _instance.UnRegisterComputer(msg);
             }
             catch (Exception ex)
             {
@@ -158,14 +163,14 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Active a computer with a product key
-        private void ActivateComputer(Response response)
+        private void ActivateComputer(HostnameChangerMessage msg)
         {
-            if (!response.IsFieldValid("#Key"))
+            if (string.IsNullOrEmpty(msg.Key))
                 return;
 
             try
             {
-                _instance.ActivateComputer(response.GetField("#Key"));
+                _instance.ActivateComputer(msg.Key);
             }
             catch (Exception ex)
             {

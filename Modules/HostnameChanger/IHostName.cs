@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,16 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
-using Zazzles.Middleware;
-
 namespace FOG.Modules.HostnameChanger
 {
     internal interface IHostName
     {
         void RenameComputer(string hostname);
-        bool RegisterComputer(Response response);
-        void UnRegisterComputer(Response response);
+        bool RegisterComputer(HostnameChangerMessage msg);
+        void UnRegisterComputer(HostnameChangerMessage msg);
         void ActivateComputer(string key);
     }
 }

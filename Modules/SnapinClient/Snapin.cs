@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,24 +17,20 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.PrinterManager
+namespace FOG.Modules.SnapinClient
 {
-    public class NetworkPrinter : Printer
+    public class Snapin
     {
-        public NetworkPrinter(string name, string ip, string port, bool defaulted)
-        {
-            Name = name;
-            IP = ip;
-            Port = port;
-            Default = defaulted;
-            LogName = "NetworkPrinter";
-        }
+        public int JobTaskID = -1;
+        public string Name = "";
+        public string JobCreation = "-1";
+        public string Action = "";
 
-        public override void Add(PrintManagerBridge instance)
-        {
-            if (string.IsNullOrEmpty(IP) || !Name.StartsWith("\\\\")) return;
+        public string RunWith = "";
+        public string RunWithArgs = "";
 
-            instance.Add(this);
-        }
+        public string FileName = "";
+        public string Args = "";
+        public string Hash = "";
     }
 }

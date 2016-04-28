@@ -18,9 +18,7 @@
  */
 
 using System;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using Zazzles;
 
 namespace FOG
@@ -38,17 +36,13 @@ namespace FOG
             Log.Output = Log.Mode.Quiet;
             Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fog_user.log");
             Log.Output = Log.Mode.File;
+
             Log.Entry(LogName, "Initializing - phase 1");
 
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
 
-            // Wait for the main service to spawn
-            if(Settings.OS == Settings.OSType.Windows)
-                while (Process.GetProcessesByName("FOGService").Length == 0)
-                {
-                    Thread.Sleep(500);
-                }
+
             Eager.Initalize();
 
             Log.Entry(LogName, "Initializing - phase 2");

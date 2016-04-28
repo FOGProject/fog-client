@@ -38,15 +38,15 @@ namespace FOG
                 var cert = RSA.ServerCertificate();
                 if (cert != null) UnpinServerCert();
 
-                var keyPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName(), "ca.cert.der");
+                var keyPath = Path.Combine(location, "ca.cert.der");
 
                 if (!presetSettings)
                     Settings.SetPath(Path.Combine(location, "settings.json"));
 
                 Configuration.GetAndSetServerAddress();
                 Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
-
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
+
                 if (!downloaded)
                     return false;
 
@@ -168,7 +168,6 @@ namespace FOG
 
             try
             {
-
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);

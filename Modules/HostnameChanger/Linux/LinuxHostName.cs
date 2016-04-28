@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using Zazzles;
-using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Linux
 {
@@ -36,12 +35,12 @@ namespace FOG.Modules.HostnameChanger.Linux
             BruteForce(hostname);
         }
 
-        public bool RegisterComputer(Response response)
+        public bool RegisterComputer(HostnameChangerMessage msg)
         {
             throw new NotImplementedException();
         }
 
-        public void UnRegisterComputer(Response response)
+        public void UnRegisterComputer(HostnameChangerMessage msg)
         {
             throw new NotImplementedException();
         }

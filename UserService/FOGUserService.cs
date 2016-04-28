@@ -21,20 +21,16 @@ using System;
 using FOG.Modules.AutoLogOut;
 using FOG.Modules.PrinterManager;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
+using Zazzles.Middleware;
 using Zazzles.Modules;
 
 namespace FOG
 {
     internal class FOGUserService : AbstractService
     {
-        public FOGUserService()
-        {
-            Bus.SetMode(Bus.Mode.Client);
-            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
-            Bus.Subscribe(Bus.Channel.Power, OnPower);
-        }
 
         private static void OnUpdate(dynamic data)
         {
@@ -67,17 +63,46 @@ namespace FOG
                 ShutdownNotification(data);
         }
 
-        protected override AbstractModule[] GetModules()
+        protected override IModule[] GetModules()
         {
-            return new AbstractModule[]
+            return new IModule[]
             {
                 new AutoLogOut(),
                 new DefaultPrinterManager()
             };
         }
 
+        protected override Response GetLoopData()
+        {
+            try
+            {
+                Settings.Reload();
+                var alo = new JObject { ["time"] = int.Parse(Settings.Get("alo-time")) };
+                var printer = new JObject { ["default"] = Settings.Get("printer-default") };
+
+                var data = new JObject
+                {
+                    ["autologout"] = alo,
+                    ["printermanager"] = printer
+                };
+
+                return new Response(data, false);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Unable to get cycle data");
+                Log.Error(Name, ex);
+            }
+
+            return new Response();
+
+        }
+
         protected override void Load()
         {
+            Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Update, OnUpdate);
+            Bus.Subscribe(Bus.Channel.Power, OnPower);
         }
 
         protected override void Unload()
@@ -90,11 +115,11 @@ namespace FOG
             {
                 var sleepTimeStr = Settings.Get("Sleep");
                 var sleepTime = int.Parse(sleepTimeStr);
-                if (sleepTime >= DefaultSleepTime)
+                if (sleepTime >= MinSleepTime)
                     return sleepTime;
 
                 Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {DefaultSleepTime}");
+                    $"Sleep time set on the server is below the minimum of {MinSleepTime}");
             }
             catch (Exception ex)
             {

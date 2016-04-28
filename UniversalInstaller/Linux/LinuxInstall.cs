@@ -35,6 +35,13 @@ namespace FOG
             if (Directory.Exists(GetLocation()))
                 Uninstall();
 
+            if (!Directory.Exists("/opt/"))
+            {
+                Directory.CreateDirectory("/opt/");
+                ProcessHandler.Run("chown", "root:root /opt/");
+                ProcessHandler.Run("chmod", "0755 /opt/");
+            }
+
             Helper.ExtractFiles("/opt/", GetLocation());
 
             var logLocation = Path.Combine(GetLocation(), "fog.log");

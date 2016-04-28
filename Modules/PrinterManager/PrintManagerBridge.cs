@@ -41,18 +41,27 @@ namespace FOG.Modules.PrinterManager
             if (printer.File != null)
                 Log.Entry(LogName, $"--> File = {printer.File}");
             if (printer.ConfigFile != null)
-                Log.Entry(LogName, $"--> File = {printer.File}");
+                Log.Entry(LogName, $"--> Config = {printer.ConfigFile}");
             if (printer.Model != null)
                 Log.Entry(LogName, $"--> Model = {printer.Model}");
 
             try
             {
-                if (printer is iPrintPrinter)
-                    AddiPrint((iPrintPrinter) printer);
-                else if (printer is LocalPrinter)
-                    AddLocal((LocalPrinter) printer);
-                else if (printer is NetworkPrinter)
-                    AddNetwork((NetworkPrinter) printer);
+                switch (printer.Type)
+                {
+                    case Printer.PrinterType.iPrint:
+                        AddiPrint(printer);
+                        break;
+                    case Printer.PrinterType.Local:
+                        AddLocal(printer);
+                        break;
+                    case Printer.PrinterType.Network:
+                        AddNetwork(printer);
+                        break;
+                    case Printer.PrinterType.CUPS:
+                        AddCUPS(printer);
+                        break;
+                }
             }
             catch (Exception ex)
             {
@@ -61,10 +70,10 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected abstract void AddiPrint(iPrintPrinter printer);
-        protected abstract void AddLocal(LocalPrinter printer);
-        protected abstract void AddNetwork(NetworkPrinter printer);
-        protected abstract void AddCUPS(CUPSPrinter printer);
+        protected abstract void AddiPrint(Printer printer);
+        protected abstract void AddLocal(Printer printer);
+        protected abstract void AddNetwork(Printer printer);
+        protected abstract void AddCUPS(Printer printer);
         public abstract void Remove(string name);
         public abstract void Default(string name);
     }

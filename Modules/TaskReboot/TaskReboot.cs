@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,7 +17,6 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
@@ -27,20 +26,16 @@ namespace FOG.Modules.TaskReboot
     /// <summary>
     ///     Reboot the computer if a task needs to
     /// </summary>
-    public class TaskReboot : AbstractModule
+    public class TaskReboot : AbstractModule<TaskRebootMessage>
     {
         public TaskReboot()
         {
             Name = "TaskReboot";
         }
 
-        protected override void DoWork()
+        protected override void DoWork(Response data, TaskRebootMessage msg)
         {
-            //Get task info
-            var response = Communication.GetResponse("/service/jobs.php", true);
-
-            //Shutdown if a task is avaible and the user is logged out or it is forced
-            if (response.Error) return;
+            if (!msg.Job) return;
 
             Log.Entry(Name, "Restarting computer for task");
             Power.Restart(Name, ShouldAbort, Power.ShutdownOptions.Delay);

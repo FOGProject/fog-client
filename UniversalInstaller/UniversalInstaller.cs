@@ -125,7 +125,9 @@ namespace FOG
             {
                 if (Settings.OS == Settings.OSType.Windows)
                 {
+                    Helper.Instance.PrepareFiles();
                     Helper.Instance.Install();
+                    Helper.Instance.Configure();
                 }
                 else
                 {
