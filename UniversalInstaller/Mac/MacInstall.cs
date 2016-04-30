@@ -84,6 +84,11 @@ namespace FOG
             return "/opt/fog-service";
         }
 
+        public void PrintInfo()
+        {
+            
+        }
+
         public bool Uninstall()
         {
             if (Directory.Exists(GetLocation()))

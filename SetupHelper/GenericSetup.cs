@@ -120,7 +120,7 @@ namespace FOG
             }
         }
 
-        public static void InstallFOGCert(string location)
+        public static bool InstallFOGCert(string location)
         {
             try
             {
@@ -130,6 +130,7 @@ namespace FOG
                 store.Add(cert);
 
                 store.Close();
+                return true;
             }
             catch (Exception ex)
             {

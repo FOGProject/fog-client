@@ -88,6 +88,10 @@ namespace FOG
             return GetValue("INSTALLDIR", config);
         }
 
+        public void PrintInfo()
+        {
+        }
+
         public bool Uninstall()
         {
             // TODO: Obtain product codes of installed version(s)

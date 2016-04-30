@@ -62,14 +62,26 @@ namespace FOG
             return Install();
         }
 
-        private bool AddControlScripts()
+        public bool isSystemd()
         {
             var systemd = ProcessHandler.Run("pidof", "systemd");
+            return systemd == 0;
+        }
+
+        public bool isInitd()
+        {
             var initd = ProcessHandler.Run("pidof", "init");
+            return initd == 0;
+        }
 
-            if (systemd == 1 && initd == 1) return false;
+        private bool AddControlScripts()
+        {
+            var systemd = isSystemd();
+            var initd = isInitd();
 
-            if (systemd == 0)
+            if (!systemd && !initd) return false;
+
+            if (systemd)
             {
                 var path = "";
                 var path1 = "/lib/systemd/system";
@@ -86,7 +98,7 @@ namespace FOG
                 ProcessHandler.Run("chmod", "755 " + Path.Combine(path,"FOGService.service"));
                 ProcessHandler.Run("systemctl", "enable FOGService.service");
             }
-            else if (initd == 0)
+            else if (initd)
             {
                 Helper.ExtractResource("FOG.Scripts.init-d", "/etc/init.d/FOGService", true);
                 ProcessHandler.Run("chmod", "755 /etc/init.d/FOGService");
@@ -104,6 +116,12 @@ namespace FOG
         public string GetLocation()
         {
             return "/opt/fog-service";
+        }
+
+        public void PrintInfo()
+        {
+            UniversalInstaller.PrintInfo("Systemd", isSystemd().ToString());
+            UniversalInstaller.PrintInfo("Initd", isInitd().ToString());
         }
 
         public bool Uninstall()

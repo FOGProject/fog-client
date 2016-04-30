@@ -19,6 +19,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using Zazzles;
 
@@ -27,6 +28,7 @@ namespace FOG
     class UniversalInstaller
     {
         private const string LogName = "Installer";
+        public static string LogPath = Path.Combine(Settings.Location, "SmartInstaller.log");
 
         [STAThread]
         static void Main(string[] args)
@@ -90,29 +92,39 @@ namespace FOG
 
         private static void PrintBanner()
         {
-            Console.WriteLine("                                            ");
-            Console.WriteLine("      ..#######:.    ..,#,..     .::##::.   ");
-            Console.WriteLine(" .:######          .:;####:......;#;..      ");
-            Console.WriteLine(" ...##...        ...##;,;##::::.##...       ");
-            Console.WriteLine("    ,#          ...##.....##:::##     ..::  ");
-            Console.WriteLine("    ##    .::###,,##.   . ##.::#.:######::. ");
-            Console.WriteLine(" ...##:::###::....#. ..  .#...#. #...#:::.  ");
-            Console.WriteLine(" ..:####:..    ..##......##::##  ..  #      ");
-            Console.WriteLine("     #  .      ...##:,;##;:::#: ... ##..    ");
-            Console.WriteLine("    .#  .       .:;####;::::.##:::;#:..     ");
-            Console.WriteLine("     #                     ..:;###..        ");
-            Console.WriteLine("                                            ");
-            Console.WriteLine(" ###########################################");
-            Console.WriteLine(" #     FOG                                 #");
-            Console.WriteLine(" #     Free Computer Imaging Solution      #");
-            Console.WriteLine(" #                                         #");
-            Console.WriteLine(" #     https://www.fogproject.org/         #");
-            Console.WriteLine(" #                                         #");
-            Console.WriteLine(" #     Credits:                            #");
-            Console.WriteLine(" #     https://fogproject.org/Credits      #");
-            Console.WriteLine(" #     GNU GPL Version 3                   #");
-            Console.WriteLine(" ###########################################");
-            Console.WriteLine(" #           FOG SERVICE INSTALLER         #");
+            var bannerColor = ConsoleColor.White;
+            var paddingSize = (Log.HeaderLength - 48)/2;
+            var builder = new StringBuilder();
+            for (int i = 0; i < paddingSize; i++)
+            {
+                builder.Append(" ");
+            }
+            var padding = builder.ToString();
+
+            Log.WriteLine(padding + "                                            ", bannerColor);
+            Log.WriteLine(padding + "      ..#######:.    ..,#,..     .::##::.   ", bannerColor);
+            Log.WriteLine(padding + " .:######          .:;####:......;#;..      ", bannerColor);
+            Log.WriteLine(padding + " ...##...        ...##;,;##::::.##...       ", bannerColor);
+            Log.WriteLine(padding + "    ,#          ...##.....##:::##     ..::  ", bannerColor);
+            Log.WriteLine(padding + "    ##    .::###,,##.   . ##.::#.:######::. ", bannerColor);
+            Log.WriteLine(padding + " ...##:::###::....#. ..  .#...#. #...#:::.  ", bannerColor);
+            Log.WriteLine(padding + " ..:####:..    ..##......##::##  ..  #      ", bannerColor);
+            Log.WriteLine(padding + "     #  .      ...##:,;##;:::#: ... ##..    ", bannerColor);
+            Log.WriteLine(padding + "    .#  .       .:;####;::::.##:::;#:..     ", bannerColor);
+            Log.WriteLine(padding + "     #                     ..:;###..        ", bannerColor);
+            Log.WriteLine(padding + "                                            ", bannerColor);
+            Log.WriteLine(padding + " ###########################################", bannerColor);
+            Log.WriteLine(padding + " #     FOG                                 #", bannerColor);
+            Log.WriteLine(padding + " #     Free Computer Imaging Solution      #", bannerColor);
+            Log.WriteLine(padding + " #                                         #", bannerColor);
+            Log.WriteLine(padding + " #     https://www.fogproject.org/         #", bannerColor);
+            Log.WriteLine(padding + " #                                         #", bannerColor);
+            Log.WriteLine(padding + " #     Credits:                            #", bannerColor);
+            Log.WriteLine(padding + " #     https://fogproject.org/Credits      #", bannerColor);
+            Log.WriteLine(padding + " #     GNU GPL Version 3                   #", bannerColor);
+            Log.WriteLine(padding + " ###########################################", bannerColor);
+            Log.WriteLine(padding + " #           FOG Service Installer         #", bannerColor);
+            Log.NewLine();
         }
 
         private static void InteractiveMode()
@@ -149,61 +161,198 @@ namespace FOG
         }
 
 
-        private static void PerformCLIUninstall()
+        private static void PerformCLIUninstall(bool noInfo = false)
         {
-            Log.Output = Log.Mode.Console;
-            PrintBanner();
-            Helper.Instance.Uninstall();
+            if (!noInfo)
+            {
+                Log.FilePath = LogPath;
+                Log.Output = Log.Mode.Console;
+
+                PrintBanner();
+                PrintLicense();
+                PrintInfo();
+            }
+
+            Log.Header("Uninstall");
+            Log.NewLine();
+
+            DoAction("Uninstalling", Helper.Instance.Uninstall);
+            Log.NewLine();
         }
 
-        private static void PerformCLIInstall()
+        private static void PerformCLIInstall(bool noInfo = false)
         {
-            Log.Output = Log.Mode.Console;
+            if (!noInfo)
+            {
+                Log.FilePath = LogPath;
+                Log.Output = Log.Mode.Console;
 
-            PrintBanner();
-            Console.WriteLine("");
-            Console.WriteLine("By installing this software you agree to the GPL v3 license");
-            Console.WriteLine("");
-            Console.WriteLine("Version: " + Helper.ClientVersion);
-            Console.WriteLine("OS:      " + Settings.OS);
-            Console.WriteLine("");
+                PrintBanner();
+                PrintLicense();
+                PrintInfo();
+            }
+            
+            Log.Header("Configure");
+            Log.NewLine();
 
             var https = "0";
-            var tray = "0";
+            var tray = "1";
             var company = "FOG";
             var rootLog = "0";
 
-            Console.Write("Enter your FOG Server address: ");
+            Log.Write("FOG Server address [default: fog-server]: ");
+            Console.ForegroundColor = ConsoleColor.Yellow;;
             var server = Console.ReadLine();
-
-            Console.Write("Enter the FOG webroot used [example: /fog]: ");
+            Console.ResetColor();
+            if (string.IsNullOrWhiteSpace(server))
+                server = "fog-server";
+            
+            Log.Write("Webroot [default: /fog]:                  ");
+            Console.ForegroundColor = ConsoleColor.Yellow; ;
             var webRoot = Console.ReadLine();
-
-            Console.Write("Enable tray icon? [y/n]: ");
+            Console.ResetColor();
+            if (string.IsNullOrWhiteSpace(webRoot))
+                webRoot = "/fog";
+            Log.Write("Enable tray icon? [Y/n]:                  ");
+            Console.ForegroundColor = ConsoleColor.Yellow; ;
             var rawTray = Console.ReadLine();
-            if (rawTray.Trim().ToLower().Equals("y"))
-                tray = "1";
+            Console.ResetColor();
+            if (rawTray.Trim().ToLower().Equals("n"))
+                tray = "0";
+            if (Settings.OS != Settings.OSType.Linux)
+                return;
 
-            Install(https, tray, server, webRoot, company, rootLog);     
+            var start = Settings.OS == Settings.OSType.Linux;
+
+            if (start)
+            {
+                Log.Write("Start FOG Service when done? [Y/n]:       ");
+                Console.ForegroundColor = ConsoleColor.Yellow; ;
+                var rawStart = Console.ReadLine();
+                Console.ResetColor();
+                if (rawStart.Trim().ToLower().Equals("n"))
+                    start = false;
+            }
+
+            if (!Install(https, tray, server, webRoot, company, rootLog))
+            {
+                Log.NewLine();
+                Log.WriteLine("Installation failed, cleaning system", ConsoleColor.Yellow);
+                Log.NewLine();
+                PerformCLIUninstall(true);
+            }
+            else
+            {
+                if (start)
+                    Start();
+            }
+
+            Log.Header("Finished");
+            Log.NewLine();
+            Log.WriteLine($"See {LogPath} for more information.", ConsoleColor.Yellow);
+            Log.NewLine();
         }
 
-        private static void Install(string https, string tray, string server, 
+        private static void PrintLicense()
+        {
+            Log.Header("License");
+            Log.NewLine();
+            Log.WriteLine("FOG Service Copyright (C) 2014-2016 FOG Project", ConsoleColor.Yellow);
+            Log.WriteLine("This program comes with ABSOLUTELY NO WARRANTY.", ConsoleColor.Yellow);
+            Log.WriteLine("This is free software, and you are welcome to redistribute it under certain", ConsoleColor.Yellow);
+            Log.WriteLine("conditions. See your FOG server under 'FOG Configuration' -> 'License' for", ConsoleColor.Yellow);
+            Log.WriteLine("further information.", ConsoleColor.Yellow);
+            Log.NewLine();
+        }
+
+        private static void PrintInfo()
+        {
+            Log.Header("Information");
+            Log.NewLine();
+            PrintInfo("Version", Helper.ClientVersion);
+            PrintInfo("OS", Settings.OS.ToString());
+            PrintInfo("Current Path", Settings.Location);
+            PrintInfo("Install Location", Helper.Instance.GetLocation());
+
+            Helper.Instance.PrintInfo();
+            Log.NewLine();
+        }
+
+        private static bool Install(string https, string tray, string server, 
             string webRoot, string company, string rootLog, bool skipSave= false)
         {
-            Console.WriteLine("Getting things ready...");
-            Helper.Instance.PrepareFiles();
+            Log.NewLine();
+            Log.Header("Installing");
+            Log.NewLine();
 
-            Console.WriteLine("Installing files...");
-            Helper.Instance.Install(https, tray, server, webRoot, company, rootLog);
+            if (!DoAction("Getting things ready", Helper.Instance.PrepareFiles))
+                return false;
+            if (!DoAction("Installing files",() => Helper.Instance.Install(https, tray, server, webRoot, company, rootLog)))
+                    return false;
 
-            Console.WriteLine("Applying Configuration...");
             if(!skipSave)
-                Helper.SaveSettings(https, tray, server, webRoot, company, rootLog);
-            Helper.Instance.Configure();
-            
-            Console.WriteLine("Setting Up Encrypted Tunnel...");
-            Helper.PinServerCert(Helper.Instance.GetLocation(), skipSave);
-            Helper.PinFOGCert();
+                if (!DoAction("Saving Configuration",() => Helper.SaveSettings(https, tray, server, webRoot, company, rootLog)))
+                    return false;
+
+            if (!DoAction("Applying Configuration", Helper.Instance.Configure))
+                return false;
+
+            if (!DoAction("Pinning FOG Project", Helper.PinFOGCert))
+                return false;
+
+            if (!DoAction("Pinning Server", () => Helper.PinServerCert(Helper.Instance.GetLocation(), skipSave)))
+                return false;
+
+            Log.NewLine();
+            return true;
+        }
+
+        private static bool DoAction(string action, Func<bool> method )
+        {
+            Log.Action(action);
+            Log.Output = Log.Mode.File;
+            var success = false;
+
+            try
+            {
+                success = method();
+            }
+            catch (Exception ex)
+            {               
+                Log.Error(LogName, "Method: " + method.Method.Name);
+                Log.Error(LogName, ex);
+            }
+
+            Log.Output = Log.Mode.Console;
+            Log.ActionResult(success);
+
+            return success;
+        }
+
+        private static void Start()
+        {
+            Log.Action("Starting FOG Service");
+
+            Log.Output = Log.Mode.File;
+            var controlPath = Path.Combine(Helper.Instance.GetLocation(), "control.sh");
+
+            var returnCode = ProcessHandler.Run("/bin/bash", controlPath + " start");
+            Log.Output = Log.Mode.Console;
+            Log.ActionResult(returnCode == 0);
+            Log.NewLine();
+        }
+
+        public static void PrintInfo(string setting, string value)
+        {
+            var builder = new StringBuilder(setting);
+
+            for (var i = setting.Length; i < Log.HeaderLength - value.Length; i++)
+            {
+                builder.Append(".");
+            }
+
+            Log.Write(builder.ToString());
+            Log.WriteLine(value, ConsoleColor.Yellow);
         }
     }
 }
