@@ -219,8 +219,6 @@ namespace FOG
             Console.ResetColor();
             if (rawTray.Trim().ToLower().Equals("n"))
                 tray = "0";
-            if (Settings.OS != Settings.OSType.Linux)
-                return;
 
             var start = Settings.OS == Settings.OSType.Linux;
 
