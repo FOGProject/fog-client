@@ -75,7 +75,7 @@ namespace FOG.Modules.PrinterManager
             if (printer.IP != null)
                 AddIPPort(printer, "9100");
 
-            PrintUI($"/if / q / b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
+            PrintUI($"/if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
 
             if (printer.ConfigFile != null)
             {
