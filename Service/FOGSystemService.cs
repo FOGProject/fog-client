@@ -43,7 +43,6 @@ namespace FOG
             try
             {
                 var response = Communication.GetResponse("/management/index.php?sub=requestClientInfo", true);
-
                 // Construct the clientupdater data regardless of encryption
                 var srvClientVersion = Communication.GetRawResponse("/service/getversion.php?clientver");
                 var srvVersion = Communication.GetRawResponse("/service/getversion.php");
@@ -53,15 +52,23 @@ namespace FOG
 
                 Log.NewLine();
                 Log.Entry(Name, "Creating user agent cache");
+                try
+                {
+                    Settings.Set("server-version", srvVersion);
 
-                // Dump user-service configuration to the settings file
-                var alo = response.GetSubResponse("autologout");
-                Settings.Set("alo-time", alo.GetField("time"));
+                    // Dump user-service configuration to the settings file
+                    var alo = response.GetSubResponse("autologout");
+                    Settings.Set("alo-time", (alo == null) ? "0" : alo.GetField("time"));
 
-                var pDefault = response.GetSubResponse("printermanager");
-                Settings.Set("printer-default", pDefault.GetField("default"));
+                    var pDefault = response.GetSubResponse("printermanager");
+                    Settings.Set("alo-time", (pDefault == null) ? "" : pDefault.GetField("default"));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Name, "Unable to set user agent cache");
+                    Log.Error(Name, ex);
+                }
 
-                Settings.Set("server-version", srvVersion);
 
                 return response;
             }

@@ -148,8 +148,8 @@
     <EmbeddedResource Include="Scripts\control.sh" />
     <EmbeddedResource Include="Scripts\systemd" />
     <EmbeddedResource Include="Scripts\fog-ca.cer" />
-    <None Include="packages.config" />
     <EmbeddedResource Include="Scripts\osxbind.sh" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

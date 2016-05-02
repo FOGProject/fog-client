@@ -50,7 +50,7 @@ namespace FOG.Modules.PrinterManager
         protected override void DoWork(Response data, DefaultPrinterMessage msg)
         {
             //Get printers
-            if (data.Error || data.GetField("#mode").Equals("0")) return;
+            if (data.Error || string.IsNullOrWhiteSpace(msg.Name)) return;
 
             Log.Entry(Name, "Checking defaults");
             var printer = new Printer {Name = msg.Name};

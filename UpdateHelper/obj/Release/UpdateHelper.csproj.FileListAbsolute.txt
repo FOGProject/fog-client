@@ -5,3 +5,7 @@ E:\fog-client\bin\FOGUpdateHelper.exe.config
 E:\fog-client\bin\FOGUpdateHelper.exe
 E:\fog-client\UpdateHelper\obj\Release\UpdateHelper.csprojResolveAssemblyReference.cache
 E:\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe
+D:\fog\fog-client\bin\FOGUpdateHelper.exe.config
+D:\fog\fog-client\bin\FOGUpdateHelper.exe
+D:\fog\fog-client\UpdateHelper\obj\Release\UpdateHelper.csprojResolveAssemblyReference.cache
+D:\fog\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe

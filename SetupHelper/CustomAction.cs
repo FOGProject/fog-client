@@ -18,21 +18,16 @@
  */
 
 using System;
-using System.IO;
 using System.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
 using FOG;
 using Microsoft.Win32;
-using Newtonsoft.Json.Linq;
 
 namespace SetupHelper
 {
     public class CustomActions
     {
-        private static string jsonFile = Path.Combine(
-            Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.User),
-            "session.json");
         private static void DisplayMSIError(Session session, string msg)
         {
             var r = new Record();
@@ -41,34 +36,11 @@ namespace SetupHelper
         }
 
         [CustomAction]
-        public static ActionResult DumpConfig(Session session)
-        {
-            var properties = new string[] { "HTTPS", "USETRAY", "WEBADDRESS", "WEBROOT",
-                "ROOTLOG", "INSTALLDIR", "ProductVersion" };
-            try
-            {
-                var json = new JObject();
-
-                foreach (var prop in properties)
-                    json[prop] = session[prop];
-                File.WriteAllText(jsonFile, json.ToString());
-                return ActionResult.Success;
-            }
-            catch (Exception ex)
-            {
-                DisplayMSIError(session, "Unable to store configuration: " + ex.Message);
-                return ActionResult.Failure;
-            }
-        }
-
-        [CustomAction]
         public static ActionResult InstallCert(Session session)
         {
             try
             {
-                var config = GetSettings();
-
-                if (GenericSetup.PinServerCert(GetValue("INSTALLDIR", config)))
+                if (GenericSetup.PinServerCert(session.CustomActionData["sINSTALLDIR"]))
                 {
                     return ActionResult.Success;
                 }
@@ -90,18 +62,10 @@ namespace SetupHelper
         {
             try
             {
-                var config = GetSettings();
 
-
-                GenericSetup.SaveSettings(
-                    GetValue("HTTPS", config),
-                    GetValue("USETRAY", config),
-                    GetValue("WEBADDRESS", config),
-                    GetValue("WEBROOT", config),
-                    "FOG",
-                    GetValue("ROOTLOG", config),
-                    GetValue("ProductVersion", config),
-                     GetValue("INSTALLDIR", config));
+                GenericSetup.SaveSettings(session.CustomActionData["sHTTPS"], session.CustomActionData["sUSETRAY"], 
+                    session.CustomActionData["sWEBADDRESS"], session.CustomActionData["sWEBROOT"], "FOG",
+                    session.CustomActionData["sROOTLOG"], session.CustomActionData["sProductVersion"], session.CustomActionData["sINSTALLDIR"]);
 
                 return ActionResult.Success;
             }
@@ -197,17 +161,6 @@ namespace SetupHelper
             }
 
             return ActionResult.Success;
-        }
-
-        private static JObject GetSettings()
-        {
-            return JObject.Parse(File.ReadAllText(jsonFile));
-        }
-
-        private static string GetValue(string key, JObject config)
-        {
-            var value = config.GetValue(key);
-            return string.IsNullOrEmpty(value.ToString().Trim()) ? string.Empty : value.ToString().Trim();
         }
     }
 }

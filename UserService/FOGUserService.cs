@@ -77,15 +77,17 @@ namespace FOG
             try
             {
                 Settings.Reload();
-                var alo = new JObject { ["time"] = int.Parse(Settings.Get("alo-time")) };
-                var printer = new JObject { ["default"] = Settings.Get("printer-default") };
+
+                var alo = -1;
+                var printer = "";
+                int.TryParse(Settings.Get("alo-time"), out alo);
+                printer = Settings.Get("printer-default");
 
                 var data = new JObject
                 {
-                    ["autologout"] = alo,
-                    ["printermanager"] = printer
+                    ["autologout"] = new JObject { ["time"] = alo },
+                    ["printermanager"] = new JObject { ["default"] = printer }
                 };
-
                 return new Response(data, false);
             }
             catch (Exception ex)
@@ -93,9 +95,7 @@ namespace FOG
                 Log.Error(Name, "Unable to get cycle data");
                 Log.Error(Name, ex);
             }
-
             return new Response();
-
         }
 
         protected override void Load()

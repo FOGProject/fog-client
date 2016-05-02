@@ -20,7 +20,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using Newtonsoft.Json.Linq;
 
 namespace FOG
 {
@@ -84,8 +83,7 @@ namespace FOG
 
         public string GetLocation()
         {
-            var config = GetSettings();
-            return GetValue("INSTALLDIR", config);
+            return "";
         }
 
         public void PrintInfo()
@@ -97,17 +95,6 @@ namespace FOG
             // TODO: Obtain product codes of installed version(s)
             //return ProcessHandler.Run("msiexec.exe", "/x " + ProductCode) == 0;
             throw new NotImplementedException();
-        }
-
-        private static JObject GetSettings()
-        {
-            return JObject.Parse(File.ReadAllText(jsonFile));
-        }
-
-        private static string GetValue(string key, JObject config)
-        {
-            var value = config.GetValue(key);
-            return string.IsNullOrEmpty(value.ToString().Trim()) ? string.Empty : value.ToString().Trim();
         }
     }
 }
