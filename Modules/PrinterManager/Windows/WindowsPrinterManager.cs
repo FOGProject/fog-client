@@ -77,7 +77,7 @@ namespace FOG.Modules.PrinterManager
 
             PrintUI($"/if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
 
-            if (printer.ConfigFile != null)
+            if (!string.IsNullOrEmpty(printer.ConfigFile))
             {
                 PrintUI($"/Sr /q /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p");
             }
