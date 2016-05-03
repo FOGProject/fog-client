@@ -46,7 +46,7 @@ namespace FOG
         public static bool PinServerCert(string address, string webroot, string location)
         {
             Configuration.ServerAddress = address + webroot;
-            return PinServerCert(location);
+            return PinServerCertPreset(location);
         }
 
 
