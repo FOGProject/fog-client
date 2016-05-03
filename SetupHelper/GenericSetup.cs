@@ -45,7 +45,7 @@ namespace FOG
 
         public static bool PinServerCert(string address, string webroot, string location)
         {
-            Configuration.ServerAddress = address + webroot;
+            Configuration.ServerAddress = "http://" + address + webroot;
             return PinServerCertPreset(location);
         }
 
@@ -61,7 +61,6 @@ namespace FOG
 
 
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
-
                 if (!downloaded)
                     return false;
 

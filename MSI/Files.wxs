@@ -47,7 +47,7 @@
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             
             <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
-            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\bin\Newtonsoft.Json.dll" />
+            <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\libs\Newtonsoft.Json.dll" />
             <File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll" />
             <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
             <File Id="SuperSocketCommon" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
