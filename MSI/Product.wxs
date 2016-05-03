@@ -20,21 +20,21 @@
 -->
 
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:iis="http://schemas.microsoft.com/wix/IIsExtension">
-  <Product Id="*" Name="FOG Service" Language="1033" Version="0.10.3" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
+  <Product Id="*" Name="FOG Service" Language="1033" Version="0.10.4" UpgradeCode="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA"
            Manufacturer="FOG">
     <Package Description="FOG Service" Comments="A client for the FOG project" InstallerVersion="300" Compressed="yes"
              InstallScope="perMachine" />
     <!-- Remove old versions -->
     <Upgrade Id="1CCFDEAF-53E9-43AC-AE18-F9F86CEFA4EA">
       <UpgradeVersion OnlyDetect="yes" Minimum="0.0.0" Property="NEWERVERSIONDETECTED" IncludeMinimum="no" />
-      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.10.2" Property="OLDERVERSIONBEINGUPGRADED"
+      <UpgradeVersion OnlyDetect="no" Minimum="0.0.0" Maximum="0.10.3" Property="OLDERVERSIONBEINGUPGRADED"
                       IncludeMinimum="no" IncludeMaximum="yes" MigrateFeatures="yes" />
     </Upgrade>
     <InstallExecuteSequence>
       <Custom Action="CheckForLegacy" Before="InstallFiles">NOT REMOVE="ALL"</Custom>
       <Custom Action="SaveSettings" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="SetSettingsProps" Before="SaveSettings" />
-      <Custom Action="InstallCert" After="SaveSettings">NOT REMOVE="ALL"</Custom>
+      <Custom Action="InstallCert" Before="InstallFinalize">NOT REMOVE="ALL"</Custom>
       <Custom Action="SetFOGCAProp" Before="InstallFOGCA" />
       <Custom Action="SetCertProp" Before="InstallCert" />
 

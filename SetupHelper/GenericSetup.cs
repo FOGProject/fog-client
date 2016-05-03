@@ -33,18 +33,33 @@ namespace FOG
 
         public static bool PinServerCert(string location, bool presetSettings = false)
         {
+
+            if (!presetSettings)
+                Settings.SetPath(Path.Combine(location, "settings.json"));
+
+            Configuration.GetAndSetServerAddress();
+            Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
+
+            return PinServerCertPreset(location);
+        }
+
+        public static bool PinServerCert(string address, string webroot, string location)
+        {
+            Configuration.ServerAddress = address + webroot;
+            return PinServerCert(location);
+        }
+
+
+        private static bool PinServerCertPreset(string location)
+        {
             try
             {
+                var keyPath = Path.Combine(location, "ca.cert.der");
+
                 var cert = RSA.ServerCertificate();
                 if (cert != null) UnpinServerCert();
 
-                var keyPath = Path.Combine(location, "ca.cert.der");
 
-                if (!presetSettings)
-                    Settings.SetPath(Path.Combine(location, "settings.json"));
-
-                Configuration.GetAndSetServerAddress();
-                Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
 
                 if (!downloaded)

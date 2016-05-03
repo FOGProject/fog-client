@@ -40,7 +40,9 @@ namespace SetupHelper
         {
             try
             {
-                if (GenericSetup.PinServerCert(session.CustomActionData["sINSTALLDIR"]))
+                if (GenericSetup.PinServerCert(session.CustomActionData["sWEBADDRESS"], 
+                    session.CustomActionData["sWEBROOT"], 
+                    session.CustomActionData["sINSTALLDIR"]))
                 {
                     return ActionResult.Success;
                 }

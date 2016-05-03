@@ -33,6 +33,7 @@ namespace FOG
         [STAThread]
         static void Main(string[] args)
         {
+            Log.FilePath = LogPath;
             Log.Output = Log.Mode.Quiet;
             if (args.Length == 5)
                 ProcessArgs(args);
@@ -71,6 +72,7 @@ namespace FOG
 
         private static void PerformUpgrade()
         {
+            Log.Output = Log.Mode.File;
             var settingsFile = Path.Combine(Settings.Location, "settings.json");
 
             Settings.SetPath(settingsFile);
@@ -287,6 +289,9 @@ namespace FOG
                 return false;
             if (!DoAction("Installing files",() => Helper.Instance.Install(https, tray, server, webRoot, company, rootLog)))
                     return false;
+
+            if (Settings.OS == Settings.OSType.Windows)
+                return true;
 
             if(!skipSave)
                 if (!DoAction("Saving Configuration",() => Helper.SaveSettings(https, tray, server, webRoot, company, rootLog)))
