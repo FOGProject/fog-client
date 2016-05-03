@@ -61,7 +61,7 @@ namespace FOG
                     Settings.Set("alo-time", (alo == null) ? "0" : alo.GetField("time"));
 
                     var pDefault = response.GetSubResponse("printermanager");
-                    Settings.Set("alo-time", (pDefault == null) ? "" : pDefault.GetField("default"));
+                    Settings.Set("printer-default", (pDefault == null) ? "" : pDefault.GetField("default"));
                 }
                 catch (Exception ex)
                 {
@@ -77,7 +77,6 @@ namespace FOG
                 Log.Error(Name, "Unable to get cycle data");
                 Log.Error(Name, ex);
             }
-
 
             return new Response();
         }
