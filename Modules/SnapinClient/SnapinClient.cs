@@ -83,7 +83,7 @@ namespace FOG.Modules.SnapinClient
                         Log.Error(Name, "Hash does not match");
                         Log.Error(Name, "--> Ideal: " + snapin.Hash);
                         Log.Error(Name, "--> Actual: " + sha512);
-
+                        Communication.Contact($"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
                         return;
                     }
                     exitCode = StartSnapin(snapin, snapinFilePath);
