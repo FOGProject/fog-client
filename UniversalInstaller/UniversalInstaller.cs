@@ -29,12 +29,13 @@ namespace FOG
     {
         private const string LogName = "Installer";
         public static string LogPath = Path.Combine(Settings.Location, "SmartInstaller.log");
+        private static ConsoleColor _infoColor = ConsoleColor.Yellow;
 
         [STAThread]
         static void Main(string[] args)
         {
-            Log.FilePath = LogPath;
             Log.Output = Log.Mode.Quiet;
+            Log.FilePath = LogPath;
             if (args.Length == 5)
                 ProcessArgs(args);
             else if (args.Length == 1 && args[0].Equals("uninstall"))
@@ -203,31 +204,44 @@ namespace FOG
             var rootLog = "0";
 
             Log.Write("FOG Server address [default: fog-server]: ");
-            Console.ForegroundColor = ConsoleColor.Yellow;;
+            Console.ForegroundColor = _infoColor;
             var server = Console.ReadLine();
             Console.ResetColor();
             if (string.IsNullOrWhiteSpace(server))
                 server = "fog-server";
             
             Log.Write("Webroot [default: /fog]:                  ");
-            Console.ForegroundColor = ConsoleColor.Yellow; ;
+            Console.ForegroundColor = _infoColor;
             var webRoot = Console.ReadLine();
             Console.ResetColor();
             if (string.IsNullOrWhiteSpace(webRoot))
                 webRoot = "/fog";
             Log.Write("Enable tray icon? [Y/n]:                  ");
-            Console.ForegroundColor = ConsoleColor.Yellow; ;
+            Console.ForegroundColor = _infoColor;
             var rawTray = Console.ReadLine();
             Console.ResetColor();
             if (rawTray.Trim().ToLower().Equals("n"))
                 tray = "0";
+
+            // Check hostname length (OSX appends .local by default)
+            var hostname = Environment.MachineName;
+            if (hostname.Length > 15)
+            {
+                Log.NewLine();
+                Log.WriteLine("Your hostname is " + hostname, _infoColor);
+                Log.WriteLine("This exceeds the 15 character limit.", _infoColor);
+                Log.WriteLine("Auto registration will not run until this is fixed.", _infoColor);
+                Log.WriteLine("Press ENTER to proceed with installation.", _infoColor);
+                Console.ReadLine();
+                Log.NewLine();
+            }
 
             var start = Settings.OS == Settings.OSType.Linux;
 
             if (start)
             {
                 Log.Write("Start FOG Service when done? [Y/n]:       ");
-                Console.ForegroundColor = ConsoleColor.Yellow; ;
+                Console.ForegroundColor = _infoColor;
                 var rawStart = Console.ReadLine();
                 Console.ResetColor();
                 if (rawStart.Trim().ToLower().Equals("n"))
@@ -237,7 +251,7 @@ namespace FOG
             if (!Install(https, tray, server, webRoot, company, rootLog))
             {
                 Log.NewLine();
-                Log.WriteLine("Installation failed, cleaning system", ConsoleColor.Yellow);
+                Log.WriteLine("Installation failed, cleaning system", _infoColor);
                 Log.NewLine();
                 PerformCLIUninstall(true);
             }
@@ -249,7 +263,7 @@ namespace FOG
 
             Log.Header("Finished");
             Log.NewLine();
-            Log.WriteLine($"See {LogPath} for more information.", ConsoleColor.Yellow);
+            Log.WriteLine($"See {LogPath} for more information.", _infoColor);
             Log.NewLine();
         }
 
@@ -257,11 +271,11 @@ namespace FOG
         {
             Log.Header("License");
             Log.NewLine();
-            Log.WriteLine("FOG Service Copyright (C) 2014-2016 FOG Project", ConsoleColor.Yellow);
-            Log.WriteLine("This program comes with ABSOLUTELY NO WARRANTY.", ConsoleColor.Yellow);
-            Log.WriteLine("This is free software, and you are welcome to redistribute it under certain", ConsoleColor.Yellow);
-            Log.WriteLine("conditions. See your FOG server under 'FOG Configuration' -> 'License' for", ConsoleColor.Yellow);
-            Log.WriteLine("further information.", ConsoleColor.Yellow);
+            Log.WriteLine("FOG Service Copyright (C) 2014-2016 FOG Project", _infoColor);
+            Log.WriteLine("This program comes with ABSOLUTELY NO WARRANTY.", _infoColor);
+            Log.WriteLine("This is free software, and you are welcome to redistribute it under certain", _infoColor);
+            Log.WriteLine("conditions. See your FOG server under 'FOG Configuration' -> 'License' for", _infoColor);
+            Log.WriteLine("further information.", _infoColor);
             Log.NewLine();
         }
 
@@ -355,7 +369,7 @@ namespace FOG
             }
 
             Log.Write(builder.ToString());
-            Log.WriteLine(value, ConsoleColor.Yellow);
+            Log.WriteLine(value, _infoColor);
         }
     }
 }

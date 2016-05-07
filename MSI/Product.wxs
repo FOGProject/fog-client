@@ -46,6 +46,17 @@
 
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
+    
+    <UI>
+      <ProgressText Action="CheckForLegacy">Checking for legacy client</ProgressText>
+      <ProgressText Action="SaveSettings">Saving settings</ProgressText>
+      <ProgressText Action="InstallCert">Pinning FOG Server</ProgressText>
+      <ProgressText Action="InstallFOGCA">Pinning FOG Project</ProgressText>
+      <ProgressText Action="CleanTasks">Cleaning Green FOG tasks</ProgressText>
+      <ProgressText Action="UninstallCert">Unpinning FOG server</ProgressText>
+      <ProgressText Action="UninstallFOGCA">Unpinning FOG Project</ProgressText>
+    </UI>
+    
     <!-- Setup the UI -->
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
     <Icon Id="icon.ico" SourceFile="icon.ico" />
