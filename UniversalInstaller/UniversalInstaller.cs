@@ -28,14 +28,16 @@ namespace FOG
     class UniversalInstaller
     {
         private const string LogName = "Installer";
-        public static string LogPath = Path.Combine(Settings.Location, "SmartInstaller.log");
+        public static string LogPath;
         private static ConsoleColor _infoColor = ConsoleColor.Yellow;
 
         [STAThread]
         static void Main(string[] args)
         {
             Log.Output = Log.Mode.Quiet;
+            LogPath = Path.Combine(Settings.Location, "SmartInstaller.log");
             Log.FilePath = LogPath;
+
             if (args.Length == 5)
                 ProcessArgs(args);
             else if (args.Length == 1 && args[0].Equals("uninstall"))
