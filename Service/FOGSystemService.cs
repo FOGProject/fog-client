@@ -37,6 +37,11 @@ namespace FOG
 {
     public class FOGSystemService : AbstractService
     {
+
+        private const int MIN_PROMPT = 60;
+        private const int MAX_PROMPT = 600;
+        private const int MAX_SLEEP_TIME = 60*60*2; // 2 Hours
+
         protected override Response GetLoopData()
         {
 
@@ -54,14 +59,14 @@ namespace FOG
                 Log.Entry(Name, "Creating user agent cache");
                 try
                 {
-                    Settings.Set("server-version", srvVersion);
+                    Settings.Set("ServerVersion", srvVersion);
 
                     // Dump user-service configuration to the settings file
                     var alo = response.GetSubResponse("autologout");
-                    Settings.Set("alo-time", (alo == null) ? "0" : alo.GetField("time"));
+                    Settings.Set("ALOTime", (alo == null) ? "0" : alo.GetField("time"));
 
                     var pDefault = response.GetSubResponse("printermanager");
-                    Settings.Set("printer-default", (pDefault == null) ? "" : pDefault.GetField("default"));
+                    Settings.Set("DefaultPrinter", (pDefault == null) ? "" : pDefault.GetField("default"));
                 }
                 catch (Exception ex)
                 {
@@ -194,27 +199,37 @@ namespace FOG
                 return null;
             }
 
-            Settings.Set("gracePeriod", response.GetField("promptTime"));
-            if (!response.IsFieldValid("sleep")) return null;
+            var promptTime = SandBoxParse(response, "promptTime", MIN_PROMPT, MAX_PROMPT, MIN_PROMPT);
+            Settings.Set("PromptTime", promptTime);
+            var sleep = SandBoxParse(response, "sleep", MIN_SLEEP_TIME, MAX_SLEEP_TIME, DEFAULT_SLEEP_TIME);
+            Settings.Set("Sleep", sleep);
 
-            try
+            return sleep;
+        }
+
+        private int SandBoxParse(Response response, string setting, int min, int max, int fallback)
+        {
+            if (response.IsFieldValid(setting))
             {
-                var sleepTime = int.Parse(response.GetField("sleep"));
-                if (sleepTime >= MinSleepTime)
+                int value;
+                var success = int.TryParse(response.GetField(setting), out value);
+
+                if (success && value >= min && value <= max)
                 {
-                    Settings.Set("Sleep", sleepTime.ToString());
-                    return sleepTime;
+                    return value;
+                }
+                else
+                {
+                    Log.Error(Name, $"Invalid {setting}, using default");
+                    return fallback;
                 }
 
-                Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {MinSleepTime}");
             }
-            catch (Exception ex)
+            else
             {
-                Log.Error(Name, "Unable to parse sleep time");
-                Log.Error(Name, ex);
+                Log.Error(Name, $"Invalid {setting}, using default");
+                return fallback;
             }
-            return null;
         }
     }
 }

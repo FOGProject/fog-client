@@ -80,8 +80,8 @@ namespace FOG
 
                 var alo = -1;
                 var printer = "";
-                int.TryParse(Settings.Get("alo-time"), out alo);
-                printer = Settings.Get("printer-default");
+                int.TryParse(Settings.Get("ALOTime"), out alo);
+                printer = Settings.Get("DefaultPrinter");
 
                 var data = new JObject
                 {
@@ -115,11 +115,11 @@ namespace FOG
             {
                 var sleepTimeStr = Settings.Get("Sleep");
                 var sleepTime = int.Parse(sleepTimeStr);
-                if (sleepTime >= MinSleepTime)
+                if (sleepTime >= MIN_SLEEP_TIME)
                     return sleepTime;
 
                 Log.Entry(Name,
-                    $"Sleep time set on the server is below the minimum of {MinSleepTime}");
+                    $"Sleep time set on the server is below the minimum of {MIN_SLEEP_TIME}");
             }
             catch (Exception ex)
             {
