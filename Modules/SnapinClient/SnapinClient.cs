@@ -51,13 +51,19 @@ namespace FOG.Modules.SnapinClient
             {
                 Log.Entry(Name, "Snapin Found:");
                 Log.Entry(Name, $"    ID: {snapin.JobTaskID}");
-                Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
-                Log.Entry(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
                 Log.Entry(Name, $"    Name: {snapin.Name}");
-                Log.Entry(Name, $"    File: {snapin.FileName}");
                 Log.Entry(Name, $"    Created: {snapin.JobCreation}");
-                Log.Entry(Name, $"    Args: {snapin.Args}");
                 Log.Entry(Name, $"    Action: {snapin.Action}");
+                Log.Entry(Name, $"    Hide: {snapin.Hide}");
+
+                if (!snapin.Hide)
+                {
+                    Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
+                    Log.Entry(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
+                    Log.Entry(Name, $"    File: {snapin.FileName}");
+                    Log.Entry(Name, $"    Args: {snapin.Args}");
+                }
+
 
                 if (string.IsNullOrEmpty(snapin.Hash))
                 {

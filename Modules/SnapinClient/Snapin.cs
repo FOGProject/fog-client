@@ -32,5 +32,7 @@ namespace FOG.Modules.SnapinClient
         public string FileName = "";
         public string Args = "";
         public string Hash = "";
+
+        public bool Hide = false;
     }
 }
