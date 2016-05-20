@@ -18,8 +18,6 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using FOG.Commands;
 
 using Zazzles;
@@ -38,6 +36,8 @@ namespace FOG
 
             _instance = new Zazzles.Debugger.Debugger();
             _instance.AddCommand("module", new ModuleCommand());
+            _instance.AddCommand("dump", new DumpCommand());
+
 
             if (args.Length > 0)
             {
