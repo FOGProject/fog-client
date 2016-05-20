@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Win32.TaskScheduler;
 using Zazzles;
 
@@ -47,7 +46,7 @@ namespace FOG.Modules.GreenFOG
             taskDefinition.Triggers.Add(trigger);
 
             //Create task action
-            var fileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + @"Power.exe");
+            var fileName = Path.Combine(Settings.Location, "Power.exe");
 
             taskDefinition.Actions.Add(restart
                 ? new ExecAction(fileName, "reboot \"This computer is going to reboot.\"")
