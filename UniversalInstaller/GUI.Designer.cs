@@ -279,7 +279,7 @@ namespace FOG
             this.addressTxtBox.Name = "addressTxtBox";
             this.addressTxtBox.Size = new System.Drawing.Size(464, 22);
             this.addressTxtBox.TabIndex = 9;
-            this.addressTxtBox.Text = "fog-server";
+            this.addressTxtBox.Text = "fogserver";
             // 
             // addressLabel
             // 

@@ -205,12 +205,12 @@ namespace FOG
             var company = "FOG";
             var rootLog = "0";
 
-            Log.Write("FOG Server address [default: fog-server]: ");
+            Log.Write("FOG Server address [default: fogserver]: ");
             Console.ForegroundColor = _infoColor;
             var server = Console.ReadLine();
             Console.ResetColor();
             if (string.IsNullOrWhiteSpace(server))
-                server = "fog-server";
+                server = "fogserver";
             
             Log.Write("Webroot [default: /fog]:                  ");
             Console.ForegroundColor = _infoColor;

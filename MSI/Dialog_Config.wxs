@@ -2,7 +2,7 @@
 
 <!--
  FOG Service : A computer management client for the FOG Project
- Copyright (C) 2014-2015 FOG Project
+ Copyright (C) 2014-2016 FOG Project
 
  This program is free software; you can redistribute it and/or
  modify it under the terms of the GNU General Public License
@@ -31,7 +31,7 @@
         <Control Property="USETRAY" Type="CheckBox" Id="UseTray" Width="83" Height="17" X="11" Y="75"
                  Text="Enable FOG Tray" Default="yes" CheckBoxValue="1" TabSkip="yes" />
         <Control Property="WEBADDRESS" Type="Edit" Id="ServerIP" Width="287" Height="15" X="71" Y="22"
-                 Text="fog-server" />
+                 Text="fogserver" />
         <Control Type="Text" Id="ServerIPLabel" Width="60" Height="12" X="8" Y="22" Text="Server Adress:" />
         <Control Type="Text" Id="WEBROOTText" Width="50" Height="17" X="8" Y="49" Text="Web Root:" />
         <Control Property="WEBROOT" Type="Edit" Id="WEBROOTTextBox" Width="287" Height="15" X="71" Y="45" Text="/fog" />
