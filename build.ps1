@@ -1,7 +1,7 @@
 param(
 	[switch]$sign,
 	[switch]$publish,
-	[string]$cert  = $(if ($sign)    { Read-Host "Input signing certificate name"} ),
+	[string]$cert    = $(if ($sign)    { Read-Host "Input signing certificate name"} ),
 	[string]$server  = $(if ($publish) { Read-Host "Input server address"} ),
 	[string]$path    = $(if ($publish) { Read-Host "Input remote path"} ),
 	[string]$user    = $(if ($publish) { Read-Host "Input user name"} ),
