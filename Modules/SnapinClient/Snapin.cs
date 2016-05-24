@@ -34,5 +34,6 @@ namespace FOG.Modules.SnapinClient
         public string Hash = "";
 
         public bool Hide = false;
+        public int TimeOut = -1;
     }
 }

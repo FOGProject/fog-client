@@ -55,7 +55,8 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, $"    Created: {snapin.JobCreation}");
                 Log.Entry(Name, $"    Action: {snapin.Action}");
                 Log.Entry(Name, $"    Hide: {snapin.Hide}");
-
+                Log.Entry(Name, $"    TimeOut: {snapin.TimeOut}");
+                
                 if (!snapin.Hide)
                 {
                     Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
@@ -132,9 +133,23 @@ namespace FOG.Modules.SnapinClient
             {
                 Log.Entry(Name, "Starting snapin...");
                 process.Start();
-                process.WaitForExit();
+
+                if (snapin.TimeOut > 0)
+                {
+                    process.WaitForExit(snapin.TimeOut);
+                    if (!process.HasExited)
+                    {
+                        Log.Entry(Name, "Snapin has exceeded the timeout, killing the process");
+                        process.Kill();
+                    }
+                }
+                else
+                {
+                    process.WaitForExit();
+                }
                 Log.Entry(Name, "Snapin finished");
                 Log.Entry(Name, "Return Code: " + process.ExitCode);
+                process.Dispose();
 
                 Notification.Emit(
                     snapin.Name + " Installed",
