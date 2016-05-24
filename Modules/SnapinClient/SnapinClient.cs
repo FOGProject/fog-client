@@ -136,7 +136,7 @@ namespace FOG.Modules.SnapinClient
 
                 if (snapin.TimeOut > 0)
                 {
-                    process.WaitForExit(snapin.TimeOut);
+                    process.WaitForExit(snapin.TimeOut*1000);
                     if (!process.HasExited)
                     {
                         Log.Entry(Name, "Snapin has exceeded the timeout, killing the process");
