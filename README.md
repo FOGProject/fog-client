@@ -35,10 +35,11 @@ Windows      | Linux       | OSX
 
 To build the entire client (including the Installer) Windows is required. This is due to the MSI for network deployment and the Universal Installer. The following dependencies must be installed and included in PATH
 * [WiX Toolset](http://wixtoolset.org/)
-* Powershell
+* [Powershell / WMF 4.0+](https://www.microsoft.com/en-us/download/details.aspx?id=40855) **(Windows 7 ships with 3.0)**
 * [.NET v4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
-* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) **(Included with Visual Studios 2015)**
-
+* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) **(Included with Visual Studios 2015, add to PATH)**
+* [ILMerge] (https://www.microsoft.com/en-us/download/confirmation.aspx?id=17630) **(Add to PATH)**
+* [Windows SDK 7, .NET 4] (https://www.microsoft.com/en-us/download/details.aspx?id=8279) **(Add to PATH)**
 Powershell must be configured to allow scripts to be run on the machine. Open CMD as adminstrator and run
 ```
 powershell "Set-ExecutionPolicy RemoteSigned"
