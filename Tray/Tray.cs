@@ -18,46 +18,59 @@
  */
 
 using System;
+using System.Drawing;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Zazzles;
 
-namespace FOG.Tray
+namespace FOG
 {
-    public sealed class Tray
+    public sealed class NotificationIcon
     {
-        private static ITray _instance;
-        //private static Thread _trayThread;
+        //Define variables
+        private readonly NotifyIcon _notifyIcon;
 
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
         public static void Main(string[] args)
         {
-            Log.Output = Log.Mode.Quiet;
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
             bool isFirstInstance;
+            // Please use a unique name for the mutex to prevent conflicts with other programs
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
                 if (!isFirstInstance) return;
-            }
+                var notificationIcon = new NotificationIcon();
+                notificationIcon._notifyIcon.Visible = true;
+                Application.Run();
+                notificationIcon._notifyIcon.Dispose();
+            } // releases the Mutex
+        }
 
+        private void IconDoubleClick(object sender, EventArgs e)
+        {
+        }
+
+        public NotificationIcon()
+        {
             Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
 
-            //_trayThread = new Thread(ShowTray);
-            //_trayThread.Start();
-            ShowTray();
+            _notifyIcon = new NotifyIcon();
+            var notificationMenu = new ContextMenu(InitializeMenu());
+
+            _notifyIcon.DoubleClick += IconDoubleClick;
+            _notifyIcon.Icon = new Icon(Path.Combine(Settings.Location, "logo.ico"));
+            _notifyIcon.ContextMenu = notificationMenu;
+            _notifyIcon.Text = "FOG Client v" + Settings.Get("Version");
         }
 
-        private static void ShowTray()
-        {
-            _instance = new WindowsTray(Path.Combine(Settings.Location, "logo.ico"), "FOG Client v" + Settings.Get("Version"));
-        }
-      
         private static void OnUpdate(dynamic data)
         {
             if (data.action == null) return;
@@ -67,14 +80,19 @@ namespace FOG.Tray
         }
 
         //Called when a message is recieved from the bus
-        private static void OnNotification(dynamic data)
+        private void OnNotification(dynamic data)
         {
-            if (data.title == null || data.message == null)
+            if (data.title == null || data.message == null || data.duration == null) return;
+            try
+            {
+                _notifyIcon.BalloonTipTitle = data.title;
+                _notifyIcon.BalloonTipText = data.message;
+                _notifyIcon.ShowBalloonTip(data.duration);
+            }
+            catch (Exception)
+            {
                 return;
-
-            _instance.Notification(data.title, data.message, 10*1000);
-
-            //SpawnGUIThread(data.title.ToString(), data.message.ToString());
+            }
         }
 
         private static MenuItem[] InitializeMenu()
@@ -82,5 +100,6 @@ namespace FOG.Tray
             var menu = new MenuItem[] { };
             return menu;
         }
-    }
+
+     }
 }

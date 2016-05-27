@@ -122,10 +122,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ITray.cs" />
     <Compile Include="Tray.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Windows\WindowsTray.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Tray.resx">
