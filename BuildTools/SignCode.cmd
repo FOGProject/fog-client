@@ -4,13 +4,13 @@ REM IMPORTANT NOTE - The SET statement and the four servers should be all on one
 REM set SERVERLIST=(http://timestamp.comodoca.com/authenticode http://timestamp.verisign.com/scripts/timstamp.dll http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
 set SERVERLIST=(http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
 REM sign the file...
-signtool.exe sign /n "%1" %2
+signtool.exe sign /n "FOG Project" %1
 set timestampErrors=0
 for /L %%a in (1,1,300) do (
     for %%s in %SERVERLIST% do (
         Echo Try %%s
         REM try to timestamp the file. This operation is unreliable and may need to be repeated...
-        signtool.exe timestamp /t %%s %2
+        signtool.exe timestamp /t %%s %1
         REM check the return value of the timestamping operation and retry
         if ERRORLEVEL 0 if not ERRORLEVEL 1 GOTO succeeded
         echo Signing problem - timestamp server %%s

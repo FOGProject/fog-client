@@ -41,12 +41,10 @@
             <File Id="FOGUpdateWaiter" Name="FOGUpdateWaiter.exe" Source="..\bin\FOGUpdateWaiter.exe" />
             <File Id="FOGShutdownGUI" Name="FOGShutdownGUI.exe" Source="..\bin\FOGShutdownGUI.exe"/>
             <File Id="FOGUserService" Name="FOGUserService.exe" Source="..\bin\FOGUserService.exe"/>
-            <File Id="Power" Name="Power.exe" Source="..\bin\Power.exe" />
             
             <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             
-            <File Id="TaskScheduler" Name="Microsoft.Win32.TaskScheduler.dll" Source="..\bin\Microsoft.Win32.TaskScheduler.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\libs\Newtonsoft.Json.dll" />
             <File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll" />
             <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
@@ -62,7 +60,6 @@
             <File Id="FOGUpdateHelperconf" Name="FOGUpdateHelper.exe.config" Source="..\bin\FOGUpdateHelper.exe.config" />
             <File Id="FOGUpdateWaiterconf" Name="FOGUpdateWaiter.exe.config" Source="..\bin\FOGUpdateWaiter.exe.config" />
             <File Id="FOGUserServiceconf" Name="FOGUserService.exe.config" Source="..\bin\FOGUserService.exe.config" />
-            <File Id="Powerconf" Name="Power.exe.config" Source="..\bin\Power.exe.config" />
             <File Id="Zazzlesconf" Name="Zazzles.dll.config" Source="..\bin\Zazzles.dll.config" />
             <File Id="Modulesconf" Name="Modules.dll.config" Source="..\bin\Modules.dll.config" />
             <File Id="FOGServiceconf" Name="FOGService.exe.config" Source="..\bin\FOGService.exe.config" />

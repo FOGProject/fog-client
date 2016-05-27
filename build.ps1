@@ -1,17 +1,16 @@
 param(
 	[switch]$sign,
 	[switch]$publish,
-	[string]$cert    = $(if ($sign)    { Read-Host "Input signing certificate name"} ),
 	[string]$server  = $(if ($publish) { Read-Host "Input server address"} ),
 	[string]$path    = $(if ($publish) { Read-Host "Input remote path"} ),
 	[string]$user    = $(if ($publish) { Read-Host "Input user name"} ),
 	[string]$channel = $(if ($publish) { Read-Host "Input channel(nightly, release-candidate, stable)"} ),
 	[string]$name    = $(if ($publish) { Read-Host "Input build name"} ),
-	[string]$ilMerge = "ilMerge.exe",
+	[string]$ilMerge = "ilmerge.exe",
 	[string]$msbuild = "msbuild.exe",
 	[string]$nuget   = "$PSScriptRoot\.nuget\NuGet.exe",
 	[string]$plink   = "$PSScriptRoot\BuildTools\plink.exe",
-	[string]$pscp    = "$PSScriptRoot\BuildTools\pscsp.exe",
+	[string]$pscp    = "$PSScriptRoot\BuildTools\pscp.exe",
 	[string]$signer  = "$PSScriptRoot\BuildTools\SignCode.cmd",
 	[string]$sshKey  = "$PSScriptRoot\BuildTools\auth.ppk",
 	[string]$netPath = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319"
@@ -44,21 +43,20 @@ $installerConfig = "$PSScriptRoot\UniversalInstaller\UniversalInstaller.csproj $
 $msiConfig       = "$PSScriptRoot\MSI\MSI.wixproj $buildMode"
 $trayConfig      = "$PSScriptRoot\Tray\Tray.csproj"
 $toSign          = "Zazzles.dll", "Modules.dll", "FOGService.exe", "FOGShutdownGUI.exe", "FOGUpdateHelper.exe", "FOGUpdateWaiter.exe", "FOGUserService.exe", "FOGTray.exe"
-$signExec        = "cmd.exe /c ""$signer"" ""$cert"" ""$PSScriptRoot\"
+$signExec        = "cmd.exe /c ""$signer"" ""$PSScriptRoot\"
 
 $plinkConfig     = "-i ""$sshKey"" $user@$server mkdir $path" + "$channel" + "/" + "$name"
 $pscpConfig      = "-i ""$sshKey"" -r $PSScriptRoot\out\* $user" + "@" + "$server" + ":" + "$path$channel" + "/" + "$name"
 
 
-$smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
-
-$debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0,""$netPath"" /out:""$PSScriptRoot\out\Debugger.exe"" `
-					""$PSScriptRoot\bin\Debugger.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" `
-					""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"" `
-					""$PSScriptRoot\bin\Modules.dll"" ""$PSScriptRoot\bin\EngineIoClientDotNet.dll"" `
-					""$PSScriptRoot\bin\log4net.dll"" ""$PSScriptRoot\bin\ProcessPrivileges.dll"" `
-					""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\SuperSocket.SocketBase.dll"" `
-					""$PSScriptRoot\bin\WebSocket4Net.dll"" ""$PSScriptRoot\bin\EngineIoClientDotNet.dll"""
+$smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
+$debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\Debugger.exe"" " + `
+					"""$PSScriptRoot\bin\Debugger.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" " + `
+					"""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"" " + `
+					"""$PSScriptRoot\bin\Modules.dll"" ""$PSScriptRoot\bin\EngineIoClientDotNet.dll"" " + `
+					"""$PSScriptRoot\bin\log4net.dll"" ""$PSScriptRoot\bin\ProcessPrivileges.dll"" " + `
+					"""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\SuperSocket.SocketBase.dll"" " + `
+					"""$PSScriptRoot\bin\WebSocket4Net.dll"""
 
 $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", "FOGShutdownGUI.exe", `
 			"FOGShutdownGUI.exe.config", "FOGTray.exe", "FOGTray.exe.config", "FOGUpdateHelper.exe", `
@@ -126,7 +124,7 @@ Invoke-Expression ($msbuild + $installerConfig) | out-null
 
 
 Write-Host "ILMerging Installer"
-Invoke-Expression ($ilMerge + $smartInstallerMerge) | out-null
+Invoke-Expression ($ilMerge + $smartInstallerMerge )
 
 if ($sign) {
 	Write-Host "Sigining Smart Installer"
@@ -137,11 +135,21 @@ if ($sign) {
 # Build Debugger
 ##################################################
 Write-Host "ILMerging Debugger"
-Invoke-Expression ($ilMerge + $debuggerMerge) | out-null
+Invoke-Expression ($ilMerge + $debuggerMerge)
 
 if ($sign) {
 	Write-Host "Sigining Debugger"
 	Invoke-Expression($signExec + "out\Debugger.exe""") | out-null
+}
+
+##################################################
+# Build PrinterManager Helper
+##################################################
+Copy-Item "$PSScriptRoot\bin\PrinterManagerHelper.exe" "$PSScriptRoot\out\PrinterManagerHelper.exe"
+
+if ($sign) {
+	Write-Host "Sigining PrinterManager Helper"
+	Invoke-Expression($signExec + "out\PrinterManagerHelper.exe""") | out-null
 }
 
 
