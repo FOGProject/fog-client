@@ -112,7 +112,17 @@ namespace FOG.Modules.PrinterManager
         {
             try
             {
-                return _instance.GetPrinters().Contains(name);
+                var printerList = _instance.GetPrinters();
+                if (printerList.Contains(name))
+                    return true;
+
+                const string copyWord = "(Copy";
+                if (printerList.Where(printer => printer.Contains(copyWord))
+                    .Select(printer => printer.Substring(0, printer.IndexOf(copyWord)).Trim())
+                    .Any(rawName => rawName.Equals(name)))
+                {
+                    return true;
+                }
             }
             catch (Exception ex)
             {
