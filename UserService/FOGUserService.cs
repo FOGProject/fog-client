@@ -86,7 +86,7 @@ namespace FOG
                 var data = new JObject
                 {
                     ["autologout"] = new JObject { ["time"] = alo },
-                    ["printermanager"] = new JObject { ["default"] = printer }
+                    ["printermanager"] = new JObject { ["name"] = printer }
                 };
                 return new Response(data, false);
             }
