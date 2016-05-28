@@ -125,7 +125,6 @@ namespace FOG.Modules.SnapinClient
             Notification.Emit(
                 "Installing " + snapin.Name,
                 "Please do not shutdown until this is completed",
-                $"snapin-{snapin.Name}",
                 true);
 
             var process = GenerateProcess(snapin, snapinPath);
@@ -154,7 +153,6 @@ namespace FOG.Modules.SnapinClient
                 Notification.Emit(
                     snapin.Name + " Installed",
                     "Installation has finished and is now ready for use",
-                    $"snapin-{snapin.Name}", 
                     true);
 
                 return process.ExitCode.ToString();
