@@ -30,7 +30,7 @@ namespace FOG
     {
         //Define variables
         private readonly NotifyIcon _notifyIcon;
-
+        private const int DURATION =  10 * 1000;
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
@@ -82,12 +82,12 @@ namespace FOG
         //Called when a message is recieved from the bus
         private void OnNotification(dynamic data)
         {
-            if (data.title == null || data.message == null || data.duration == null) return;
+            if (data.title == null || data.message == null) return;
             try
             {
                 _notifyIcon.BalloonTipTitle = data.title;
                 _notifyIcon.BalloonTipText = data.message;
-                _notifyIcon.ShowBalloonTip(data.duration);
+                _notifyIcon.ShowBalloonTip(DURATION);
             }
             catch (Exception)
             {
