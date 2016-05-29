@@ -1,6 +1,6 @@
 /*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -64,6 +64,11 @@ namespace FOG.Modules.PrinterManager
         }
 
         public override void Default(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Configure(Printer printer)
         {
             throw new NotImplementedException();
         }

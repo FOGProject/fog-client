@@ -76,29 +76,27 @@ namespace FOG.Modules.PrinterManager
             foreach (var printer in msg.Printers)
             {
                 if (!PrinterExists(printer.Name))
+                {
                     printer.Add(_instance);
+                    CleanPrinter(printer.Name);
+                }
                 else
+                {
                     Log.Entry(Name, printer.Name + " already exists");
+                    CleanPrinter(printer.Name);
+                }
+                _instance.Configure(printer);
             }
         }
 
         private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg)
         {
-            Log.Debug(Name, "Removing extra printers...");
-
-            Log.Debug(Name, "Stripping printer data");
-
-            var managedPrinters = new List<string>();
-            foreach (var printer in newPrinters.Where(printer => printer != null))
-            {
-                Log.Debug(Name, "Stripping " + printer.Name);
-                managedPrinters.Add(printer.Name);
-            }
+            var managedPrinters = newPrinters.Where(printer => printer != null).Select(printer => printer.Name).ToList();
 
             if (!msg.Mode.Equals("ar"))
             {
                 foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
-                    _instance.Remove(name);
+                    CleanPrinter(name, true);
             }
             else
             {
@@ -113,16 +111,7 @@ namespace FOG.Modules.PrinterManager
             try
             {
                 var printerList = _instance.GetPrinters();
-                if (printerList.Contains(name))
-                    return true;
-
-                const string copyWord = "(Copy";
-                if (printerList.Where(printer => printer.Contains(copyWord))
-                    .Select(printer => printer.Substring(0, printer.IndexOf(copyWord)).Trim())
-                    .Any(rawName => rawName.Equals(name)))
-                {
-                    return true;
-                }
+                return printerList.Contains(name);
             }
             catch (Exception ex)
             {
@@ -131,6 +120,22 @@ namespace FOG.Modules.PrinterManager
             }
 
             return false;
+        }
+
+        private void CleanPrinter(string name, bool cleanOriginal = false)
+        {
+            var printerList = _instance.GetPrinters();
+
+            const string copyWord = "(Copy";
+            var matches = printerList.Where(printer => printer.Contains(copyWord)).ToList();
+
+            if(cleanOriginal && printerList.Contains(name))
+                matches.Add(name);
+
+            foreach (var printer in matches.Select(match => new Printer { Name = match }))
+            {
+                printer.Remove(_instance);
+            }
         }
     }
 }

@@ -30,21 +30,6 @@ namespace FOG.Modules.PrinterManager
 
         public void Add(Printer printer)
         {
-            Log.Entry(LogName, "Attempting to add printer:");
-
-            if (printer.Name != null)
-                Log.Entry(LogName, $"--> Name = {printer.Name}");
-            if (printer.IP != null)
-                Log.Entry(LogName, $"--> IP = {printer.IP}");
-            if (printer.Port != null)
-                Log.Entry(LogName, $"--> Port = {printer.Port}");
-            if (printer.File != null)
-                Log.Entry(LogName, $"--> File = {printer.File}");
-            if (printer.ConfigFile != null)
-                Log.Entry(LogName, $"--> Config = {printer.ConfigFile}");
-            if (printer.Model != null)
-                Log.Entry(LogName, $"--> Model = {printer.Model}");
-
             try
             {
                 switch (printer.Type)
@@ -76,5 +61,6 @@ namespace FOG.Modules.PrinterManager
         protected abstract void AddCUPS(Printer printer);
         public abstract void Remove(string name);
         public abstract void Default(string name);
+        public abstract void Configure(Printer printer);
     }
 }

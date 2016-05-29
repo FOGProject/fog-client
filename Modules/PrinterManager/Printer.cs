@@ -49,6 +49,7 @@ namespace FOG.Modules.PrinterManager
 
         public void Remove(PrintManagerBridge instance)
         {
+            Log.Entry("Printer", "Removing printer: " + Name);
             try
             {
                 instance.Remove(Name);
@@ -75,6 +76,20 @@ namespace FOG.Modules.PrinterManager
 
         public void Add(PrintManagerBridge instance)
         {
+            Log.Entry("Printer", "Adding printer: " + Name);
+            if (Name != null)
+                Log.Entry(LogName, $"--> Name = {Name}");
+            if (IP != null)
+                Log.Entry(LogName, $"--> IP = {IP}");
+            if (Port != null)
+                Log.Entry(LogName, $"--> Port = {Port}");
+            if (File != null)
+                Log.Entry(LogName, $"--> File = {File}");
+            if (ConfigFile != null)
+                Log.Entry(LogName, $"--> Config = {ConfigFile}");
+            if (Model != null)
+                Log.Entry(LogName, $"--> Model = {Model}");
+
             try
             {
                 instance.Add(this);

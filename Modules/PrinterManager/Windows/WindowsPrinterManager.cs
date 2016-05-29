@@ -22,7 +22,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
-using System.Runtime.InteropServices;
 using Zazzles;
 
 namespace FOG.Modules.PrinterManager
@@ -35,8 +34,20 @@ namespace FOG.Modules.PrinterManager
         {
             try
             {
-                var proc = Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry {cmdLine}");
-                proc?.WaitForExit(30*1000);
+                using (var proc = Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry {cmdLine}"))
+                {
+                    proc.WaitForExit(30*1000);
+
+                    if (proc.HasExited)
+                    {
+                        Log.Entry(LogName, "PrintUI return code = " + proc.ExitCode);
+                    }
+                    else
+                    {
+                        Log.Entry(LogName, "PrintUI has not finished in a timely fashion, abandoning process");
+
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -76,11 +87,6 @@ namespace FOG.Modules.PrinterManager
                 AddIPPort(printer, "9100");
 
             PrintUI($"/if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
-
-            if (!string.IsNullOrEmpty(printer.ConfigFile))
-            {
-                PrintUI($"/Sr /q /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p");
-            }
         }
 
         protected override void AddNetwork(Printer printer)
@@ -98,13 +104,21 @@ namespace FOG.Modules.PrinterManager
 
         public override void Remove(string name)
         {
-            Log.Entry("Printer", "Removing printer: " + name);
             PrintUI(name.StartsWith("\\\\") ? $"/gd /q /n \"{name}\"" : $"/dl /q /n \"{name}\"");
         }
 
         public override void Default(string name)
         {
             PrintUI($"/y /n \"{name}\"");
+        }
+
+        public override void Configure(Printer printer)
+        {
+            if (!string.IsNullOrEmpty(printer.ConfigFile))
+            {
+                Log.Entry(LogName, "Configuring " + printer.Name);
+                PrintUI($"/Sr /q /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p");
+            }
         }
 
         private void AddIPPort(Printer printer, string remotePort)
