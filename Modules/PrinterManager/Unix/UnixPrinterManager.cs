@@ -23,7 +23,7 @@ using Zazzles;
 
 namespace FOG.Modules.PrinterManager
 {
-    internal class UnixPrinterManager : PrintManagerBridge
+    public class UnixPrinterManager : PrintManagerBridge
     {
         public override List<string> GetPrinters()
         {
@@ -32,22 +32,22 @@ namespace FOG.Modules.PrinterManager
             return new List<string>(stdout);
         }
 
-        protected override void AddiPrint(Printer printer)
+        protected override void AddiPrint(Printer printer, bool verbose = false)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddLocal(Printer printer)
+        protected override void AddLocal(Printer printer, bool verbose = false)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddNetwork(Printer printer)
+        protected override void AddNetwork(Printer printer, bool verbose = false)
         {
             throw new NotImplementedException();
         }
 
-        protected override void AddCUPS(Printer printer)
+        protected override void AddCUPS(Printer printer, bool verbose = false)
         {
             string[] stdout;
             ProcessHandler.Run("echo", $"{printer.Name} | tr ' ' '_'", true, out stdout);
@@ -58,17 +58,17 @@ namespace FOG.Modules.PrinterManager
                 $"-p {portName} -E -v {lpdAddress} -P {printer.File} -D {printer.Name}");
         }
 
-        public override void Remove(string name)
+        public override void Remove(string name, bool verbose = false)
         {
             ProcessHandler.Run("lpstat", $"- -P {name}");
         }
 
-        public override void Default(string name)
+        public override void Default(string name, bool verbose = false)
         {
             throw new NotImplementedException();
         }
 
-        public override void Configure(Printer printer)
+        public override void Configure(Printer printer, bool verbose = false)
         {
             throw new NotImplementedException();
         }

@@ -47,12 +47,12 @@ namespace FOG.Modules.PrinterManager
         [JsonConverter(typeof (StringEnumConverter))]
         public PrinterType Type;
 
-        public void Remove(PrintManagerBridge instance)
+        public void Remove(PrintManagerBridge instance, bool verbose = false)
         {
             Log.Entry("Printer", "Removing printer: " + Name);
             try
             {
-                instance.Remove(Name);
+                instance.Remove(Name, verbose);
             }
             catch (Exception ex)
             {
@@ -61,12 +61,12 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        public void SetDefault(PrintManagerBridge instance)
+        public void SetDefault(PrintManagerBridge instance, bool verbose = false)
         {
             Log.Entry("Printer", "Setting default: " + Name);
             try
             {
-                instance.Default(Name);
+                instance.Default(Name, verbose);
             }
             catch (Exception ex)
             {
@@ -74,7 +74,7 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        public void Add(PrintManagerBridge instance)
+        public void Add(PrintManagerBridge instance, bool verbose = false)
         {
             Log.Entry("Printer", "Adding printer: " + Name);
             if (Name != null)
@@ -92,7 +92,7 @@ namespace FOG.Modules.PrinterManager
 
             try
             {
-                instance.Add(this);
+                instance.Add(this, verbose);
             }
             catch (Exception ex)
             {

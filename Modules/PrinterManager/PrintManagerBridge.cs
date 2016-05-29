@@ -28,23 +28,23 @@ namespace FOG.Modules.PrinterManager
         private const string LogName = "Printer";
         public abstract List<string> GetPrinters();
 
-        public void Add(Printer printer)
+        public void Add(Printer printer, bool verbose = false)
         {
             try
             {
                 switch (printer.Type)
                 {
                     case Printer.PrinterType.iPrint:
-                        AddiPrint(printer);
+                        AddiPrint(printer, verbose);
                         break;
                     case Printer.PrinterType.Local:
-                        AddLocal(printer);
+                        AddLocal(printer,verbose);
                         break;
                     case Printer.PrinterType.Network:
-                        AddNetwork(printer);
+                        AddNetwork(printer, verbose);
                         break;
                     case Printer.PrinterType.CUPS:
-                        AddCUPS(printer);
+                        AddCUPS(printer, verbose);
                         break;
                 }
             }
@@ -55,12 +55,12 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected abstract void AddiPrint(Printer printer);
-        protected abstract void AddLocal(Printer printer);
-        protected abstract void AddNetwork(Printer printer);
-        protected abstract void AddCUPS(Printer printer);
-        public abstract void Remove(string name);
-        public abstract void Default(string name);
-        public abstract void Configure(Printer printer);
+        protected abstract void AddiPrint(Printer printer, bool verbose = false);
+        protected abstract void AddLocal(Printer printer, bool verbose = false);
+        protected abstract void AddNetwork(Printer printer, bool verbose = false);
+        protected abstract void AddCUPS(Printer printer, bool verbose = false);
+        public abstract void Remove(string name, bool verbose = false);
+        public abstract void Default(string name, bool verbose = false);
+        public abstract void Configure(Printer printer, bool verbose = false);
     }
 }

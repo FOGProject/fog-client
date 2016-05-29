@@ -26,12 +26,15 @@ using Zazzles;
 
 namespace FOG.Modules.PrinterManager
 {
-    internal class WindowsPrinterManager : PrintManagerBridge
+    public class WindowsPrinterManager : PrintManagerBridge
     {
         private const string LogName = "PrinterManager";
 
-        private void PrintUI(string cmdLine)
+        private void PrintUI(string cmdLine, bool verbose = false)
         {
+            if (!verbose)
+                cmdLine = cmdLine + " /q";
+
             try
             {
                 using (var proc = Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry {cmdLine}"))
@@ -64,7 +67,7 @@ namespace FOG.Modules.PrinterManager
                     select printer.GetPropertyValue("name").ToString()).ToList();
         }
 
-        protected override void AddiPrint(Printer printer)
+        protected override void AddiPrint(Printer printer, bool verbose = false)
         {
             var proc = new Process
             {
@@ -81,43 +84,43 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(LogName, "Return code " + proc.ExitCode);
         }
 
-        protected override void AddLocal(Printer printer)
+        protected override void AddLocal(Printer printer, bool verbose = false)
         {
             if (printer.IP != null)
                 AddIPPort(printer, "9100");
 
-            PrintUI($"/if /q /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"");
+            PrintUI($"/if /b \"{printer.Name}\" /f \"{printer.File}\" /r \"{printer.Port}\" /m \"{printer.Model}\"", verbose);
         }
 
-        protected override void AddNetwork(Printer printer)
+        protected override void AddNetwork(Printer printer, bool verbose = false)
         {
             // Add per machine printer connection
-            PrintUI($"/ga /n \"{printer.Name}\"");
+            PrintUI($"/ga /n \"{printer.Name}\"", verbose);
             // Add printer network connection, download the drivers from the print server
-            PrintUI($"/in /n \"{printer.Name}\"");
+            PrintUI($"/in /n \"{printer.Name}\"", verbose);
         }
 
-        protected override void AddCUPS(Printer printer)
+        protected override void AddCUPS(Printer printer, bool verbose = false)
         {
             throw new NotImplementedException();
         }
 
-        public override void Remove(string name)
+        public override void Remove(string name, bool verbose = false)
         {
-            PrintUI(name.StartsWith("\\\\") ? $"/gd /q /n \"{name}\"" : $"/dl /q /n \"{name}\"");
+            PrintUI(name.StartsWith("\\\\") ? $"/gd /n \"{name}\"" : $"/dl /q /n \"{name}\"", verbose);
         }
 
-        public override void Default(string name)
+        public override void Default(string name, bool verbose = false)
         {
-            PrintUI($"/y /n \"{name}\"");
+            PrintUI($"/y /n \"{name}\"", verbose);
         }
 
-        public override void Configure(Printer printer)
+        public override void Configure(Printer printer, bool verbose = false)
         {
             if (!string.IsNullOrEmpty(printer.ConfigFile))
             {
                 Log.Entry(LogName, "Configuring " + printer.Name);
-                PrintUI($"/Sr /q /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p");
+                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
             }
         }
 
