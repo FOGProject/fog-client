@@ -82,40 +82,43 @@ namespace FOG.Modules.SnapinClient
                 var exitCode = "-1";
 
                 //If the file downloaded successfully then run the snapin and report to FOG what the exit code was
-                if (downloaded)
+                if (!downloaded)
                 {
-                    var sha512 = Hash.SHA512(snapinFilePath);
-                    if (!sha512.ToUpper().Equals(snapin.Hash.ToUpper()))
-                    {
-                        Log.Error(Name, "Hash does not match");
-                        Log.Error(Name, "--> Ideal: " + snapin.Hash);
-                        Log.Error(Name, "--> Actual: " + sha512);
-                        Communication.Contact($"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
-                        return;
-                    }
-                    exitCode = StartSnapin(snapin, snapinFilePath);
-                    if (File.Exists(snapinFilePath))
-                        File.Delete(snapinFilePath);
-
                     Communication.Contact(
                         $"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
-
-                    if (snapin.Action.ToLower().Equals("reboot"))
-                    {
-                        Power.Restart("Snapin requested restart", Power.ShutdownOptions.Delay,
-                            "This computer needs to reboot to apply new software.");
-                        break;
-                    }
-                    else if (snapin.Action.ToLower().Equals("shutdown"))
-                    {
-                        Power.Shutdown("Snapin requested shutdown", Power.ShutdownOptions.Delay,
-                            "This computer needs to shutdown to apply new software.");
-                        break;
-                    }
+                    return;
                 }
-                else
-                    Communication.Contact(
-                        $"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
+
+                var sha512 = Hash.SHA512(snapinFilePath);
+                if (!sha512.ToUpper().Equals(snapin.Hash.ToUpper()))
+                {
+                    Log.Error(Name, "Hash does not match");
+                    Log.Error(Name, "--> Ideal: " + snapin.Hash);
+                    Log.Error(Name, "--> Actual: " + sha512);
+                    Communication.Contact($"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
+                    return;
+                }
+
+                exitCode = StartSnapin(snapin, snapinFilePath);
+                if (File.Exists(snapinFilePath))
+                    File.Delete(snapinFilePath);
+
+                Communication.Contact(
+                    $"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
+
+                if (snapin.Action.ToLower().Equals("reboot"))
+                {
+                    Power.Restart("Snapin requested restart", Power.ShutdownOptions.Delay,
+                        "This computer needs to reboot to apply new software.");
+                    break;
+                }
+                else if (snapin.Action.ToLower().Equals("shutdown"))
+                {
+                    Power.Shutdown("Snapin requested shutdown", Power.ShutdownOptions.Delay,
+                        "This computer needs to shutdown to apply new software.");
+                    break;
+                }
+
             }
         }
 
@@ -127,40 +130,43 @@ namespace FOG.Modules.SnapinClient
                 "Please do not shutdown until this is completed",
                 true);
 
-            var process = GenerateProcess(snapin, snapinPath);
-            try
+            using (var process = GenerateProcess(snapin, snapinPath))
             {
-                Log.Entry(Name, "Starting snapin...");
-                process.Start();
-
-                if (snapin.TimeOut > 0)
+                try
                 {
-                    process.WaitForExit(snapin.TimeOut*1000);
-                    if (!process.HasExited)
+                    Log.Entry(Name, "Starting snapin...");
+                    process.Start();
+
+                    if (snapin.TimeOut > 0)
                     {
-                        Log.Entry(Name, "Snapin has exceeded the timeout, killing the process");
-                        process.Kill();
+                        process.WaitForExit(snapin.TimeOut*1000);
+                        if (!process.HasExited)
+                        {
+                            Log.Entry(Name, "Snapin has exceeded the timeout, killing the process");
+                            process.Kill();
+                        }
                     }
+                    else
+                    {
+                        process.WaitForExit();
+                    }
+                    Log.Entry(Name, "Snapin finished");
+                    var returnCode = process.ExitCode;
+
+                    Log.Entry(Name, "Return Code: " + returnCode);
+
+                    Notification.Emit(
+                        snapin.Name + " Installed",
+                        "Installation has finished and is now ready for use",
+                        true);
+
+                    return returnCode.ToString();
                 }
-                else
+                catch (Exception ex)
                 {
-                    process.WaitForExit();
+                    Log.Error(Name, "Could not run snapin");
+                    Log.Error(Name, ex);
                 }
-                Log.Entry(Name, "Snapin finished");
-                Log.Entry(Name, "Return Code: " + process.ExitCode);
-                process.Dispose();
-
-                Notification.Emit(
-                    snapin.Name + " Installed",
-                    "Installation has finished and is now ready for use",
-                    true);
-
-                return process.ExitCode.ToString();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Could not start snapin");
-                Log.Error(Name, ex);
             }
 
             return "-1";
