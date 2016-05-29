@@ -168,8 +168,8 @@ Global
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.ActiveCfg = Release|Any CPU
-		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.Build.0 = Release|Any CPU
+		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.ActiveCfg = Release|x86
+		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,6 +19,7 @@
 
 using System;
 using FOG.Modules.AutoLogOut;
+using FOG.Modules.DisplayManager;
 using FOG.Modules.PrinterManager;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -68,7 +69,8 @@ namespace FOG
             return new IModule[]
             {
                 new AutoLogOut(),
-                new DefaultPrinterManager()
+                new DefaultPrinterManager(),
+                new DisplayManager()
             };
         }
 
