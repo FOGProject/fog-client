@@ -205,9 +205,9 @@ namespace FOG
             }
 
             var promptTime = SandBoxParse(response, "promptTime", MIN_PROMPT, MAX_PROMPT, MIN_PROMPT);
-            Settings.Set("PromptTime", promptTime);
+            Settings.Set("PromptTime", promptTime.ToString());
             var sleep = SandBoxParse(response, "sleep", MIN_SLEEP_TIME, MAX_SLEEP_TIME, DEFAULT_SLEEP_TIME);
-            Settings.Set("Sleep", sleep);
+            Settings.Set("Sleep", sleep.ToString());
 
             return sleep;
         }
