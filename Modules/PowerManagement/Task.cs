@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,13 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.GreenFOG
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+namespace FOG.Modules.PowerManagement
 {
-    internal interface IGreen
+    public class Task
     {
-        void AddTask(int min, int hour, bool restart);
-        void RemoveTask(int min, int hour, bool restart);
-        void Reload();
-        void ClearAll();
+        public string CRONTask;
+
+        [JsonConverter(typeof(StringEnumConverter))]
+        public PowerManagement.PowerAction Action;
+
     }
 }

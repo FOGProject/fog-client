@@ -1,7 +1,7 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
  * Copyright (C) 2014-2016 FOG Project
- *
+ * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 3
@@ -17,12 +17,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.GreenFOG
+using System.Collections.Generic;
+
+namespace FOG.Modules.PowerManagement
 {
-    public class Task
+    public class PowerManagementMessage
     {
-        public int Min = -1;
-        public int Hour = -1;
-        public string Action = "";
+        public List<Task> Tasks = new List<Task>();
+        public PowerManagement.PowerAction OnDemandAction;
     }
 }
