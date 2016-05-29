@@ -23,16 +23,19 @@ using System.IO;
 using System.Linq;
 using System.Management;
 using System.Windows.Forms;
+using FOG.Modules.PrinterManager;
 
 namespace PrinterManagerHelper
 {
     public partial class Form1 : Form
     {
         private Dictionary<string, ManagementBaseObject> _printers;
-
+        private PrintManagerBridge _instance;
+        
         public Form1()
         {
             InitializeComponent();
+            _instance = new WindowsPrinterManager();
 
             _printers = GetPrinters();
 
@@ -142,6 +145,89 @@ namespace PrinterManagerHelper
             ipText.Text = GetPrinterIP(printer) ?? "NA";
             modelText.Text = printer.GetPropertyValue("DriverName")?.ToString() ?? "NA";
             driverText.Text = GetPrinterDriver(printer) ?? "NA";
+        }
+
+        private void typeCombo_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ClearAll();
+
+            if (typeCombo.SelectedItem.Equals("TCP/IP"))
+            {
+                aliasBox.ReadOnly = false;
+                ipBox.ReadOnly = false;
+                portBox.ReadOnly = false;
+                modelBox.ReadOnly = false;
+                driverBox.ReadOnly = false;
+            }
+            else if (typeCombo.SelectedItem.Equals("Network"))
+            {
+                aliasBox.ReadOnly = false;
+                ipBox.ReadOnly = true;
+                portBox.ReadOnly = true;
+                modelBox.ReadOnly = true;
+                driverBox.ReadOnly = true;
+            }
+            else if (typeCombo.SelectedItem.Equals("iPrint"))
+            {
+                aliasBox.ReadOnly = false;
+                ipBox.ReadOnly = true;
+                portBox.ReadOnly = false;
+                modelBox.ReadOnly = true;
+                driverBox.ReadOnly = true;
+            }
+        }
+
+        private void ClearAll()
+        {
+            aliasBox.Clear();
+            ipBox.Clear();
+            portBox.Clear();
+            modelBox.Clear();
+            driverBox.Clear();
+        }
+
+        private void addButton_Click(object sender, EventArgs e)
+        {
+            aliasBox.Enabled = false;
+            ipBox.Enabled = false;
+            portBox.Enabled = false;
+            modelBox.Enabled = false;
+            driverBox.Enabled = false;
+            typeCombo.Enabled = false;
+
+
+            // Create the printer
+            var printer = new Printer
+            {
+                Name = aliasBox.Text,
+                File = driverBox.Text,
+                IP = ipBox.Text,
+                Port = portBox.Text,
+                Model = modelBox.Text
+            };
+
+            if (typeCombo.SelectedItem.Equals("TCP/IP"))
+            {
+                printer.Type = Printer.PrinterType.Local;
+            }
+            else if (typeCombo.SelectedItem.Equals("Network"))
+            {
+                printer.Type = Printer.PrinterType.Network;
+
+            }
+            else if (typeCombo.SelectedItem.Equals("iPrint"))
+            {
+                printer.Type = Printer.PrinterType.iPrint;
+            }
+
+            printer.Add(_instance, true);
+
+            aliasBox.Enabled = true;
+            ipBox.Enabled = true;
+            portBox.Enabled = true;
+            modelBox.Enabled = true;
+            driverBox.Enabled = true;
+            typeCombo.Enabled = true;
         }
     }
 }
