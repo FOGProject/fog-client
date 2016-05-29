@@ -81,14 +81,24 @@ namespace FOG
                 Settings.Reload();
 
                 var alo = -1;
+                var displayX = -1;
+                var displayY = -1;
+                var displayR = -1;
                 var printer = "";
+
                 int.TryParse(Settings.Get("ALOTime"), out alo);
                 printer = Settings.Get("DefaultPrinter");
+                int.TryParse(Settings.Get("DisplayX"), out displayX);
+                int.TryParse(Settings.Get("DisplayY"), out displayY);
+                int.TryParse(Settings.Get("DisplayR"), out displayR);
+
 
                 var data = new JObject
                 {
                     ["autologout"] = new JObject { ["time"] = alo },
                     ["printermanager"] = new JObject { ["name"] = printer }
+                    ["displaymanager"] = new JObject { ["x"] = displayX, ["y"] = displayY, ["r"] = displayR }
+
                 };
                 return new Response(data, false);
             }
