@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -19,8 +19,8 @@
 
 using System.Collections.Generic;
 using FOG.Modules.AutoLogOut;
-using FOG.Modules.GreenFOG;
 using FOG.Modules.HostnameChanger;
+using FOG.Modules.PowerManagement;
 using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
@@ -38,7 +38,7 @@ namespace FOG.Commands
         private readonly Dictionary<string, IModule> _modules = new Dictionary<string, IModule>
         {
             {"autologout", new AutoLogOut()},
-            {"greenfog", new GreenFOG()},
+            {"powermanagement", new PowerManagement()},
             {"hostnamechanger", new HostnameChanger()},
             {"printermanager", new PrinterManager()},
             {"snapinclient", new SnapinClient()},
