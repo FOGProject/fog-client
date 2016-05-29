@@ -48,7 +48,7 @@ $signExec        = "cmd.exe /c ""$signer"" ""$PSScriptRoot\"
 $plinkConfig     = "-i ""$sshKey"" $user@$server mkdir $path" + "$channel" + "/" + "$name"
 $pscpConfig      = "-i ""$sshKey"" -r $PSScriptRoot\out\* $user" + "@" + "$server" + ":" + "$path$channel" + "/" + "$name"
 
-
+$printerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Modules.dll"""
 $smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
 $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\Debugger.exe"" " + `
 					"""$PSScriptRoot\bin\Debugger.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" " + `
@@ -123,7 +123,7 @@ Write-Host "Building Smart Installer"
 Invoke-Expression ($msbuild + $installerConfig) | out-null
 
 
-Write-Host "ILMerging Installer"
+Write-Host "ILMerging Smart Installer"
 Invoke-Expression ($ilMerge + $smartInstallerMerge )
 
 if ($sign) {
@@ -145,7 +145,8 @@ if ($sign) {
 ##################################################
 # Build PrinterManager Helper
 ##################################################
-Copy-Item "$PSScriptRoot\bin\PrinterManagerHelper.exe" "$PSScriptRoot\out\PrinterManagerHelper.exe"
+Write-Host "ILMerging PrinterManagerHelper"
+Invoke-Expression ($ilMerge + $printerMerge)
 
 if ($sign) {
 	Write-Host "Sigining PrinterManager Helper"
