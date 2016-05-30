@@ -61,6 +61,7 @@ namespace FOG
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
+            Bus.Subscribe(Bus.Channel.Status, OnStatus);
 
             _notifyIcon = new NotifyIcon();
             var notificationMenu = new ContextMenu(InitializeMenu());
@@ -93,6 +94,13 @@ namespace FOG
             {
                 return;
             }
+        }
+
+        private void OnStatus(dynamic data)
+        {
+            if (data.action == null) return;
+            if (data.action.toString().Equals("unload"))
+                Application.Exit();
         }
 
         private static MenuItem[] InitializeMenu()
