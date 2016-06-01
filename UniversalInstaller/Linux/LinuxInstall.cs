@@ -52,8 +52,6 @@ namespace FOG
             Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
 
-            Helper.CreateRuntime();
-
             return AddControlScripts();
         }
 

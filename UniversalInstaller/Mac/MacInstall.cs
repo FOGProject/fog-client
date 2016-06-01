@@ -63,9 +63,6 @@ namespace FOG
             ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
 
-
-            Helper.CreateRuntime();
-
             return true;
         }
 

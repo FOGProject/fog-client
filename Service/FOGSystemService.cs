@@ -112,15 +112,6 @@ namespace FOG
                 Log.Error(Name, "Could not clear last session data");
                 Log.Error(Name, ex);
             }
-            
-            // Update the Runtime variable
-            var runtimeFile = Path.Combine(Settings.Location, "runtime");
-
-            if (File.Exists(runtimeFile))
-            {
-                var runtime = File.ReadAllText(runtimeFile).Trim();
-                Settings.Set("Runtime", runtime);
-            }
 
             Bus.SetMode(Bus.Mode.Server);
 
