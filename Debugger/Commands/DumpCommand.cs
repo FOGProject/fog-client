@@ -72,7 +72,7 @@ namespace FOG.Commands
 
         private void Help()
         {
-            Log.WriteLine("Available modules");
+            Log.WriteLine("Available commands");
             Log.WriteLine("--> cycle");
             Log.WriteLine("--> cycle save");
         }
