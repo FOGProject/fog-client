@@ -16,9 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
-//  Created by Thomas Sealy on 5/30/16.
-//  Copyright © 2016 freeghost.org. All rights reserved.
-//
+
 
 #import "FOGUtilities.h"
 #import <SocketRocket/SRWebSocket.h>
@@ -93,13 +91,13 @@
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didFailWithError:(NSError *)error {
-    [self performSelector:@selector(startWSClient) withObject:self afterDelay:60.0 ];
-    [self startWSClient];
+    NSLog(@"Failed Connecting to Bus, trying again in 30 sec");
+    [self performSelector:@selector(startWSClient) withObject:self afterDelay:30.0 ];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didCloseWithCode:(NSInteger)code reason:(NSString *)reason wasClean:(BOOL)wasClean {
-    [self performSelector:@selector(startWSClient) withObject:self afterDelay:60.0 ];
-    [self startWSClient];
+    NSLog(@"Disconnected from Bus, trying again in 30 sec");
+    [self performSelector:@selector(startWSClient) withObject:self afterDelay:30.0 ];
 }
 
 - (void)webSocket:(SRWebSocket *)webSocket didReceiveMessage:(id)message {

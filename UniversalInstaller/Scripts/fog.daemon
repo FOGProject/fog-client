@@ -1,5 +1,5 @@
-﻿#!/bin/bash
-​
+#!/bin/bash
+​eval `/usr/libexec/path_helper -s`
 function startDaemon() {
 	/opt/fog-service/control.sh start
   	tail -f /dev/null &
