@@ -4,6 +4,8 @@
 *.ppk
 BuildTools/plink.exe
 BuildTools/pscp.exe
+build.cmd
+out/
 
 # User-specific files
 *.suo
