@@ -71,6 +71,7 @@
               Description="Perform tasks for the FOG Server"
               Start="auto"
               ErrorControl="normal">
+              <ServiceDependency Id="dnscache" />
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
           </Component>
