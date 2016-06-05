@@ -35,12 +35,14 @@ namespace FOG.Modules.PrinterManager
     {
         private static string LogName;
         private readonly PrintManagerBridge _instance;
+        private readonly List<string> _configuredPrinters;
 
         public PrinterManager()
         {
             Compatiblity = Settings.OSType.Windows;
             Name = "PrinterManager";
             LogName = Name;
+            _configuredPrinters = new List<string>();
 
             switch (Settings.OS)
             {
@@ -85,7 +87,7 @@ namespace FOG.Modules.PrinterManager
                     Log.Entry(Name, printer.Name + " already exists");
                     CleanPrinter(printer.Name);
                 }
-                _instance.Configure(printer);
+                BatchConfigure(msg.Printers);
             }
         }
 
@@ -135,6 +137,35 @@ namespace FOG.Modules.PrinterManager
             foreach (var printer in matches.Select(match => new Printer { Name = match }))
             {
                 printer.Remove(_instance);
+            }
+        }
+
+        private void BatchConfigure(List<Printer> printers)
+        {
+            var stringPrinters = new List<string>();
+
+            foreach (var printer in printers.Where(printer => !_configuredPrinters.Contains(printer.ToString())))
+            {
+                stringPrinters.Add(printer.ToString());
+                _configuredPrinters.Add(printer.ToString());
+
+                try
+                {
+                    _instance.Configure(printer);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(LogName, "Unable to configure " + printer.Name);
+                    Log.Error(LogName, ex);
+                }
+            }
+
+            // Perform an except removal since _configuredPrinters is read only
+            var extras = _configuredPrinters.Except(stringPrinters);
+
+            foreach (var extraPrinter in extras)
+            {
+                _configuredPrinters.Remove(extraPrinter);
             }
         }
     }

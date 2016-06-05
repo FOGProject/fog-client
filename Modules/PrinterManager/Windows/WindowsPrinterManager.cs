@@ -117,11 +117,16 @@ namespace FOG.Modules.PrinterManager
 
         public override void Configure(Printer printer, bool verbose = false)
         {
-            if (!string.IsNullOrEmpty(printer.ConfigFile))
+            if (printer.Type == Printer.PrinterType.Network)
             {
-                Log.Entry(LogName, "Configuring " + printer.Name);
-                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
+                Log.Entry(LogName, "Invoking add network printer method for all users");
+                PrintUI($"/in /n \"{printer.Name}\"", verbose);
             }
+
+            if (string.IsNullOrEmpty(printer.ConfigFile)) return;
+
+            Log.Entry(LogName, "Configuring " + printer.Name);
+            PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
         }
 
         private void AddIPPort(Printer printer, string remotePort)

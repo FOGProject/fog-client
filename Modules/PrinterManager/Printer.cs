@@ -35,7 +35,6 @@ namespace FOG.Modules.PrinterManager
             CUPS
         }
 
-        //Basic variables for printers
         public string Port;
         public string File ;
         public string ConfigFile;
@@ -99,6 +98,12 @@ namespace FOG.Modules.PrinterManager
                 Log.Error(LogName, "Could not add");
                 Log.Error(LogName, ex);
             }
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{(Name ?? "")} | {(IP ?? "")} | {(Port ?? "")} | {(File ?? "")} | {(ConfigFile ?? "")} | {(Model ?? "")}";
         }
     }
 }
