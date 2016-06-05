@@ -122,6 +122,7 @@
     </Compile>
     <Compile Include="Linux\LinuxInstall.cs" />
     <Compile Include="Mac\MacInstall.cs" />
+    <Compile Include="Options.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -150,6 +151,7 @@
     <EmbeddedResource Include="Scripts\fog-ca.cer" />
     <EmbeddedResource Include="Scripts\osxbind.sh" />
     <None Include="packages.config" />
+    <EmbeddedResource Include="Scripts\OSX-FOG-TRAY.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

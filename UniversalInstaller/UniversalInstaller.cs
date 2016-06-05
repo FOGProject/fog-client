@@ -22,6 +22,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Zazzles;
+using Mono.Options;
 
 namespace FOG
 {
@@ -38,39 +39,44 @@ namespace FOG
             LogPath = Path.Combine(Settings.Location, "SmartInstaller.log");
             Log.FilePath = LogPath;
 
-            if (args.Length == 5)
-                ProcessArgs(args);
-            else if (args.Length == 1 && args[0].Equals("uninstall"))
-                PerformCLIUninstall();
-            else if (args.Length == 1 && args[0].Equals("upgrade"))
-                PerformUpgrade();
-            else
-                InteractiveMode();
-        }
-
-        private static void ProcessArgs(string[] args)
-        {
-            var url = args[0];
-            var tray = args[1];
-            var company = args[2];
-            var rootLog = args[3];
-            var https = args[4];
-
-            var server = url;
+            var upgrade = false;
+            var uninstall = false;
+            var tray = false;
+            var start = false;
+            var rootLog = false;
+            var https = false;
+            var server = "";
             var webRoot = "";
-            try
-            {
-                if (!url.Contains("/"))
-                    return;
-                server = url.Substring(0, url.IndexOf("/"));
-                webRoot = url.Substring(url.IndexOf("/"));
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
 
-            Install(https, tray, server, webRoot, company, rootLog);
+            var p = new OptionSet() {
+                { "server=|SERVER=", "the FOG server address, defaults to fogserver",
+                  v => server = v },
+                { "webroot=|WEBROOT=", "the FOG server webroot, defaults to /fog",
+                  v => webRoot = v },
+                { "h|https|HTTPS", "use HTTPS for communication",
+                  v => https = v != null },
+                { "r|rootlog|ROOTLOG", "store fog.log in the root of the filesystem",
+                  v => rootLog = v != null },
+                { "s|start", "start the service when complete",
+                  v => start = v != null },
+                { "t|tray|TRAY", "enable the FOG Tray and notifications",
+                  v => tray = v != null },
+                { "u|uninstall", "uninstall an existing installation",
+                  v => uninstall = v != null },
+                { "upgrade",  "upgrade an existing installation",
+                  v => upgrade = v != null },
+            };
+
+            p.Parse(args);
+
+            if (uninstall)
+                PerformCLIUninstall();
+            else if (upgrade)
+                PerformUpgrade();
+            else if (args.Length == 0)
+                InteractiveMode();
+            else
+                Install(https ? "1" : "0", tray ? "1" : "0", server, webRoot, "FOG", rootLog ? "1" : "0");
         }
 
         private static void PerformUpgrade()
@@ -96,13 +102,13 @@ namespace FOG
             var bannerColor = ConsoleColor.White;
             var paddingSize = (Log.HeaderLength - 48)/2;
             var builder = new StringBuilder();
-            for (int i = 0; i < paddingSize; i++)
+            for (var i = 0; i < paddingSize; i++)
             {
                 builder.Append(" ");
             }
             var padding = builder.ToString();
 
-            Log.WriteLine(padding + "                                            ", bannerColor);
+            Log.NewLine();
             Log.WriteLine(padding + "      ..#######:.    ..,#,..     .::##::.   ", bannerColor);
             Log.WriteLine(padding + " .:######          .:;####:......;#;..      ", bannerColor);
             Log.WriteLine(padding + " ...##...        ...##;,;##::::.##...       ", bannerColor);
