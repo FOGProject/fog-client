@@ -136,10 +136,8 @@ namespace FOG.Modules.PrinterManager
 
         public override void ApplyChanges()
         {
-            Log.Entry(LogName, "Stopping print spooler");
+            Log.Entry(LogName, "Restarting spooler");
             ProcessHandler.Run("net", "stop spooler");
-
-            Log.Entry(LogName, "Starting print spooler");
             ProcessHandler.Run("net", "start spooler");
         }
 

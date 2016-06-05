@@ -57,6 +57,11 @@ namespace FOG.Modules.PrinterManager
 
         protected override void DoWork(Response data, PrinterMessage msg)
         {
+
+            Log.Entry(Name, "Getting installed printers");
+            var installedPrinters = _instance.GetPrinters();
+
+
             var printerAdded = false;
 
             //Get printers
@@ -64,7 +69,7 @@ namespace FOG.Modules.PrinterManager
 
             if (data.Error && data.ReturnCode.Equals("np"))
             {
-                RemoveExtraPrinters(new List<Printer>(), msg);
+                RemoveExtraPrinters(new List<Printer>(), msg, installedPrinters);
                 return;
             }
             if (data.Error) return;
@@ -74,10 +79,9 @@ namespace FOG.Modules.PrinterManager
                 return;
             }
 
-            RemoveExtraPrinters(msg.Printers, msg);
+            RemoveExtraPrinters(msg.Printers, msg, installedPrinters);
 
-            Log.Entry(Name, "Getting which printers already exist");
-            var installedPrinters = _instance.GetPrinters();
+
 
             Log.Entry(Name, "Adding printers");
             foreach (var printer in msg.Printers)
@@ -94,19 +98,19 @@ namespace FOG.Modules.PrinterManager
                     CleanPrinter(printer.Name);
                 }
             }
-            BatchConfigure(msg.Printers);
+            printerAdded = printerAdded || BatchConfigure(msg.Printers);
 
             if(printerAdded)
                 _instance.ApplyChanges();
         }
 
-        private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg)
+        private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg, List<string> existingPrinters )
         {
             var managedPrinters = newPrinters.Where(printer => printer != null).Select(printer => printer.Name).ToList();
 
             if (!msg.Mode.Equals("ar"))
             {
-                foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && PrinterExists(name)))
+                foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && existingPrinters.Contains(name)))
                     CleanPrinter(name, true);
             }
             else
@@ -150,8 +154,10 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        private void BatchConfigure(List<Printer> printers)
+        private bool BatchConfigure(List<Printer> printers)
         {
+            var configuredAny = false;
+
             var allPrinters = new List<string>();
             var newPrinters = new List<string>();
 
@@ -167,6 +173,7 @@ namespace FOG.Modules.PrinterManager
 
                 try
                 {
+                    configuredAny = true;
                     _instance.Configure(printer);
                 }
                 catch (Exception ex)
@@ -185,6 +192,8 @@ namespace FOG.Modules.PrinterManager
             }
 
             _configuredPrinters.AddRange(newPrinters);
+
+            return configuredAny;
         }
     }
 }
