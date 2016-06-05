@@ -48,7 +48,7 @@ namespace FOG.Modules.PrinterManager
 
         public void Remove(PrintManagerBridge instance, bool verbose = false)
         {
-            Log.Entry("Printer", "Removing printer: " + Name);
+            Log.Entry("Printer", "Removing: " + Name);
             try
             {
                 instance.Remove(Name, verbose);
@@ -62,7 +62,7 @@ namespace FOG.Modules.PrinterManager
 
         public void SetDefault(PrintManagerBridge instance, bool verbose = false)
         {
-            Log.Entry("Printer", "Setting default: " + Name);
+            Log.Entry("Printer", "Setting " + Name + " as default");
             try
             {
                 instance.Default(Name, verbose);
@@ -75,9 +75,7 @@ namespace FOG.Modules.PrinterManager
 
         public void Add(PrintManagerBridge instance, bool verbose = false)
         {
-            Log.Entry("Printer", "Adding printer: " + Name);
-            if (Name != null)
-                Log.Entry(LogName, $"--> Name = {Name}");
+            Log.Entry("Printer", "Adding: " + Name);
             if (IP != null)
                 Log.Entry(LogName, $"--> IP = {IP}");
             if (Port != null)

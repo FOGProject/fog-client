@@ -104,7 +104,15 @@ namespace FOG.Modules.PrinterManager
 
         public override void Remove(string name, bool verbose = false)
         {
-            PrintUI(name.StartsWith("\\\\") ? $"/gd /n \"{name}\"" : $"/dl /q /n \"{name}\"", verbose);
+            if (name.StartsWith("\\\\"))
+            {
+                PrintUI($"/dn /n \"{name}\"", verbose);
+                PrintUI($"/gd /n \"{name}\"", verbose);
+            }
+            else
+            {
+                PrintUI($"/dl /q /n \"{name}\"", verbose);
+            }
         }
 
         public override void Default(string name, bool verbose = false)

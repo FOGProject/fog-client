@@ -76,10 +76,13 @@ namespace FOG.Modules.PrinterManager
 
             RemoveExtraPrinters(msg.Printers, msg);
 
+            Log.Entry(Name, "Getting which printers already exist");
+            var installedPrinters = _instance.GetPrinters();
+
             Log.Entry(Name, "Adding printers");
             foreach (var printer in msg.Printers)
             {
-                if (!PrinterExists(printer.Name))
+                if (!installedPrinters.Contains(printer.Name))
                 {
                     printerAdded = true;
                     printer.Add(_instance);
@@ -129,6 +132,7 @@ namespace FOG.Modules.PrinterManager
 
             return false;
         }
+
 
         private void CleanPrinter(string name, bool cleanOriginal = false)
         {
