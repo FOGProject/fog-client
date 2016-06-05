@@ -1,6 +1,3 @@
 #!/usr/bin/env bash
-
-WORKINGDIR=/opt/fog-service/
-RUNTIME="`cat ${WORKINGDIR}runtime`"
-
-${RUNTIME}mono /opt/fog-service/FOGUserService.exe
+eval `/usr/libexec/path_helper -s`
+mono /opt/fog-service/FOGUserService.exe
