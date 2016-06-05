@@ -57,6 +57,8 @@ namespace FOG.Modules.PrinterManager
 
         protected override void DoWork(Response data, PrinterMessage msg)
         {
+            var printerAdded = false;
+
             //Get printers
             if (msg.Mode.Equals("0")) return;
 
@@ -79,6 +81,7 @@ namespace FOG.Modules.PrinterManager
             {
                 if (!PrinterExists(printer.Name))
                 {
+                    printerAdded = true;
                     printer.Add(_instance);
                     CleanPrinter(printer.Name);
                 }
@@ -89,6 +92,9 @@ namespace FOG.Modules.PrinterManager
                 }
             }
             BatchConfigure(msg.Printers);
+
+            if(printerAdded)
+                _instance.ApplyChanges();
         }
 
         private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg)
@@ -142,12 +148,18 @@ namespace FOG.Modules.PrinterManager
 
         private void BatchConfigure(List<Printer> printers)
         {
-            var stringPrinters = new List<string>();
+            var allPrinters = new List<string>();
+            var newPrinters = new List<string>();
 
-            foreach (var printer in printers.Where(printer => !_configuredPrinters.Contains(printer.ToString())))
+
+            foreach (var printer in printers)
             {
-                stringPrinters.Add(printer.ToString());
-                _configuredPrinters.Add(printer.ToString());
+                allPrinters.Add(printer.ToString());
+
+                if (_configuredPrinters.Contains(printer.ToString()))
+                    continue;
+
+                newPrinters.Add(printer.ToString());
 
                 try
                 {
@@ -161,12 +173,14 @@ namespace FOG.Modules.PrinterManager
             }
 
             // Perform an except removal since _configuredPrinters is read only
-            var extras = _configuredPrinters.Except(stringPrinters);
+            var extras = _configuredPrinters.Except(allPrinters);
 
             foreach (var extraPrinter in extras)
             {
                 _configuredPrinters.Remove(extraPrinter);
             }
+
+            _configuredPrinters.AddRange(newPrinters);
         }
     }
 }

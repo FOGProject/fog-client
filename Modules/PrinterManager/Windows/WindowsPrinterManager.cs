@@ -116,7 +116,7 @@ namespace FOG.Modules.PrinterManager
         {
             if (printer.Type == Printer.PrinterType.Network)
             {
-                Log.Entry(LogName, "Invoking add network printer method for all users");
+                Log.Entry(LogName, $"Invoking add {printer.Name} for all users");
                 PrintUI($"/in /n \"{printer.Name}\"", verbose);
             }
 
@@ -124,6 +124,15 @@ namespace FOG.Modules.PrinterManager
 
             Log.Entry(LogName, "Configuring " + printer.Name);
             PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
+        }
+
+        public override void ApplyChanges()
+        {
+            Log.Entry(LogName, "Stopping print spooler");
+            ProcessHandler.Run("net", "stop spooler");
+
+            Log.Entry(LogName, "Starting print spooler");
+            ProcessHandler.Run("net", "start spooler");
         }
 
         private void AddIPPort(Printer printer, string remotePort)
