@@ -94,10 +94,7 @@ namespace FOG.Modules.PrinterManager
 
         protected override void AddNetwork(Printer printer, bool verbose = false)
         {
-            // Add per machine printer connection
             PrintUI($"/ga /n \"{printer.Name}\"", verbose);
-            // Add printer network connection, download the drivers from the print server
-            PrintUI($"/in /n \"{printer.Name}\"", verbose);
         }
 
         protected override void AddCUPS(Printer printer, bool verbose = false)

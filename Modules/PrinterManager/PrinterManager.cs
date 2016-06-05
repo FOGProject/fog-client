@@ -87,8 +87,8 @@ namespace FOG.Modules.PrinterManager
                     Log.Entry(Name, printer.Name + " already exists");
                     CleanPrinter(printer.Name);
                 }
-                BatchConfigure(msg.Printers);
             }
+            BatchConfigure(msg.Printers);
         }
 
         private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg)
