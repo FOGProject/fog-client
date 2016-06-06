@@ -1,18 +1,16 @@
 #!/bin/bash
-​eval `/usr/libexec/path_helper -s`
+eval `/usr/libexec/path_helper -s`
 function startDaemon() {
 	/opt/fog-service/control.sh start
   	tail -f /dev/null &
   	wait $!
 }
-​
-​
+
 function killDaemon() {
-	/opt/fog-service/control.sh stop	
-	exit 0
+  /opt/fog-service/control.sh stop
+  exit 0
 }
-​
 trap killDaemon SIGTERM
 trap killDaemon SIGKill
-​
+
 startDaemon;
