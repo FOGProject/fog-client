@@ -57,13 +57,21 @@ namespace FOG
             _fogService = new FOGUserService();
             _fogService.Start();
 
-            if (Settings.Get("Tray").Equals("1") && Settings.OS == Settings.OSType.Windows)
+            if (Settings.Get("Tray").Equals("1"))
                 StartTray();
         }
 
         private static void StartTray()
         {
-            ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Windows:
+                    ProcessHandler.RunClientEXE("FOGTray.exe", "", false);
+                    break;
+                case Settings.OSType.Mac:
+                    ProcessHandler.Run("open", Path.Combine(Settings.Location, "OSX-FOG-TRAY.app"), false);
+                    break;
+            }
         }
     }
 }

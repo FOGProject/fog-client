@@ -67,6 +67,7 @@ namespace FOG
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "osxbind.sh"));
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "OSX-FOG-TRAY.app"));
+            ProcessHandler.Run("chmod", "+x " + Path.Combine(GetLocation(), "OSX-FOG-TRAY.app/Contents/MacOS/OSX-FOG-Tray"));
 
             ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
@@ -98,11 +99,18 @@ namespace FOG
         {
             if (Directory.Exists(GetLocation()))
             {
+                // Check if an upgrade is underway
                 if (Settings.Location.Contains(GetLocation()))
                 {
                     var filePaths = Directory.GetFiles(GetLocation(), "*", SearchOption.TopDirectoryOnly);
                     foreach (var filePath in filePaths.Where(filePath => !filePath.ToLower().EndsWith("fog.log")))
                         File.Delete(filePath);
+
+                    // OSX .app programs are actually directories
+                    var trayApp = Path.Combine(GetLocation(), "OSX-FOG-TRAY.app");
+                    if (Directory.Exists(trayApp))
+                        Directory.Delete(trayApp, true);
+
                 }
                 else
                 {

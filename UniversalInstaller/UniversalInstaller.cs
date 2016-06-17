@@ -69,6 +69,14 @@ namespace FOG
 
             p.Parse(args);
 
+            if (args.Length == 1)
+            {
+                if (args[0].Equals("upgrade"))
+                    upgrade = true;
+                else if (args[0].Equals("uninstall"))
+                    uninstall = true;
+            }
+
             if (uninstall)
                 PerformCLIUninstall();
             else if (upgrade)
@@ -224,7 +232,7 @@ namespace FOG
             Console.ForegroundColor = _infoColor;
             var rawTray = Console.ReadLine();
             Console.ResetColor();
-            if (rawTray.Trim().ToLower().Equals("n"))
+            if (rawTray.Trim().Equals("n", StringComparison.OrdinalIgnoreCase))
                 tray = "0";
 
             // Check hostname length (OSX appends .local by default)
@@ -248,7 +256,7 @@ namespace FOG
                 Console.ForegroundColor = _infoColor;
                 var rawStart = Console.ReadLine();
                 Console.ResetColor();
-                if (rawStart.Trim().ToLower().Equals("n"))
+                if (rawStart.Trim().Equals("n", StringComparison.OrdinalIgnoreCase))
                     start = false;
             }
 

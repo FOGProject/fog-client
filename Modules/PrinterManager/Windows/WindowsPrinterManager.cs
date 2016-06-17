@@ -137,8 +137,8 @@ namespace FOG.Modules.PrinterManager
         public override void ApplyChanges()
         {
             Log.Entry(LogName, "Restarting spooler");
-            ProcessHandler.Run("net", "stop spooler");
-            ProcessHandler.Run("net", "start spooler");
+            Process.Start("net", "stop spooler")?.WaitForExit(15*1000);
+            Process.Start("net", "start spooler")?.WaitForExit(15 * 1000);
         }
 
         private void AddIPPort(Printer printer, string remotePort)

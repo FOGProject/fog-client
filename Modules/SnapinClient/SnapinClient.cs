@@ -106,13 +106,13 @@ namespace FOG.Modules.SnapinClient
                 Communication.Contact(
                     $"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
 
-                if (snapin.Action.ToLower().Equals("reboot"))
+                if (snapin.Action.Equals("reboot", StringComparison.OrdinalIgnoreCase))
                 {
                     Power.Restart("Snapin requested restart", Power.ShutdownOptions.Delay,
                         "This computer needs to reboot to apply new software.");
                     break;
                 }
-                else if (snapin.Action.ToLower().Equals("shutdown"))
+                else if (snapin.Action.Equals("shutdown", StringComparison.OrdinalIgnoreCase))
                 {
                     Power.Shutdown("Snapin requested shutdown", Power.ShutdownOptions.Delay,
                         "This computer needs to shutdown to apply new software.");

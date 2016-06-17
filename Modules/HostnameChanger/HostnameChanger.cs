@@ -94,7 +94,7 @@ namespace FOG.Modules.HostnameChanger
                 Log.Error(Name, "Hostname is not specified");
                 return;
             }
-            if (Environment.MachineName.ToLower().Equals(msg.Hostname.ToLower()))
+            if (Environment.MachineName.Equals(msg.Hostname.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 Log.Entry(Name, "Hostname is correct");
                 return;

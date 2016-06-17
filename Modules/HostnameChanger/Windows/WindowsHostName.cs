@@ -24,12 +24,42 @@ using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
 using Zazzles;
-using Zazzles.Middleware;
 
 namespace FOG.Modules.HostnameChanger.Windows
 {
     internal class WindowsHostName : IHostName
     {
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU, 
+            string lpAccount, string lpPassword, JoinOptions nameType);
+
+        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
+        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
+            UnJoinOptions fUnjoinOptions);
+
+        private static int DomainWrapper(HostnameChangerMessage msg, bool ou, JoinOptions options)
+        {
+            return NetJoinDomain(null,
+                msg.ADDom,
+                ou ? msg.ADOU : null,
+                msg.ADUser,
+                msg.ADPass,
+                options);
+        }
+
+        [Flags]
+        private enum UnJoinOptions
+        {
+            NetsetupAccountDelete = 0x00000004
+        }
+
+        [Flags]
+        private enum JoinOptions
+        {
+            NetsetupJoinDomain = 0x00000001,
+            NetsetupAcctCreate = 0x00000002
+        }
+
         private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
         {
             {0, "Success"},
@@ -148,38 +178,6 @@ namespace FOG.Modules.HostnameChanger.Windows
             }
 
             WinActivation.SetProductKey(key);
-        }
-
-        //Import dll methods
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetJoinDomain(string lpServer, string lpDomain, string lpAccountOU,
-            string lpAccount, string lpPassword, JoinOptions nameType);
-
-        [DllImport("netapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
-            UnJoinOptions fUnjoinOptions);
-
-        private static int DomainWrapper(HostnameChangerMessage msg, bool ou, JoinOptions options)
-        {
-            return NetJoinDomain(null,
-                msg.ADDom,
-                ou ? msg.ADOU : null,
-                msg.ADUser,
-                msg.ADPass,
-                options);
-        }
-
-        [Flags]
-        private enum UnJoinOptions
-        {
-            NetsetupAccountDelete = 0x00000004
-        }
-
-        [Flags]
-        private enum JoinOptions
-        {
-            NetsetupJoinDomain = 0x00000001,
-            NetsetupAcctCreate = 0x00000002
         }
     }
 }

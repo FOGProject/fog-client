@@ -36,7 +36,7 @@ namespace FOG.Commands
                 Help();
                 return true;
             }
-            else if (args[0].ToLower().Equals("cycle"))
+            else if (args[0].Equals("cycle", StringComparison.OrdinalIgnoreCase))
             {
                 try
                 {
@@ -51,7 +51,7 @@ namespace FOG.Commands
                     Log.WriteLine(rawResponse);
                     Log.Divider();
 
-                    if (args.Length > 1 && args[1].ToLower().Equals("save"))
+                    if (args.Length > 1 && args[1].Equals("save", StringComparison.OrdinalIgnoreCase))
                     {
                         var path = Path.Combine(Settings.Location, "FOGCycle.txt");
                         Log.WriteLine("Saving output to " + path);
