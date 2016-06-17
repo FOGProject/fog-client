@@ -17,17 +17,43 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-
 namespace FOG.Modules.PowerManagement
 {
     public class Task
     {
-        public string CRONTask;
+        public string CRON = "";
+        public string Action = "";
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public PowerManagement.PowerAction Action;
 
+        public override string ToString()
+        {
+            return $"{(Action ?? "")} at {(CRON ?? "")}";
+        }
+
+        public string ToQuartz()
+        {
+            const int dom = 2;
+            const int dow = 4;
+
+            // Prepend a 0 for the quartz seconds field
+            var quartzFormat = "0 ";
+            var unixCron = CRON.Split(' ');
+            
+            // If DOM is set, ignore DOW
+            // else ignore DOM
+            if (unixCron.Length < 5)
+                quartzFormat += CRON;
+            else
+            {
+                if (unixCron[dom] != "*")
+                    unixCron[dow] = "?";
+                else
+                    unixCron[dom] = "?";
+
+                quartzFormat += string.Join(" ", unixCron);
+            }
+
+            return quartzFormat;
+        }
     }
 }

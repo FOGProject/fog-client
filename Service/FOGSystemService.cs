@@ -44,7 +44,6 @@ namespace FOG
 
         protected override Response GetLoopData()
         {
-
             try
             {
                 var response = Communication.GetResponse("/management/index.php?sub=requestClientInfo", true);
@@ -61,7 +60,6 @@ namespace FOG
                 {
                     Settings.Set("ServerVersion", srvVersion);
 
-                    // Dump user-service configuration to the settings file
                     var alo = response.GetSubResponse("autologout");
                     Settings.Set("ALOTime", (alo == null) ? "0" : alo.GetField("time"));
 
@@ -78,7 +76,6 @@ namespace FOG
                     Log.Error(Name, "Unable to set user agent cache");
                     Log.Error(Name, ex);
                 }
-
 
                 return response;
             }

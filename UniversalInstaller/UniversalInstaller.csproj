@@ -151,7 +151,7 @@
     <EmbeddedResource Include="Scripts\fog-ca.cer" />
     <EmbeddedResource Include="Scripts\osxbind.sh" />
     <None Include="packages.config" />
-    <EmbeddedResource Include="Scripts\OSX-FOG-TRAY.zip" />
+    <EmbeddedResource Include="Scripts\OSXFOGTray.zip" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="logo.ico" />

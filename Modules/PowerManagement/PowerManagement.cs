@@ -17,10 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
+using System;
 using System.Collections.Generic;
-using FOG.Modules.PowerManagement.CronNET;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
+using Quartz;
+using Quartz.Impl;
 using Zazzles;
 using Zazzles.Middleware;
 using Zazzles.Modules;
@@ -33,26 +33,36 @@ namespace FOG.Modules.PowerManagement
     /// </summary>
     public class PowerManagement : AbstractModule<PowerManagementMessage>
     {
-        [JsonConverter(typeof(StringEnumConverter))]
-        public enum PowerAction
-        {
-            Shutdown,
-            Restart,
-            None
-        }
+        private readonly ISchedulerFactory _schedulerFactory;
+        private readonly IScheduler _scheduler;
 
-        private readonly CronDaemon _cronDaemon;
+        private readonly IJobDetail _restartJob;
+        private readonly IJobDetail _shutdownJob;
+
+        private readonly Dictionary<string, TriggerKey> _triggers; 
 
         public PowerManagement()
         {
             Name = "PowerManagement";
-            _cronDaemon = new CronDaemon();
-            _cronDaemon.Start();
+
+            _schedulerFactory = new StdSchedulerFactory();
+            _scheduler = _schedulerFactory.GetScheduler();
+            _scheduler.Start();
+
+            _restartJob = JobBuilder.Create<RestartJob>()
+                .WithIdentity("restart", "powerGroup")
+                .StoreDurably(true)
+                .Build();
+            _shutdownJob = JobBuilder.Create<ShutdownJob>()
+                .WithIdentity("shutdown", "powerGroup")
+                .StoreDurably(true)
+                .Build();
+
+            _triggers = new Dictionary<string, TriggerKey>(StringComparer.OrdinalIgnoreCase);
         }
 
         protected override void DoWork(Response data, PowerManagementMessage msg)
         {
-            //Shutdown if a task is avaible and the user is logged out or it is forced
             if (data.Error)
             {
                 ClearAll();
@@ -66,18 +76,17 @@ namespace FOG.Modules.PowerManagement
                 return;
             }
 
-            switch (msg.OnDemandAction)
+            if (msg.OnDemand.Equals("shutdown", StringComparison.OrdinalIgnoreCase))
             {
-                case PowerAction.Shutdown:
-                    Log.Entry(Name, "On demand shutdown requested");
-                    ClearAll();
-                    Power.Shutdown("FOG PowerManagement");
-                    return;
-                case PowerAction.Restart:
-                    Log.Entry(Name, "On demand restart requested");
-                    ClearAll();
-                    Power.Restart("FOG PowerManagement");
-                    return;
+                Log.Entry(Name, "On demand shutdown requested");
+                Power.Shutdown("FOG PowerManagement");
+                return;
+            }
+            else if (msg.OnDemand.Equals("restart", StringComparison.OrdinalIgnoreCase))
+            {
+                Log.Entry(Name, "On demand restart requested");
+                Power.Restart("FOG PowerManagement");
+                return;
             }
 
             CreateTasks(msg.Tasks);
@@ -85,25 +94,103 @@ namespace FOG.Modules.PowerManagement
 
         private void ClearAll()
         {
-            _cronDaemon.RemoveAllJobs();
+            foreach (var triggerPair in _triggers)
+            {
+                Log.Entry(Name, $"--> Unscheduling a {triggerPair.Key}");
+                _scheduler.UnscheduleJob(triggerPair.Value);
+            }
+
+            _triggers.Clear();
+        }
+
+        private void RemoveExtraTasks(List<Task> tasks)
+        {
+            Log.Entry(Name, "Calculating tasks to unschedule");
+            var toRemove = new Dictionary<string, TriggerKey>(_triggers);
+
+            foreach (var task in tasks)
+            {
+                toRemove.Remove(task.ToString());
+            }
+
+            foreach (var triggerPair in toRemove)
+            {
+                Log.Entry(Name, $"--> Unscheduling a {triggerPair.Key}");
+                try
+                {
+                    _scheduler.UnscheduleJob(triggerPair.Value);
+                    _triggers.Remove(triggerPair.Key);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Name, ex);
+                }
+
+            }
         }
 
         private void CreateTasks(List<Task> tasks)
         {
-            ClearAll();
+            RemoveExtraTasks(tasks);
+
+            Log.Entry(Name, "Calculating tasks to schedule");
             foreach (var task in tasks)
             {
-                switch (task.Action)
+                if (string.IsNullOrWhiteSpace(task.Action) || string.IsNullOrWhiteSpace(task.CRON))
                 {
-                    case PowerAction.Shutdown:
-                        _cronDaemon.AddJob(task.CRONTask, () => {Power.Shutdown("FOG PowerManagement");});
-                        break;
-                    case PowerAction.Restart:
-                        _cronDaemon.AddJob(task.CRONTask, () => { Power.Restart("FOG PowerManagement"); });
-                        break;
+                    Log.Entry(Name, "--> Invalid task given by server: " + task);
+                    continue;
+                }
+
+                if (_triggers.ContainsKey(task.ToString()))
+                {
+                    Log.Entry(Name, $"--> A {task} is already scheduled");
+                    continue;
+                }
+
+                Log.Entry(Name, $"--> Scheduling a {task} with a Quartz of {task.ToQuartz()}");
+
+                try
+                {
+                    var trigger = TriggerBuilder.Create()
+                        .WithIdentity(task.CRON, task.Action)
+                        .WithCronSchedule(task.ToQuartz())
+                        .Build();
+                    var key = trigger.Key;
+                    _triggers.Add(task.ToString(), key);
+
+                    if (task.Action.Equals("shutdown", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _scheduler.ScheduleJob(_shutdownJob, trigger);
+                    }
+                    else if (task.Action.Equals("reboot", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _scheduler.ScheduleJob(_restartJob, trigger);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Name, ex);
                 }
 
             }
         }
     }
+
+    internal class ShutdownJob : IJob
+    {
+        void IJob.Execute(IJobExecutionContext context)
+        {
+            Power.Shutdown("FOG PowerManagement");
+        }
+    }
+
+    internal class RestartJob : IJob
+    {
+        void IJob.Execute(IJobExecutionContext context)
+        {
+            Power.Restart("FOG PowerManagement");
+        }
+    }
+
 }

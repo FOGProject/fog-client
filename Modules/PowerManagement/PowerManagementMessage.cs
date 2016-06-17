@@ -24,6 +24,6 @@ namespace FOG.Modules.PowerManagement
     public class PowerManagementMessage
     {
         public List<Task> Tasks = new List<Task>();
-        public PowerManagement.PowerAction OnDemandAction;
+        public string OnDemand = "";
     }
 }

@@ -18,6 +18,7 @@
  */
 
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using Zazzles;
 
@@ -56,10 +57,17 @@ namespace FOG
             Helper.ExtractResource("FOG.Scripts.osxbind.sh", Path.Combine(GetLocation(), "osxbind.sh"), true);
             Helper.ExtractResource("FOG.Scripts.control.sh", Path.Combine(GetLocation(), "control.sh"), true);
 
+            var trayZip = Path.Combine(GetLocation(), "OSXFOGTray.zip");
+            Helper.ExtractResource("FOG.Scripts.OSXFOGTray.zip", trayZip);
+            ZipFile.ExtractToDirectory(trayZip, GetLocation());
+            File.Delete(trayZip);
+
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "fog.daemon"));
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "fog.agent"));
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "osxbind.sh"));
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "control.sh"));
+            ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "OSX-FOG-TRAY.app"));
+
             ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
 
