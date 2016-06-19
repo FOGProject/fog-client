@@ -34,7 +34,7 @@ namespace FOG.Modules.PrinterManager
 
         public DefaultPrinterManager()
         {
-            Name = "PrinterManager";
+            Name = "DefaultPrinterManager";
 
             switch (Settings.OS)
             {
@@ -49,8 +49,7 @@ namespace FOG.Modules.PrinterManager
 
         protected override void DoWork(Response data, DefaultPrinterMessage msg)
         {
-            //Get printers
-            if (data.Error || string.IsNullOrWhiteSpace(msg.Name)) return;
+            if (string.IsNullOrEmpty(msg.Name)) return;
 
             Log.Entry(Name, "Checking defaults");
             var printer = new Printer {Name = msg.Name};

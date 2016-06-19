@@ -12,3 +12,12 @@ C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOG.NotificationIcon.resources
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\Tray.csproj.GenerateResource.Cache
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.exe
 C:\Users\jbob\Desktop\fog-client\Tray\obj\Debug\FOGTray.pdb
+C:\Users\Administrator\dev\fog-client\bin\logo.ico
+C:\Users\Administrator\dev\fog-client\bin\FOGTray.exe.config
+C:\Users\Administrator\dev\fog-client\bin\FOGTray.exe
+C:\Users\Administrator\dev\fog-client\bin\FOGTray.pdb
+C:\Users\Administrator\dev\fog-client\Tray\obj\Debug\Tray.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\dev\fog-client\Tray\obj\Debug\FOG.NotificationIcon.resources
+C:\Users\Administrator\dev\fog-client\Tray\obj\Debug\Tray.csproj.GenerateResource.Cache
+C:\Users\Administrator\dev\fog-client\Tray\obj\Debug\FOGTray.exe
+C:\Users\Administrator\dev\fog-client\Tray\obj\Debug\FOGTray.pdb

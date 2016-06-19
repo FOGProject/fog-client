@@ -47,6 +47,7 @@ namespace FOG
             var https = false;
             var server = "";
             var webRoot = "";
+            var logFile = "";
 
             var p = new OptionSet() {
                 { "server=|SERVER=", "the FOG server address, defaults to fogserver",
@@ -65,9 +66,17 @@ namespace FOG
                   v => uninstall = v != null },
                 { "upgrade",  "upgrade an existing installation",
                   v => upgrade = v != null },
+                { "l|log",  "the log file to use",
+                  v => logFile = v },
             };
 
             p.Parse(args);
+
+            if (!string.IsNullOrWhiteSpace(logFile))
+            {
+                LogPath = logFile;
+                Log.FilePath = LogPath;
+            }
 
             if (args.Length == 1)
             {

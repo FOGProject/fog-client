@@ -92,12 +92,14 @@ namespace FOG
                 int.TryParse(Settings.Get("DisplayY"), out displayY);
                 int.TryParse(Settings.Get("DisplayR"), out displayR);
 
-
                 var data = new JObject
                 {
                     ["autologout"] = new JObject { ["time"] = alo },
-                    ["printermanager"] = new JObject { ["name"] = printer }
-                    ["displaymanager"] = new JObject { ["x"] = displayX, ["y"] = displayY, ["r"] = displayR }
+                    ["defaultprintermanager"] = new JObject { ["name"] = printer },
+                    ["displaymanager"] = new JObject { ["error"] = ((displayX == -1) ? "Configuration not set" : "ok"),
+                        ["x"] = displayX,
+                        ["y"] = displayY,
+                        ["r"] = displayR }
 
                 };
                 return new Response(data, false);
@@ -115,6 +117,14 @@ namespace FOG
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
             Bus.Subscribe(Bus.Channel.Power, OnPower);
+            Bus.Subscribe(Bus.Channel.Status, OnStatus);
+        }
+
+        private void OnStatus(dynamic data)
+        {
+            if (data.action == null) return;
+            if (data.action.toString().Equals("unload"))
+                Environment.Exit(0);
         }
 
         protected override void Unload()

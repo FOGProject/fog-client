@@ -16,3 +16,5 @@ D:\fog\fog-client\bin\Debugger.exe.config
 D:\fog\fog-client\bin\Debugger.exe
 D:\fog\fog-client\Debugger\obj\Release\Debugger.csprojResolveAssemblyReference.cache
 D:\fog\fog-client\Debugger\obj\Release\Debugger.exe
+C:\Users\Administrator\dev\fog-client\bin\Debugger.exe.config
+C:\Users\Administrator\dev\fog-client\Debugger\obj\Release\Debugger.exe

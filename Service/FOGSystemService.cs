@@ -67,9 +67,9 @@ namespace FOG
                     Settings.Set("DefaultPrinter", (pDefault == null) ? "" : pDefault.GetField("default"));
 
                     var display = response.GetSubResponse("displaymanager");
-                    Settings.Set("DisplayX", (display == null) ? "0" : display.GetField("x"));
-                    Settings.Set("DisplayY", (display == null) ? "0" : display.GetField("y"));
-                    Settings.Set("DisplayR", (display == null) ? "0" : display.GetField("r"));
+                    Settings.Set("DisplayX", (display == null || display.Error) ? "" : display.GetField("x"));
+                    Settings.Set("DisplayY", (display == null || display.Error) ? "" : display.GetField("y"));
+                    Settings.Set("DisplayR", (display == null || display.Error) ? "" : display.GetField("r"));
                 }
                 catch (Exception ex)
                 {

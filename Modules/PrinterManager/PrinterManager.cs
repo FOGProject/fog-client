@@ -57,17 +57,15 @@ namespace FOG.Modules.PrinterManager
 
         protected override void DoWork(Response data, PrinterMessage msg)
         {
-
             Log.Entry(Name, "Getting installed printers");
             var installedPrinters = _instance.GetPrinters();
-
 
             var printerAdded = false;
 
             //Get printers
-            if (msg.Mode.Equals("0")) return;
+            if (msg.Mode == "0") return;
 
-            if (data.Error && data.ReturnCode.Equals("np"))
+            if (data.Error && data.ReturnCode.Equals("np", StringComparison.OrdinalIgnoreCase))
             {
                 RemoveExtraPrinters(new List<Printer>(), msg, installedPrinters);
                 return;
@@ -80,8 +78,6 @@ namespace FOG.Modules.PrinterManager
             }
 
             RemoveExtraPrinters(msg.Printers, msg, installedPrinters);
-
-
 
             Log.Entry(Name, "Adding printers");
             foreach (var printer in msg.Printers)
@@ -108,7 +104,7 @@ namespace FOG.Modules.PrinterManager
         {
             var managedPrinters = newPrinters.Where(printer => printer != null).Select(printer => printer.Name).ToList();
 
-            if (!msg.Mode.Equals("ar"))
+            if (!msg.Mode.Equals("ar", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && existingPrinters.Contains(name)))
                     CleanPrinter(name, true);

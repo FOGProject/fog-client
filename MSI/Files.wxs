@@ -54,6 +54,9 @@
             <File Id="SuperWebSocket" Name="SuperWebSocket.dll" Source="..\bin\SuperWebSocket.dll" />
             <File Id="WebSocket4Net" Name="WebSocket4Net.dll" Source="..\bin\WebSocket4Net.dll" />
             <File Id="ProcessPrivileges" Name="ProcessPrivileges.dll" Source="..\bin\ProcessPrivileges.dll" />
+            <File Id="CommonLoggingCore" Name="Common.Logging.Core.dll" Source="..\bin\Common.Logging.Core.dll" />
+            <File Id="CommonLogging" Name="Common.Logging.dll" Source="..\bin\Common.Logging.dll" />
+            <File Id="Quartz" Name="Quartz.dll" Source="..\bin\Quartz.dll" />
             
             <File Id="FOGShutdownGUIconf" Name="FOGShutdownGUI.exe.config" Source="..\bin\FOGShutdownGUI.exe.config" />
             <File Id="FOGTrayconf" Name="FOGTray.exe.config" Source="..\bin\FOGTray.exe.config" />

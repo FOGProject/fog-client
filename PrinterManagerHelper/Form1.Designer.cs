@@ -41,12 +41,9 @@
             this.aliasLB = new System.Windows.Forms.Label();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.localPage = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
-            this.defaultButton = new System.Windows.Forms.Button();
-            this.removeButton = new System.Windows.Forms.Button();
             this.addPrinter = new System.Windows.Forms.TabPage();
-            this.typeCombo = new System.Windows.Forms.ComboBox();
-            this.typeLabel = new System.Windows.Forms.Label();
+            this.aliasBox = new System.Windows.Forms.TextBox();
+            this.addButton = new System.Windows.Forms.Button();
             this.aliasLabel = new System.Windows.Forms.Label();
             this.driverBox = new System.Windows.Forms.TextBox();
             this.ipLabel = new System.Windows.Forms.Label();
@@ -56,8 +53,8 @@
             this.modelLabel = new System.Windows.Forms.Label();
             this.ipBox = new System.Windows.Forms.TextBox();
             this.driverLabel = new System.Windows.Forms.Label();
-            this.addButton = new System.Windows.Forms.Button();
-            this.aliasBox = new System.Windows.Forms.TextBox();
+            this.typeLabel = new System.Windows.Forms.Label();
+            this.typeCombo = new System.Windows.Forms.ComboBox();
             this.tabControl1.SuspendLayout();
             this.localPage.SuspendLayout();
             this.addPrinter.SuspendLayout();
@@ -174,9 +171,6 @@
             // 
             // localPage
             // 
-            this.localPage.Controls.Add(this.button1);
-            this.localPage.Controls.Add(this.defaultButton);
-            this.localPage.Controls.Add(this.removeButton);
             this.localPage.Controls.Add(this.aliasLB);
             this.localPage.Controls.Add(this.printerComboBox);
             this.localPage.Controls.Add(this.driverText);
@@ -194,33 +188,6 @@
             this.localPage.TabIndex = 0;
             this.localPage.Text = "Local Printers";
             this.localPage.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(13, 195);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(890, 23);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "Export Printer(s)";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
-            // defaultButton
-            // 
-            this.defaultButton.Location = new System.Drawing.Point(13, 166);
-            this.defaultButton.Name = "defaultButton";
-            this.defaultButton.Size = new System.Drawing.Size(433, 23);
-            this.defaultButton.TabIndex = 11;
-            this.defaultButton.Text = "Set Default";
-            this.defaultButton.UseVisualStyleBackColor = true;
-            // 
-            // removeButton
-            // 
-            this.removeButton.Location = new System.Drawing.Point(470, 166);
-            this.removeButton.Name = "removeButton";
-            this.removeButton.Size = new System.Drawing.Size(433, 23);
-            this.removeButton.TabIndex = 10;
-            this.removeButton.Text = "Remove Printer";
-            this.removeButton.UseVisualStyleBackColor = true;
             // 
             // addPrinter
             // 
@@ -245,28 +212,25 @@
             this.addPrinter.Text = "Add New Printer";
             this.addPrinter.UseVisualStyleBackColor = true;
             // 
-            // typeCombo
+            // aliasBox
             // 
-            this.typeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.typeCombo.FormattingEnabled = true;
-            this.typeCombo.Items.AddRange(new object[] {
-            "TCP/IP",
-            "Network",
-            "iPrint"});
-            this.typeCombo.Location = new System.Drawing.Point(65, 6);
-            this.typeCombo.Name = "typeCombo";
-            this.typeCombo.Size = new System.Drawing.Size(836, 21);
-            this.typeCombo.TabIndex = 13;
-            this.typeCombo.SelectedIndexChanged += new System.EventHandler(this.typeCombo_SelectedIndexChanged);
+            this.aliasBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.aliasBox.Location = new System.Drawing.Point(65, 46);
+            this.aliasBox.Name = "aliasBox";
+            this.aliasBox.ReadOnly = true;
+            this.aliasBox.Size = new System.Drawing.Size(836, 20);
+            this.aliasBox.TabIndex = 14;
             // 
-            // typeLabel
+            // addButton
             // 
-            this.typeLabel.AutoSize = true;
-            this.typeLabel.Location = new System.Drawing.Point(8, 9);
-            this.typeLabel.Name = "typeLabel";
-            this.typeLabel.Size = new System.Drawing.Size(31, 13);
-            this.typeLabel.TabIndex = 1;
-            this.typeLabel.Text = "Type";
+            this.addButton.Location = new System.Drawing.Point(11, 203);
+            this.addButton.Name = "addButton";
+            this.addButton.Size = new System.Drawing.Size(890, 23);
+            this.addButton.TabIndex = 20;
+            this.addButton.Text = "Add Printer";
+            this.addButton.UseVisualStyleBackColor = true;
+            this.addButton.Click += new System.EventHandler(this.addButton_Click);
             // 
             // aliasLabel
             // 
@@ -355,25 +319,28 @@
             this.driverLabel.TabIndex = 14;
             this.driverLabel.Text = "Driver";
             // 
-            // addButton
+            // typeLabel
             // 
-            this.addButton.Location = new System.Drawing.Point(11, 203);
-            this.addButton.Name = "addButton";
-            this.addButton.Size = new System.Drawing.Size(890, 23);
-            this.addButton.TabIndex = 20;
-            this.addButton.Text = "Add Printer";
-            this.addButton.UseVisualStyleBackColor = true;
-            this.addButton.Click += new System.EventHandler(this.addButton_Click);
+            this.typeLabel.AutoSize = true;
+            this.typeLabel.Location = new System.Drawing.Point(8, 9);
+            this.typeLabel.Name = "typeLabel";
+            this.typeLabel.Size = new System.Drawing.Size(31, 13);
+            this.typeLabel.TabIndex = 1;
+            this.typeLabel.Text = "Type";
             // 
-            // aliasBox
+            // typeCombo
             // 
-            this.aliasBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.aliasBox.Location = new System.Drawing.Point(65, 46);
-            this.aliasBox.Name = "aliasBox";
-            this.aliasBox.ReadOnly = true;
-            this.aliasBox.Size = new System.Drawing.Size(836, 20);
-            this.aliasBox.TabIndex = 14;
+            this.typeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.typeCombo.FormattingEnabled = true;
+            this.typeCombo.Items.AddRange(new object[] {
+            "TCP/IP",
+            "Network",
+            "iPrint"});
+            this.typeCombo.Location = new System.Drawing.Point(65, 6);
+            this.typeCombo.Name = "typeCombo";
+            this.typeCombo.Size = new System.Drawing.Size(836, 21);
+            this.typeCombo.TabIndex = 13;
+            this.typeCombo.SelectedIndexChanged += new System.EventHandler(this.typeCombo_SelectedIndexChanged);
             // 
             // Form1
             // 
@@ -408,9 +375,6 @@
         private System.Windows.Forms.Label aliasLB;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage localPage;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button defaultButton;
-        private System.Windows.Forms.Button removeButton;
         private System.Windows.Forms.TabPage addPrinter;
         private System.Windows.Forms.Label typeLabel;
         private System.Windows.Forms.ComboBox typeCombo;

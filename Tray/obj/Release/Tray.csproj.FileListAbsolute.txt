@@ -20,3 +20,5 @@ D:\fog\fog-client\bin\FOGTray.exe.config
 D:\fog\fog-client\bin\FOGTray.exe
 D:\fog\fog-client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
 D:\fog\fog-client\Tray\obj\Release\FOGTray.exe
+C:\Users\Administrator\dev\fog-client\bin\FOGTray.exe.config
+C:\Users\Administrator\dev\fog-client\Tray\obj\Release\FOGTray.exe

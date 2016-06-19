@@ -27,7 +27,7 @@ namespace FOG
     {
         public void ApplyUpdate()
         {
-            ProcessHandler.RunClientEXE("SmartInstaller.exe", "--upgrade");
+            ProcessHandler.RunClientEXE("SmartInstaller.exe", $"/upgrade /log=\"{Log.FilePath}\"");
         }
 
         public abstract void StartService();

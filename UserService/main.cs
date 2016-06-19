@@ -42,7 +42,6 @@ namespace FOG
 
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
 
-
             Eager.Initalize();
 
             Log.Entry(LogName, "Initializing - phase 2");

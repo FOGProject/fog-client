@@ -27,3 +27,9 @@ D:\fog\client\Service\bin\x86\Debug\Modules.pdb
 D:\fog\client\Service\bin\x86\Debug\PipeServer.pdb
 D:\fog\client\Service\bin\x86\Debug\FOGUpdateHelper.pdb
 D:\fog\client\Service\bin\x86\Debug\FOGUpdateWaiter.pdb
+C:\Users\Administrator\dev\fog-client\bin\FOGService.exe.config
+C:\Users\Administrator\dev\fog-client\bin\FOGService.exe
+C:\Users\Administrator\dev\fog-client\bin\FOGService.pdb
+C:\Users\Administrator\dev\fog-client\Service\obj\Debug\Service.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\dev\fog-client\Service\obj\Debug\FOGService.exe
+C:\Users\Administrator\dev\fog-client\Service\obj\Debug\FOGService.pdb

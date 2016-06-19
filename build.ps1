@@ -56,7 +56,8 @@ $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$
 					"""$PSScriptRoot\bin\Modules.dll"" ""$PSScriptRoot\bin\EngineIoClientDotNet.dll"" " + `
 					"""$PSScriptRoot\bin\log4net.dll"" ""$PSScriptRoot\bin\ProcessPrivileges.dll"" " + `
 					"""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\SuperSocket.SocketBase.dll"" " + `
-					"""$PSScriptRoot\bin\WebSocket4Net.dll"""
+					"""$PSScriptRoot\bin\WebSocket4Net.dll"" ""$PSScriptRoot\bin\Quartz.dll"" " + `
+					"""$PSScriptRoot\bin\Common.Logging.Core.dll"" ""$PSScriptRoot\bin\Common.Logging.dll"""
 
 $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", "FOGShutdownGUI.exe", `
 			"FOGShutdownGUI.exe.config", "FOGTray.exe", "FOGTray.exe.config", "FOGUpdateHelper.exe", `
@@ -66,7 +67,8 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 			"Modules.dll", "Modules.dll.config", "Newtonsoft.Json.dll", `
 			"ProcessPrivileges.dll", "SuperSocket.Common.dll", "SuperSocket.SocketBase.dll", `
 			"SuperSocket.SocketEngine.dll", "SuperWebSocket.dll", "themes.xml", `
-			"WebSocket4Net.dll", "Zazzles.dll"
+			"WebSocket4Net.dll", "Zazzles.dll", "Quartz.dll", "Common.Logging.dll", `
+			"Common.Logging.Core.dll"
 
 ##################################################
 # Initial Build

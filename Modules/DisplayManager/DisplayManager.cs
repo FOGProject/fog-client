@@ -49,11 +49,11 @@ namespace FOG.Modules.DisplayManager
             _display.LoadDisplaySettings();
             if (_display.PopulatedSettings)
             {
-                //Get task info
-                var response = Communication.GetResponse("/service/displaymanager.php", true);
-
-                if (response.Error) return;
-
+                if (msg.X <= 0 || msg.Y <= 0)
+                {
+                    Log.Error(Name, "Invalid settings provided");
+                    return;
+                }
                 ChangeResolution(GetDisplays().Count > 0 ? GetDisplays()[0] : "", msg.X, msg.Y, msg.R);
             }
             else
