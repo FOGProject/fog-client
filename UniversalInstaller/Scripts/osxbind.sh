@@ -8,12 +8,19 @@ adName="$1";
 adOU="$2";
 adUser="$3";
 adPass="$4";
-
+if [[ $adUser == *"\\"* ]]
+then
+adUser= $adUser | awk -F "\\" '{print $2}'
+fi
 domainNow=`/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'`
  
 if [ "$domainNow" = "$adName" ]
     then
     exit 1
+fi
+if [ "$domainNow" != "" ]
+    then
+    sudo dsconfigad -force -remove -u $adUser -p $adPass
 fi
 
 ####  Check if required variables hav ben populated
@@ -48,7 +55,11 @@ if [ "$doAD" == "1" ] && [ "$adUser" != "" ] && [ "$adName" != "" ] && [ "$adPas
 	sleep 5
 	 
 	# Bind to AD
-	dsconfigad -f -a $computerid -domain $domain -u $udn -p "$password" -ou "$ou"
+	if ["$ou" != "" ]; then
+		dsconfigad -f -a $computerid -domain $domain -u $udn -p "$password" -ou "$ou"
+	else
+		dsconfigad -f -a $computerid -domain $domain -u $udn -p "$password"
+	fi
 	 
 	# Configure advanced AD plugin options
 	if [ "$admingroups" = "" ]; then
