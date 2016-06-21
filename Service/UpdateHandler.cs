@@ -73,7 +73,7 @@ namespace FOG
                 //Launch the updater
                 Log.Entry(LogName, "Spawning update helper");
 
-                ProcessHandler.RunClientEXE(Path.Combine("tmp", "FOGUpdateHelper.exe"), Log.FilePath, false);
+                ProcessHandler.RunClientEXE(Path.Combine("tmp", "FOGUpdateHelper.exe"), $"\"{Log.FilePath}\"", false);
             }
             catch (Exception ex)
             {

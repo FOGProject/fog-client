@@ -103,6 +103,20 @@ namespace FOG
                 {
                     Directory.Delete(tmpDir, true);
                 }
+
+                if (Settings.Get("RootLog").Equals("0") && Settings.OS == Settings.OSType.Windows)
+                {
+                    try
+                    {
+                        var messUpLog = @"C:\Program";
+                        if (File.Exists(messUpLog))
+                            File.Delete(messUpLog);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+
+                }
             }
             catch (Exception ex)
             {
