@@ -82,19 +82,23 @@ namespace FOG.Modules.PrinterManager
             Log.Entry(Name, "Adding printers");
             foreach (var printer in msg.Printers)
             {
-                if (!installedPrinters.Contains(printer.Name))
+                if (installedPrinters.Contains(printer.Name))
+                {
+                    Log.Entry(Name, printer.Name + " already exists");
+                    CleanPrinter(printer.Name);
+                }
+                else if (_configuredPrinters.Contains(printer.ToString()))
+                {
+                    Log.Entry(Name, printer.Name + " has already been configured");
+                }
+                else
                 {
                     printerAdded = true;
                     printer.Add(_instance);
                     CleanPrinter(printer.Name);
                 }
-                else
-                {
-                    Log.Entry(Name, printer.Name + " already exists");
-                    CleanPrinter(printer.Name);
-                }
             }
-            printerAdded = printerAdded || BatchConfigure(msg.Printers);
+            printerAdded = BatchConfigure(msg.Printers) || printerAdded;
 
             if(printerAdded)
                 _instance.ApplyChanges();

@@ -19,6 +19,7 @@
 
 using System;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Zazzles;
@@ -95,7 +96,7 @@ namespace FOG
                 textBox1.Select(0, 0);
 
                 progressBar1.Maximum = _gracePeriod - 1;
-                label1.Text = _gracePeriod + " seconds";
+                label1.Text = FormatSeconds(_gracePeriod);
                 var workingArea = Screen.GetWorkingArea(this);
                 var height = workingArea.Bottom - Size.Height;
                 if (Settings.OS == Settings.OSType.Mac) height = height - 22;
@@ -118,7 +119,7 @@ namespace FOG
                 Environment.Exit(0);
             progressBar1.Value++;
             progressBar1.Update();
-            label1.Text = (_gracePeriod - progressBar1.Value) + " seconds";
+            label1.Text = FormatSeconds(_gracePeriod - progressBar1.Value);
         }
 
         private void BtnNowClick(object sender, EventArgs e)
@@ -142,6 +143,24 @@ namespace FOG
                 Environment.Exit(2);
             else if (data.action.ToString().Equals("delay"))
                 Environment.Exit(2);
+        }
+
+        private string FormatSeconds(double totalSeconds)
+        {
+            var timeSpan = TimeSpan.FromSeconds(totalSeconds);
+
+            var hours = (int) timeSpan.TotalHours;
+            var minutes = timeSpan.Minutes;
+            var seconds = timeSpan.Seconds;
+
+            return BuildFormatSection(hours, "hour", "hours") +
+                   BuildFormatSection(minutes, "minute", "minutes") +
+                   BuildFormatSection(seconds, "second", "seconds");
+        }
+
+        private string BuildFormatSection(int value, string singular, string plural)
+        {
+            return value <= 0 ? string.Empty : $"{value} {(value == 1 ? singular : plural)} ";
         }
     }
 }
