@@ -82,7 +82,6 @@ namespace FOG.Modules.HostnameChanger
             if (Power.ShuttingDown || Power.Requested) return;
 
             RegisterComputer(msg);
-            if (Power.ShuttingDown || Power.Requested) return;
         }
 
         //Rename the computer and remove it from active directory
@@ -132,6 +131,7 @@ namespace FOG.Modules.HostnameChanger
 
             try
             {
+                Log.Entry(Name, "Attempting to join active directory");
                 if (_instance.RegisterComputer(msg))
                     Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
             }
