@@ -26,14 +26,14 @@ namespace FOG.Modules.TaskReboot
     /// <summary>
     ///     Reboot the computer if a task needs to
     /// </summary>
-    public class TaskReboot : AbstractModule<TaskRebootMessage>
+    public class TaskReboot : AbstractModule<DataContracts.TaskReboot>
     {
         public TaskReboot()
         {
             Name = "TaskReboot";
         }
 
-        protected override void DoWork(Response data, TaskRebootMessage msg)
+        protected override void DoWork(Response data, DataContracts.TaskReboot msg)
         {
             if (!msg.Job) return;
 

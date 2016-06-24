@@ -31,7 +31,7 @@ namespace FOG.Modules.DisplayManager
     /// <summary>
     ///     Change the resolution of the display
     /// </summary>
-    public class DisplayManager : AbstractModule<DisplayMessage>
+    public class DisplayManager : AbstractModule<DataContracts.DisplayManager>
     {
         private Display _display;
 
@@ -41,7 +41,7 @@ namespace FOG.Modules.DisplayManager
             Compatiblity = Settings.OSType.Windows;
         }
 
-        protected override void DoWork(Response data, DisplayMessage msg)
+        protected override void DoWork(Response data, DataContracts.DisplayManager msg)
         {
             if(_display == null)
                 _display = new Display();

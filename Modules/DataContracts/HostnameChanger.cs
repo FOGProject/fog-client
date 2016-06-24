@@ -17,10 +17,17 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.TaskReboot
+namespace FOG.Modules.DataContracts
 {
-    public class TaskRebootMessage
+    public class HostnameChanger
     {
-        public bool Job = false;
+        public string Hostname = "";
+        public string Key = "";
+        public bool AD = false;
+        public bool Enforce = true;
+        public string ADDom = "";
+        public string ADOU = "";
+        public string ADUser = "";
+        public string ADPass = "";
     }
 }

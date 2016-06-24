@@ -127,34 +127,34 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AutoLogOut\AutoLogOut.cs" />
-    <Compile Include="AutoLogOut\AutoLogOutMessage.cs" />
+    <Compile Include="DataContracts\AutoLogOut.cs" />
     <Compile Include="DisplayManager\Display.cs" />
     <Compile Include="DisplayManager\DisplayManager.cs" />
-    <Compile Include="DisplayManager\DisplayMessage.cs" />
+    <Compile Include="DataContracts\DisplayManager.cs" />
     <Compile Include="DisplayManager\User_32.cs" />
     <Compile Include="PowerManagement\Task.cs" />
-    <Compile Include="PowerManagement\PowerManagementMessage.cs" />
+    <Compile Include="DataContracts\PowerManagement.cs" />
     <Compile Include="PowerManagement\PowerManagement.cs" />
-    <Compile Include="HostnameChanger\HostnameChangerMessage.cs" />
+    <Compile Include="DataContracts\HostnameChanger.cs" />
     <Compile Include="HostnameChanger\HostnameChanger.cs" />
     <Compile Include="HostnameChanger\IHostName.cs" />
     <Compile Include="HostnameChanger\Linux\LinuxHostName.cs" />
     <Compile Include="HostnameChanger\Mac\MacHostName.cs" />
     <Compile Include="HostnameChanger\Windows\WinActivation.cs" />
     <Compile Include="HostnameChanger\Windows\WindowsHostName.cs" />
-    <Compile Include="PrinterManager\DefaultPrinterMessage.cs" />
+    <Compile Include="DataContracts\DefaultPrinterManager.cs" />
     <Compile Include="PrinterManager\PrintManagerBridge.cs" />
     <Compile Include="PrinterManager\Printer.cs" />
     <Compile Include="PrinterManager\DefaultPrinterManager.cs" />
     <Compile Include="PrinterManager\PrinterManager.cs" />
-    <Compile Include="PrinterManager\PrinterMessage.cs" />
+    <Compile Include="DataContracts\PrinterManager.cs" />
     <Compile Include="PrinterManager\Unix\UnixPrinterManager.cs" />
     <Compile Include="PrinterManager\Windows\WindowsPrinterManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SnapinClient\Snapin.cs" />
-    <Compile Include="SnapinClient\SnapinMessage.cs" />
+    <Compile Include="DataContracts\Snapin.cs" />
+    <Compile Include="DataContracts\SnapinClient.cs" />
     <Compile Include="SnapinClient\SnapinClient.cs" />
-    <Compile Include="TaskReboot\TaskRebootMessage.cs" />
+    <Compile Include="DataContracts\TaskReboot.cs" />
     <Compile Include="TaskReboot\TaskReboot.cs" />
     <Compile Include="UserTracker\UserTracker.cs" />
   </ItemGroup>

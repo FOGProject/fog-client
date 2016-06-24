@@ -17,10 +17,23 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.PrinterManager
+namespace FOG.Modules.DataContracts
 {
-    public class DefaultPrinterMessage
+    public class Snapin
     {
+        public int JobTaskID = -1;
         public string Name = "";
+        public string JobCreation = "-1";
+        public string Action = "";
+
+        public string RunWith = "";
+        public string RunWithArgs = "";
+
+        public string FileName = "";
+        public string Args = "";
+        public string Hash = "";
+
+        public bool Hide = false;
+        public int TimeOut = -1;
     }
 }

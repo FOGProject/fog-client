@@ -18,10 +18,11 @@
  */
 
 using System.Collections.Generic;
+using FOG.Modules.PowerManagement;
 
-namespace FOG.Modules.PowerManagement
+namespace FOG.Modules.DataContracts
 {
-    public class PowerManagementMessage
+    public class PowerManagement
     {
         public List<Task> Tasks = new List<Task>();
         public string OnDemand = "";

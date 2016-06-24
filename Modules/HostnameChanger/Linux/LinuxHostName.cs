@@ -35,12 +35,12 @@ namespace FOG.Modules.HostnameChanger.Linux
             BruteForce(hostname);
         }
 
-        public bool RegisterComputer(HostnameChangerMessage msg)
+        public bool RegisterComputer(DataContracts.HostnameChanger msg)
         {
             throw new NotImplementedException();
         }
 
-        public void UnRegisterComputer(HostnameChangerMessage msg)
+        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             throw new NotImplementedException();
         }

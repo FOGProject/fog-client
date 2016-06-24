@@ -31,7 +31,7 @@ namespace FOG.Modules.PowerManagement
     /// <summary>
     ///     Perform cron style power tasks
     /// </summary>
-    public class PowerManagement : AbstractModule<PowerManagementMessage>
+    public class PowerManagement : AbstractModule<DataContracts.PowerManagement>
     {
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IScheduler _scheduler;
@@ -61,7 +61,7 @@ namespace FOG.Modules.PowerManagement
             _triggers = new Dictionary<string, TriggerKey>(StringComparer.OrdinalIgnoreCase);
         }
 
-        protected override void DoWork(Response data, PowerManagementMessage msg)
+        protected override void DoWork(Response data, DataContracts.PowerManagement msg)
         {
             if (data.Error)
             {

@@ -30,7 +30,7 @@ namespace FOG.Modules.HostnameChanger
     /// <summary>
     ///     Rename a host, register with AD, and activate the windows key
     /// </summary>
-    public class HostnameChanger : AbstractModule<HostnameChangerMessage>
+    public class HostnameChanger : AbstractModule<DataContracts.HostnameChanger>
     {
         private readonly IHostName _instance;
 
@@ -52,7 +52,7 @@ namespace FOG.Modules.HostnameChanger
             }
         }
 
-        protected override void DoWork(Response data, HostnameChangerMessage msg)
+        protected override void DoWork(Response data, DataContracts.HostnameChanger msg)
         {
             if (data.Error) return;
             if (!data.Encrypted)
@@ -85,7 +85,7 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Rename the computer and remove it from active directory
-        private void RenameComputer(HostnameChangerMessage msg)
+        private void RenameComputer(DataContracts.HostnameChanger msg)
         {
             Log.Entry(Name, "Checking Hostname");
             if (string.IsNullOrEmpty(msg.Hostname))
@@ -117,7 +117,7 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Add a host to active directory
-        private void RegisterComputer(HostnameChangerMessage msg)
+        private void RegisterComputer(DataContracts.HostnameChanger msg)
         {
             if (!msg.AD)
                 return;
@@ -142,7 +142,7 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Remove the host from active directory
-        private void UnRegisterComputer(HostnameChangerMessage msg)
+        private void UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             Log.Entry(Name, "Removing host from active directory");
 
@@ -163,7 +163,7 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Active a computer with a product key
-        private void ActivateComputer(HostnameChangerMessage msg)
+        private void ActivateComputer(DataContracts.HostnameChanger msg)
         {
             if (string.IsNullOrEmpty(msg.Key))
                 return;

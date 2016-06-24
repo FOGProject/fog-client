@@ -34,7 +34,7 @@ namespace FOG.Modules.HostnameChanger.Mac
             ProcessHandler.Run("scutil", "--set ComputerName " + hostname);
         }
 
-        public bool RegisterComputer(HostnameChangerMessage msg)
+        public bool RegisterComputer(DataContracts.HostnameChanger msg)
         {
             var user = msg.ADUser;
 
@@ -51,7 +51,7 @@ namespace FOG.Modules.HostnameChanger.Mac
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(HostnameChangerMessage msg)
+        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             throw new NotImplementedException();
         }

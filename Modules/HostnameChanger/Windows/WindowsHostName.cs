@@ -37,7 +37,7 @@ namespace FOG.Modules.HostnameChanger.Windows
         private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
             UnJoinOptions fUnjoinOptions);
 
-        private static int DomainWrapper(HostnameChangerMessage msg, bool ou, JoinOptions options)
+        private static int DomainWrapper(DataContracts.HostnameChanger msg, bool ou, JoinOptions options)
         {
             return NetJoinDomain(null,
                 msg.ADDom,
@@ -87,7 +87,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                 "ComputerName", hostname, false);
         }
 
-        public bool RegisterComputer(HostnameChangerMessage msg)
+        public bool RegisterComputer(DataContracts.HostnameChanger msg)
         {
             // Check if the host is already part of the set domain by checking server IPs
             try
@@ -134,7 +134,7 @@ namespace FOG.Modules.HostnameChanger.Windows
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(HostnameChangerMessage msg)
+        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             try
             {

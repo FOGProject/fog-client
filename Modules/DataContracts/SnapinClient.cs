@@ -19,12 +19,10 @@
 
 using System.Collections.Generic;
 
-namespace FOG.Modules.PrinterManager
+namespace FOG.Modules.DataContracts
 {
-    public class PrinterMessage
+    public class SnapinClient
     {
-        public string Mode = "0";
-        public List<Printer> Printers = new List<Printer>();
-        public List<string> AllPrinters = new List<string>();
+        public List<Snapin> Snapins = new List<Snapin>();
     }
 }

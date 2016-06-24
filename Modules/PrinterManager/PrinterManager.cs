@@ -31,7 +31,7 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class PrinterManager : AbstractModule<PrinterMessage>
+    public class PrinterManager : AbstractModule<DataContracts.PrinterManager>
     {
         private static string LogName;
         private readonly PrintManagerBridge _instance;
@@ -55,7 +55,7 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected override void DoWork(Response data, PrinterMessage msg)
+        protected override void DoWork(Response data, DataContracts.PrinterManager msg)
         {
             Log.Entry(Name, "Getting installed printers");
             var installedPrinters = _instance.GetPrinters();
@@ -104,7 +104,7 @@ namespace FOG.Modules.PrinterManager
                 _instance.ApplyChanges();
         }
 
-        private void RemoveExtraPrinters(List<Printer> newPrinters, PrinterMessage msg, List<string> existingPrinters )
+        private void RemoveExtraPrinters(List<Printer> newPrinters, DataContracts.PrinterManager msg, List<string> existingPrinters )
         {
             var managedPrinters = newPrinters.Where(printer => printer != null).Select(printer => printer.Name).ToList();
 

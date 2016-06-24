@@ -17,12 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.DisplayManager
+namespace FOG.Modules.DataContracts
 {
-    public class DisplayMessage
+    public class TaskReboot
     {
-        public int X;
-        public int Y;
-        public int R;
+        public bool Job = false;
     }
 }

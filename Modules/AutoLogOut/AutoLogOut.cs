@@ -27,7 +27,7 @@ namespace FOG.Modules.AutoLogOut
     /// <summary>
     ///     Automatically log out the user after a given duration of inactivity
     /// </summary>
-    public class AutoLogOut : AbstractModule<AutoLogOutMessage>
+    public class AutoLogOut : AbstractModule<DataContracts.AutoLogOut>
     {
         private readonly int _minimumTime;
 
@@ -37,7 +37,7 @@ namespace FOG.Modules.AutoLogOut
             _minimumTime = 300;
         }
 
-        protected override void DoWork(Response data, AutoLogOutMessage msg)
+        protected override void DoWork(Response data, DataContracts.AutoLogOut msg)
         {
 			if (!User.AnyLoggedIn())
 			{
@@ -67,7 +67,7 @@ namespace FOG.Modules.AutoLogOut
         }
 
         //Get how long a user must be inactive before logging them out
-        private int GetTimeOut(AutoLogOutMessage msg)
+        private int GetTimeOut(DataContracts.AutoLogOut msg)
         {
             return msg.Time >= _minimumTime ? msg.Time : 0;
         }

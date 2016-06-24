@@ -28,7 +28,7 @@ namespace FOG.Modules.PrinterManager
     /// <summary>
     ///     Manage printers
     /// </summary>
-    public class DefaultPrinterManager : AbstractModule<DefaultPrinterMessage>
+    public class DefaultPrinterManager : AbstractModule<DataContracts.DefaultPrinterManager>
     {
         private readonly PrintManagerBridge _instance;
 
@@ -47,7 +47,7 @@ namespace FOG.Modules.PrinterManager
             }
         }
 
-        protected override void DoWork(Response data, DefaultPrinterMessage msg)
+        protected override void DoWork(Response data, DataContracts.DefaultPrinterManager msg)
         {
             if (string.IsNullOrEmpty(msg.Name)) return;
 

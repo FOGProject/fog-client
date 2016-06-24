@@ -20,6 +20,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using FOG.Modules.DataContracts;
 using Zazzles;
 using Zazzles.Data;
 using Zazzles.Middleware;
@@ -30,14 +31,14 @@ namespace FOG.Modules.SnapinClient
     /// <summary>
     ///     Installs snapins on client computers
     /// </summary>
-    public class SnapinClient : AbstractModule<SnapinMessage>
+    public class SnapinClient : AbstractModule<DataContracts.SnapinClient>
     {
         public SnapinClient()
         {
             Name = "SnapinClient";
         }
 
-        protected override void DoWork(Response data, SnapinMessage msg)
+        protected override void DoWork(Response data, DataContracts.SnapinClient msg)
         {
             if (data.Error) return;
 

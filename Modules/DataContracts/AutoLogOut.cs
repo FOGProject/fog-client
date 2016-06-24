@@ -17,23 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.SnapinClient
+namespace FOG.Modules.DataContracts
 {
-    public class Snapin
+    public class AutoLogOut
     {
-        public int JobTaskID = -1;
-        public string Name = "";
-        public string JobCreation = "-1";
-        public string Action = "";
-
-        public string RunWith = "";
-        public string RunWithArgs = "";
-
-        public string FileName = "";
-        public string Args = "";
-        public string Hash = "";
-
-        public bool Hide = false;
-        public int TimeOut = -1;
+        public int Time = -1;
     }
 }

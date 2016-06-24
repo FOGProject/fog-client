@@ -17,10 +17,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-namespace FOG.Modules.AutoLogOut
+using System.Collections.Generic;
+using FOG.Modules.PrinterManager;
+
+namespace FOG.Modules.DataContracts
 {
-    public class AutoLogOutMessage
+    public class PrinterManager
     {
-        public int Time = -1;
+        public string Mode = "0";
+        public List<Printer> Printers = new List<Printer>();
+        public List<string> AllPrinters = new List<string>();
     }
 }

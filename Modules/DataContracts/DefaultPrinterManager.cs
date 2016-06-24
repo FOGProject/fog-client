@@ -17,12 +17,10 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
 
-using System.Collections.Generic;
-
-namespace FOG.Modules.SnapinClient
+namespace FOG.Modules.DataContracts
 {
-    public class SnapinMessage
+    public class DefaultPrinterManager
     {
-        public List<Snapin> Snapins = new List<Snapin>();
+        public string Name = "";
     }
 }
