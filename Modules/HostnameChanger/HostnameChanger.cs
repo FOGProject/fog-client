@@ -112,8 +112,6 @@ namespace FOG.Modules.HostnameChanger
             {
                 Log.Error(Name, ex);
             }
-
-            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
         }
 
         //Add a host to active directory
@@ -132,8 +130,7 @@ namespace FOG.Modules.HostnameChanger
             try
             {
                 Log.Entry(Name, "Attempting to join active directory");
-                if (_instance.RegisterComputer(msg))
-                    Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
+                _instance.RegisterComputer(msg);
             }
             catch (Exception ex)
             {

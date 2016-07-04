@@ -36,17 +36,8 @@ namespace FOG.Modules.HostnameChanger.Mac
 
         public bool RegisterComputer(DataContracts.HostnameChanger msg)
         {
-            var user = msg.ADUser;
-
-            // Remove the DOMAIN from ADUser since osx binding does not require it
-            if (user.Contains("/"))
-            {
-                var splitIndex = msg.ADUser.IndexOf("/", StringComparison.Ordinal);
-                user = msg.ADUser.Substring(splitIndex + 1);
-            }
-
             var returnCode = ProcessHandler.Run("/bin/bash",
-                $"{Path.Combine(Settings.Location, "osxbind.sh")} {msg.ADDom} {msg.ADOU} {user} {msg.ADPass}");
+                $"{Path.Combine(Settings.Location, "osxbind.sh")} {msg.ADDom} {msg.ADUser} {msg.ADPass} {msg.ADOU}");
 
             return returnCode == 0;
         }

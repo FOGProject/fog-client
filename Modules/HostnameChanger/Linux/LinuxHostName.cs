@@ -33,6 +33,7 @@ namespace FOG.Modules.HostnameChanger.Linux
             currentHostName = Environment.MachineName;
 
             BruteForce(hostname);
+            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
         }
 
         public bool RegisterComputer(DataContracts.HostnameChanger msg)

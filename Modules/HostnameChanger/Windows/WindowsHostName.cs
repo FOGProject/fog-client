@@ -85,6 +85,8 @@ namespace FOG.Modules.HostnameChanger.Windows
                 "ComputerName", hostname, false);
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
                 "ComputerName", hostname, false);
+
+            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
         }
 
         public bool RegisterComputer(DataContracts.HostnameChanger msg)
@@ -131,7 +133,10 @@ namespace FOG.Modules.HostnameChanger.Windows
             Log.Entry(Name,
                 $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
-            return returnCode == 0;
+            if (returnCode != 0) return false;
+
+            Power.Restart("Host joined to Active Directory, restart required", Power.ShutdownOptions.Delay);
+            return true;
         }
 
         public void UnRegisterComputer(DataContracts.HostnameChanger msg)
