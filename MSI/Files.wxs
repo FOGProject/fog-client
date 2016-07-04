@@ -57,6 +57,7 @@
             <File Id="CommonLoggingCore" Name="Common.Logging.Core.dll" Source="..\bin\Common.Logging.Core.dll" />
             <File Id="CommonLogging" Name="Common.Logging.dll" Source="..\bin\Common.Logging.dll" />
             <File Id="Quartz" Name="Quartz.dll" Source="..\bin\Quartz.dll" />
+            <File Id="SharpZipLib" Name="ICSharpCode.SharpZipLib.dll" Source="..\bin\ICSharpCode.SharpZipLib.dll" />
             
             <File Id="FOGShutdownGUIconf" Name="FOGShutdownGUI.exe.config" Source="..\bin\FOGShutdownGUI.exe.config" />
             <File Id="FOGTrayconf" Name="FOGTray.exe.config" Source="..\bin\FOGTray.exe.config" />

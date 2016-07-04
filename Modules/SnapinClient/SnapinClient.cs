@@ -25,6 +25,9 @@ using Zazzles;
 using Zazzles.Data;
 using Zazzles.Middleware;
 using Zazzles.Modules;
+using ICSharpCode.SharpZipLib.Zip;
+using Newtonsoft.Json.Linq;
+using Quartz.Util;
 
 namespace FOG.Modules.SnapinClient
 {
@@ -100,7 +103,11 @@ namespace FOG.Modules.SnapinClient
                     return;
                 }
 
-                exitCode = StartSnapin(snapin, snapinFilePath);
+                var isPack = snapin.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) &&
+                             snapin.RunWith.IsNullOrWhiteSpace()
+                             && snapin.RunWithArgs.IsNullOrWhiteSpace() && snapin.Args.IsNullOrWhiteSpace();
+
+                exitCode = (isPack) ? ProcessSnapinPack(snapin, snapinFilePath) : StartSnapin(snapin, snapinFilePath);
                 if (File.Exists(snapinFilePath))
                     File.Delete(snapinFilePath);
 
@@ -123,15 +130,61 @@ namespace FOG.Modules.SnapinClient
             }
         }
 
+        private string ProcessSnapinPack(Snapin snapin, string localPath)
+        {
+            Log.Entry(Name, "Processing SnapinPack " + snapin.FileName);
+            var extractionPath = Path.Combine(Settings.Location, "tmp", snapin.Name);
+            try
+            {
+                Log.Entry(Name, "Extracting SnapinPack");
+                if(Directory.Exists(extractionPath))
+                    Directory.Delete(extractionPath, true);
+                Directory.CreateDirectory(extractionPath);
+                var fz = new FastZip();
+                fz.ExtractZip(localPath, extractionPath, null);
+
+                Log.Entry(Name, "Reading SnapinPack configuration");
+                var snapinConfigFile = Path.Combine(extractionPath, "config.json");
+                if (!File.Exists(snapinConfigFile))
+                    throw  new FileNotFoundException("Invalid snapin object, no config.json");
+
+                var rawConfig = JObject.Parse(File.ReadAllText(snapinConfigFile));
+                var snapinConfig = rawConfig.ToObject<SnapinConfigFile>();
+
+                Log.Entry(Name, "SnapinPack Configuration");
+                Log.Entry(Name, "--> Name:    " + snapinConfig.Name);
+                Log.Entry(Name, "--> Version: " + snapinConfig.Version);
+
+                Log.Entry(Name, "Processing SnapinPack execution");
+                snapinConfig.File = snapinConfig.File.Replace("[FOG_SNAPIN_PATH]", extractionPath);
+                snapinConfig.Args = snapinConfig.Args.Replace("[FOG_SNAPIN_PATH]", extractionPath);
+
+                // Convert the SnapinPack to a normal snapin
+                snapin.RunWith = snapinConfig.File;
+                snapin.RunWithArgs = snapinConfig.Args;
+
+                var returnCode = StartSnapin(snapin, extractionPath, true);
+                Directory.Delete(extractionPath, true);
+
+                return returnCode;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, ex);
+                return "-1";
+            }
+
+        }
+
         //Execute the snapin once it has been downloaded
-        private string StartSnapin(Snapin snapin, string snapinPath)
+        private string StartSnapin(Snapin snapin, string snapinPath, bool snapinPack = false)
         {
             Notification.Emit(
                 "Installing " + snapin.Name,
                 "Please do not shutdown until this is completed",
                 true);
 
-            using (var process = GenerateProcess(snapin, snapinPath))
+            using (var process = (snapinPack) ? GenerateSnapinPackProcess(snapin) :GenerateProcess(snapin, snapinPath))
             {
                 try
                 {
@@ -203,6 +256,24 @@ namespace FOG.Modules.SnapinClient
                 process.StartInfo.FileName = Environment.ExpandEnvironmentVariables(snapinPath);
                 process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(snapin.Args);
             }
+
+            return process;
+        }
+
+        private static Process GenerateSnapinPackProcess(Snapin snapin)
+        {
+            var process = new Process
+            {
+                StartInfo =
+                {
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                }
+            };
+
+            process.StartInfo.FileName = Environment.ExpandEnvironmentVariables(snapin.RunWith);
+            process.StartInfo.Arguments = Environment.ExpandEnvironmentVariables(snapin.RunWithArgs).Trim();
 
             return process;
         }
