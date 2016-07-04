@@ -37,7 +37,7 @@ $msbuild = ($msbuild + " ")
 $plink   = ($plink + " ")
 $pscp    = ($pscp + " ")
 
-$buildMode       = "/verbosity:minimal /p:configuration=Debug"
+$buildMode       = "/verbosity:minimal /p:configuration=Release"
 $solutionConfig  = "$PSScriptRoot\FOGService.sln $buildMode"
 $installerConfig = "$PSScriptRoot\UniversalInstaller\UniversalInstaller.csproj $buildMode"
 $msiConfig       = "$PSScriptRoot\MSI\MSI.wixproj $buildMode"
@@ -68,7 +68,7 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 			"ProcessPrivileges.dll", "SuperSocket.Common.dll", "SuperSocket.SocketBase.dll", `
 			"SuperSocket.SocketEngine.dll", "SuperWebSocket.dll", "themes.xml", `
 			"WebSocket4Net.dll", "Zazzles.dll", "Quartz.dll", "Common.Logging.dll", `
-			"Common.Logging.Core.dll"
+			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll"
 
 ##################################################
 # Initial Build
@@ -81,9 +81,6 @@ Invoke-Expression ($msbuild + $solutionConfig) | out-null
 
 Write-Host "Copying Theme to build"
 Copy-Item "$PSScriptRoot\themes.xml" "$PSScriptRoot\bin\themes.xml"
-
-Write-Host "Deleting pdbs"
-get-childitem "$PSScriptRoot\bin\" -include *.pdb -recurse | foreach ($_) {remove-item $_.fullname}
 
 ##################################################
 # Build Installers
