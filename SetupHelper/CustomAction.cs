@@ -18,6 +18,7 @@
  */
 
 using System;
+using System.IO;
 using System.Linq;
 using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
@@ -77,6 +78,24 @@ namespace SetupHelper
             }
 
             return ActionResult.Failure;
+        }
+
+        [CustomAction]
+        public static ActionResult Cleanup(Session session)
+        {
+            try
+            {
+                var dir = session.CustomActionData["sINSTALLDIR"];
+
+                if (Directory.Exists(dir))
+                    Directory.Delete(dir, true);
+            }
+            catch (Exception ex)
+            {
+                DisplayMSIError(session, "Unable to cleanup leftover files: " + ex.Message);
+            }
+
+            return ActionResult.Success;
         }
 
         [CustomAction]

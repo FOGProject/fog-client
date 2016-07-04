@@ -43,7 +43,9 @@
 
       <Custom Action="UninstallFOGCA" After="InstallFiles">REMOVE="ALL"</Custom>
       <Custom Action="CleanTasks" After="InstallFiles"></Custom>
-
+      
+      <Custom Action="SetCleanupProp" Before="Cleanup" />
+      <Custom Action="Cleanup" After="InstallFiles">(NOT UPGRADINGPRODUCTCODE) AND (REMOVE="ALL")</Custom>
       <RemoveExistingProducts Before="InstallInitialize" />
     </InstallExecuteSequence>
     
@@ -55,6 +57,7 @@
       <ProgressText Action="CleanTasks">Cleaning Green FOG tasks</ProgressText>
       <ProgressText Action="UninstallCert">Unpinning FOG server</ProgressText>
       <ProgressText Action="UninstallFOGCA">Unpinning FOG Project</ProgressText>
+      <ProgressText Action="Cleanup">Removing leftover files</ProgressText>
     </UI>
     
     <!-- Setup the UI -->
@@ -81,7 +84,10 @@
                   DllEntry="UninstallCert" />
     <CustomAction Id="CleanTasks" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll"
                   DllEntry="CleanTasks" />
-                     
+    <CustomAction Id="Cleanup" Return="check" Impersonate="no" Execute="deferred" BinaryKey="SetupHelper.CA.dll"
+                   DllEntry="Cleanup" />
+    
+    <CustomAction Id="SetCleanupProp" Property="Cleanup" Value="sINSTALLDIR=[INSTALLDIR];" />
     <CustomAction Id="SetSettingsProps" Property="SaveSettings" Value="sHTTPS=[HTTPS];sUSETRAY=[USETRAY];sWEBADDRESS=[WEBADDRESS];sWEBROOT=[WEBROOT];sROOTLOG=[ROOTLOG];sProductVersion=[ProductVersion];sINSTALLDIR=[INSTALLDIR]" />
     <CustomAction Id="SetCertProp" Property="InstallCert" Value="sHTTPS=[HTTPS];sUSETRAY=[USETRAY];sWEBADDRESS=[WEBADDRESS];sWEBROOT=[WEBROOT];sROOTLOG=[ROOTLOG];sProductVersion=[ProductVersion];sINSTALLDIR=[INSTALLDIR]" />
 
