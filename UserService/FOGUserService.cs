@@ -32,6 +32,7 @@ namespace FOG
 {
     internal class FOGUserService : AbstractService
     {
+        private IModule[] _modules;
 
         private static void OnUpdate(dynamic data)
         {
@@ -66,12 +67,19 @@ namespace FOG
 
         protected override IModule[] GetModules()
         {
-            return new IModule[]
+            if (_modules != null)
+                return _modules;
+
+            Log.Entry(Name, "Initializing modules");
+
+            _modules =  new IModule[]
             {
                 new AutoLogOut(),
                 new DefaultPrinterManager(),
                 new DisplayManager()
             };
+
+            return _modules;
         }
 
         protected override Response GetLoopData()

@@ -37,10 +37,11 @@ namespace FOG
 {
     public class FOGSystemService : AbstractService
     {
-
         private const int MIN_PROMPT = 60;
         private const int MAX_PROMPT = 600;
         private const int MAX_SLEEP_TIME = 60*60*2; // 2 Hours
+
+        private IModule[] _modules;
 
         protected override Response GetLoopData()
         {
@@ -90,40 +91,6 @@ namespace FOG
 
         protected override void Load()
         {
-
-            try
-            {
-                // Kill any existing sub-processes
-                ProcessHandler.KillAllEXE("FOGUserService");
-                ProcessHandler.KillAllEXE("FOGTray");
-
-                // Delete any tmp files from last session
-                var tmpDir = Path.Combine(Settings.Location, "tmp");
-                if (Directory.Exists(tmpDir))
-                {
-                    Directory.Delete(tmpDir, true);
-                }
-
-                if (Settings.Get("RootLog").Equals("0") && Settings.OS == Settings.OSType.Windows)
-                {
-                    try
-                    {
-                        var messUpLog = @"C:\Program";
-                        if (File.Exists(messUpLog))
-                            File.Delete(messUpLog);
-                    }
-                    catch (Exception ex)
-                    {
-                    }
-
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Could not clear last session data");
-                Log.Error(Name, ex);
-            }
-
             Bus.SetMode(Bus.Mode.Server);
 
             dynamic json = new JObject();
@@ -132,6 +99,25 @@ namespace FOG
 
             if (Settings.OS == Settings.OSType.Linux)
                 UserServiceSpawner.Start();
+        }
+
+        private void CleanTmpFolder()
+        {
+            try
+            {
+                // Delete any tmp files from last session
+                var tmpDir = Path.Combine(Settings.Location, "tmp");
+                if (Directory.Exists(tmpDir))
+                {
+                    Directory.Delete(tmpDir, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Could not clear last session data");
+                Log.Error(Name, ex);
+            }
+
         }
 
         protected override void Unload()
@@ -151,8 +137,12 @@ namespace FOG
 
         protected override IModule[] GetModules()
         {
+            if (_modules != null)
+                return _modules;
+
+            Log.Entry(Name, "Initializing modules");
             var upgradeFiles = new string[] {"FOGUpdateHelper.exe", "FOGUpdateWaiter.exe"};
-            return new IModule[]
+            _modules = new IModule[]
             {
                 new ClientUpdater(upgradeFiles), 
                 new TaskReboot(),
@@ -162,10 +152,13 @@ namespace FOG
                 new PowerManagement(),
                 new UserTracker()
             };
+
+            return _modules;
         }
 
         protected override void ModuleLooper()
         {
+            JITCompile();
             Authenticate();
 
             base.ModuleLooper();
@@ -174,6 +167,12 @@ namespace FOG
                 UpdateHandler.BeginUpdate();
 
             Process.GetCurrentProcess().Kill();
+        }
+
+        private void JITCompile()
+        {
+            Log.Entry(Name, "Invoking early JIT compilation on needed binaries");
+            ProcessHandler.RunClientEXE("FOGShutdownGUI.exe", "jit");
         }
 
         private void Authenticate()
