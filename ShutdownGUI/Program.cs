@@ -34,6 +34,11 @@ namespace FOG
         [STAThread]
         private static void Main(string[] args)
         {
+            if (args.Length > 0 && args[0].Equals("jit", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm(args));
