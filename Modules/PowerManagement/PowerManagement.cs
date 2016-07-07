@@ -166,7 +166,7 @@ namespace FOG.Modules.PowerManagement
                     var key = trigger.Key;
                     _triggers.Add(task.ToString(), key);
 
-                    var isRestart = task.Action.Equals("shutdown", StringComparison.OrdinalIgnoreCase);
+                    var isRestart = task.Action.Equals("reboot", StringComparison.OrdinalIgnoreCase);
 
                     _scheduler.ScheduleJob(JobFactory(isRestart), trigger);
                 }
