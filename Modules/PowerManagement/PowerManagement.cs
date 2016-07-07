@@ -36,9 +36,6 @@ namespace FOG.Modules.PowerManagement
         private readonly ISchedulerFactory _schedulerFactory;
         private readonly IScheduler _scheduler;
 
-        private readonly IJobDetail _restartJob;
-        private readonly IJobDetail _shutdownJob;
-
         private readonly Dictionary<string, TriggerKey> _triggers; 
 
         public PowerManagement()
@@ -48,15 +45,6 @@ namespace FOG.Modules.PowerManagement
             _schedulerFactory = new StdSchedulerFactory();
             _scheduler = _schedulerFactory.GetScheduler();
             _scheduler.Start();
-
-            _restartJob = JobBuilder.Create<RestartJob>()
-                .WithIdentity("restart", "powerGroup")
-                .StoreDurably(true)
-                .Build();
-            _shutdownJob = JobBuilder.Create<ShutdownJob>()
-                .WithIdentity("shutdown", "powerGroup")
-                .StoreDurably(true)
-                .Build();
 
             _triggers = new Dictionary<string, TriggerKey>(StringComparer.OrdinalIgnoreCase);
         }
@@ -90,6 +78,25 @@ namespace FOG.Modules.PowerManagement
             }
 
             CreateTasks(msg.Tasks);
+        }
+
+        private IJobDetail JobFactory(bool restart)
+        {
+            var group = (restart) ? "restart" : "shutdown";
+            var name = Guid.NewGuid().ToString();
+
+            if (restart)
+            {
+                return JobBuilder.Create <RestartJob> ()
+                    .WithIdentity(name, group)
+                    .Build();
+            }
+            else
+            {
+                return JobBuilder.Create<ShutdownJob>()
+                     .WithIdentity(name, group)
+                     .Build();
+            }
         }
 
         private void ClearAll()
@@ -159,14 +166,9 @@ namespace FOG.Modules.PowerManagement
                     var key = trigger.Key;
                     _triggers.Add(task.ToString(), key);
 
-                    if (task.Action.Equals("shutdown", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _scheduler.ScheduleJob(_shutdownJob, trigger);
-                    }
-                    else if (task.Action.Equals("reboot", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _scheduler.ScheduleJob(_restartJob, trigger);
-                    }
+                    var isRestart = task.Action.Equals("shutdown", StringComparison.OrdinalIgnoreCase);
+
+                    _scheduler.ScheduleJob(JobFactory(isRestart), trigger);
                 }
                 catch (Exception ex)
                 {
