@@ -17,7 +17,7 @@ Windows      | Linux       | OSX
 |:----------------:|:-------:|:-----:|:---:|
 | Auto Logout | ✓ | ✓ | ✓ |
 | Auto Updating | ✓ | ✓ | ✓ |
-| GreenFOG | ✓ | ✓ | ✓ |
+| PowerManagement | ✓ | ✓ | ✓ |
 | Rename | ✓ | ✓ | ✓ |
 | Join Active Directory | ✓ |  | ✓ |
 | Join LDAP | ✓ |  | ✓ |
@@ -61,8 +61,8 @@ AutoLogOut is responsible for automatically logging out users after a set inacti
 * On Linux AutoLogOut is only possible if `xprintidle` is installed.
 * On Windows one user must be logged in for other users to log out. This is a security measure put in place by Windows. For example, if 5 users are 'logged in', but all hit the 'Switch User' button, non will be logged out. But once someone logs into the machine they will be. GPO is recommened to handle auto log outs on Windows because of this restriction.
 
-#### GreenFOG
-GreenFOG is a cron-style power management module. A computer can be configured to restart / shutdown at specific times / days. If automatic shutdown is used, GreenFOG cannot be used to turn back on the computer. Wake On Lan would need to be used to automate this.
+#### PowerManagement
+PowerManagement is a cron-style power management module. A computer can be configured to restart / shutdown at specific times / days. On-demand shutdown / restarts can also be issued with this module.
 
 #### HostnameChanger
 HostnameChanger is one of the core, and most used, modules of the client. It will:

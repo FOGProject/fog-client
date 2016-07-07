@@ -39,19 +39,19 @@ namespace FOG.Modules.AutoLogOut
 
         protected override void DoWork(Response data, DataContracts.AutoLogOut msg)
         {
-			if (!User.AnyLoggedIn())
-			{
-				Log.Entry(Name, "No user logged in");
-				return;
-			}
+            if (!User.AnyLoggedIn())
+            {
+            	Log.Entry(Name, "No user logged in");
+            	return;
+            }
 
             var timeOut = GetTimeOut(msg);
             if (timeOut <= 0) return;
 
-			var inactiveTime = User.InactivityTime();
+            var inactiveTime = User.InactivityTime();
 
             Log.Entry(Name, $"Time set to {timeOut} seconds");
-			Log.Entry(Name, $"Inactive for {inactiveTime} seconds");
+            Log.Entry(Name, $"Inactive for {inactiveTime} seconds");
 
             if (inactiveTime < timeOut) return;
 
