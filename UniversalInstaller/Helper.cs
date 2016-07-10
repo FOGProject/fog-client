@@ -19,8 +19,8 @@
 
 using System;
 using System.IO;
-using System.IO.Compression;
 using System.Reflection;
+using ICSharpCode.SharpZipLib.Zip;
 using Zazzles;
 
 namespace FOG
@@ -28,7 +28,7 @@ namespace FOG
     public static class Helper
     {
         private const string LogName = "Installer";
-        public const string ClientVersion = "0.11.2";
+        public const string ClientVersion = "0.11.3";
 
         public static IInstall Instance { get;  }
 
@@ -62,10 +62,14 @@ namespace FOG
 
         public static void ExtractFiles(string tmp, string location)
         {
-            var tmpLocation = Path.Combine(tmp, "FOGService.zip");
-            ExtractResource("FOG.Scripts.FOGService.zip", tmpLocation);
-            ZipFile.ExtractToDirectory(tmpLocation, location);
-            File.Delete(tmpLocation);
+            var zipLocation = Path.Combine(tmp, "FOGService.zip");
+            ExtractResource("FOG.Scripts.FOGService.zip", zipLocation);
+
+            Directory.CreateDirectory(location);
+            var fz = new FastZip();
+            fz.ExtractZip(zipLocation, location, null);
+
+            File.Delete(zipLocation);
         }
 
         public static bool ExtractResource(string resource, string filePath, bool dos2Unix=false)
