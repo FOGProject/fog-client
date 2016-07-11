@@ -231,13 +231,13 @@ namespace FOG
             if (string.IsNullOrWhiteSpace(server))
                 server = "fogserver";
             
-            Log.Write("Webroot [default: /fog]:                  ");
+            Log.Write("Webroot [default: /fog]:                 ");
             Console.ForegroundColor = _infoColor;
             var webRoot = Console.ReadLine();
             Console.ResetColor();
             if (string.IsNullOrWhiteSpace(webRoot))
                 webRoot = "/fog";
-            Log.Write("Enable tray icon? [Y/n]:                  ");
+            Log.Write("Enable tray icon? [Y/n]:                 ");
             Console.ForegroundColor = _infoColor;
             var rawTray = Console.ReadLine();
             Console.ResetColor();
@@ -261,7 +261,7 @@ namespace FOG
 
             if (start)
             {
-                Log.Write("Start FOG Service when done? [Y/n]:       ");
+                Log.Write("Start FOG Service when done? [Y/n]:      ");
                 Console.ForegroundColor = _infoColor;
                 var rawStart = Console.ReadLine();
                 Console.ResetColor();
