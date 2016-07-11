@@ -44,7 +44,7 @@ namespace FOG
             if (Settings.OS == Settings.OSType.Windows)
             {
                 Log.Entry("User Service", "Spawning waiter");
-                UpdateWaiterHelper.SpawnUpdateWaiter(Settings.Location);
+                UpdateWaiterHelper.SpawnUpdateWaiter(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
             else if (Settings.OS == Settings.OSType.Mac)
             {

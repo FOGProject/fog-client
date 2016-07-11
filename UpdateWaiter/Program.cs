@@ -30,7 +30,7 @@ namespace FOG
 
             //Update Line
             //Check if an parameter was passed
-            if (args.Length <= 0) return;
+            if (args.Length == 0) return;
 
             //Wait for all update files to be applied
             while (UpdaterHelper.Updating()) { }
