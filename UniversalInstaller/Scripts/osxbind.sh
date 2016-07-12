@@ -5,13 +5,17 @@
 
 compName=`scutil --get HostName`;
 adName="$1";
-adOU="$2";
-adUser="$3";
-adPass="$4";
-if [[ $adUser == *"\\"* ]]
-then
-adUser= $adUser | awk -F "\\" '{print $2}'
+adOU="$4";
+adUser="$2";
+adPass="$3";
+doAD="1"
+if [[ "$adUser" =~ $adName ]]; then
+  adUser="$(echo $adUser | awk -F "$adName" '{print $2}')"
 fi
+if [[ "$adUser" =~ "\\" ]]; then
+  adUser="$(echo $adUser | awk -F "\\" '{print $2}')"
+fi
+
 domainNow=`/usr/sbin/dsconfigad -show | /usr/bin/grep -i "Active Directory Domain" | /usr/bin/sed -n 's/[^.]*= //p'`
  
 if [ "$domainNow" = "$adName" ]
