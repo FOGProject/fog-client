@@ -56,7 +56,7 @@ namespace FOG
                 UserServiceSpawner.Stop();
 
                 //Create updating.info which will warn any sub-processes currently initializing that they should halt
-                File.WriteAllText(Path.Combine(Settings.Location, "tmp", "updating.info"), "foobar");
+                File.WriteAllText(Path.Combine(Settings.Location, "updating.info"), "foobar");
 
                 //Give time for any sub-processes that may be in the middle of initializing and missed the updating.info file so they can recieve the update pipe notice
                 Thread.Sleep(1000);

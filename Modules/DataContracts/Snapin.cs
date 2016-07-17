@@ -33,6 +33,8 @@ namespace FOG.Modules.DataContracts
         public string Args = "";
         public string Hash = "";
 
+        public string Url = "";
+        public bool Pack = false;
         public bool Hide = false;
         public int TimeOut = -1;
     }

@@ -123,13 +123,13 @@ namespace FOG.Modules.HostnameChanger
             if (string.IsNullOrEmpty(msg.ADDom) || string.IsNullOrEmpty(msg.ADUser) ||
                 string.IsNullOrEmpty(msg.ADPass))
             {
-                Log.Error(Name, "Required ADDom Joining information is missing");
+                Log.Error(Name, "Required domain information is missing");
                 return;
             }
 
             try
             {
-                Log.Entry(Name, "Attempting to join active directory");
+                Log.Entry(Name, "Attempting to join domain");
                 _instance.RegisterComputer(msg);
             }
             catch (Exception ex)
@@ -141,11 +141,11 @@ namespace FOG.Modules.HostnameChanger
         //Remove the host from active directory
         private void UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
-            Log.Entry(Name, "Removing host from active directory");
+            Log.Entry(Name, "Removing host from domain");
 
             if (string.IsNullOrEmpty(msg.ADUser) || string.IsNullOrEmpty(msg.ADPass))
             {
-                Log.Error(Name, "Required ADDom information is missing");
+                Log.Error(Name, "Required domain information is missing");
                 return;
             }
 

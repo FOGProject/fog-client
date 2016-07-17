@@ -58,15 +58,25 @@ namespace FOG.Modules.SnapinClient
                 Log.Entry(Name, $"    Name: {snapin.Name}");
                 Log.Entry(Name, $"    Created: {snapin.JobCreation}");
                 Log.Entry(Name, $"    Action: {snapin.Action}");
+                Log.Entry(Name, $"    Pack: {snapin.Pack}");
                 Log.Entry(Name, $"    Hide: {snapin.Hide}");
+                Log.Entry(Name, $"    Server: {snapin.Url}");
                 Log.Entry(Name, $"    TimeOut: {snapin.TimeOut}");
                 
                 if (!snapin.Hide)
                 {
-                    Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
-                    Log.Entry(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
+                    if (snapin.Pack)
+                    {
+                        Log.Entry(Name, $"    SnapinPack File: {snapin.RunWith}");
+                        Log.Entry(Name, $"    SnapinPack Args: {snapin.RunWithArgs}");
+                    }
+                    else
+                    {
+                        Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
+                        Log.Entry(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
+                        Log.Entry(Name, $"    Args: {snapin.Args}");
+                    }
                     Log.Entry(Name, $"    File: {snapin.FileName}");
-                    Log.Entry(Name, $"    Args: {snapin.Args}");
                 }
 
 
@@ -78,9 +88,12 @@ namespace FOG.Modules.SnapinClient
 
                 var snapinFilePath = Path.Combine(Settings.Location, "tmp", snapin.FileName);
 
-                var downloaded =
-                    Communication.DownloadFile(
-                        $"/service/snapins.file.php?mac={Configuration.MACAddresses()}&taskid={snapin.JobTaskID}", snapinFilePath);
+                var postfix = $"/service/snapins.file.php?mac={Configuration.MACAddresses()}&taskid={snapin.JobTaskID}";
+
+                var downloaded = (string.IsNullOrWhiteSpace(snapin.Url))
+                    ? Communication.DownloadFile(postfix, snapinFilePath)
+                    : Communication.DownloadExternalFile(snapin.Url + postfix, snapinFilePath);
+
 
                 Log.Entry(Name, snapinFilePath);
                 var exitCode = "-1";
@@ -103,11 +116,7 @@ namespace FOG.Modules.SnapinClient
                     return;
                 }
 
-                var isPack = snapin.FileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) &&
-                             snapin.RunWith.IsNullOrWhiteSpace()
-                             && snapin.RunWithArgs.IsNullOrWhiteSpace() && snapin.Args.IsNullOrWhiteSpace();
-
-                exitCode = (isPack) ? ProcessSnapinPack(snapin, snapinFilePath) : StartSnapin(snapin, snapinFilePath);
+                exitCode = (snapin.Pack) ? ProcessSnapinPack(snapin, snapinFilePath) : StartSnapin(snapin, snapinFilePath);
                 if (File.Exists(snapinFilePath))
                     File.Delete(snapinFilePath);
 
@@ -132,48 +141,49 @@ namespace FOG.Modules.SnapinClient
 
         private string ProcessSnapinPack(Snapin snapin, string localPath)
         {
+            var returnCode = "-1";
             Log.Entry(Name, "Processing SnapinPack " + snapin.FileName);
             var extractionPath = Path.Combine(Settings.Location, "tmp", snapin.Name);
             try
             {
                 Log.Entry(Name, "Extracting SnapinPack");
-                if(Directory.Exists(extractionPath))
+                if (Directory.Exists(extractionPath))
                     Directory.Delete(extractionPath, true);
                 Directory.CreateDirectory(extractionPath);
                 var fz = new FastZip();
                 fz.ExtractZip(localPath, extractionPath, null);
 
-                Log.Entry(Name, "Reading SnapinPack configuration");
-                var snapinConfigFile = Path.Combine(extractionPath, "config.json");
-                if (!File.Exists(snapinConfigFile))
-                    throw  new FileNotFoundException("Invalid snapin object, no config.json");
+                Log.Entry(Name, "Processing SnapinPack settings");
+                snapin.RunWith = snapin.RunWith.Replace("[FOG_SNAPIN_PATH]", extractionPath);
+                snapin.RunWithArgs = snapin.RunWithArgs.Replace("[FOG_SNAPIN_PATH]", extractionPath);
+                snapin.Args = "";
+                if (!snapin.Hide)
+                {
+                    Log.Entry(Name, "New SnapinPack File: " + snapin.RunWith);
+                    Log.Entry(Name, "New SnapinPack Args: " + snapin.RunWithArgs);
+                }
 
-                var rawConfig = JObject.Parse(File.ReadAllText(snapinConfigFile));
-                var snapinConfig = rawConfig.ToObject<SnapinConfigFile>();
-
-                Log.Entry(Name, "SnapinPack Configuration");
-                Log.Entry(Name, "--> Name:    " + snapinConfig.Name);
-                Log.Entry(Name, "--> Version: " + snapinConfig.Version);
-
-                Log.Entry(Name, "Processing SnapinPack execution");
-                snapinConfig.File = snapinConfig.File.Replace("[FOG_SNAPIN_PATH]", extractionPath);
-                snapinConfig.Args = snapinConfig.Args.Replace("[FOG_SNAPIN_PATH]", extractionPath);
-
-                // Convert the SnapinPack to a normal snapin
-                snapin.RunWith = snapinConfig.File;
-                snapin.RunWithArgs = snapinConfig.Args;
-
-                var returnCode = StartSnapin(snapin, extractionPath, true);
-                Directory.Delete(extractionPath, true);
-
-                return returnCode;
+                returnCode = StartSnapin(snapin, extractionPath, true);
             }
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
-                return "-1";
+            }
+            finally
+            {
+                try
+                {
+                    if (Directory.Exists(extractionPath))
+                        Directory.Delete(extractionPath, true);
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(Name, "Unable to clean up snapin pack");
+                    Log.Error(Name, ex);
+                }
             }
 
+            return returnCode;
         }
 
         //Execute the snapin once it has been downloaded

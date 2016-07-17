@@ -43,12 +43,10 @@ namespace FOG
 
             if (Settings.OS == Settings.OSType.Windows)
             {
-                Log.Entry("User Service", "Spawning waiter");
                 UpdateWaiterHelper.SpawnUpdateWaiter(System.Reflection.Assembly.GetEntryAssembly().Location);
             }
             else if (Settings.OS == Settings.OSType.Mac)
             {
-                Log.Entry("User Service", "Spawning waiter");
                 UpdateWaiterHelper.SpawnUpdateWaiter("launchctl", "load -w /Library/LaunchAgents/org.freeghost.useragent.plist");
             }
 

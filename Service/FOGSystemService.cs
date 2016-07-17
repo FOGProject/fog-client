@@ -103,6 +103,10 @@ namespace FOG
 
         private void CleanTmpFolder()
         {
+            var updatingFile = Path.Combine(Settings.Location, "updating.info");
+            if (File.Exists(updatingFile))
+                File.Delete(updatingFile);
+
             try
             {
                 // Delete any tmp files from last session
@@ -158,6 +162,7 @@ namespace FOG
 
         protected override void ModuleLooper()
         {
+            CleanTmpFolder();
             JITCompile();
             Authenticate();
 

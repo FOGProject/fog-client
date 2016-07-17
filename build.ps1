@@ -4,7 +4,7 @@ param(
 	[string]$server  = $(if ($publish) { Read-Host "Input server address"} ),
 	[string]$path    = $(if ($publish) { Read-Host "Input remote path"} ),
 	[string]$user    = $(if ($publish) { Read-Host "Input user name"} ),
-	[string]$channel = $(if ($publish) { Read-Host "Input channel(nightly, release-candidate, stable)"} ),
+	[string]$channel = $(if ($publish) { Read-Host "Input channel(nightly, release-candidate, release)"} ),
 	[string]$name    = $(if ($publish) { Read-Host "Input build name"} ),
 	[string]$ilMerge = "ilmerge.exe",
 	[string]$msbuild = "msbuild.exe",
