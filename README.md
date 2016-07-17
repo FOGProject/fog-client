@@ -20,7 +20,7 @@ Windows      | Linux       | OSX
 | PowerManagement | ✓ | ✓ | ✓ |
 | Rename | ✓ | ✓ | ✓ |
 | Join Active Directory | ✓ |  | ✓ |
-| Join LDAP | ✓ |  | ✓ |
+| Join Samba Directory | ✓ |  | ✓ |
 | Join Open Directory | ✓ |  | ✓ |
 | Snapins | ✓ | ✓ | ✓ |
 | Task Reboot | ✓ | ✓ | ✓ |
