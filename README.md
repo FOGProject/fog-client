@@ -23,6 +23,7 @@ Windows      | Linux       | OSX
 | Join Samba Directory | ✓ |  | ✓ |
 | Join Open Directory | ✓ |  | ✓ |
 | Snapins | ✓ | ✓ | ✓ |
+| Snapin Packs | ✓ | ✓ | ✓ |
 | Task Reboot | ✓ | ✓ | ✓ |
 | User Tracker | ✓ | ✓ | ✓ |
 | TCP/IP Printers | ✓ |  |  |
