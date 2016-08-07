@@ -76,6 +76,7 @@
               Start="auto"
               ErrorControl="normal">
               <ServiceDependency Id="dnscache" />
+              <ServiceDependency Id="RpcSs" />
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
           </Component>
