@@ -22,6 +22,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Management;
+using System.ServiceProcess;
 using Zazzles;
 
 namespace FOG.Modules.PrinterManager
@@ -137,8 +138,24 @@ namespace FOG.Modules.PrinterManager
         public override void ApplyChanges()
         {
             Log.Entry(LogName, "Restarting spooler");
-            Process.Start("net", "stop spooler")?.WaitForExit(15*1000);
-            Process.Start("net", "start spooler")?.WaitForExit(15 * 1000);
+            try
+            {
+                const int timeoutMilliseconds = 60 * 1000;
+                var spooler = new ServiceController("spooler");
+
+                var timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+                spooler.Stop();
+                spooler.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
+
+                timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+                spooler.Start();
+                spooler.WaitForStatus(ServiceControllerStatus.Running, timeout);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(LogName, "Failed to restart the print spooler");
+                Log.Error(LogName, ex);
+            }
         }
 
         private void AddIPPort(Printer printer, string remotePort)
