@@ -37,6 +37,7 @@ namespace FOG.Modules.HostnameChanger
         public HostnameChanger()
         {
             Name = "HostnameChanger";
+            ShutdownFriendly = false;
 
             switch (Settings.OS)
             {

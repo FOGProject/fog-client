@@ -37,6 +37,7 @@ namespace FOG.Modules.SnapinClient
         public SnapinClient()
         {
             Name = "SnapinClient";
+            ShutdownFriendly = false;
         }
 
         protected override void DoWork(Response data, DataContracts.SnapinClient msg)

@@ -31,6 +31,7 @@ namespace FOG.Modules.TaskReboot
         public TaskReboot()
         {
             Name = "TaskReboot";
+            ShutdownFriendly = false;
         }
 
         protected override void DoWork(Response data, DataContracts.TaskReboot msg)
