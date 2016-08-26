@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='utf-8'?>
+﻿<?xml version='1.0' encoding='utf-8'?>
 
 <!--
   NOTE: To be picked up at run-time, this file must be named themes.xml and reside in your applications base folder.
@@ -135,7 +135,7 @@
 
       <property name='ComboBox.BorderColor.Normal' value='#999999' type='System.Drawing.Color' />
       <property name='ComboBox.BorderColor.Disabled' value='#CCCCCC' type='System.Drawing.Color' />
-      <property name='ComboBox.BorderColor.Hover' value='#333333' type='System.Drawing.Color' />
+      <property name='ComboBox.BorderColor.Hover' value='#999999' type='System.Drawing.Color' />
       <property name='ComboBox.BorderColor.Press' value='#999999' type='System.Drawing.Color' />
 
       <!-- 
@@ -367,7 +367,7 @@
 
       <property name='ComboBox.BorderColor.Normal' value='#999999' type='System.Drawing.Color' />
       <property name='ComboBox.BorderColor.Disabled' value='#555555' type='System.Drawing.Color' />
-      <property name='ComboBox.BorderColor.Hover' value='#CCCCCC' type='System.Drawing.Color' />
+      <property name='ComboBox.BorderColor.Hover' value='#999999' type='System.Drawing.Color' />
       <property name='ComboBox.BorderColor.Press' value='#999999' type='System.Drawing.Color' />
 
       <!-- 
