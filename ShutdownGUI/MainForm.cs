@@ -24,6 +24,7 @@ using System.Windows.Forms;
 using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
+using Zazzles.DataContracts;
 
 namespace FOG
 {
@@ -36,49 +37,49 @@ namespace FOG
         private const int NumberOfDelays = 5;
         private const int StartingDelay = 15;
 
-        private readonly int _gracePeriod = 600;
-        private readonly dynamic _transport;
-        private Power.ShutdownOptions _options;
-        private int _aggregatedDelayTime;
+        private readonly PowerAction _action;
 
         public MainForm(string[] args)
         {
             if (args.Length == 0) Environment.Exit(1);
             Log.Output = Log.Mode.Quiet;
 
-            //_transport = new JObject();
-            //_transport.options = 1;
-            //_transport.aggregatedDelayTime = 0;
-            //_transport.period = 600;
-            _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+            dynamic transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+            _action = transport.Data.ToObject<PowerDelayRequest>();
+
             InitializeComponent();
 
             // Retrieve what configuration the prompt should use
-            _options = Enum.Parse(typeof(Power.ShutdownOptions), _transport.options.ToString());
-
-            btnAbort.Text = (_options == Power.ShutdownOptions.Abort)
+            btnAbort.Text = (_action.Option == Power.ShutdownOptions.Abort)
                 ? "Cancel"
                 : "Hide";
 
-            _aggregatedDelayTime = _transport.aggregatedDelayTime;
+            switch (_action.Type)
+            {
+                case Power.Actions.Shutdown:
+                    btnNow.Text = "Shutdown Now";
+                    break;
+                case Power.Actions.Restart:
+                    btnNow.Text = "Restart Now";
+                    break;
+                default:
+                    throw new Exception("Unsupported action");
+            }
 
-            if (_transport.period == null) return;
-            _gracePeriod = _transport.period;
-
-            Log.Entry(LogName, _gracePeriod.ToString());
-            if (_gracePeriod == 0)
+            Log.Entry(LogName, _action.PromptTime.ToString());
+            if (_action.PromptTime == 0)
                 throw new Exception("Invaid gracePeriod");
 
             textBox1.Text = GenerateMessage();
             textBox1.Select(0, 0);
 
-            progressBar1.Maximum = _gracePeriod - 1;
-            label1.Text = Time.FormatSeconds(_gracePeriod);
+            progressBar1.Maximum = _action.PromptTime - 1;
+            label1.Text = Time.FormatSeconds(_action.PromptTime);
 
             GenerateDelays();
             PositionForm();
 
-            Bus.SetMode(Bus.Mode.Client);
+            Bus.Mode = Bus.Role.Client;
             Bus.Subscribe(Bus.Channel.Power, onPower);
         }
 
@@ -89,7 +90,7 @@ namespace FOG
 
             for (var i = 0; i < NumberOfDelays; i++)
             {
-                if (currentDelay + _aggregatedDelayTime > Power.MaxDelayTime)
+                if (currentDelay + _action.AggregatedDelayTime > Power.MaxDelayTime)
                     break;
 
                 var readableTime = Time.FormatMinutes(currentDelay);
@@ -126,8 +127,8 @@ namespace FOG
 
         private string GenerateMessage()
         {
-            string message = (_transport.message != null) 
-                ? _transport.message.ToString() 
+            var message = (!string.IsNullOrWhiteSpace(_action.Message))
+                ? _action.Message
                 : "This computer needs to perform maintenance.";
             message += " Please save all work and close programs.";
 
@@ -140,40 +141,53 @@ namespace FOG
                 Environment.Exit(0);
             progressBar1.Value++;
             progressBar1.Update();
-            label1.Text = Time.FormatSeconds(_gracePeriod - progressBar1.Value);
+            label1.Text = Time.FormatSeconds(_action.PromptTime - progressBar1.Value);
         }
 
         private void BtnNowClick(object sender, EventArgs e)
         {
-            _transport.action = "now";
-            Bus.Emit(Bus.Channel.Power, _transport, true);
+            var executeNowRequest = new PowerExecuteNowRequest();
+            Bus.Emit(Bus.Channel.Power, executeNowRequest, true);
             Environment.Exit(0);
         }
 
         private void BtnAbortClick(object sender, EventArgs e)
         {
-            if (_options != Power.ShutdownOptions.Abort)
+            if (_action.Option != Power.ShutdownOptions.Abort)
                 Environment.Exit(0);
 
-            _transport.action = "abort";
-            Bus.Emit(Bus.Channel.Power, _transport, true);
+            var abortRequest = new PowerAbortRequest();
+            Bus.Emit(Bus.Channel.Power, abortRequest, true);
             Environment.Exit(1);
         }
 
         private void BtnPostponeClick(object sender, EventArgs e)
         {
-            _transport.action = "delay";
-            _transport.delay = comboPostpone.SelectedValue;
-            Bus.Emit(Bus.Channel.Power, _transport, true);
+            var delayRequest = new PowerDelayRequest()
+            {
+                Delay = (int) comboPostpone.SelectedValue
+            };
+
+            Bus.Emit(Bus.Channel.PowerRequest, delayRequest, true);
             Environment.Exit(1);
         }
 
         private void onPower(dynamic data)
         {
-            if (data.action == null) return;
+            if (data.action == null)
+                return;
 
-            if (data.action.ToString() == "abort" || data.action.ToString() == "delay")
-                Environment.Exit(2);
+            Power.BusCommands action = Enum.Parse(typeof(Power.BusCommands), data.action.ToString(), true);
+
+            switch (action)
+            {
+                case Power.BusCommands.Abort:
+                case Power.BusCommands.Delay:
+                    Environment.Exit(2);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

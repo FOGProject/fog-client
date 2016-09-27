@@ -37,9 +37,9 @@ namespace FOG
 {
     public class FOGSystemService : AbstractService
     {
-        private const int MIN_PROMPT = 60;
-        private const int MAX_PROMPT = 600;
-        private const int MAX_SLEEP_TIME = 60*60*2; // 2 Hours
+        private const int MinPrompt = 60;
+        private const int MaxPrompt = 60*60*2;
+        private const int MaxSleepTime = 60*60*2; // 2 Hours
 
         private IModule[] _modules;
 
@@ -91,7 +91,7 @@ namespace FOG
 
         protected override void Load()
         {
-            Bus.SetMode(Bus.Mode.Server);
+            Bus.Mode = Bus.Role.Server;
 
             dynamic json = new JObject();
             json.action = "load";
@@ -168,7 +168,7 @@ namespace FOG
 
             base.ModuleLooper();
 
-            if (Power.Updating)
+            if (Power.State == Power.Status.Updating)
                 UpdateHandler.BeginUpdate();
 
             Process.GetCurrentProcess().Kill();
@@ -210,9 +210,9 @@ namespace FOG
                 return null;
             }
 
-            var promptTime = SandBoxParse(response, "promptTime", MIN_PROMPT, MAX_PROMPT, MIN_PROMPT);
+            var promptTime = SandBoxParse(response, "promptTime", MinPrompt, MaxPrompt, MinPrompt);
             Settings.Set("PromptTime", promptTime.ToString());
-            var sleep = SandBoxParse(response, "sleep", MIN_SLEEP_TIME, MAX_SLEEP_TIME, DEFAULT_SLEEP_TIME);
+            var sleep = SandBoxParse(response, "sleep", MinSleepTime, MaxSleepTime, DefaultSleepTime);
             Settings.Set("Sleep", sleep.ToString());
 
             return sleep;

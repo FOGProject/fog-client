@@ -23,6 +23,7 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Zazzles;
+using Zazzles.DataContracts;
 
 namespace FOG
 {
@@ -30,7 +31,7 @@ namespace FOG
     {
         //Define variables
         private readonly NotifyIcon _notifyIcon;
-        private const int DURATION =  10 * 1000;
+        private const int Duration =  10 * 1000;
         /// <summary>Program entry point.</summary>
         /// <param name="args">Command Line Arguments</param>
         [STAThread]
@@ -58,7 +59,7 @@ namespace FOG
         public NotificationIcon()
         {
             Eager.Initalize();
-            Bus.SetMode(Bus.Mode.Client);
+            Bus.Mode = Bus.Role.Client;
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
             Bus.Subscribe(Bus.Channel.Update, OnUpdate);
             Bus.Subscribe(Bus.Channel.Status, OnStatus);
@@ -69,7 +70,7 @@ namespace FOG
             _notifyIcon.DoubleClick += IconDoubleClick;
             _notifyIcon.Icon = new Icon(Path.Combine(Settings.Location, "logo.ico"));
             _notifyIcon.ContextMenu = notificationMenu;
-            _notifyIcon.Text = "FOG Client v" + Settings.Get("Version");
+            _notifyIcon.Text = $"FOG Client v{Settings.Get("Version")}";
         }
 
         private static void OnUpdate(dynamic data)
@@ -83,17 +84,13 @@ namespace FOG
         //Called when a message is recieved from the bus
         private void OnNotification(dynamic data)
         {
-            if (data.title == null || data.message == null) return;
-            try
-            {
-                _notifyIcon.BalloonTipTitle = data.title;
-                _notifyIcon.BalloonTipText = data.message;
-                _notifyIcon.ShowBalloonTip(DURATION);
-            }
-            catch (Exception)
-            {
+            NotificationTransport notification = data.ToObject<NotificationTransport>();
+            if (string.IsNullOrWhiteSpace(notification.Title) || string.IsNullOrWhiteSpace(notification.Message))
                 return;
-            }
+
+            _notifyIcon.BalloonTipTitle = notification.Title;
+            _notifyIcon.BalloonTipText = notification.Message;
+            _notifyIcon.ShowBalloonTip(Duration);
         }
 
         private void OnStatus(dynamic data)
