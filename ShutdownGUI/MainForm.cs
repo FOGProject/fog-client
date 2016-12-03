@@ -20,7 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
+using MetroFramework.Components;
 using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
@@ -31,6 +33,7 @@ namespace FOG
     {
         private const string LogName = "Shutdown GUI";
         private const int OSXTitleBarHeight = 22;
+        private const string ProgressColor = "#00567a";
 
         // Provide 5 different delay options, starting at 15 minutes
         private const int NumberOfDelays = 5;
@@ -38,19 +41,20 @@ namespace FOG
 
         private readonly int _gracePeriod = 600;
         private readonly dynamic _transport;
-        private Power.ShutdownOptions _options;
-        private int _aggregatedDelayTime;
+        private readonly Power.ShutdownOptions _options;
+        private readonly int _aggregatedDelayTime;
 
         public MainForm(string[] args)
         {
-            if (args.Length == 0) Environment.Exit(1);
+            //if (args.Length == 0) Environment.Exit(1);
             Log.Output = Log.Mode.Quiet;
 
-            //_transport = new JObject();
-            //_transport.options = 1;
-            //_transport.aggregatedDelayTime = 0;
-            //_transport.period = 600;
-            _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+            _transport = new JObject();
+            _transport.options = Power.ShutdownOptions.Abort.ToString();
+            _transport.aggregatedDelayTime = 0;
+            _transport.period = 30;
+            
+            //_transport = JObject.Parse(Transform.DecodeBase64(args[0]));
             InitializeComponent();
 
             // Retrieve what configuration the prompt should use
@@ -67,7 +71,7 @@ namespace FOG
 
             Log.Entry(LogName, _gracePeriod.ToString());
             if (_gracePeriod == 0)
-                throw new Exception("Invaid gracePeriod");
+                return;
 
             textBox1.Text = GenerateMessage();
             textBox1.Select(0, 0);
@@ -75,11 +79,42 @@ namespace FOG
             progressBar1.Maximum = _gracePeriod - 1;
             label1.Text = Time.FormatSeconds(_gracePeriod);
 
+            SetColors();
+            SwapBanner();
             GenerateDelays();
             PositionForm();
 
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Power, onPower);
+        }
+
+        private void SetColors()
+        {
+            var customColor = ColorTranslator.FromHtml(ProgressColor);
+            try
+            {
+                if (!string.IsNullOrEmpty(Settings.Get("Color")))
+                    customColor = ColorTranslator.FromHtml(Settings.Get("Color"));
+            }
+            catch (Exception)
+            {
+
+            }
+
+            MetroStyleManager.Styles.AddStyle("Custom", customColor);
+            progressBar1.Style = "Custom";
+        }
+
+        private void SwapBanner()
+        {
+            var bannerPath = Path.Combine(Settings.Location, "banner.png");
+            if (!File.Exists(bannerPath))
+                return;
+            var bannerHash = Hash.SHA512(bannerPath);
+            if (bannerHash != Settings.Get("BannerHash"))
+                return;
+
+            bannerBox.Image = Image.FromFile(bannerPath);
         }
 
         private void GenerateDelays()

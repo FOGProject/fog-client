@@ -22,7 +22,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Modules.HostnameChanger;
-using FOG.Modules.PowerManagement;
 using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;

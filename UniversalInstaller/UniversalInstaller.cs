@@ -100,13 +100,10 @@ namespace FOG
         {
             Log.Output = Log.Mode.File;
             var settingsFile = Path.Combine(Settings.Location, "settings.json");
-
             Settings.SetPath(settingsFile);
-            Settings.Set("Version", Helper.ClientVersion, false);
 
             Install(Settings.Get("HTTPS"), Settings.Get("Tray"), Settings.Get("Server"), 
-                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"), 
-                true);
+                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"));
 
             File.Copy(settingsFile, 
                 Path.Combine(Helper.Instance.GetLocation(), "settings.json"), true);

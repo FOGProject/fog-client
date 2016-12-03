@@ -28,11 +28,9 @@ namespace FOG
 {
     public sealed class NotificationIcon
     {
-        //Define variables
         private readonly NotifyIcon _notifyIcon;
-        private const int DURATION =  10 * 1000;
-        /// <summary>Program entry point.</summary>
-        /// <param name="args">Command Line Arguments</param>
+        private const int Duration =  10 * 1000;
+
         [STAThread]
         public static void Main(string[] args)
         {
@@ -40,7 +38,6 @@ namespace FOG
             Application.SetCompatibleTextRenderingDefault(false);
 
             bool isFirstInstance;
-            // Please use a unique name for the mutex to prevent conflicts with other programs
             using (new Mutex(true, "FOG-TRAY", out isFirstInstance))
             {
                 if (!isFirstInstance) return;
@@ -48,7 +45,7 @@ namespace FOG
                 notificationIcon._notifyIcon.Visible = true;
                 Application.Run();
                 notificationIcon._notifyIcon.Dispose();
-            } // releases the Mutex
+            }
         }
 
         private void IconDoubleClick(object sender, EventArgs e)
@@ -57,6 +54,7 @@ namespace FOG
 
         public NotificationIcon()
         {
+            Log.Output = Log.Mode.Quiet;
             Eager.Initalize();
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Notification, OnNotification);
@@ -88,7 +86,7 @@ namespace FOG
             {
                 _notifyIcon.BalloonTipTitle = data.title;
                 _notifyIcon.BalloonTipText = data.message;
-                _notifyIcon.ShowBalloonTip(DURATION);
+                _notifyIcon.ShowBalloonTip(Duration);
             }
             catch (Exception)
             {
@@ -108,6 +106,5 @@ namespace FOG
             var menu = new MenuItem[] { };
             return menu;
         }
-
      }
 }

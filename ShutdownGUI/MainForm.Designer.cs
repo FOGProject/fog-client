@@ -38,14 +38,14 @@ namespace FOG {
             this.btnAbort = new MetroFramework.Controls.MetroButton();
             this.progressBar1 = new MetroFramework.Controls.MetroProgressBar();
             this.label1 = new MetroFramework.Controls.MetroLabel();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.bannerBox = new System.Windows.Forms.PictureBox();
             this.textBox1 = new MetroFramework.Controls.MetroTextBox();
             this.timer = new System.Windows.Forms.Timer(this.components);
             this.btnNow = new MetroFramework.Controls.MetroButton();
             this.btnPostpone = new MetroFramework.Controls.MetroButton();
             this.labelPostpone = new MetroFramework.Controls.MetroLabel();
             this.comboPostpone = new MetroFramework.Controls.MetroComboBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bannerBox)).BeginInit();
             this.SuspendLayout();
             // 
             // btnAbort
@@ -73,14 +73,14 @@ namespace FOG {
             this.label1.TabIndex = 2;
             this.label1.Text = "60 seconds";
             // 
-            // pictureBox1
+            // bannerBox
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(12, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(645, 120);
-            this.pictureBox1.TabIndex = 3;
-            this.pictureBox1.TabStop = false;
+            this.bannerBox.Image = ((System.Drawing.Image)(resources.GetObject("bannerBox.Image")));
+            this.bannerBox.Location = new System.Drawing.Point(12, 12);
+            this.bannerBox.Name = "bannerBox";
+            this.bannerBox.Size = new System.Drawing.Size(645, 120);
+            this.bannerBox.TabIndex = 3;
+            this.bannerBox.TabStop = false;
             // 
             // textBox1
             // 
@@ -133,7 +133,6 @@ namespace FOG {
             this.comboPostpone.Name = "comboPostpone";
             this.comboPostpone.Size = new System.Drawing.Size(282, 29);
             this.comboPostpone.TabIndex = 9;
-            this.comboPostpone.Select();
             // 
             // MainForm
             // 
@@ -147,7 +146,7 @@ namespace FOG {
             this.Controls.Add(this.btnPostpone);
             this.Controls.Add(this.btnNow);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.bannerBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnAbort);
@@ -158,7 +157,7 @@ namespace FOG {
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.TopMost = true;
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.bannerBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -166,7 +165,7 @@ namespace FOG {
 		private MetroButton btnNow;
 		private Timer timer;
 		private MetroTextBox textBox1;
-		private PictureBox pictureBox1;
+		private PictureBox bannerBox;
 		private MetroLabel label1;
 		private MetroButton btnAbort;
         private MetroProgressBar progressBar1;
