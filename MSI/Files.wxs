@@ -45,6 +45,7 @@
             <File Id="Zazzles" Name="Zazzles.dll" Source="..\bin\Zazzles.dll" />
             <File Id="Modules" Name="Modules.dll" Source="..\bin\Modules.dll" />
             
+            <File Id="Mono.Security" Name="Mono.Security.dll" Source="..\libs\Mono.Security.dll" />
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\libs\Newtonsoft.Json.dll" />
             <File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll" />
             <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
