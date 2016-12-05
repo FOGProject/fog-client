@@ -22,6 +22,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using FOG.Modules.HostnameChanger;
+using FOG.Modules.PowerManagement;
 using FOG.Modules.PrinterManager;
 using FOG.Modules.SnapinClient;
 using FOG.Modules.TaskReboot;
@@ -39,11 +40,33 @@ namespace FOG
         private const int MIN_PROMPT = 60;
         private const int MAX_PROMPT = 600;
         private const int MAX_SLEEP_TIME = 60*60*2; // 2 Hours
-
         private IModule[] _modules;
+        private Response _config;
 
         protected override Response GetLoopData()
         {
+            try
+            {
+                _config = Communication.GetResponse("/management/index.php?sub=requestClientInfo&configure");
+                var promptTime = SandBoxParse(_config, "promptTime", MIN_PROMPT, MAX_PROMPT, MIN_PROMPT);
+                Settings.Set("PromptTime", promptTime.ToString());
+
+                Settings.Set("Company", _config.GetField("company"));
+                Settings.Set("Color", _config.GetField("color"));
+                Settings.Set("BannerHash", _config.GetField("bannerHash").ToUpper());
+
+                var bannerURL = _config.GetField("bannerURL");
+                if (!string.IsNullOrEmpty(bannerURL))
+                {
+                    Communication.DownloadFile(bannerURL, Path.Combine(Settings.Location, "banner.png"));
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(Name, "Unable to get config data");
+                Log.Error(Name, ex);
+                _config = null;
+            }
             try
             {
                 var response = Communication.GetResponse("/management/index.php?sub=requestClientInfo", true);
@@ -196,24 +219,9 @@ namespace FOG
 
         protected override int? GetSleepTime()
         {
-            Response response;
-            try
-            {
-                response = Communication.GetResponse("/management/index.php?sub=requestClientInfo&configure");
-                if (response.Error) return null;
-            }
-            catch (Exception ex)
-            {
-                Log.Error(Name, "Unable to retrieve configuration");
-                Log.Error(Name, ex);
-                return null;
-            }
-
-            var promptTime = SandBoxParse(response, "promptTime", MIN_PROMPT, MAX_PROMPT, MIN_PROMPT);
-            Settings.Set("PromptTime", promptTime.ToString());
-            var sleep = SandBoxParse(response, "sleep", MIN_SLEEP_TIME, MAX_SLEEP_TIME, DEFAULT_SLEEP_TIME);
+            if (_config == null || _config.Error) return null;
+            var sleep = SandBoxParse(_config, "sleep", MIN_SLEEP_TIME, MAX_SLEEP_TIME, DEFAULT_SLEEP_TIME);
             Settings.Set("Sleep", sleep.ToString());
-
             return sleep;
         }
 
