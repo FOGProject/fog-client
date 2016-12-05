@@ -46,15 +46,16 @@ namespace FOG
 
         public MainForm(string[] args)
         {
-            //if (args.Length == 0) Environment.Exit(1);
+            if (args.Length == 0)
+                Environment.Exit(1);
             Log.Output = Log.Mode.Quiet;
 
-            _transport = new JObject();
-            _transport.options = Power.ShutdownOptions.Abort.ToString();
-            _transport.aggregatedDelayTime = 0;
-            _transport.period = 30;
+            //_transport = new JObject();
+            //_transport.options = Power.ShutdownOptions.Abort.ToString();
+            //_transport.aggregatedDelayTime = 0;
+            //_transport.period = 30;
             
-            //_transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+            _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
             InitializeComponent();
 
             // Retrieve what configuration the prompt should use
@@ -66,7 +67,8 @@ namespace FOG
 
             _aggregatedDelayTime = _transport.aggregatedDelayTime;
 
-            if (_transport.period == null) return;
+            if (_transport.period == null)
+                return;
             _gracePeriod = _transport.period;
 
             Log.Entry(LogName, _gracePeriod.ToString());
@@ -103,6 +105,7 @@ namespace FOG
 
             MetroStyleManager.Styles.AddStyle("Custom", customColor);
             progressBar1.Style = "Custom";
+            comboPostpone.Style = "Custom";
         }
 
         private void SwapBanner()
