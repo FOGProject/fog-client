@@ -48,8 +48,8 @@ $signExec        = "cmd.exe /c ""$signer"" ""$PSScriptRoot\"
 $plinkConfig     = "-i ""$sshKey"" $user@$server mkdir $path" + "$channel" + "/" + "$name"
 $pscpConfig      = "-i ""$sshKey"" -r $PSScriptRoot\out\* $user" + "@" + "$server" + ":" + "$path$channel" + "/" + "$name"
 
-$printerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Mono.Security.dll"" ""$PSScriptRoot\bin\Modules.dll""" 
-$smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Mono.Security.dll"" ""$PSScriptRoot\bin\ICSharpCode.SharpZipLib.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
+$printerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Modules.dll""" 
+$smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\ICSharpCode.SharpZipLib.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
 $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\Debugger.exe"" " + `
 					"""$PSScriptRoot\bin\Debugger.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" " + `
 					"""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"" " + `
@@ -57,7 +57,7 @@ $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$
 					"""$PSScriptRoot\bin\log4net.dll"" ""$PSScriptRoot\bin\ProcessPrivileges.dll"" " + `
 					"""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\SuperSocket.SocketBase.dll"" " + `
 					"""$PSScriptRoot\bin\WebSocket4Net.dll"" ""$PSScriptRoot\bin\Quartz.dll"" " + `
-					"""$PSScriptRoot\bin\Common.Logging.Core.dll"" ""$PSScriptRoot\bin\Common.Logging.dll"" ""$PSScriptRoot\bin\Mono.Security.dll"""
+					"""$PSScriptRoot\bin\Common.Logging.Core.dll"" ""$PSScriptRoot\bin\Common.Logging.dll"""
 
 $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", "FOGShutdownGUI.exe", `
 			"FOGShutdownGUI.exe.config", "FOGTray.exe", "FOGTray.exe.config", "FOGUpdateHelper.exe", `
@@ -68,7 +68,7 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 			"ProcessPrivileges.dll", "SuperSocket.Common.dll", "SuperSocket.SocketBase.dll", `
 			"SuperSocket.SocketEngine.dll", "SuperWebSocket.dll", "themes.xml", `
 			"WebSocket4Net.dll", "Zazzles.dll", "Quartz.dll", "Common.Logging.dll", `
-			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll", "Mono.Security.dll"
+			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll"
 
 ##################################################
 # Initial Build
