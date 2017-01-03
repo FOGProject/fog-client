@@ -91,4 +91,3 @@ TaskReboot will automatically restart a computer if the client's server has task
 
 #### UserTracker
 UserTracker will automatically report to the FOG server any logins or logouts that occur on the computer.
-
