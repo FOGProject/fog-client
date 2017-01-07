@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,40 +79,47 @@ namespace FOG.Modules.HostnameChanger
                 return;
             }
 
-            RenameComputer(msg);
-            if (Power.ShuttingDown || Power.Requested) return;
+            if (!RenameComputer(msg) || Power.ShuttingDown || Power.Requested)
+                return;
 
             RegisterComputer(msg);
         }
 
         //Rename the computer and remove it from active directory
-        private void RenameComputer(DataContracts.HostnameChanger msg)
+        private bool RenameComputer(DataContracts.HostnameChanger msg)
         {
             Log.Entry(Name, "Checking Hostname");
             if (string.IsNullOrEmpty(msg.Hostname))
             {
                 Log.Error(Name, "Hostname is not specified");
-                return;
+                return true;
             }
             if (Environment.MachineName.Equals(msg.Hostname.ToLower(), StringComparison.OrdinalIgnoreCase))
             {
                 Log.Entry(Name, "Hostname is correct");
-                return;
+                return true;
             }
 
-            //First unjoin it from active directory
-            UnRegisterComputer(msg);
-            if (Power.ShuttingDown || Power.Requested) return;
+            // Remove the domain binding if present
+            if (!UnRegisterComputer(msg))
+            {
+                Log.Error(Name, "Domain unbinding errors, aborting hostname change process");
+                return false;
+            }
+            if (Power.ShuttingDown || Power.Requested) return true;
 
             Log.Entry(Name, $"Renaming host to {msg.Hostname}");
             try
             {
                 _instance.RenameComputer(msg.Hostname);
+                return true;
             }
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
             }
+
+            return false;
         }
 
         //Add a host to active directory
@@ -140,24 +147,32 @@ namespace FOG.Modules.HostnameChanger
         }
 
         //Remove the host from active directory
-        private void UnRegisterComputer(DataContracts.HostnameChanger msg)
+        private bool UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             Log.Entry(Name, "Removing host from domain");
 
             if (string.IsNullOrEmpty(msg.ADUser) || string.IsNullOrEmpty(msg.ADPass))
             {
                 Log.Error(Name, "Required domain information is missing");
-                return;
+
+                // Rather than returning false right here, process with the unregistering process
+                // and let the os-specific unregistering code handle bad credentials
+                if (msg.ADUser == null)
+                    msg.ADUser = string.Empty;
+                if (msg.ADPass == null)
+                    msg.ADPass = string.Empty;
             }
 
             try
             {
-                _instance.UnRegisterComputer(msg);
+                return _instance.UnRegisterComputer(msg);
             }
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
             }
+
+            return false;
         }
 
         //Active a computer with a product key

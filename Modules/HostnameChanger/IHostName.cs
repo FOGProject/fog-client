@@ -23,7 +23,7 @@ namespace FOG.Modules.HostnameChanger
     {
         void RenameComputer(string hostname);
         bool RegisterComputer(DataContracts.HostnameChanger msg);
-        void UnRegisterComputer(DataContracts.HostnameChanger msg);
+        bool UnRegisterComputer(DataContracts.HostnameChanger msg);
         void ActivateComputer(string key);
     }
 }
