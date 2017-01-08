@@ -26,8 +26,6 @@ using Zazzles.Data;
 using Zazzles.Middleware;
 using Zazzles.Modules;
 using ICSharpCode.SharpZipLib.Zip;
-using Newtonsoft.Json.Linq;
-using Quartz.Util;
 
 namespace FOG.Modules.SnapinClient
 {
@@ -39,6 +37,7 @@ namespace FOG.Modules.SnapinClient
         public SnapinClient()
         {
             Name = "SnapinClient";
+            ShutdownFriendly = false;
         }
 
         protected override void DoWork(Response data, DataContracts.SnapinClient msg)
@@ -194,7 +193,9 @@ namespace FOG.Modules.SnapinClient
                 "Please do not shutdown until this is completed",
                 true);
 
-            using (var process = (snapinPack) ? GenerateSnapinPackProcess(snapin) :GenerateProcess(snapin, snapinPath))
+            using (var process = (snapinPack) 
+                ? GenerateSnapinPackProcess(snapin, snapinPath) 
+                : GenerateProcess(snapin, snapinPath))
             {
                 try
                 {
@@ -245,6 +246,7 @@ namespace FOG.Modules.SnapinClient
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false,
+                    WorkingDirectory = Path.GetDirectoryName(snapinPath) ?? "",
                     WindowStyle = ProcessWindowStyle.Hidden
                 }
             };
@@ -270,7 +272,7 @@ namespace FOG.Modules.SnapinClient
             return process;
         }
 
-        private static Process GenerateSnapinPackProcess(Snapin snapin)
+        private static Process GenerateSnapinPackProcess(Snapin snapin, string directory)
         {
             var process = new Process
             {
@@ -278,6 +280,7 @@ namespace FOG.Modules.SnapinClient
                 {
                     CreateNoWindow = true,
                     UseShellExecute = false,
+                    WorkingDirectory = directory,
                     WindowStyle = ProcessWindowStyle.Hidden
                 }
             };

@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -139,23 +139,43 @@ namespace FOG.Modules.HostnameChanger.Windows
             return true;
         }
 
-        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
+        public bool UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
             try
             {
+                Domain.GetComputerDomain();
+            }
+            catch (ActiveDirectoryObjectNotFoundException)
+            {
+                // If the host is not bound to a domain, this exception will be thrown
+                return true;
+            }
+            catch (Exception)
+            {
+                // Swallow any unknown errors and proceed with the unbiding process
+            }
+
+            try
+            {
+
                 var returnCode = NetUnjoinDomain(null, msg.ADUser,
                     msg.ADPass, UnJoinOptions.NetsetupAccountDelete);
 
                 Log.Entry(Name,
                     $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
-                if (returnCode.Equals(0))
+                if (returnCode == 0)
                     Power.Restart("Host left active directory, restart needed", Power.ShutdownOptions.Delay);
+
+                if (returnCode == 0 || returnCode == 2692)
+                    return true;
             }
             catch (Exception ex)
             {
                 Log.Error(Name, ex);
             }
+
+            return false;
         }
 
         public void ActivateComputer(string key)

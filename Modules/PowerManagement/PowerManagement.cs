@@ -161,7 +161,7 @@ namespace FOG.Modules.PowerManagement
                 {
                     var trigger = TriggerBuilder.Create()
                         .WithIdentity(task.CRON, task.Action)
-                        .WithCronSchedule(task.ToQuartz())
+                        .WithCronSchedule(task.ToQuartz(), x => x.WithMisfireHandlingInstructionDoNothing())
                         .Build();
                     var key = trigger.Key;
                     _triggers.Add(task.ToString(), key);

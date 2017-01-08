@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2015 FOG Project
+ * Copyright (C) 2014-2016 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,99 +18,158 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
+using System.IO;
 using System.Windows.Forms;
+using MetroFramework.Components;
 using Newtonsoft.Json.Linq;
 using Zazzles;
 using Zazzles.Data;
 
 namespace FOG
 {
-    /// <summary>
-    ///     Description of MainForm.
-    /// </summary>
     public partial class MainForm : Form
     {
-        private readonly int _gracePeriod = 60;
-        private readonly int delayTime = 10;
-        private readonly string LogName = "Shutdown GUI";
-        private readonly dynamic transport = new JObject();
+        private const string LogName = "Shutdown GUI";
+        private const int OSXTitleBarHeight = 22;
+        private const string ProgressColor = "#00567a";
+
+        // Provide 5 different delay options, starting at 15 minutes
+        private const int NumberOfDelays = 5;
+        private const int StartingDelay = 15;
+
+        private readonly int _gracePeriod = 600;
+        private readonly dynamic _transport;
+        private readonly Power.ShutdownOptions _options;
+        private readonly int _aggregatedDelayTime;
 
         public MainForm(string[] args)
         {
+            if (args.Length == 0)
+                Environment.Exit(1);
+            Log.Output = Log.Mode.Quiet;
+
+            //_transport = new JObject();
+            //_transport.options = Power.ShutdownOptions.Abort.ToString();
+            //_transport.aggregatedDelayTime = 0;
+            //_transport.period = 30;
+            
+            _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+            InitializeComponent();
+
+            // Retrieve what configuration the prompt should use
+            _options = Enum.Parse(typeof(Power.ShutdownOptions), _transport.options.ToString());
+
+            btnAbort.Text = (_options == Power.ShutdownOptions.Abort)
+                ? "Cancel"
+                : "Hide";
+
+            _aggregatedDelayTime = _transport.aggregatedDelayTime;
+
+            if (_transport.period == null)
+                return;
+            _gracePeriod = _transport.period;
+
+            Log.Entry(LogName, _gracePeriod.ToString());
+            if (_gracePeriod == 0)
+                return;
+
+            textBox1.Text = GenerateMessage();
+            textBox1.Select(0, 0);
+
+            progressBar1.Maximum = _gracePeriod - 1;
+            label1.Text = Time.FormatSeconds(_gracePeriod);
+
+            SetColors();
+            SwapBanner();
+            GenerateDelays();
+            PositionForm();
+
+            Bus.SetMode(Bus.Mode.Client);
+            Bus.Subscribe(Bus.Channel.Power, onPower);
+        }
+
+        private void SetColors()
+        {
+            var customColor = ColorTranslator.FromHtml(ProgressColor);
             try
             {
-                Log.Output = Log.Mode.Quiet;
-
-                if (args.Length == 0) Environment.Exit(1);
-                Log.Entry(LogName, args[0]);
-                var arg = Transform.DecodeBase64(args[0]);
-
-                transport = JObject.Parse(arg);
-
-                Log.Entry(LogName, transport.ToString());
-                Log.Entry(LogName, transport.command.ToString());
-
-                InitializeComponent();
-
-                var options = (Power.ShutdownOptions) Enum.Parse(typeof (Power.ShutdownOptions), transport.options.ToString());
-
-                switch (options)
-                {
-                  case Power.ShutdownOptions.None:
-                      btnAbort.Enabled = false;
-                      break;
-                  case Power.ShutdownOptions.Delay:
-                      btnAbort.Text = "Delay " + delayTime + " Minutes";
-                      break;
-                }
-
-                string message = (transport.message != null)
-                    ? transport.message.ToString()
-                    : "This computer needs to perform maintenance.";
-
-                try
-                {
-                    if (transport.period == null) return;
-                    _gracePeriod = (int) transport.period;
-                }
-                catch (Exception)
-                {
-                }
-
-                Log.Entry(LogName, _gracePeriod.ToString());
-                if (_gracePeriod == 0)
-                    throw new Exception("Invaid gracePeriod");
-
-
-                //Generate the message
-                message += " Please save all work and close programs.";
-
-                if (btnAbort.Enabled && btnAbort.Text.Contains("Abort"))
-                    message += " Press Abort to cancel.";
-                else if (btnAbort.Enabled && btnAbort.Text.Contains("Delay"))
-                    message += " You may only delay this operation once.";
-
-                textBox1.Text = message;
-                textBox1.Select(0, 0);
-
-                progressBar1.Maximum = _gracePeriod - 1;
-                label1.Text = FormatSeconds(_gracePeriod);
-                var workingArea = Screen.GetWorkingArea(this);
-                var height = workingArea.Bottom - Size.Height;
-                if (Settings.OS == Settings.OSType.Mac) height = height - 22;
-
-                Location = new Point(workingArea.Right - Size.Width, height);
-                Bus.SetMode(Bus.Mode.Client);
-                Bus.Subscribe(Bus.Channel.Power, onAbort);
+                if (!string.IsNullOrEmpty(Settings.Get("Color")))
+                    customColor = ColorTranslator.FromHtml(Settings.Get("Color"));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Log.Error(LogName, "Unable to start GUI");
-                Log.Error(LogName, ex);
-                Environment.Exit(1);
+
             }
+
+            MetroStyleManager.Styles.AddStyle("Custom", customColor);
+            progressBar1.Style = "Custom";
+            comboPostpone.Style = "Custom";
+        }
+
+        private void SwapBanner()
+        {
+            var bannerPath = Path.Combine(Settings.Location, "banner.png");
+            if (!File.Exists(bannerPath))
+                return;
+            var bannerHash = Hash.SHA512(bannerPath);
+            if (bannerHash != Settings.Get("BannerHash"))
+                return;
+
+            bannerBox.Image = Image.FromFile(bannerPath);
+        }
+
+        private void GenerateDelays()
+        {
+            var delays = new SortedDictionary<int, string>();
+            var currentDelay = StartingDelay;
+
+            for (var i = 0; i < NumberOfDelays; i++)
+            {
+                if (currentDelay + _aggregatedDelayTime > Power.MaxDelayTime)
+                    break;
+
+                var readableTime = Time.FormatMinutes(currentDelay);
+                // Delays are processed in minutes
+                delays.Add(currentDelay, readableTime);
+
+                // Double the delay for the next increment
+                currentDelay = currentDelay*2;
+            }
+
+            if (delays.Count == 0)
+            {
+                comboPostpone.Enabled = false;
+                btnPostpone.Enabled = false;
+                return;
+            }
+
+            comboPostpone.DataSource = new BindingSource(delays, null);
+            comboPostpone.DisplayMember = "Value";
+            comboPostpone.ValueMember = "Key";
+
+        }
+
+        private void PositionForm()
+        {
+            var workingArea = Screen.GetWorkingArea(this);
+            var height = workingArea.Bottom - Size.Height;
+
+            // Account for the title bar on OSX which offsets the height
+            if (Settings.OS == Settings.OSType.Mac) height = height - OSXTitleBarHeight;
+
+            Location = new Point(workingArea.Right - Size.Width, height);
+        }
+
+        private string GenerateMessage()
+        {
+            string message = (_transport.message != null) 
+                ? _transport.message.ToString() 
+                : "This computer needs to perform maintenance.";
+            message += " Please save all work and close programs.";
+
+            return message;
         }
 
         private void TimerTick(object sender, EventArgs e)
@@ -119,48 +178,40 @@ namespace FOG
                 Environment.Exit(0);
             progressBar1.Value++;
             progressBar1.Update();
-            label1.Text = FormatSeconds(_gracePeriod - progressBar1.Value);
+            label1.Text = Time.FormatSeconds(_gracePeriod - progressBar1.Value);
         }
 
         private void BtnNowClick(object sender, EventArgs e)
         {
+            _transport.action = "now";
+            Bus.Emit(Bus.Channel.Power, _transport, true);
             Environment.Exit(0);
         }
 
         private void BtnAbortClick(object sender, EventArgs e)
         {
-            transport.action = (btnAbort.Text.StartsWith("Delay")) ? "delay" : "abort";
-            transport.delay = delayTime;
-            Bus.Emit(Bus.Channel.Power, transport, true);
+            if (_options != Power.ShutdownOptions.Abort)
+                Environment.Exit(0);
+
+            _transport.action = "abort";
+            Bus.Emit(Bus.Channel.Power, _transport, true);
             Environment.Exit(1);
         }
 
-        private void onAbort(dynamic data)
+        private void BtnPostponeClick(object sender, EventArgs e)
+        {
+            _transport.action = "delay";
+            _transport.delay = comboPostpone.SelectedValue;
+            Bus.Emit(Bus.Channel.Power, _transport, true);
+            Environment.Exit(1);
+        }
+
+        private void onPower(dynamic data)
         {
             if (data.action == null) return;
 
-            if (data.action.ToString().Equals("abort"))
+            if (data.action.ToString() == "abort" || data.action.ToString() == "delay")
                 Environment.Exit(2);
-            else if (data.action.ToString().Equals("delay"))
-                Environment.Exit(2);
-        }
-
-        private string FormatSeconds(double totalSeconds)
-        {
-            var timeSpan = TimeSpan.FromSeconds(totalSeconds);
-
-            var hours = (int) timeSpan.TotalHours;
-            var minutes = timeSpan.Minutes;
-            var seconds = timeSpan.Seconds;
-
-            return BuildFormatSection(hours, "hour", "hours") +
-                   BuildFormatSection(minutes, "minute", "minutes") +
-                   BuildFormatSection(seconds, "second", "seconds");
-        }
-
-        private string BuildFormatSection(int value, string singular, string plural)
-        {
-            return value <= 0 ? string.Empty : $"{value} {(value == 1 ? singular : plural)} ";
         }
     }
 }

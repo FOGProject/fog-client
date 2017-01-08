@@ -48,7 +48,7 @@ $signExec        = "cmd.exe /c ""$signer"" ""$PSScriptRoot\"
 $plinkConfig     = "-i ""$sshKey"" $user@$server mkdir $path" + "$channel" + "/" + "$name"
 $pscpConfig      = "-i ""$sshKey"" -r $PSScriptRoot\out\* $user" + "@" + "$server" + ":" + "$path$channel" + "/" + "$name"
 
-$printerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Modules.dll"""
+$printerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\PrinterManagerHelper.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\Modules.dll""" 
 $smartInstallerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\SmartInstaller.exe"" ""$PSScriptRoot\bin\SmartInstaller.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" ""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\ICSharpCode.SharpZipLib.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"""
 $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$PSScriptRoot\out\Debugger.exe"" " + `
 					"""$PSScriptRoot\bin\Debugger.exe"" ""$PSScriptRoot\bin\Zazzles.dll"" " + `
