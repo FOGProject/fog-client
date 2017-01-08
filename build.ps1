@@ -69,7 +69,6 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 			"SuperSocket.SocketEngine.dll", "SuperWebSocket.dll", "themes.xml", `
 			"WebSocket4Net.dll", "Zazzles.dll", "Quartz.dll", "Common.Logging.dll", `
 			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll"
-
 ##################################################
 # Initial Build
 ##################################################
