@@ -69,7 +69,7 @@ namespace FOG {
             this.label1.BackColor = System.Drawing.SystemColors.Window;
             this.label1.Location = new System.Drawing.Point(12, 306);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 15);
+            this.label1.Size = new System.Drawing.Size(250, 15);
             this.label1.TabIndex = 2;
             this.label1.Text = "60 seconds";
             // 
@@ -121,7 +121,7 @@ namespace FOG {
             this.labelPostpone.AutoSize = true;
             this.labelPostpone.Location = new System.Drawing.Point(277, 253);
             this.labelPostpone.Name = "labelPostpone";
-            this.labelPostpone.Size = new System.Drawing.Size(88, 19);
+            this.labelPostpone.Size = new System.Drawing.Size(88, 25);
             this.labelPostpone.TabIndex = 8;
             this.labelPostpone.Text = "Postpone for:";
             // 
