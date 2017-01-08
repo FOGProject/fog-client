@@ -4,7 +4,7 @@ REM IMPORTANT NOTE - The SET statement and the four servers should be all on one
 REM set SERVERLIST=(http://timestamp.comodoca.com/authenticode http://timestamp.verisign.com/scripts/timstamp.dll http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
 set SERVERLIST=(http://timestamp.globalsign.com/scripts/timestamp.dll http://tsa.starfieldtech.com)
 REM sign the file...
-signtool.exe sign /n "FOG Project" %1
+signtool.exe sign /n "FOG Project - Joe Schmitt" %1
 set timestampErrors=0
 for /L %%a in (1,1,300) do (
     for %%s in %SERVERLIST% do (

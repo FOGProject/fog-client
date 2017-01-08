@@ -86,11 +86,11 @@ namespace FOG
             {
                 Settings.Reload();
 
-                var alo = -1;
-                var displayX = -1;
-                var displayY = -1;
-                var displayR = -1;
-                var printer = "";
+                int alo;
+                int displayX;
+                int displayY;
+                int displayR;
+                string printer;
 
                 int.TryParse(Settings.Get("ALOTime"), out alo);
                 printer = Settings.Get("DefaultPrinter");

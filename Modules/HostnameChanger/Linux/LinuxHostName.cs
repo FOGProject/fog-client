@@ -41,9 +41,9 @@ namespace FOG.Modules.HostnameChanger.Linux
             throw new NotImplementedException();
         }
 
-        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
+        public bool UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void ActivateComputer(string key)

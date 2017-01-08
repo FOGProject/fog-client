@@ -42,9 +42,9 @@ namespace FOG.Modules.HostnameChanger.Mac
             return returnCode == 0;
         }
 
-        public void UnRegisterComputer(DataContracts.HostnameChanger msg)
+        public bool UnRegisterComputer(DataContracts.HostnameChanger msg)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public void ActivateComputer(string key)

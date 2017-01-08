@@ -32,7 +32,7 @@
                  Text="Enable FOG Tray" Default="yes" CheckBoxValue="1" TabSkip="yes" />
         <Control Property="WEBADDRESS" Type="Edit" Id="ServerIP" Width="287" Height="15" X="71" Y="22"
                  Text="fogserver" />
-        <Control Type="Text" Id="ServerIPLabel" Width="60" Height="12" X="8" Y="22" Text="Server Adress:" />
+        <Control Type="Text" Id="ServerIPLabel" Width="60" Height="12" X="8" Y="22" Text="Server Address:" />
         <Control Type="Text" Id="WEBROOTText" Width="50" Height="17" X="8" Y="49" Text="Web Root:" />
         <Control Property="WEBROOT" Type="Edit" Id="WEBROOTTextBox" Width="287" Height="15" X="71" Y="45" Text="/fog" />
         <Control Property="ROOTLOG" Type="CheckBox" Id="LogFile" Width="247" Height="20" X="11" Y="94"

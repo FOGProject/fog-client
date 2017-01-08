@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -100,13 +100,10 @@ namespace FOG
         {
             Log.Output = Log.Mode.File;
             var settingsFile = Path.Combine(Settings.Location, "settings.json");
-
             Settings.SetPath(settingsFile);
-            Settings.Set("Version", Helper.ClientVersion);
 
             Install(Settings.Get("HTTPS"), Settings.Get("Tray"), Settings.Get("Server"), 
-                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"), 
-                true);
+                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"));
 
             File.Copy(settingsFile, 
                 Path.Combine(Helper.Instance.GetLocation(), "settings.json"), true);
@@ -292,7 +289,7 @@ namespace FOG
         {
             Log.Header("License");
             Log.NewLine();
-            Log.WriteLine("FOG Service Copyright (C) 2014-2016 FOG Project", _infoColor);
+            Log.WriteLine("FOG Service Copyright (C) 2014-2017 FOG Project", _infoColor);
             Log.WriteLine("This program comes with ABSOLUTELY NO WARRANTY.", _infoColor);
             Log.WriteLine("This is free software, and you are welcome to redistribute it under certain", _infoColor);
             Log.WriteLine("conditions. See your FOG server under 'FOG Configuration' -> 'License' for", _infoColor);

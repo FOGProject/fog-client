@@ -82,27 +82,17 @@ namespace FOG
             var filePath = Path.Combine(location, "settings.json");
             try
             {
-
-                if (File.Exists(filePath))
+                var settings = new JObject
                 {
-                    var settings = JObject.Parse(File.ReadAllText(filePath));
-                    settings["Version"] = version;
-                    File.WriteAllText(filePath, settings.ToString());
-                }
-                else
-                {
-                    var settings = new JObject
-                    {
-                        {"HTTPS", https},
-                        {"Tray", usetray},
-                        {"Server", webaddress},
-                        {"WebRoot", webroot},
-                        {"Version", version},
-                        {"Company", company},
-                        {"RootLog", rootLog}
-                    };
-                    File.WriteAllText(filePath, settings.ToString());
-                }
+                    { "HTTPS", https},
+                    { "Tray", usetray},
+                    { "Server", webaddress},
+                    { "WebRoot", webroot},
+                    { "Version", version},
+                    { "Company", company},
+                    { "RootLog", rootLog}
+                };
+                File.WriteAllText(filePath, settings.ToString());
                 return true;
             }
             catch (Exception ex)
