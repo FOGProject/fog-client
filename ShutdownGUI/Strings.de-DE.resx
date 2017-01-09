@@ -142,7 +142,7 @@
     <value>Verschieben</value>
   </data>
   <data name="POSTPONE_FOR" xml:space="preserve">
-    <value>Verschieben für</value>
+    <value>Verschieben um</value>
   </data>
   <data name="RESTART_NOW" xml:space="preserve">
     <value>Jetzt neustarten</value>
