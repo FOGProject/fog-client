@@ -153,13 +153,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Strings.fr-FR.Designer.cs">
-      <DependentUpon>Strings.fr-FR.resx</DependentUpon>
+    <Compile Include="Strings.nl.Designer.cs">
+      <DependentUpon>Strings.nl.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Strings.de-DE.Designer.cs">
-      <DependentUpon>Strings.de-DE.resx</DependentUpon>
+    <Compile Include="Strings.fr.Designer.cs">
+      <DependentUpon>Strings.fr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Strings.de.Designer.cs">
+      <DependentUpon>Strings.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -194,13 +199,17 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Strings.fr-FR.resx">
+    <EmbeddedResource Include="Strings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.fr-FR.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings.nl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strings.de-DE.resx">
+    <EmbeddedResource Include="Strings.fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.de-DE.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

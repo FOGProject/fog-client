@@ -131,13 +131,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AutoLogOut\ALOStrings.fr-FR.Designer.cs">
-      <DependentUpon>ALOStrings.fr-FR.resx</DependentUpon>
+    <Compile Include="AutoLogOut\ALOStrings.nl.Designer.cs">
+      <DependentUpon>ALOStrings.nl.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="AutoLogOut\ALOStrings.de-DE.Designer.cs">
-      <DependentUpon>ALOStrings.de-DE.resx</DependentUpon>
+    <Compile Include="AutoLogOut\ALOStrings.fr.Designer.cs">
+      <DependentUpon>ALOStrings.fr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="AutoLogOut\ALOStrings.de.Designer.cs">
+      <DependentUpon>ALOStrings.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -176,13 +181,18 @@
     <Compile Include="DataContracts\SnapinClient.cs" />
     <Compile Include="SnapinClient\SnapinClient.cs" />
     <Compile Include="DataContracts\TaskReboot.cs" />
-    <Compile Include="SnapinClient\SnapinStrings.fr-FR.Designer.cs">
-      <DependentUpon>SnapinStrings.fr-FR.resx</DependentUpon>
+    <Compile Include="SnapinClient\SnapinStrings.nl.Designer.cs">
+      <DependentUpon>SnapinStrings.nl.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="SnapinClient\SnapinStrings.de-DE.Designer.cs">
-      <DependentUpon>SnapinStrings.de-DE.resx</DependentUpon>
+    <Compile Include="SnapinClient\SnapinStrings.fr.Designer.cs">
+      <DependentUpon>SnapinStrings.fr.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SnapinClient\SnapinStrings.de.Designer.cs">
+      <DependentUpon>SnapinStrings.de.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -196,31 +206,36 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="job_scheduling_data_2_0.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AutoLogOut\ALOStrings.fr-FR.resx">
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ALOStrings.fr-FR.Designer.cs</LastGenOutput>
+      <LastGenOutput>ALOStrings.nl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="AutoLogOut\ALOStrings.de-DE.resx">
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ALOStrings.de-DE.Designer.cs</LastGenOutput>
+      <LastGenOutput>ALOStrings.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="AutoLogOut\ALOStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SnapinClient\SnapinStrings.fr-FR.resx">
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SnapinStrings.fr-FR.Designer.cs</LastGenOutput>
+      <LastGenOutput>SnapinStrings.nl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SnapinClient\SnapinStrings.de-DE.resx">
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.fr.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SnapinStrings.de-DE.Designer.cs</LastGenOutput>
+      <LastGenOutput>SnapinStrings.fr.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>

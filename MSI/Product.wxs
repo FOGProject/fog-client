@@ -102,6 +102,9 @@
     <Directory Id="TARGETDIR" Name="SourceDir"/>
     <Feature Id="Base" Title="FOG Service" Description="A client for the FOG server" Level="1">
       <ComponentRef Id="StandardComponent" />
+      <ComponentRef Id="GermanComponent"/>
+      <ComponentRef Id="FrenchComponent"/>
+      <ComponentRef Id="DutchComponent"/>
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
     </Feature>
   </Product>

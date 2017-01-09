@@ -45,7 +45,6 @@ namespace FOG
         private readonly dynamic _transport;
         private readonly Power.ShutdownOptions _options;
         private readonly int _aggregatedDelayTime;
-
         public MainForm(string[] args)
         {
 #if DEBUG
@@ -64,6 +63,7 @@ namespace FOG
 #else
             _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
 #endif
+            // Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("nl-BE");
             InitializeComponent();
 
             // Retrieve what configuration the prompt should use
@@ -199,9 +199,13 @@ namespace FOG
 
         private string GenerateMessage()
         {
+            var company = Settings.Get("Company");
+            if (string.IsNullOrWhiteSpace(company))
+                company = "FOG";
+
             string message = (_transport.message != null)
                 ? _transport.message.ToString()
-                : string.Format(Strings.DEFAULT_MESSAGE, Settings.Get("Company"));
+                : string.Format(Strings.DEFAULT_MESSAGE, company);
 
             return message;
         }

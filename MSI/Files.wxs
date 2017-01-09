@@ -80,6 +80,24 @@
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
           </Component>
+          <Directory Id="deDirectory" Name="de">
+            <Component Id="GermanComponent" Guid="6f08a97d-79ba-4d03-9525-0016e74a088f" DiskId="1">
+              <File Id="ShutdownGUIde" Name="FOGShutdownGUI.resources.dll" Source="..\bin\de\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesde" Name="Modules.resources.dll" Source="..\bin\de\Modules.resources.dll" />
+            </Component>
+          </Directory>
+          <Directory Id="frDirectory" Name="fr">
+            <Component Id="FrenchComponent" Guid="32ec1aca-87c9-4121-aa6f-0de841b90836" DiskId="1">
+              <File Id="ShutdownGUIfr" Name="FOGShutdownGUI.resources.dll" Source="..\bin\fr\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesfr" Name="Modules.resources.dll" Source="..\bin\fr\Modules.resources.dll" />
+            </Component>
+          </Directory>
+          <Directory Id="nlDirectory" Name="nl">
+            <Component Id="DutchComponent" Guid="2feb0df0-6273-4752-8181-55b56694f628" DiskId="1">
+              <File Id="ShutdownGUInl" Name="FOGShutdownGUI.resources.dll" Source="..\bin\nl\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesnl" Name="Modules.resources.dll" Source="..\bin\nl\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
