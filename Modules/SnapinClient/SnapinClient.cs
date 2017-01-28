@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -189,8 +189,8 @@ namespace FOG.Modules.SnapinClient
         private string StartSnapin(Snapin snapin, string snapinPath, bool snapinPack = false)
         {
             Notification.Emit(
-                "Installing " + snapin.Name,
-                "Please do not shutdown until this is completed",
+                string.Format(SnapinStrings.INSTALLING_NOTIFICATION_TITLE, snapin.Name),
+                SnapinStrings.INSTALLING_NOTIFICATION_BODY,
                 true);
 
             using (var process = (snapinPack) 
@@ -221,8 +221,8 @@ namespace FOG.Modules.SnapinClient
                     Log.Entry(Name, "Return Code: " + returnCode);
 
                     Notification.Emit(
-                        snapin.Name + " Installed",
-                        "Installation has finished and is now ready for use",
+                        string.Format(SnapinStrings.COMPLETE_NOTIFICATION_TITLE, snapin.Name),
+                        SnapinStrings.COMPLETE_NOTIFICATION_BODY,
                         true);
 
                     return returnCode.ToString();

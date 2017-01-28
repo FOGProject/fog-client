@@ -68,8 +68,7 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 			"ProcessPrivileges.dll", "SuperSocket.Common.dll", "SuperSocket.SocketBase.dll", `
 			"SuperSocket.SocketEngine.dll", "SuperWebSocket.dll", "themes.xml", `
 			"WebSocket4Net.dll", "Zazzles.dll", "Quartz.dll", "Common.Logging.dll", `
-			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll"
-
+			"Common.Logging.Core.dll", "ICSharpCode.SharpZipLib.dll", "de", "fr", "nl"
 ##################################################
 # Initial Build
 ##################################################
@@ -100,7 +99,7 @@ If (Test-Path "$PSScriptRoot\bin\tmp"){ Remove-Item -Recurse "$PSScriptRoot\bin\
 New-Item -ItemType directory -Path "$PSScriptRoot\bin\tmp" | out-null
 
 foreach ($file in $toZip) {
-	Copy-Item ("$PSScriptRoot\bin\" + $file) ("$PSScriptRoot\bin\tmp\" + $file) | out-null
+	Copy-Item ("$PSScriptRoot\bin\" + $file) ("$PSScriptRoot\bin\tmp\" + $file) -recurse | out-null
 }
 Zip "$PSScriptRoot\bin\tmp" $InstallerZip | out-null
 

@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,9 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using MetroFramework.Components;
 using Newtonsoft.Json.Linq;
@@ -43,27 +45,33 @@ namespace FOG
         private readonly dynamic _transport;
         private readonly Power.ShutdownOptions _options;
         private readonly int _aggregatedDelayTime;
-
         public MainForm(string[] args)
         {
+#if DEBUG
+#else
             if (args.Length == 0)
                 Environment.Exit(1);
+#endif
             Log.Output = Log.Mode.Quiet;
 
-            //_transport = new JObject();
-            //_transport.options = Power.ShutdownOptions.Abort.ToString();
-            //_transport.aggregatedDelayTime = 0;
-            //_transport.period = 30;
-            
+#if DEBUG
+
+            _transport = new JObject();
+            _transport.options = Power.ShutdownOptions.Abort.ToString();
+            _transport.aggregatedDelayTime = 0;
+            _transport.period = 6000;
+#else
             _transport = JObject.Parse(Transform.DecodeBase64(args[0]));
+#endif
+            // Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("nl-BE");
             InitializeComponent();
 
             // Retrieve what configuration the prompt should use
             _options = Enum.Parse(typeof(Power.ShutdownOptions), _transport.options.ToString());
 
             btnAbort.Text = (_options == Power.ShutdownOptions.Abort)
-                ? "Cancel"
-                : "Hide";
+                ? Strings.CANCEL
+                : Strings.HIDE;
 
             _aggregatedDelayTime = _transport.aggregatedDelayTime;
 
@@ -82,12 +90,38 @@ namespace FOG
             label1.Text = Time.FormatSeconds(_gracePeriod);
 
             SetColors();
+            Localize();
             SwapBanner();
             GenerateDelays();
             PositionForm();
+            this.ActiveControl = labelPostpone;
 
             Bus.SetMode(Bus.Mode.Client);
             Bus.Subscribe(Bus.Channel.Power, onPower);
+
+        }
+
+        private void Localize()
+        {
+            labelPostpone.Text = Strings.POSTPONE_FOR;
+            var size = labelPostpone.CreateGraphics().MeasureString(labelPostpone.Text, this.Font);
+            labelPostpone.Location = new Point((int)(comboPostpone.Location.X - size.Width - 25), labelPostpone.Location.Y);
+
+            btnPostpone.Text = Strings.POSTPONE;
+
+            // The NOW buttons are really long in a lot of languages
+            // so account for that length
+            btnNow.Text = Strings.SHUTDOWN_NOW;
+            size = labelPostpone.CreateGraphics().MeasureString(btnNow.Text, this.Font);
+            if (size.Width > btnNow.Width - 25)
+            {
+                // gotta move everything over
+                var offset = size.Width - btnNow.Width + 25;
+                btnAbort.Location = new Point((int) (btnAbort.Location.X - offset), btnAbort.Location.Y);
+                btnPostpone.Location = new Point((int)(btnPostpone.Location.X - offset), btnPostpone.Location.Y);
+                btnNow.Location = new Point((int)(btnNow.Location.X - offset), btnNow.Location.Y);
+                btnNow.Width = (int) (size.Width + 25);
+            }
         }
 
         private void SetColors()
@@ -130,7 +164,8 @@ namespace FOG
                 if (currentDelay + _aggregatedDelayTime > Power.MaxDelayTime)
                     break;
 
-                var readableTime = Time.FormatMinutes(currentDelay);
+                var readableTime = Time.FormatMinutes(currentDelay,
+                    Strings.HOUR, Strings.HOURS, Strings.MINUTE, Strings.MINUTES, Strings.SECOND, Strings.SECONDS);
                 // Delays are processed in minutes
                 delays.Add(currentDelay, readableTime);
 
@@ -164,10 +199,13 @@ namespace FOG
 
         private string GenerateMessage()
         {
-            string message = (_transport.message != null) 
-                ? _transport.message.ToString() 
-                : "This computer needs to perform maintenance.";
-            message += " Please save all work and close programs.";
+            var company = Settings.Get("Company");
+            if (string.IsNullOrWhiteSpace(company))
+                company = "FOG";
+
+            string message = (_transport.message != null)
+                ? _transport.message.ToString()
+                : string.Format(Strings.DEFAULT_MESSAGE, company);
 
             return message;
         }
@@ -178,7 +216,8 @@ namespace FOG
                 Environment.Exit(0);
             progressBar1.Value++;
             progressBar1.Update();
-            label1.Text = Time.FormatSeconds(_gracePeriod - progressBar1.Value);
+            label1.Text = Time.FormatSeconds(_gracePeriod - progressBar1.Value, 
+                Strings.HOUR, Strings.HOURS, Strings.MINUTE, Strings.MINUTES, Strings.SECOND, Strings.SECONDS);
         }
 
         private void BtnNowClick(object sender, EventArgs e)
