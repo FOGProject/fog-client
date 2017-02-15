@@ -203,7 +203,7 @@ namespace FOG
             if (string.IsNullOrWhiteSpace(company))
                 company = "FOG";
 
-            string message = (_transport.message != null)
+            string message = (_transport.message != null && !string.IsNullOrWhiteSpace(_transport.message.ToString()))
                 ? _transport.message.ToString()
                 : string.Format(Strings.DEFAULT_MESSAGE, company);
 
