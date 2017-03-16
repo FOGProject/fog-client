@@ -21,6 +21,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Threading;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PowerManagement;
 using FOG.Modules.PrinterManager;
@@ -193,7 +194,21 @@ namespace FOG
             if (Power.Updating)
                 UpdateHandler.BeginUpdate();
 
-            Process.GetCurrentProcess().Kill();
+            if (Power.ShuttingDown)
+            {
+                // simply idle to allow the power task to cleanly run
+                Log.WriteLine("Idling for 5 minutes for SIGTERM or SIGKILL");
+
+                // Use a for loop to allow the CPU to perform other tasks
+                for (var i = 0; i < 60*5; i++)
+                {
+                    Thread.Sleep(1000);
+                }
+                
+                 
+            }
+            Log.WriteLine("Forcing unload");
+            this.Unload();
         }
 
         private void JITCompile()
