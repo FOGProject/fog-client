@@ -207,8 +207,7 @@ namespace FOG
                 
                  
             }
-            Log.WriteLine("Forcing unload");
-            this.Unload();
+            Process.GetCurrentProcess().Kill();
         }
 
         private void JITCompile()
