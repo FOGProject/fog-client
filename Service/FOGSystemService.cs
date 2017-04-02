@@ -194,19 +194,6 @@ namespace FOG
             if (Power.Updating)
                 UpdateHandler.BeginUpdate();
 
-            if (Power.ShuttingDown)
-            {
-                // simply idle to allow the power task to cleanly run
-                Log.WriteLine("Idling for 5 minutes for SIGTERM or SIGKILL");
-
-                // Use a for loop to allow the CPU to perform other tasks
-                for (var i = 0; i < 60*5; i++)
-                {
-                    Thread.Sleep(1000);
-                }
-                
-                 
-            }
             Process.GetCurrentProcess().Kill();
         }
 
