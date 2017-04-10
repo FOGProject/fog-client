@@ -120,6 +120,7 @@
     </Reference>
     <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
@@ -131,6 +132,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AutoLogOut\ALOStrings.no.Designer.cs">
+      <DependentUpon>ALOStrings.no.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="AutoLogOut\ALOStrings.eu.Designer.cs">
+      <DependentUpon>ALOStrings.eu.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="AutoLogOut\ALOStrings.es-ES.Designer.cs">
+      <DependentUpon>ALOStrings.es-ES.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="AutoLogOut\ALOStrings.nl.Designer.cs">
       <DependentUpon>ALOStrings.nl.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -181,6 +197,21 @@
     <Compile Include="DataContracts\SnapinClient.cs" />
     <Compile Include="SnapinClient\SnapinClient.cs" />
     <Compile Include="DataContracts\TaskReboot.cs" />
+    <Compile Include="SnapinClient\SnapinStrings.no.Designer.cs">
+      <DependentUpon>SnapinStrings.no.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SnapinClient\SnapinStrings.eu.Designer.cs">
+      <DependentUpon>SnapinStrings.eu.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SnapinClient\SnapinStrings.es-ES.Designer.cs">
+      <DependentUpon>SnapinStrings.es-ES.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="SnapinClient\SnapinStrings.nl.Designer.cs">
       <DependentUpon>SnapinStrings.nl.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -209,6 +240,18 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.no.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.no.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.eu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.eu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.es-ES.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.es-ES.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="AutoLogOut\ALOStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.nl.Designer.cs</LastGenOutput>
@@ -224,6 +267,18 @@
     <EmbeddedResource Include="AutoLogOut\ALOStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.no.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.no.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.eu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.eu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.es-ES.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.es-ES.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>

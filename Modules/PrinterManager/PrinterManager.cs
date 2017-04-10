@@ -57,13 +57,10 @@ namespace FOG.Modules.PrinterManager
 
         protected override void DoWork(Response data, DataContracts.PrinterManager msg)
         {
-            Log.Entry(Name, "Getting installed printers");
-            var installedPrinters = _instance.GetPrinters();
-
-            var printerAdded = false;
-
-            //Get printers
             if (msg.Mode == "0") return;
+
+            var installedPrinters = _instance.GetPrinters();
+            var printerAdded = false;
 
             if (data.Error && data.ReturnCode.Equals("np", StringComparison.OrdinalIgnoreCase))
             {
@@ -104,19 +101,18 @@ namespace FOG.Modules.PrinterManager
                 _instance.ApplyChanges();
         }
 
-        private void RemoveExtraPrinters(List<Printer> newPrinters, DataContracts.PrinterManager msg, List<string> existingPrinters )
+        private void RemoveExtraPrinters(List<Printer> newPrinters, DataContracts.PrinterManager msg, List<string> installedPrinters )
         {
             var managedPrinters = newPrinters.Where(printer => printer != null).Select(printer => printer.Name).ToList();
 
             if (!msg.Mode.Equals("ar", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && existingPrinters.Contains(name)))
+                foreach (var name in msg.AllPrinters.Where(name => !managedPrinters.Contains(name) && installedPrinters.Contains(name)))
                     CleanPrinter(name, true);
             }
             else
             {
-                var printerNames = _instance.GetPrinters();
-                foreach (var name in printerNames.Where(name => !managedPrinters.Contains(name)))
+                foreach (var name in installedPrinters.Where(name => !managedPrinters.Contains(name)))
                     _instance.Remove(name);
             }
         }

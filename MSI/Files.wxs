@@ -98,6 +98,24 @@
               <File Id="Modulesnl" Name="Modules.resources.dll" Source="..\bin\nl\Modules.resources.dll" />
             </Component>
           </Directory>
+          <Directory Id="noDirectory" Name="no">
+            <Component Id="NorwegianComponent" Guid="7511ee91-2708-4d9b-b242-b629c8150290" DiskId="1">
+              <File Id="ShutdownGUIno" Name="FOGShutdownGUI.resources.dll" Source="..\bin\no\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesno" Name="Modules.resources.dll" Source="..\bin\no\Modules.resources.dll" />
+            </Component>
+          </Directory> 
+          <Directory Id="esESDirectory" Name="esES">
+            <Component Id="SpainComponent" Guid="6bbdc832-f58f-4914-8dea-154b4520af19" DiskId="1">
+              <File Id="ShutdownGUIesES" Name="FOGShutdownGUI.resources.dll" Source="..\bin\es-ES\FOGShutdownGUI.resources.dll" />
+              <File Id="ModulesesES" Name="Modules.resources.dll" Source="..\bin\es-ES\Modules.resources.dll" />
+            </Component>
+          </Directory>           
+          <Directory Id="euDirectory" Name="eu">
+            <Component Id="BasqueComponent" Guid="2a16f840-bcdf-4a54-9294-4ceedbf0898b" DiskId="1">
+              <File Id="ShutdownGUIeu" Name="FOGShutdownGUI.resources.dll" Source="..\bin\eu\FOGShutdownGUI.resources.dll" />
+              <File Id="Moduleseu" Name="Modules.resources.dll" Source="..\bin\eu\Modules.resources.dll" />
+            </Component>
+          </Directory>   
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
