@@ -30,6 +30,7 @@ using FOG.Modules.TaskReboot;
 using FOG.Modules.UserTracker;
 using Newtonsoft.Json.Linq;
 using Zazzles;
+using Zazzles.Data;
 using Zazzles.Middleware;
 using Zazzles.Modules;
 using Zazzles.Modules.Updater;
@@ -54,13 +55,29 @@ namespace FOG
 
                 Settings.Set("Company", _config.GetField("company"));
                 Settings.Set("Color", _config.GetField("color"));
-                Settings.Set("BannerHash", _config.GetField("bannerHash").ToUpper());
+                var idealHash = _config.GetField("bannerHash").ToUpper();
+                Settings.Set("BannerHash", idealHash);
 
                 var bannerURL = _config.GetField("bannerURL");
+                var bannerFile = Path.Combine(Settings.Location, "banner.png");
                 if (!string.IsNullOrEmpty(bannerURL))
                 {
-                    Communication.DownloadFile(bannerURL, Path.Combine(Settings.Location, "banner.png"));
+                    // Check the hash to see if we need to re-download it
+                    var actualHash = Hash.SHA256(bannerFile);
+                    if (!actualHash.Equals(idealHash, StringComparison.OrdinalIgnoreCase))
+                    {
+                        Communication.DownloadFile(bannerURL, bannerFile);
+                    }
                 }
+                else
+                {
+                    File.Delete(bannerFile);
+                }
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException)
+            {
+                Log.Error(Name, "Failed modify banner image");
+                Log.Error(Name, ex);
             }
             catch (Exception ex)
             {
