@@ -1,6 +1,6 @@
 ﻿/*
  * FOG Service : A computer management client for the FOG Project
- * Copyright (C) 2014-2016 FOG Project
+ * Copyright (C) 2014-2017 FOG Project
  * 
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,7 +21,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using FOG.Modules.HostnameChanger;
 using FOG.Modules.PowerManagement;
 using FOG.Modules.PrinterManager;
