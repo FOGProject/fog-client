@@ -105,6 +105,9 @@
       <ComponentRef Id="GermanComponent"/>
       <ComponentRef Id="FrenchComponent"/>
       <ComponentRef Id="DutchComponent"/>
+      <ComponentRef Id="NorwegianComponent"/>
+      <ComponentRef Id="SpainComponent"/>
+      <ComponentRef Id="BasqueComponent"/>      
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
     </Feature>
   </Product>
