@@ -28,12 +28,14 @@ namespace FOG.Modules.HostnameChanger.Linux
         private readonly string Name = "HostnameChanger";
         private string currentHostName;
 
-        public void RenameComputer(string hostname)
+        public bool RenameComputer(DataContracts.HostnameChanger msg)
         {
             currentHostName = Environment.MachineName;
 
-            BruteForce(hostname);
+            BruteForce(msg.Hostname);
             Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
+
+            return true;
         }
 
         public bool RegisterComputer(DataContracts.HostnameChanger msg)

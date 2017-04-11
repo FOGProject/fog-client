@@ -37,6 +37,11 @@ namespace FOG.Modules.HostnameChanger.Windows
         private static extern int NetUnjoinDomain(string lpServer, string lpAccount, string lpPassword,
             UnJoinOptions fUnjoinOptions);
 
+        [DllImport("netapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern int NetRenameMachineInDomain(string lpServer, string lpNewMachineName,
+            string lpAccount, string lpPassword, JoinOptions fRenameOptions);
+
+
         private static int DomainWrapper(DataContracts.HostnameChanger msg, bool ou, JoinOptions options)
         {
             return NetJoinDomain(null,
@@ -77,7 +82,40 @@ namespace FOG.Modules.HostnameChanger.Windows
 
         private readonly string Name = "HostnameChanger";
 
-        public void RenameComputer(string hostname)
+        public bool RenameComputer(DataContracts.HostnameChanger msg)
+        {
+            var success = false;
+            if (IsJoinedToDomain(msg.ADDom))
+            {
+                Log.Entry(Name, "Renaming host inside existing domain binding");
+                // We are already in the correct domain
+                var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NetsetupAcctCreate);
+                Log.Entry(Name,
+                $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
+
+                if (returnCode == 0)
+                {
+                    success = true;
+                    SetLocalHostName(msg.Hostname);
+                }
+            } else if (IsJoinedToAnyDomain()) {
+                Log.Entry(Name, "Moving host to correct domain");
+                // We are in the incorrect domain
+                success = UnRegisterComputer(msg);
+            } else
+            {
+                Log.Entry(Name, "Renaming host");
+                // We are not joined to any domain
+                success = SetLocalHostName(msg.Hostname);
+            }
+
+            if (success)
+                Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
+
+            return success;
+        }
+
+        private bool SetLocalHostName(string hostname)
         {
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "NV Hostname",
                 hostname, false);
@@ -86,30 +124,56 @@ namespace FOG.Modules.HostnameChanger.Windows
             RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
                 "ComputerName", hostname, false);
 
-            Power.Restart(Settings.Get("Company") + " needs to rename your computer", Power.ShutdownOptions.Delay);
+            return true;
         }
 
-        public bool RegisterComputer(DataContracts.HostnameChanger msg)
+
+        private bool IsJoinedToAnyDomain()
         {
-            // Check if the host is already part of the set domain by checking server IPs
+            try
+            {
+                using (var domain = Domain.GetComputerDomain())
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+            }
+
+            return false;
+        }
+
+        private bool IsJoinedToDomain(string idealDomain)
+        {
             try
             {
                 using (var domain = Domain.GetComputerDomain())
                 {
                     var currentIP = Dns.GetHostAddresses(domain.Name);
-                    var targetIP = Dns.GetHostAddresses(msg.ADDom);
+                    var targetIP = Dns.GetHostAddresses(idealDomain);
 
                     if (currentIP.Intersect(targetIP).Any())
                     {
-                        Log.Entry(Name, "Host is already joined to target domain");
-                        return false;
+                        return true;
                     }
 
                 }
             }
             catch (Exception)
             {
-                // ignored
+            }
+
+            return false;
+        }
+
+        public bool RegisterComputer(DataContracts.HostnameChanger msg)
+        {
+            // Check if the host is already part of the set domain by checking server IPs
+            if (IsJoinedToDomain(msg.ADDom))
+            {
+                Log.Entry(Name, "Host already joined to target domain");
+                return true;
             }
 
             // Attempt to join the domain

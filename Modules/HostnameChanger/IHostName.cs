@@ -21,7 +21,7 @@ namespace FOG.Modules.HostnameChanger
 {
     internal interface IHostName
     {
-        void RenameComputer(string hostname);
+        bool RenameComputer(DataContracts.HostnameChanger msg);
         bool RegisterComputer(DataContracts.HostnameChanger msg);
         bool UnRegisterComputer(DataContracts.HostnameChanger msg);
         void ActivateComputer(string key);

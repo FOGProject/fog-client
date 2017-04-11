@@ -27,11 +27,13 @@ namespace FOG.Modules.HostnameChanger.Mac
     {
         private readonly string Name = "HostnameChanger";
 
-        public void RenameComputer(string hostname)
+        public bool RenameComputer(DataContracts.HostnameChanger msg)
         {
-            ProcessHandler.Run("scutil", "--set HostName " + hostname);
-            ProcessHandler.Run("scutil", "--set LocalHostName " + hostname);
-            ProcessHandler.Run("scutil", "--set ComputerName " + hostname);
+            ProcessHandler.Run("scutil", "--set HostName " + msg.Hostname);
+            ProcessHandler.Run("scutil", "--set LocalHostName " + msg.Hostname);
+            ProcessHandler.Run("scutil", "--set ComputerName " + msg.Hostname);
+
+            return true;
         }
 
         public bool RegisterComputer(DataContracts.HostnameChanger msg)

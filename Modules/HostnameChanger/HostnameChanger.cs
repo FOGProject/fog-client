@@ -100,18 +100,10 @@ namespace FOG.Modules.HostnameChanger
                 return true;
             }
 
-            // Remove the domain binding if present
-            if (!UnRegisterComputer(msg))
-            {
-                Log.Error(Name, "Domain unbinding errors, aborting hostname change process");
-                return false;
-            }
-            if (Power.ShuttingDown || Power.Requested) return true;
-
             Log.Entry(Name, $"Renaming host to {msg.Hostname}");
             try
             {
-                _instance.RenameComputer(msg.Hostname);
+                _instance.RenameComputer(msg);
                 return true;
             }
             catch (Exception ex)
