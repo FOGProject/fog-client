@@ -110,7 +110,7 @@ Write-Host "Building MSI"
 Invoke-Expression ($msbuild + $msiConfig) | out-null
 $InstallerMSI = "$PSScriptRoot\UniversalInstaller\Scripts\FOGService.msi"
 if ($sign) {
-	Write-Host "Sigining MSI"
+	Write-Host "Signing MSI"
 	Invoke-Expression($signExec + "bin\FOGService.msi""") | out-null
 }
 if (Test-Path $InstallerMSI) { Remove-Item $InstallerMSI }
@@ -125,7 +125,7 @@ Write-Host "ILMerging Smart Installer"
 Invoke-Expression ($ilMerge + $smartInstallerMerge )
 
 if ($sign) {
-	Write-Host "Sigining Smart Installer"
+	Write-Host "Signing Smart Installer"
 	Invoke-Expression($signExec + "out\SmartInstaller.exe""") | out-null
 }
 
@@ -136,7 +136,7 @@ Write-Host "ILMerging Debugger"
 Invoke-Expression ($ilMerge + $debuggerMerge)
 
 if ($sign) {
-	Write-Host "Sigining Debugger"
+	Write-Host "Signing Debugger"
 	Invoke-Expression($signExec + "out\Debugger.exe""") | out-null
 }
 
@@ -147,7 +147,7 @@ Write-Host "ILMerging PrinterManagerHelper"
 Invoke-Expression ($ilMerge + $printerMerge)
 
 if ($sign) {
-	Write-Host "Sigining PrinterManager Helper"
+	Write-Host "Signing PrinterManager Helper"
 	Invoke-Expression($signExec + "out\PrinterManagerHelper.exe""") | out-null
 }
 
