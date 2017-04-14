@@ -103,8 +103,7 @@ namespace FOG.Modules.HostnameChanger
             Log.Entry(Name, $"Renaming host to {msg.Hostname}");
             try
             {
-                _instance.RenameComputer(msg);
-                return true;
+                return _instance.RenameComputer(msg);
             }
             catch (Exception ex)
             {

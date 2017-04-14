@@ -41,6 +41,9 @@ namespace FOG.Modules.HostnameChanger.Windows
         private static extern int NetRenameMachineInDomain(string lpServer, string lpNewMachineName,
             string lpAccount, string lpPassword, JoinOptions fRenameOptions);
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        private static extern bool SetComputerNameEx(COMPUTER_NAME_FORMAT NameType, string lpBuffer);
+
 
         private static int DomainWrapper(DataContracts.HostnameChanger msg, bool ou, JoinOptions options)
         {
@@ -53,6 +56,19 @@ namespace FOG.Modules.HostnameChanger.Windows
         }
 
         [Flags]
+        private enum COMPUTER_NAME_FORMAT
+        {
+            ComputerNameNetBIOS,
+            ComputerNameDnsHostname,
+            ComputerNameDnsDomain,
+            ComputerNameDnsFullyQualified,
+            ComputerNamePhysicalNetBIOS,
+            ComputerNamePhysicalDnsHostname,
+            ComputerNamePhysicalDnsDomain,
+            ComputerNamePhysicalDnsFullyQualified,
+        }
+
+        [Flags]
         private enum UnJoinOptions
         {
             NetsetupAccountDelete = 0x00000004
@@ -61,8 +77,10 @@ namespace FOG.Modules.HostnameChanger.Windows
         [Flags]
         private enum JoinOptions
         {
-            NetsetupJoinDomain = 0x00000001,
-            NetsetupAcctCreate = 0x00000002
+            NETSETUP_JOIN_DOMAIN = 0x00000001,
+            NETSETUP_DOMAIN_JOIN_IF_JOINED = 0x00000020,
+            NETSETUP_JOIN_WITH_NEW_NAME = 0x00000400,
+            NETSETUP_ACCT_CREATE = 0x00000002
         }
 
         private readonly Dictionary<int, string> _returnCodes = new Dictionary<int, string>
@@ -87,9 +105,22 @@ namespace FOG.Modules.HostnameChanger.Windows
             var success = false;
             if (IsJoinedToDomain(msg.ADDom))
             {
+                if (!msg.AD)
+                {
+                    Log.Error(Name, "Host is currently bound to a domain, but domain management is disabled; Cannot rename");
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(msg.ADDom) || string.IsNullOrEmpty(msg.ADUser) ||
+                    string.IsNullOrEmpty(msg.ADPass))
+                {
+                    Log.Error(Name, "Host is currently bound to a domain, but required domain information is missing; Cannot rename");
+                    return false;
+                }
+
                 Log.Entry(Name, "Renaming host inside existing domain binding");
                 // We are already in the correct domain
-                var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NetsetupAcctCreate);
+                var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NETSETUP_ACCT_CREATE);
                 Log.Entry(Name,
                 $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
 
@@ -99,6 +130,18 @@ namespace FOG.Modules.HostnameChanger.Windows
                     SetLocalHostName(msg.Hostname);
                 }
             } else if (IsJoinedToAnyDomain()) {
+                if (!msg.AD)
+                {
+                    Log.Error(Name, "Host is currently bound to a domain, but domain management is disabled; Cannot rename");
+                    return false;
+                }
+
+                if (string.IsNullOrEmpty(msg.ADDom) || string.IsNullOrEmpty(msg.ADUser) ||
+                    string.IsNullOrEmpty(msg.ADPass))
+                {
+                    Log.Error(Name, "Host is currently bound to a domain, but required domain information is missing; Cannot rename");
+                    return false;
+                }
                 Log.Entry(Name, "Moving host to correct domain");
                 // We are in the incorrect domain
                 success = UnRegisterComputer(msg);
@@ -107,6 +150,15 @@ namespace FOG.Modules.HostnameChanger.Windows
                 Log.Entry(Name, "Renaming host");
                 // We are not joined to any domain
                 success = SetLocalHostName(msg.Hostname);
+
+
+                if (success && msg.AD && !string.IsNullOrEmpty(msg.ADDom) && !string.IsNullOrEmpty(msg.ADUser) && string.IsNullOrEmpty(msg.ADPass))
+                {
+                    Log.Entry(Name, "Joining domain");
+                    var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME);
+                    Log.Entry(Name,
+                    $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
+                } 
             }
 
             if (success)
@@ -117,14 +169,7 @@ namespace FOG.Modules.HostnameChanger.Windows
 
         private bool SetLocalHostName(string hostname)
         {
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters", "NV Hostname",
-                hostname, false);
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName",
-                "ComputerName", hostname, false);
-            RegistryHandler.SetRegistryValue(@"SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
-                "ComputerName", hostname, false);
-
-            return true;
+            return SetComputerNameEx(COMPUTER_NAME_FORMAT.ComputerNamePhysicalDnsHostname, hostname);
         }
 
 
@@ -153,11 +198,7 @@ namespace FOG.Modules.HostnameChanger.Windows
                     var currentIP = Dns.GetHostAddresses(domain.Name);
                     var targetIP = Dns.GetHostAddresses(idealDomain);
 
-                    if (currentIP.Intersect(targetIP).Any())
-                    {
-                        return true;
-                    }
-
+                    return (currentIP.Intersect(targetIP).Any());
                 }
             }
             catch (Exception)
@@ -178,18 +219,18 @@ namespace FOG.Modules.HostnameChanger.Windows
 
             // Attempt to join the domain
             var returnCode = DomainWrapper(msg, true,
-                (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
 
             switch (returnCode)
             {
                 case 2224:
-                    returnCode = DomainWrapper(msg, true, JoinOptions.NetsetupJoinDomain);
+                    returnCode = DomainWrapper(msg, true, JoinOptions.NETSETUP_JOIN_DOMAIN);
                     break;
                 case 2:
                 case 50:
                 case 1355:
                     returnCode = DomainWrapper(msg, false,
-                        (JoinOptions.NetsetupJoinDomain | JoinOptions.NetsetupAcctCreate));
+                        (JoinOptions.NETSETUP_JOIN_DOMAIN | JoinOptions.NETSETUP_ACCT_CREATE));
                     break;
             }
 
