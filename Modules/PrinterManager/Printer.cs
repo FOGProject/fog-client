@@ -77,15 +77,15 @@ namespace FOG.Modules.PrinterManager
         {
             Log.Entry("Printer", "Adding: " + Name);
             if (IP != null)
-                Log.Entry(LogName, $"--> IP = {IP}");
+                Log.Debug(LogName, $"--> IP = {IP}");
             if (Port != null)
-                Log.Entry(LogName, $"--> Port = {Port}");
+                Log.Debug(LogName, $"--> Port = {Port}");
             if (File != null)
-                Log.Entry(LogName, $"--> File = {File}");
+                Log.Debug(LogName, $"--> File = {File}");
             if (ConfigFile != null)
-                Log.Entry(LogName, $"--> Config = {ConfigFile}");
+                Log.Debug(LogName, $"--> Config = {ConfigFile}");
             if (Model != null)
-                Log.Entry(LogName, $"--> Model = {Model}");
+                Log.Debug(LogName, $"--> Model = {Model}");
 
             try
             {

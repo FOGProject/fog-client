@@ -52,31 +52,32 @@ namespace FOG.Modules.SnapinClient
 
             foreach (var snapin in msg.Snapins)
             {
-                Log.Entry(Name, "Snapin Found:");
-                Log.Entry(Name, $"    ID: {snapin.JobTaskID}");
-                Log.Entry(Name, $"    Name: {snapin.Name}");
-                Log.Entry(Name, $"    Created: {snapin.JobCreation}");
-                Log.Entry(Name, $"    Action: {snapin.Action}");
-                Log.Entry(Name, $"    Pack: {snapin.Pack}");
-                Log.Entry(Name, $"    Hide: {snapin.Hide}");
-                Log.Entry(Name, $"    Server: {snapin.Url}");
-                Log.Entry(Name, $"    TimeOut: {snapin.TimeOut}");
+                Log.Entry(Name, "Running snapin " + snapin.Name);
+                Log.Debug(Name, "Snapin Found:");
+                Log.Debug(Name, $"    ID: {snapin.JobTaskID}");
+                Log.Debug(Name, $"    Name: {snapin.Name}");
+                Log.Debug(Name, $"    Created: {snapin.JobCreation}");
+                Log.Debug(Name, $"    Action: {snapin.Action}");
+                Log.Debug(Name, $"    Pack: {snapin.Pack}");
+                Log.Debug(Name, $"    Hide: {snapin.Hide}");
+                Log.Debug(Name, $"    Server: {snapin.Url}");
+                Log.Debug(Name, $"    TimeOut: {snapin.TimeOut}");
                 
-                if (!snapin.Hide)
-                {
+                //if (!snapin.Hide)
+                //{
                     if (snapin.Pack)
                     {
-                        Log.Entry(Name, $"    SnapinPack File: {snapin.RunWith}");
-                        Log.Entry(Name, $"    SnapinPack Args: {snapin.RunWithArgs}");
+                        Log.Debug(Name, $"    SnapinPack File: {snapin.RunWith}");
+                        Log.Debug(Name, $"    SnapinPack Args: {snapin.RunWithArgs}");
                     }
                     else
                     {
-                        Log.Entry(Name, $"    RunWith: {snapin.RunWith}");
-                        Log.Entry(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
-                        Log.Entry(Name, $"    Args: {snapin.Args}");
+                        Log.Debug(Name, $"    RunWith: {snapin.RunWith}");
+                        Log.Debug(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
+                        Log.Debug(Name, $"    Args: {snapin.Args}");
                     }
-                    Log.Entry(Name, $"    File: {snapin.FileName}");
-                }
+                    Log.Debug(Name, $"    File: {snapin.FileName}");
+                //}
 
 
                 if (string.IsNullOrEmpty(snapin.Hash))
@@ -152,15 +153,15 @@ namespace FOG.Modules.SnapinClient
                 var fz = new FastZip();
                 fz.ExtractZip(localPath, extractionPath, null);
 
-                Log.Entry(Name, "Processing SnapinPack settings");
+                Log.Debug(Name, "Processing SnapinPack settings");
                 snapin.RunWith = snapin.RunWith.Replace("[FOG_SNAPIN_PATH]", extractionPath);
                 snapin.RunWithArgs = snapin.RunWithArgs.Replace("[FOG_SNAPIN_PATH]", extractionPath);
                 snapin.Args = "";
-                if (!snapin.Hide)
-                {
-                    Log.Entry(Name, "New SnapinPack File: " + snapin.RunWith);
-                    Log.Entry(Name, "New SnapinPack Args: " + snapin.RunWithArgs);
-                }
+                //if (!snapin.Hide)
+                //{
+                Log.Debug(Name, "New SnapinPack File: " + snapin.RunWith);
+                Log.Debug(Name, "New SnapinPack Args: " + snapin.RunWithArgs);
+                //}
 
                 returnCode = StartSnapin(snapin, extractionPath, true);
             }
@@ -199,7 +200,7 @@ namespace FOG.Modules.SnapinClient
             {
                 try
                 {
-                    Log.Entry(Name, "Starting snapin...");
+                    Log.Entry(Name, "Starting snapin");
                     process.Start();
 
                     if (snapin.TimeOut > 0)

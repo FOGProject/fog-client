@@ -62,8 +62,7 @@ namespace FOG
                 if (!string.IsNullOrEmpty(bannerURL))
                 {
                     // Check the hash to see if we need to re-download it
-                    var actualHash = Hash.SHA256(bannerFile);
-                    if (!actualHash.Equals(idealHash, StringComparison.OrdinalIgnoreCase))
+                    if (!File.Exists(bannerFile) || !Hash.SHA256(bannerFile).Equals(idealHash, StringComparison.OrdinalIgnoreCase))
                     {
                         Communication.DownloadFile(bannerURL, bannerFile);
                     }
@@ -226,8 +225,8 @@ namespace FOG
             {
                 Log.NewLine();
                 Log.PaddedHeader("Authentication");
-                Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
-                Log.Entry("Client-Info", $"OS:      {Settings.OS}");
+                Log.Debug("Client-Info", $"Version: {Settings.Get("Version")}");
+                Log.Debug("Client-Info", $"OS:      {Settings.OS}");
 
                 if (Authentication.HandShake()) break;
             }

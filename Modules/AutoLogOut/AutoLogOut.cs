@@ -41,7 +41,7 @@ namespace FOG.Modules.AutoLogOut
         {
             if (!User.AnyLoggedIn())
             {
-            	Log.Entry(Name, "No user logged in");
+            	Log.Debug(Name, "No user logged in");
             	return;
             }
 
@@ -50,8 +50,8 @@ namespace FOG.Modules.AutoLogOut
 
             var inactiveTime = User.InactivityTime();
 
-            Log.Entry(Name, $"Time set to {timeOut} seconds");
-            Log.Entry(Name, $"Inactive for {inactiveTime} seconds");
+            Log.Debug(Name, $"Time set to {timeOut} seconds");
+            Log.Debug(Name, $"Inactive for {inactiveTime} seconds");
 
             if (inactiveTime < timeOut) return;
 

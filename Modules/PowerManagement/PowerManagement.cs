@@ -103,7 +103,7 @@ namespace FOG.Modules.PowerManagement
         {
             foreach (var triggerPair in _triggers)
             {
-                Log.Entry(Name, $"--> Unscheduling a {triggerPair.Key}");
+                Log.Debug(Name, $"--> Unscheduling a {triggerPair.Key}");
                 _scheduler.UnscheduleJob(triggerPair.Value);
             }
 
@@ -122,7 +122,7 @@ namespace FOG.Modules.PowerManagement
 
             foreach (var triggerPair in toRemove)
             {
-                Log.Entry(Name, $"--> Unscheduling a {triggerPair.Key}");
+                Log.Debug(Name, $"--> Unscheduling a {triggerPair.Key}");
                 try
                 {
                     _scheduler.UnscheduleJob(triggerPair.Value);
@@ -145,17 +145,17 @@ namespace FOG.Modules.PowerManagement
             {
                 if (string.IsNullOrWhiteSpace(task.Action) || string.IsNullOrWhiteSpace(task.CRON))
                 {
-                    Log.Entry(Name, "--> Invalid task given by server: " + task);
+                    Log.Debug(Name, "--> Invalid task given by server: " + task);
                     continue;
                 }
 
                 if (_triggers.ContainsKey(task.ToString()))
                 {
-                    Log.Entry(Name, $"--> A {task} is already scheduled");
+                    Log.Debug(Name, $"--> A {task} is already scheduled");
                     continue;
                 }
 
-                Log.Entry(Name, $"--> Scheduling a {task} with a Quartz of {task.ToQuartz()}");
+                Log.Debug(Name, $"--> Scheduling a {task} with a Quartz of {task.ToQuartz()}");
 
                 try
                 {

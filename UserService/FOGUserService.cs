@@ -37,7 +37,7 @@ namespace FOG
         private static void OnUpdate(dynamic data)
         {
             if (data.action == null) return;
-            Log.Entry("User Service", data.ToString());
+            Log.Debug("User Service", data.ToString());
 
             if (!data.action.ToString().Equals("start")) return;
 

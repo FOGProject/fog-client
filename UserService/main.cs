@@ -37,14 +37,8 @@ namespace FOG
             Log.FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".fog_user.log");
             Log.Output = Log.Mode.File;
 
-            Log.Entry(LogName, "Initializing - phase 1");
-
-
             AppDomain.CurrentDomain.UnhandledException += Log.UnhandledException;
-
             Eager.Initalize();
-
-            Log.Entry(LogName, "Initializing - phase 2");
 
             if (File.Exists(Path.Combine(AppDomain.CurrentDomain.BaseDirectory + "updating.info")))
             {
