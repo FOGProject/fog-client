@@ -147,12 +147,11 @@ namespace FOG.Modules.HostnameChanger.Windows
                 success = UnRegisterComputer(msg);
             } else
             {
-                Log.Entry(Name, "Renaming host");
                 // We are not joined to any domain
                 success = SetLocalHostName(msg.Hostname);
 
 
-                if (success && msg.AD && !string.IsNullOrEmpty(msg.ADDom) && !string.IsNullOrEmpty(msg.ADUser) && string.IsNullOrEmpty(msg.ADPass))
+                if (success && msg.AD && !string.IsNullOrEmpty(msg.ADDom) && !string.IsNullOrEmpty(msg.ADUser) && !string.IsNullOrEmpty(msg.ADPass))
                 {
                     Log.Entry(Name, "Joining domain");
                     var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME);
