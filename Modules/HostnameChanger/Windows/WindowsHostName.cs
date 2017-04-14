@@ -154,7 +154,19 @@ namespace FOG.Modules.HostnameChanger.Windows
                 if (success && msg.AD && !string.IsNullOrEmpty(msg.ADDom) && !string.IsNullOrEmpty(msg.ADUser) && !string.IsNullOrEmpty(msg.ADPass))
                 {
                     Log.Entry(Name, "Joining domain");
-                    var returnCode = NetRenameMachineInDomain(null, msg.Hostname, msg.ADUser, msg.ADPass, JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME);
+                    var returnCode =  DomainWrapper(msg, true, JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME | JoinOptions.NETSETUP_ACCT_CREATE);
+                    switch (returnCode)
+                    {
+                        case 2224:
+                            returnCode = DomainWrapper(msg, true, JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME);
+                            break;
+                        case 2:
+                        case 50:
+                        case 1355:
+                            returnCode = DomainWrapper(msg, false,
+                                (JoinOptions.NETSETUP_JOIN_WITH_NEW_NAME | JoinOptions.NETSETUP_ACCT_CREATE));
+                            break;
+                    }
                     Log.Entry(Name,
                     $"{(_returnCodes.ContainsKey(returnCode) ? $"{_returnCodes[returnCode]}, code = " : "Unknown Return Code: ")} {returnCode}");
                 } 
