@@ -34,13 +34,40 @@ Windows      | Linux       | OSX
 
 #### Environment
 
-To build the entire client (including the Installer) Windows is required. This is due to the MSI for network deployment and the Universal Installer. The following dependencies must be installed and included in PATH
+To checkout and build the entire client (including the Installer) Windows is required. This is due to the MSI for network deployment and the Universal Installer. The following dependencies must be installed and included in PATH
+* [Git for Windows](https://git-for-windows.github.io/)
+** All default install settings are fine.
 * [WiX Toolset](http://wixtoolset.org/)
+** Download installer wix???.exe from github repo linked on that website.
 * [Powershell / WMF 4.0+](https://www.microsoft.com/en-us/download/details.aspx?id=40855) **(Windows 7 ships with 3.0)**
+** See Install Instructions on that page to find the correct package for your system
 * [.NET v4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
-* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) **(Included with Visual Studios 2015, add to PATH)**
-* [ILMerge] (https://www.microsoft.com/en-us/download/confirmation.aspx?id=17630) **(Add to PATH)**
-* [Windows SDK 7, .NET 4] (https://www.microsoft.com/en-us/download/details.aspx?id=8279) **(Add to PATH)**
+* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159)
+** Included with Visual Studios 2015 if you have that already
+** Add to PATH - for instructions see below
+* [Windows SDK 7, .NET 4] (https://www.microsoft.com/en-us/download/details.aspx?id=8279)
+** Before running the installer **note down** and then adjust some registry keys or the installer will fail (details see [here](https://stackoverflow.com/questions/31455926/windows-sdk-setup-failure))
+** Default setup is ok if you have enough disk space left but you can savely go with only selecting '.NET Development' and the two submodules
+** After installation change back the registry keys to what they were before
+
+In case you want to build the Universal Installer you need to add ILMerge as well:
+* [ILMerge] (https://www.microsoft.com/en-us/download/confirmation.aspx?id=17630)
+** (Add to PATH - for instructions see below)
+
+Adding PATH variables:
+** Win+R key -> rundll32.exe sysdm.cpl,EditEnvironmentVariables
+** New... -> Variable name: PATH, Variable value: C:\Program Files\MSBuild\14.0\Bin;C:\Program Files\Microsoft\ILMerge
+
+**Now, restart your system!**
+
+#### Repository and powershell setting
+Open Git Bash and clone the repository:
+```
+IEUser@WIN7 MINGW32 ~/Desktop
+$ git clone https://github.com/FOGProject/fog-client
+Cloning into 'fog-client'...
+...
+```
 
 Powershell must be configured to allow scripts to be run on the machine. Open CMD as adminstrator and run
 ```
