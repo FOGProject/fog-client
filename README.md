@@ -47,6 +47,8 @@ To checkout and build the entire client (including the Installer) Windows is req
   * Add to PATH - for instructions see below
 * [Windows SDK 7, .NET 4](https://www.microsoft.com/en-us/download/details.aspx?id=8279)
   * Before running the installer **note down** and then adjust some registry keys or the installer will fail (details see [here](https://stackoverflow.com/questions/31455926/windows-sdk-setup-failure))
+    * 32 bit: `HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Client\Version` and `HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full\Version`
+    * 64 bit: `HKLM\SOFTWARE\Wow6432Node\Microsoft\NET Framework Setup\NDP\v4\Client\Version` and `HKLM\SOFTWARE\Wow6432Node\Microsoft\NET Framework Setup\NDP\v4\Full\Version`
   * Default setup is ok if you have enough disk space left but you can savely go with only selecting '.NET Development' and the two submodules
   * After installation change back the registry keys to what they were before
 
@@ -55,8 +57,8 @@ In case you want to build the Universal Installer you need to add ILMerge as wel
   * (Add to PATH - for instructions see below)
 
 Adding PATH variables:
-* Win+R key -> rundll32.exe sysdm.cpl,EditEnvironmentVariables
-* New... -> Variable name: PATH, Variable value: C:\Program Files\MSBuild\14.0\Bin;C:\Program Files\Microsoft\ILMerge
+* Win+R key -> `rundll32.exe sysdm.cpl,EditEnvironmentVariables`
+* New... -> Variable name: `PATH`, Variable value: `C:\Program Files\MSBuild\14.0\Bin;C:\Program Files\Microsoft\ILMerge`
 
 **Now, restart your system!**
 
