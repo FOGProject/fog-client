@@ -115,7 +115,13 @@
               <File Id="ShutdownGUIeu" Name="FOGShutdownGUI.resources.dll" Source="..\bin\eu\FOGShutdownGUI.resources.dll" />
               <File Id="Moduleseu" Name="Modules.resources.dll" Source="..\bin\eu\Modules.resources.dll" />
             </Component>
-          </Directory>   
+          </Directory>
+          <Directory Id="huDirectory" Name="hu">
+            <Component Id="HungarianComponent" Guid="95f5272c-4990-4133-aab0-1fd6d1ae6bf6" DiskId="1">
+              <File Id="ShutdownGUIhu" Name="FOGShutdownGUI.resources.dll" Source="..\bin\hu\FOGShutdownGUI.resources.dll" />
+              <File Id="Moduleshu" Name="Modules.resources.dll" Source="..\bin\hu\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">

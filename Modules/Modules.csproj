@@ -80,7 +80,7 @@
     <Optimize>true</Optimize>
     <FileAlignment>4096</FileAlignment>
     <DebugType>None</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
@@ -168,6 +168,11 @@
       <DependentUpon>ALOStrings.resx</DependentUpon>
     </Compile>
     <Compile Include="AutoLogOut\AutoLogOut.cs" />
+    <Compile Include="AutoLogOut\ALOStrings.hu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ALOStrings.hu.resx</DependentUpon>
+    </Compile>
     <Compile Include="DataContracts\AutoLogOut.cs" />
     <Compile Include="DataContracts\SnapinConfigFile.cs" />
     <Compile Include="DisplayManager\Display.cs" />
@@ -195,6 +200,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataContracts\Snapin.cs" />
     <Compile Include="DataContracts\SnapinClient.cs" />
+    <Compile Include="SnapinClient\SnapinStrings.hu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SnapinStrings.hu.resx</DependentUpon>
+    </Compile>
     <Compile Include="SnapinClient\SnapinClient.cs" />
     <Compile Include="DataContracts\TaskReboot.cs" />
     <Compile Include="SnapinClient\SnapinStrings.no.Designer.cs">
@@ -267,6 +277,14 @@
     <EmbeddedResource Include="AutoLogOut\ALOStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.hu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.hu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.hu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.hu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.no.resx">
       <Generator>ResXFileCodeGenerator</Generator>
