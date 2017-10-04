@@ -29,3 +29,11 @@ C:\dev\fog-client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
 C:\dev\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
 C:\dev\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
 C:\dev\fog-client\Tray\obj\Release\FOGTray.exe
+C:\Users\Administrator\Desktop\dev\fog-client\bin\logo.ico
+C:\Users\Administrator\Desktop\dev\fog-client\bin\FOGTray.exe.config
+C:\Users\Administrator\Desktop\dev\fog-client\bin\FOGTray.exe
+C:\Users\Administrator\Desktop\dev\fog-client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\dev\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
+C:\Users\Administrator\Desktop\dev\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
+C:\Users\Administrator\Desktop\dev\fog-client\Tray\obj\Release\Tray.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\dev\fog-client\Tray\obj\Release\FOGTray.exe

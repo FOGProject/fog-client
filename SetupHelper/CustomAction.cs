@@ -162,6 +162,7 @@ namespace SetupHelper
             return ActionResult.Success;
         }
 
+        // Cleanup legacy tasks
         [CustomAction]
         public static ActionResult CleanTasks(Session session)
         {

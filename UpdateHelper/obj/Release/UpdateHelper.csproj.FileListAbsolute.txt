@@ -15,3 +15,8 @@ C:\dev\fog-client\bin\FOGUpdateHelper.exe.config
 C:\dev\fog-client\bin\FOGUpdateHelper.exe
 C:\dev\fog-client\UpdateHelper\obj\Release\UpdateHelper.csprojResolveAssemblyReference.cache
 C:\dev\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe
+C:\Users\Administrator\Desktop\dev\fog-client\bin\FOGUpdateHelper.exe.config
+C:\Users\Administrator\Desktop\dev\fog-client\bin\FOGUpdateHelper.exe
+C:\Users\Administrator\Desktop\dev\fog-client\UpdateHelper\obj\Release\UpdateHelper.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\dev\fog-client\UpdateHelper\obj\Release\UpdateHelper.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\dev\fog-client\UpdateHelper\obj\Release\FOGUpdateHelper.exe
