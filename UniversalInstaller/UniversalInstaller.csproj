@@ -107,12 +107,6 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-    <Reference Include="Zazzles, Version=1.0.5764.34033, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\libs\Zazzles.dll</HintPath>
-      <EmbedAssembly>true</EmbedAssembly>
-      <Private>False</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helper.cs" />
@@ -177,6 +171,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\zazzles\Zazzles\Zazzles.csproj">
+      <Project>{4cacd1de-ef40-4db9-8ee0-9dcb90c359e7}</Project>
+      <Name>Zazzles</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SetupHelper\SetupHelper.csproj">
       <Project>{1e34afec-035c-45a1-bbe3-4d2d7c67f5c7}</Project>
       <Name>SetupHelper</Name>

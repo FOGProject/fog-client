@@ -1,0 +1,3 @@
+[submodule "zazzles"]
+	path = zazzles
+	url = https://github.com/FOGProject/zazzles.git

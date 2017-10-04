@@ -22,3 +22,10 @@ D:\fog\fog-client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
 D:\fog\fog-client\Tray\obj\Release\FOGTray.exe
 C:\Users\Administrator\dev\fog-client\bin\FOGTray.exe.config
 C:\Users\Administrator\dev\fog-client\Tray\obj\Release\FOGTray.exe
+C:\dev\fog-client\bin\logo.ico
+C:\dev\fog-client\bin\FOGTray.exe.config
+C:\dev\fog-client\bin\FOGTray.exe
+C:\dev\fog-client\Tray\obj\Release\Tray.csprojResolveAssemblyReference.cache
+C:\dev\fog-client\Tray\obj\Release\FOG.NotificationIcon.resources
+C:\dev\fog-client\Tray\obj\Release\Tray.csproj.GenerateResource.Cache
+C:\dev\fog-client\Tray\obj\Release\FOGTray.exe

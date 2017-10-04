@@ -10,3 +10,6 @@ D:\fog\fog-client\bin\FOGUpdateWaiter.exe.config
 D:\fog\fog-client\bin\FOGUpdateWaiter.exe
 D:\fog\fog-client\UpdateWaiter\obj\Release\UpdateWaiter.csprojResolveAssemblyReference.cache
 D:\fog\fog-client\UpdateWaiter\obj\Release\FOGUpdateWaiter.exe
+C:\dev\fog-client\bin\FOGUpdateWaiter.exe.config
+C:\dev\fog-client\bin\FOGUpdateWaiter.exe
+C:\dev\fog-client\UpdateWaiter\obj\Release\FOGUpdateWaiter.exe

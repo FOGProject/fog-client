@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{5C3289AB-B65D-42F8-BFD0-21C61619729A}"
 EndProject
@@ -34,6 +34,18 @@ EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "MSI", "MSI\MSI.wixproj", "{B364328D-CB64-4B22-93DC-FD1732064818}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrinterManagerHelper", "PrinterManagerHelper\PrinterManagerHelper.csproj", "{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{66BE57DC-1CAB-4B10-8CC8-0A99D7797C78}"
+	ProjectSection(SolutionItems) = preProject
+		..\zazzles\.nuget\NuGet.Config = ..\zazzles\.nuget\NuGet.Config
+		..\zazzles\.nuget\NuGet.exe = ..\zazzles\.nuget\NuGet.exe
+		..\zazzles\.nuget\NuGet.targets = ..\zazzles\.nuget\NuGet.targets
+		..\zazzles\.nuget\packages.config = ..\zazzles\.nuget\packages.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zazzles.Tests", "..\zazzles\Zazzles.Tests\Zazzles.Tests.csproj", "{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zazzles", "..\zazzles\Zazzles\Zazzles.csproj", "{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,8 +186,38 @@ Global
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.ActiveCfg = Release|x86
 		{A4E20BE6-BD6A-43B1-B5B6-172B4FF260F4}.Release|x86.Build.0 = Release|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|x86.ActiveCfg = Debug|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Debug|x86.Build.0 = Debug|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|x86.ActiveCfg = Release|x86
+		{B7C10B83-A5DB-4A11-AE11-D41B22BA156C}.Release|x86.Build.0 = Release|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|x86.ActiveCfg = Debug|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Debug|x86.Build.0 = Debug|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|Mixed Platforms.Build.0 = Release|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|x86.ActiveCfg = Release|x86
+		{4CACD1DE-EF40-4DB9-8EE0-9DCB90C359E7}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5E61D59A-79BD-4F17-85BE-5A5452346A57}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Service\Service.csproj
 	EndGlobalSection
 EndGlobal
