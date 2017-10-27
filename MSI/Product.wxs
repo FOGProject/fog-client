@@ -63,6 +63,8 @@
     <!-- Setup the UI -->
     <WixVariable Id="WixUILicenseRtf" Value="license.rtf" />
     <Icon Id="icon.ico" SourceFile="icon.ico" />
+    <WixVariable Id="WixUIDialogBmp" Value="WixUIDialogBmp.bmp" />
+    <WixVariable Id="WixUIBannerBmp" Value="WixUIBannerBmp.bmp" />
     <Property Id="ARPPRODUCTICON" Value="icon.ico" />
     <Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
     <Property Id="USETRAY" Value="1" />

@@ -32,6 +32,8 @@
   <ItemGroup>
     <Content Include="icon.ico" />
     <Content Include="license.rtf" />
+    <Content Include="WixUIBannerBmp.bmp" />
+    <Content Include="WixUIDialogBmp.bmp" />
   </ItemGroup>
   <ItemGroup>
     <WixExtension Include="WixFirewallExtension">
