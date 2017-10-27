@@ -73,7 +73,7 @@ namespace FOG
                   v => upgrade = v != null },
                 { "l|log",  "the log file to use",
                   v => logFile = v },
-                { "?|h|help",  "show this message and exit",
+                { "?|help",  "show this message and exit",
                   v => help = v != null },
             };
 
