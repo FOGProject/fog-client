@@ -48,8 +48,8 @@ namespace FOG
             var start = false;
             var rootLog = false;
             var https = false;
-            var server = "";
-            var webRoot = "";
+            string server = null;
+            string webRoot = null;
             var logFile = "";
 
             var help = false;
@@ -115,10 +115,6 @@ namespace FOG
                     upgrade = true;
                 else if (args[0].Equals("uninstall"))
                     uninstall = true;
-                else
-                {
-                    ShowHelp(p);
-                }
             }
 
             if (uninstall)
