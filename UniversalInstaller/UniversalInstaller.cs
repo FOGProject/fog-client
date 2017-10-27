@@ -29,6 +29,9 @@ namespace FOG
     class UniversalInstaller
     {
         private const string LogName = "Installer";
+        private const string DEFAULT_SERVER = "fogserver";
+        private const string DEFAULT_WEBROOT = "/fog";
+
         public static string LogPath;
         private static ConsoleColor _infoColor = ConsoleColor.Yellow;
 
@@ -49,10 +52,12 @@ namespace FOG
             var webRoot = "";
             var logFile = "";
 
+            var help = false;
+
             var p = new OptionSet() {
-                { "server=|SERVER=", "the FOG server address, defaults to fogserver",
+                { "server=|SERVER=", $"the FOG server address, defaults to {DEFAULT_SERVER}",
                   v => server = v },
-                { "webroot=|WEBROOT=", "the FOG server webroot, defaults to /fog",
+                { "webroot=|WEBROOT=", $"the FOG server webroot, defaults to {DEFAULT_WEBROOT}",
                   v => webRoot = v },
                 { "h|https|HTTPS", "use HTTPS for communication",
                   v => https = v != null },
@@ -68,9 +73,35 @@ namespace FOG
                   v => upgrade = v != null },
                 { "l|log",  "the log file to use",
                   v => logFile = v },
+                { "?|h|help",  "show this message and exit",
+                  v => help = v != null },
             };
 
             p.Parse(args);
+
+            if (help)
+            {
+                ShowHelp(p);
+                return;
+            }
+
+            // Defaults
+            if (server == null)
+                server = DEFAULT_SERVER;
+            if (webRoot == null)
+                webRoot = DEFAULT_WEBROOT;
+
+            // If no server was set, show help
+            if (string.IsNullOrWhiteSpace(server))
+            {
+                ShowHelp(p);
+                return;
+            }
+            // A blank webroot is equal to /
+            if (string.IsNullOrWhiteSpace(webRoot))
+            {
+                webRoot = DEFAULT_WEBROOT;
+            }
 
             if (!string.IsNullOrWhiteSpace(logFile))
             {
@@ -84,6 +115,10 @@ namespace FOG
                     upgrade = true;
                 else if (args[0].Equals("uninstall"))
                     uninstall = true;
+                else
+                {
+                    ShowHelp(p);
+                }
             }
 
             if (uninstall)
@@ -93,7 +128,27 @@ namespace FOG
             else if (args.Length == 0)
                 InteractiveMode();
             else
+            {
+                PrintBanner();
+                PrintLicense();
+                PrintInfo();
                 Install(https ? "1" : "0", tray ? "1" : "0", server, webRoot, "FOG", rootLog ? "1" : "0");
+            }
+        }
+
+        private static void ShowHelp(OptionSet p)
+        {
+            Console.WriteLine("Usage: mono SmartInstaller.exe [OPTIONS]");
+            Console.WriteLine("Install the FOG Service onto this computer.");
+            Console.WriteLine();
+            Console.WriteLine("Special Commands:");
+            Console.WriteLine("mono SmartInstaller.exe uninstall");
+            Console.WriteLine("mono SmartInstaller.exe upgrade");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            p.WriteOptionDescriptions(Console.Out);
+
+
         }
 
         private static void PerformUpgrade()
