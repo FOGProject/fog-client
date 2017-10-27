@@ -93,7 +93,12 @@ namespace FOG
             else if (args.Length == 0)
                 InteractiveMode();
             else
+            {
+                PrintBanner();
+                PrintLicense();
+                PrintInfo();
                 Install(https ? "1" : "0", tray ? "1" : "0", server, webRoot, "FOG", rootLog ? "1" : "0");
+            }
         }
 
         private static void PerformUpgrade()
