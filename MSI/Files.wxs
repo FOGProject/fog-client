@@ -19,7 +19,7 @@
  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 -->
 
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension">
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi" xmlns:fire="http://schemas.microsoft.com/wix/FirewallExtension" xmlns:util="http://schemas.microsoft.com/wix/UtilExtension">
   <Fragment>
     <DirectoryRef Id="TARGETDIR">
       <Directory Id="ProgramFilesFolder" Name="PFiles">
@@ -75,8 +75,23 @@
               Description="Perform tasks for the FOG Server"
               Start="auto"
               ErrorControl="normal">
-              <ServiceDependency Id="dnscache" />
-              <ServiceDependency Id="RpcSs" />
+
+              <!--Services required for internet-->
+              <ServiceDependency Id="ALG" /> <!--Application Layer Gateway-->
+              <ServiceDependency Id="dnscache" /> <!--DNS-->
+              <ServiceDependency Id="NlaSvc" /> <!--Network Location Awareness (NLA)-->
+              
+              <!--Services required for API calls-->
+              <ServiceDependency Id="RpcSs" /> <!--Remote Procedure Call (RPC)-->
+              <ServiceDependency Id="EventSystem" /> <!--COM+ Event System-->
+              <ServiceDependency Id="eventlog" /> <!--Event Logger-->
+              <ServiceDependency Id="Power" /> <!--Power Policy-->
+              <ServiceDependency Id="CryptSvc" /> <!--Cryptographic API-->
+              <ServiceDependency Id="ProfSvc" /> <!--User Profile Service-->
+              <ServiceDependency Id="Schedule" /> <!--Task Scheduler-->
+              <ServiceDependency Id="winmgmt" /> <!--Windows Management Instrumentation-->
+
+              <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="none" RestartServiceDelayInSeconds="60" ResetPeriodInDays="1"/>
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
           </Component>
@@ -104,10 +119,10 @@
               <File Id="Modulesno" Name="Modules.resources.dll" Source="..\bin\no\Modules.resources.dll" />
             </Component>
           </Directory> 
-          <Directory Id="esESDirectory" Name="esES">
-            <Component Id="SpainComponent" Guid="6bbdc832-f58f-4914-8dea-154b4520af19" DiskId="1">
-              <File Id="ShutdownGUIesES" Name="FOGShutdownGUI.resources.dll" Source="..\bin\es-ES\FOGShutdownGUI.resources.dll" />
-              <File Id="ModulesesES" Name="Modules.resources.dll" Source="..\bin\es-ES\Modules.resources.dll" />
+          <Directory Id="esDirectory" Name="es">
+            <Component Id="SpanishComponent" Guid="6bbdc832-f58f-4914-8dea-154b4520af19" DiskId="1">
+              <File Id="ShutdownGUIes" Name="FOGShutdownGUI.resources.dll" Source="..\bin\es\FOGShutdownGUI.resources.dll" />
+              <File Id="Moduleses" Name="Modules.resources.dll" Source="..\bin\es\Modules.resources.dll" />
             </Component>
           </Directory>           
           <Directory Id="euDirectory" Name="eu">
