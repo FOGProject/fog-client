@@ -18,3 +18,8 @@ D:\fog\fog-client\Debugger\obj\Release\Debugger.csprojResolveAssemblyReference.c
 D:\fog\fog-client\Debugger\obj\Release\Debugger.exe
 C:\Users\Administrator\dev\fog-client\bin\Debugger.exe.config
 C:\Users\Administrator\dev\fog-client\Debugger\obj\Release\Debugger.exe
+C:\Users\Administrator\Desktop\dev\fog-client\bin\Debugger.exe.config
+C:\Users\Administrator\Desktop\dev\fog-client\bin\Debugger.exe
+C:\Users\Administrator\Desktop\dev\fog-client\Debugger\obj\Release\Debugger.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\dev\fog-client\Debugger\obj\Release\Debugger.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\dev\fog-client\Debugger\obj\Release\Debugger.exe

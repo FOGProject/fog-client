@@ -37,6 +37,7 @@ namespace FOG
             _instance = new Zazzles.Debugger.Debugger();
             _instance.AddCommand("module", new ModuleCommand());
             _instance.AddCommand("dump", new DumpCommand());
+            _instance.AddCommand("power", new PowerCommand());
 
 
             if (args.Length > 0)

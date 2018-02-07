@@ -127,6 +127,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\PowerCommand.cs" />
     <Compile Include="Commands\DumpCommand.cs" />
     <Compile Include="Commands\ModuleCommand.cs" />
     <Compile Include="Debugger.cs" />
