@@ -131,9 +131,27 @@ namespace FOG
                 var cert = new X509Certificate2(location);
                 var store = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
                 store.Open(OpenFlags.ReadWrite);
-                store.Add(cert);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
 
+                var validKeyPresent = false;
+                if (cers.Count > 0)
+                {
+                    for (var i = 0; i < cers.Count; i++)
+                    {
+                        X509Certificate2 CAroot = cers[i];
+                        if (CAroot.GetCertHash() != cert.GetCertHash())
+                            store.Remove(cert);
+                        else
+                            validKeyPresent = true;
+                    }
+                }
+
+                if (!validKeyPresent)
+                {
+                    store.Add(cert);
+                }
                 store.Close();
+
                 return true;
             }
             catch (Exception ex)
