@@ -142,8 +142,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="AutoLogOut\ALOStrings.es-ES.Designer.cs">
-      <DependentUpon>ALOStrings.es-ES.resx</DependentUpon>
+    <Compile Include="AutoLogOut\ALOStrings.es.Designer.cs">
+      <DependentUpon>ALOStrings.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -217,8 +217,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="SnapinClient\SnapinStrings.es-ES.Designer.cs">
-      <DependentUpon>SnapinStrings.es-ES.resx</DependentUpon>
+    <Compile Include="SnapinClient\SnapinStrings.es.Designer.cs">
+      <DependentUpon>SnapinStrings.es.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
@@ -258,9 +258,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.eu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="AutoLogOut\ALOStrings.es-ES.resx">
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.es.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ALOStrings.es-ES.Designer.cs</LastGenOutput>
+      <LastGenOutput>ALOStrings.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="AutoLogOut\ALOStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -294,9 +294,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SnapinStrings.eu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="SnapinClient\SnapinStrings.es-ES.resx">
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.es.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>SnapinStrings.es-ES.Designer.cs</LastGenOutput>
+      <LastGenOutput>SnapinStrings.es.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.nl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
