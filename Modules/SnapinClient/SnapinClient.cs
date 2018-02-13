@@ -62,23 +62,16 @@ namespace FOG.Modules.SnapinClient
                 Log.Debug(Name, $"    Hide: {snapin.Hide}");
                 Log.Debug(Name, $"    Server: {snapin.Url}");
                 Log.Debug(Name, $"    TimeOut: {snapin.TimeOut}");
-                
-                //if (!snapin.Hide)
-                //{
-                    if (snapin.Pack)
-                    {
-                        Log.Debug(Name, $"    SnapinPack File: {snapin.RunWith}");
-                        Log.Debug(Name, $"    SnapinPack Args: {snapin.RunWithArgs}");
-                    }
-                    else
-                    {
-                        Log.Debug(Name, $"    RunWith: {snapin.RunWith}");
-                        Log.Debug(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
-                        Log.Debug(Name, $"    Args: {snapin.Args}");
-                    }
-                    Log.Debug(Name, $"    File: {snapin.FileName}");
-                //}
 
+                if (snapin.Pack) {
+                    Log.Debug(Name, $"    SnapinPack File: {snapin.RunWith}");
+                    Log.Debug(Name, $"    SnapinPack Args: {snapin.RunWithArgs}");
+                } else {
+                    Log.Debug(Name, $"    RunWith: {snapin.RunWith}");
+                    Log.Debug(Name, $"    RunWithArgs: {snapin.RunWithArgs}");
+                    Log.Debug(Name, $"    Args: {snapin.Args}");
+                }
+                Log.Debug(Name, $"    File: {snapin.FileName}");
 
                 if (string.IsNullOrEmpty(snapin.Hash))
                 {
@@ -117,8 +110,17 @@ namespace FOG.Modules.SnapinClient
                 }
 
                 exitCode = (snapin.Pack) ? ProcessSnapinPack(snapin, snapinFilePath) : StartSnapin(snapin, snapinFilePath);
-                if (File.Exists(snapinFilePath))
-                    File.Delete(snapinFilePath);
+                
+                try
+                {
+                    if (File.Exists(snapinFilePath))
+                        File.Delete(snapinFilePath);
+                } catch (Exception ex)
+                {
+                    Log.Error(Name, "Unable to clean up snapin file");
+                    Log.Error(Name, ex);
+                }
+
 
                 Communication.Contact(
                     $"/service/snapins.checkin.php?taskid={snapin.JobTaskID}&exitcode={exitCode}", true);
@@ -157,11 +159,9 @@ namespace FOG.Modules.SnapinClient
                 snapin.RunWith = snapin.RunWith.Replace("[FOG_SNAPIN_PATH]", extractionPath);
                 snapin.RunWithArgs = snapin.RunWithArgs.Replace("[FOG_SNAPIN_PATH]", extractionPath);
                 snapin.Args = "";
-                //if (!snapin.Hide)
-                //{
+
                 Log.Debug(Name, "New SnapinPack File: " + snapin.RunWith);
                 Log.Debug(Name, "New SnapinPack Args: " + snapin.RunWithArgs);
-                //}
 
                 returnCode = StartSnapin(snapin, extractionPath, true);
             }
