@@ -38,14 +38,14 @@ namespace FOG
                 Settings.SetPath(Path.Combine(location, "settings.json"));
 
             Configuration.GetAndSetServerAddress();
-            Configuration.ServerAddress = Configuration.ServerAddress.Replace("https://", "http://");
 
             return PinServerCertPreset(location);
         }
 
-        public static bool PinServerCert(string address, string webroot, string location)
+        public static bool PinServerCert(string https, string address, string webroot, string location)
         {
-            Configuration.ServerAddress = "http://" + address + webroot;
+            var useHTTPS = (https == "1");
+            Configuration.ServerAddress = ((useHTTPS) ? "https://" : "http://") + address + webroot;
             return PinServerCertPreset(location);
         }
 

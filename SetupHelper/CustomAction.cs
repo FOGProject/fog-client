@@ -41,7 +41,8 @@ namespace SetupHelper
         {
             try
             {
-                if (GenericSetup.PinServerCert(session.CustomActionData["sWEBADDRESS"], 
+                if (GenericSetup.PinServerCert(session.CustomActionData["sHTTPS"],
+                    session.CustomActionData["sWEBADDRESS"], 
                     session.CustomActionData["sWEBROOT"], 
                     session.CustomActionData["sINSTALLDIR"]))
                 {
