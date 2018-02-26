@@ -91,7 +91,7 @@
               <ServiceDependency Id="Schedule" /> <!--Task Scheduler-->
               <ServiceDependency Id="winmgmt" /> <!--Windows Management Instrumentation-->
 
-              <ServiceConfig DelayedAutoStart="yes" OnInstall="yes" OnUninstall="yes"/>
+              <ServiceConfig DelayedAutoStart="yes" OnInstall="yes" OnReinstall="yes"/>
               <util:ServiceConfig FirstFailureActionType="restart" SecondFailureActionType="restart" ThirdFailureActionType="none" RestartServiceDelayInSeconds="60" ResetPeriodInDays="1"/>
             </ServiceInstall>
             <ServiceControl Id="ConfigureService" Stop="both" Remove="uninstall" Name="FOGService" Wait="yes" />
