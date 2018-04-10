@@ -118,15 +118,15 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="COMPLETE_NOTIFICATION_BODY" xml:space="preserve">
-    <value>Installation has finished and is now ready for use</value>
+    <value>Task Complete</value>
   </data>
   <data name="COMPLETE_NOTIFICATION_TITLE" xml:space="preserve">
-    <value>{0} installed</value>
+    <value>{0} has finished</value>
   </data>
   <data name="INSTALLING_NOTIFICATION_BODY" xml:space="preserve">
-    <value>Please do not shutdown until this is completed</value>
+    <value>Please do not shutdown until this is done</value>
   </data>
   <data name="INSTALLING_NOTIFICATION_TITLE" xml:space="preserve">
-    <value>Installing {0}</value>
+    <value>Running {0}</value>
   </data>
 </root>

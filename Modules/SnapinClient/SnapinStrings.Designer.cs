@@ -19,7 +19,7 @@ namespace FOG.Modules.SnapinClient {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class SnapinStrings {
@@ -61,7 +61,7 @@ namespace FOG.Modules.SnapinClient {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installation has finished and is now ready for use.
+        ///   Looks up a localized string similar to Task Complete.
         /// </summary>
         internal static string COMPLETE_NOTIFICATION_BODY {
             get {
@@ -70,7 +70,7 @@ namespace FOG.Modules.SnapinClient {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to {0} installed.
+        ///   Looks up a localized string similar to {0} has finished.
         /// </summary>
         internal static string COMPLETE_NOTIFICATION_TITLE {
             get {
@@ -79,7 +79,7 @@ namespace FOG.Modules.SnapinClient {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please do not shutdown until this is completed.
+        ///   Looks up a localized string similar to Please do not shutdown until this is done.
         /// </summary>
         internal static string INSTALLING_NOTIFICATION_BODY {
             get {
@@ -88,7 +88,7 @@ namespace FOG.Modules.SnapinClient {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Installing {0}.
+        ///   Looks up a localized string similar to Running {0}.
         /// </summary>
         internal static string INSTALLING_NOTIFICATION_TITLE {
             get {
