@@ -96,9 +96,6 @@ namespace FOG.Modules.PrinterManager
                 }
             }
             printerAdded = BatchConfigure(msg.Printers) || printerAdded;
-
-            if(printerAdded)
-                _instance.ApplyChanges();
         }
 
         private void RemoveExtraPrinters(List<Printer> newPrinters, DataContracts.PrinterManager msg, List<string> installedPrinters )

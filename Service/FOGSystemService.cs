@@ -102,8 +102,8 @@ namespace FOG
                     var alo = response.GetSubResponse("autologout");
                     Settings.Set("ALOTime", (alo == null) ? "0" : alo.GetField("time"));
 
-                    var pDefault = response.GetSubResponse("printermanager");
-                    Settings.Set("DefaultPrinter", (pDefault == null) ? "" : pDefault.GetField("default"));
+                    var pPrinter = response.GetSubResponse("printermanager");
+                    Settings.Set("printermanager", pPrinter.Data);
 
                     var display = response.GetSubResponse("displaymanager");
                     Settings.Set("DisplayX", (display == null || display.Error) ? "" : display.GetField("x"));
@@ -190,7 +190,6 @@ namespace FOG
                 new TaskReboot(),
                 new HostnameChanger(),
                 new SnapinClient(),
-                new PrinterManager(),
                 new PowerManagement(),
                 new UserTracker()
             };

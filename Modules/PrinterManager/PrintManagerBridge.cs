@@ -62,6 +62,5 @@ namespace FOG.Modules.PrinterManager
         public abstract void Remove(string name, bool verbose = false);
         public abstract void Default(string name, bool verbose = false);
         public abstract void Configure(Printer printer, bool verbose = false);
-        public abstract void ApplyChanges();
     }
 }

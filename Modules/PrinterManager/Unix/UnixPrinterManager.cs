@@ -73,9 +73,5 @@ namespace FOG.Modules.PrinterManager
             throw new NotImplementedException();
         }
 
-        public override void ApplyChanges()
-        {
-            
-        }
     }
 }

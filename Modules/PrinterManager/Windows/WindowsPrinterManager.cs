@@ -135,29 +135,6 @@ namespace FOG.Modules.PrinterManager
             PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
         }
 
-        public override void ApplyChanges()
-        {
-            Log.Entry(LogName, "Restarting spooler");
-            try
-            {
-                const int timeoutMilliseconds = 60 * 1000;
-                var spooler = new ServiceController("spooler");
-
-                var timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
-                spooler.Stop();
-                spooler.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
-
-                timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
-                spooler.Start();
-                spooler.WaitForStatus(ServiceControllerStatus.Running, timeout);
-            }
-            catch (Exception ex)
-            {
-                Log.Error(LogName, "Failed to restart the print spooler");
-                Log.Error(LogName, ex);
-            }
-        }
-
         private void AddIPPort(Printer printer, string remotePort)
         {
             var conn = new ConnectionOptions

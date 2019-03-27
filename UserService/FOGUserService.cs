@@ -73,6 +73,7 @@ namespace FOG
             _modules =  new IModule[]
             {
                 new AutoLogOut(),
+                new PrinterManager(),
                 new DefaultPrinterManager(),
                 new DisplayManager()
             };
@@ -93,15 +94,17 @@ namespace FOG
                 string printer;
 
                 int.TryParse(Settings.Get("ALOTime"), out alo);
-                printer = Settings.Get("DefaultPrinter");
                 int.TryParse(Settings.Get("DisplayX"), out displayX);
                 int.TryParse(Settings.Get("DisplayY"), out displayY);
                 int.TryParse(Settings.Get("DisplayR"), out displayR);
 
+                printer = Settings.GetSubResponse("printermanager");
+
                 var data = new JObject
                 {
                     ["autologout"] = new JObject { ["time"] = alo },
-                    ["defaultprintermanager"] = new JObject { ["name"] = printer },
+                    ["defaultprintermanager"] = new JObject { ["name"] = printer.GetField("default") },
+                    ["printermanager"] = printer.Data,
                     ["displaymanager"] = new JObject { ["error"] = ((displayX == -1) ? "Configuration not set" : "ok"),
                         ["x"] = displayX,
                         ["y"] = displayY,
