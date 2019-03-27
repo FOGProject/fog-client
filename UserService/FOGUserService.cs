@@ -91,7 +91,7 @@ namespace FOG
                 int displayX;
                 int displayY;
                 int displayR;
-                string printer;
+                Response printer;
 
                 int.TryParse(Settings.Get("ALOTime"), out alo);
                 int.TryParse(Settings.Get("DisplayX"), out displayX);
