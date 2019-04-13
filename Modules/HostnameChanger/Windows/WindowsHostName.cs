@@ -297,6 +297,16 @@ namespace FOG.Modules.HostnameChanger.Windows
         public void ActivateComputer(string key)
         {
             Log.Entry(Name, "Checking Product Key Activation");
+            if (key.Length == 25 && !key.Contains("-"))
+            {
+                var keyParts = new string[5];
+                keyParts[0] = key.Substring(0, 5);
+                keyParts[1] = key.Substring(5, 5);
+                keyParts[2] = key.Substring(10, 5);
+                keyParts[3] = key.Substring(15, 5);
+                keyParts[4] = key.Substring(20, 5);
+                key = string.Join("-", keyParts);
+            }
             if (key.Length != 29)
             {
                 Log.Error(Name, "Invalid product key provided by server");
