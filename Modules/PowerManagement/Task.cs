@@ -50,6 +50,10 @@ namespace FOG.Modules.PowerManagement
                 else
                     unixCron[dom] = "?";
 
+                // Correct for Day of Week being counted from
+                // 1=Sunday by Quartz but 0=Sunday by CRON
+                if (int.TryParse(unixCron[dow], out int dayofweek))
+                    unixCron[dow] = (dayofweek + 1).ToString();
                 quartzFormat += string.Join(" ", unixCron);
             }
 
