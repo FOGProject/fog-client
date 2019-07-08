@@ -138,6 +138,12 @@
               <File Id="Moduleshu" Name="Modules.resources.dll" Source="..\bin\hu\Modules.resources.dll" />
             </Component>
           </Directory>
+          <Directory Id="ptDirectory" Name="pt">
+            <Component Id="PortugueseComponent" Guid="dd49ed8e-ef7a-4e46-acb2-d195e69fc9c4" DiskId="1">
+              <File Id="ShutdownGUIpt" Name="FOGShutdownGUI.resources.dll" Source="..\bin\pt\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulespt" Name="Modules.resources.dll" Source="..\bin\pt\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
