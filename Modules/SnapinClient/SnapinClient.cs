@@ -201,6 +201,9 @@ namespace FOG.Modules.SnapinClient
                 try
                 {
                     Log.Entry(Name, "Starting snapin");
+                    process.StartInfo.EnvironmentVariables.Add("FOG_URL", Configuration.ServerAddress);
+                    process.StartInfo.EnvironmentVariables.Add("FOG_SNAPIN_TASK_ID", snapin.JobTaskID.ToString());
+                    process.StartInfo.EnvironmentVariables.Add("FOG_MAC_ADRESSES", Configuration.MACAddresses());
                     process.Start();
 
                     if (snapin.TimeOut > 0)
