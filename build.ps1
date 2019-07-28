@@ -55,8 +55,7 @@ $debuggerMerge = "/ndebug /copyattrs /targetplatform:4.0``,""$netPath"" /out:""$
 					"""$PSScriptRoot\bin\Newtonsoft.Json.dll"" ""$PSScriptRoot\bin\SetupHelper.dll"" " + `
 					"""$PSScriptRoot\bin\Modules.dll"" ""$PSScriptRoot\bin\EngineIoClientDotNet.dll"" " + `
 					"""$PSScriptRoot\bin\log4net.dll"" ""$PSScriptRoot\bin\ProcessPrivileges.dll"" " + `
-					"""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\SuperSocket.SocketBase.dll"" " + `
-					"""$PSScriptRoot\bin\WebSocket4Net.dll"" ""$PSScriptRoot\bin\Quartz.dll"" " + `
+					"""$PSScriptRoot\bin\SuperSocket.Common.dll"" ""$PSScriptRoot\bin\Quartz.dll"" " + `
 					"""$PSScriptRoot\bin\Common.Logging.Core.dll"" ""$PSScriptRoot\bin\Common.Logging.dll"""
 
 $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", "FOGShutdownGUI.exe", `
