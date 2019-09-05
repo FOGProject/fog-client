@@ -153,6 +153,7 @@ namespace FOG.Modules.SnapinClient
                     Directory.Delete(extractionPath, true);
                 Directory.CreateDirectory(extractionPath);
                 var fz = new FastZip();
+                fz.CreateEmptyDirectories = true;
                 fz.ExtractZip(localPath, extractionPath, null);
 
                 Log.Debug(Name, "Processing SnapinPack settings");
