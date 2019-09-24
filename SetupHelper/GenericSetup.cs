@@ -110,7 +110,7 @@ namespace FOG
 
             try
             {
-                var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+                var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);
                 store.Close();
@@ -129,7 +129,7 @@ namespace FOG
             try
             {
                 var cert = new X509Certificate2(location);
-                var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+                var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadWrite);
                 var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
 
@@ -168,7 +168,7 @@ namespace FOG
             try
             {
                 X509Certificate2 CAroot = null;
-                var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+                var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadOnly);
                 var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
 
@@ -191,7 +191,7 @@ namespace FOG
 
             try
             {
-                var store = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+                var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadWrite);
                 store.Remove(cert);
                 store.Close();
@@ -204,5 +204,27 @@ namespace FOG
             }
 
         }
+
+        /// <summary>
+        /// OS specific X509 Store location
+        /// </summary>
+        /// <returns>OS specific X509 StoreLocation</returns>
+        private static StoreLocation GetCertStoreLocation()
+        {
+            switch (Settings.OS)
+            {
+                case Settings.OSType.Windows:
+                    return StoreLocation.LocalMachine;
+                case Settings.OSType.Nix:
+                    return StoreLocation.LocalMachine;
+                case Settings.OSType.Mac:
+                    return StoreLocation.CurrentUser;
+                case Settings.OSType.Linux:
+                    return StoreLocation.LocalMachine;
+                default:
+                    return StoreLocation.LocalMachine;
+            }
+        }
+
     }
 }
