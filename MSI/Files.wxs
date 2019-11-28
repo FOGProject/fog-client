@@ -144,6 +144,12 @@
               <File Id="Modulespt" Name="Modules.resources.dll" Source="..\bin\pt\Modules.resources.dll" />
             </Component>
           </Directory>
+          <Directory Id="csDirectory" Name="cs">
+            <Component Id="CzechComponent" Guid="b85c50a6-bb70-417b-ae84-be2c58056d59" DiskId="1">
+              <File Id="ShutdownGUIcs" Name="FOGShutdownGUI.resources.dll" Source="..\bin\cs\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulescs" Name="Modules.resources.dll" Source="..\bin\cs\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">

@@ -112,6 +112,7 @@
       <ComponentRef Id="BasqueComponent"/>      
       <ComponentRef Id="HungarianComponent"/>
       <ComponentRef Id="PortugueseComponent"/>
+      <ComponentRef Id="CzechComponent"/>
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
     </Feature>
   </Product>
