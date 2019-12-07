@@ -69,9 +69,13 @@ namespace FOG
             ProcessHandler.Run("chmod", "755 " + Path.Combine(GetLocation(), "OSX-FOG-TRAY.app"));
             ProcessHandler.Run("chmod", "+x " + Path.Combine(GetLocation(), "OSX-FOG-TRAY.app/Contents/MacOS/OSX-FOG-Tray"));
 
+            // Ensure correct ownership or daemons will not launch
             ProcessHandler.Run("chown", "root /Library/LaunchDaemons/org.freeghost.daemon.plist");
             ProcessHandler.Run("chown", "root /Library/LaunchAgents/org.freeghost.useragent.plist");
 
+            // Load daemon with permanent add to launchd using legacy syntax
+            ProcessHandler.Run("launchctl", "load -w /Library/LaunchDaemons/org.freeghost.daemon.plist");
+            
             return true;
         }
 

@@ -50,6 +50,7 @@ namespace FOG
             var https = false;
             string server = null;
             string webRoot = null;
+            bool relaunchRequired = false;
             var logFile = "";
 
             var help = false;
@@ -117,7 +118,14 @@ namespace FOG
                     uninstall = true;
             }
 
-            if (uninstall)
+            //Preliminary environment checks
+            if (Settings.OS == Settings.OSType.Mac)
+                relaunchRequired =  (Environment.UserName != "root" || Environment.GetEnvironmentVariable("HOME") != "/var/root");
+
+
+            if (relaunchRequired)
+                RelaunchAsRoot(args);
+            else if (uninstall)
                 PerformCLIUninstall();
             else if (upgrade)
                 PerformUpgrade();
@@ -130,6 +138,37 @@ namespace FOG
                 PrintInfo();
                 Install(https ? "1" : "0", tray ? "1" : "0", server, webRoot, "FOG", rootLog ? "1" : "0");
             }
+        }
+
+        private static void RelaunchAsRoot(string[] args)
+        {
+            /* 
+            Need to run as the user 'root' so that the certificate store
+            is placed in (/var)/root/.mono until the location conflict 
+            with macOS System Integrity Protection (SIP) is resolved.
+            */
+            string cliargs = "";
+            System.Diagnostics.Process pRelaunch = new System.Diagnostics.Process();
+            pRelaunch.StartInfo.FileName = "/usr/bin/sudo";
+
+            foreach (string arg in args)
+            {
+                cliargs += " " + arg;
+            }
+
+            pRelaunch.StartInfo.Arguments = "-i mono " + System.Reflection.Assembly.GetEntryAssembly().Location + cliargs;
+
+            Console.WriteLine("OS: " + Settings.OS.ToString());
+            Console.WriteLine("Current User: " + Environment.UserName + "  Required User: root");
+            Console.WriteLine("Current $HOME: " + Environment.GetEnvironmentVariable("HOME") + "  Required $HOME: /var/root");
+            Console.WriteLine("Relaunching installer into 'root' user environment...");
+            Console.WriteLine("Launching: " + pRelaunch.StartInfo.FileName + ' ' + pRelaunch.StartInfo.Arguments);
+            Console.WriteLine("You may be prompted for credentials.");
+
+            pRelaunch.Start();
+            pRelaunch.WaitForExit();
+            pRelaunch.Dispose();
+
         }
 
         private static void ShowHelp(OptionSet p)
