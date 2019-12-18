@@ -8,7 +8,7 @@ FOG Client is a cross platform computer management software. With it, Linux, Mac
 
 Windows      | Linux       | OSX
 -------------|-------------|-------------
-[![Windows](https://ci.appveyor.com/api/projects/status/6uqyhjiarj0dysa8/branch/master?svg=true)](https://ci.appveyor.com/project/jbob182/fog-client/branch/master) | [![Linux] (https://travis-ci.org/FOGProject/fog-client.svg?branch=master)] (https://travis-ci.org/FOGProject/fog-client/) | [![OSX] (https://travis-ci.org/FOGProject/fog-client.svg?branch=osx-build)] (https://travis-ci.org/FOGProject/fog-client/)
+[![Windows](https://ci.appveyor.com/api/projects/status/6uqyhjiarj0dysa8/branch/master?svg=true)](https://ci.appveyor.com/project/jbob182/fog-client/branch/master) | [![Linux](https://travis-ci.org/FOGProject/fog-client.svg?branch=master)](https://travis-ci.org/FOGProject/fog-client/) | [![OSX](https://travis-ci.org/FOGProject/fog-client.svg?branch=osx-build)](https://travis-ci.org/FOGProject/fog-client/)
 
 
 #### Cross Platform Compatibility
