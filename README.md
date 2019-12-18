@@ -4,7 +4,6 @@
 FOG Client is a cross platform computer management software. With it, Linux, Mac, and Windows machines can easily be managed by a remote server.
 
 ## Development
-[![Stories in progress](https://badge.waffle.io/FOGProject/fog-client.svg?label=In%20Progress&title=Issues%20In%20Progress)](http://waffle.io/FOGProject/fog-client)
 
 Windows      | Linux       | OSX
 -------------|-------------|-------------
