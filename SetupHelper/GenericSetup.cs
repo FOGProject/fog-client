@@ -141,7 +141,7 @@ namespace FOG
                 var cert = new X509Certificate2(location);
                 var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadWrite);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project CA", true);
 
                 var validKeyPresent = false;
                 if (cers.Count > 0)
@@ -181,7 +181,7 @@ namespace FOG
                 X509Certificate2 CAroot = null;
                 var store = new X509Store(StoreName.Root, GetCertStoreLocation());
                 store.Open(OpenFlags.ReadOnly);
-                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project", true);
+                var cers = store.Certificates.Find(X509FindType.FindBySubjectName, "FOG Project CA", true);
 
                 if (cers.Count > 0)
                 {
