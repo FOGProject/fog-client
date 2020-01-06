@@ -74,6 +74,15 @@ $toZip = "EngineIoClientDotNet.dll", "FOGService.exe", "FOGService.exe.config", 
 Write-Host "Restoring Packages"
 Invoke-Expression ($nuget + "restore") | out-null
 
+Write-Host "Cleaning Projects"
+Invoke-Expression ($msbuild + $solutionConfig + " /t:Clean")
+Invoke-Expression ($msbuild + $installerConfig + " /t:Clean")
+Invoke-Expression ($msbuild + $msiConfig + " /t:Clean")
+If (Test-Path "$PSScriptRoot\bin"){ Remove-Item -Recurse "$PSScriptRoot\bin" | out-null }
+If (Test-Path "$PSScriptRoot\bin"){ Remove-Item -Recurse "$PSScriptRoot\bin" | out-null }
+If (Test-Path "$PSScriptRoot\bin"){ Remove-Item -Recurse "$PSScriptRoot\bin" | out-null }
+New-Item -ItemType directory -Path "$PSScriptRoot\bin" | out-null
+
 Write-Host "Building Solution"
 Invoke-Expression ($msbuild + $solutionConfig) | out-null
 
@@ -102,6 +111,8 @@ foreach ($file in $toZip) {
 }
 Zip "$PSScriptRoot\bin\tmp" $InstallerZip | out-null
 
+If (Test-Path "$PSScriptRoot\out"){ Remove-Item -Recurse "$PSScriptRoot\out" | out-null }
+If (Test-Path "$PSScriptRoot\out"){ Remove-Item -Recurse "$PSScriptRoot\out" | out-null }
 If (Test-Path "$PSScriptRoot\out"){ Remove-Item -Recurse "$PSScriptRoot\out" | out-null }
 New-Item -ItemType directory -Path "$PSScriptRoot\out" | out-null
 
