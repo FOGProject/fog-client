@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("UpdateHelper")]
-[assembly: AssemblyCopyright("Copyright 2014-2016")]
+[assembly: AssemblyCopyright("Copyright 2014-2020")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
