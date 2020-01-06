@@ -18,6 +18,8 @@
  */
 
 
+using System;
+using System.IO;
 using Zazzles;
 using Zazzles.Modules.Updater;
 
@@ -25,9 +27,16 @@ namespace FOG
 {
     abstract class AbstractUpdate :  IUpdate
     {
-        public void ApplyUpdate()
+        public int ApplyUpdate()
         {
-            ProcessHandler.RunClientEXE("SmartInstaller.exe", $"/upgrade /log=\"{Log.FilePath}\"");
+            var temp = Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.Machine);
+            if (string.IsNullOrEmpty(temp))
+                temp = Path.GetTempPath();
+            if (!string.IsNullOrEmpty(temp) && !Directory.Exists(temp))
+                Directory.CreateDirectory(temp);
+            var logFilePath = Path.Combine(temp, "FOGService.install.log");
+
+            return ProcessHandler.RunClientEXE("SmartInstaller.exe", $"/upgrade /log=\"{logFilePath}\"");
         }
 
         public abstract void StartService();

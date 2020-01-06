@@ -24,16 +24,20 @@ using Microsoft.Deployment.WindowsInstaller;
 using Microsoft.Win32.TaskScheduler;
 using FOG;
 using Microsoft.Win32;
+using Zazzles;
 
 namespace SetupHelper
 {
     public class CustomActions
     {
+        private const string LogName = "Installer";
+
         private static void DisplayMSIError(Session session, string msg)
         {
             var r = new Record();
             r.SetString(0, msg);
             session.Message(InstallMessage.Error, r);
+            Log.Error(LogName, msg);
         }
 
         [CustomAction]

@@ -72,7 +72,7 @@ namespace FOG
                   v => uninstall = v != null },
                 { "upgrade",  "upgrade an existing installation",
                   v => upgrade = v != null },
-                { "l|log",  "the log file to use",
+                { "l=|log=",  "the log file to use",
                   v => logFile = v },
                 { "?|help",  "show this message and exit",
                   v => help = v != null },
@@ -108,6 +108,9 @@ namespace FOG
             {
                 LogPath = logFile;
                 Log.FilePath = LogPath;
+                Log.Output = Log.Mode.File;
+                if (File.Exists(LogPath))
+                    File.Delete(LogPath);
             }
 
             if (args.Length == 1)
@@ -128,7 +131,7 @@ namespace FOG
             else if (uninstall)
                 PerformCLIUninstall();
             else if (upgrade)
-                PerformUpgrade();
+                PerformUpgrade(https ? "1" : "", tray ? "1" : "", server, webRoot, rootLog ? "1" : "");
             else if (args.Length == 0)
                 InteractiveMode();
             else
@@ -186,14 +189,29 @@ namespace FOG
 
         }
 
-        private static void PerformUpgrade()
+        private static void PerformUpgrade(string https, string tray, string server, string webRoot, string rootLog)
         {
             Log.Output = Log.Mode.File;
             var settingsFile = Path.Combine(Settings.Location, "settings.json");
             Settings.SetPath(settingsFile);
+            if (string.IsNullOrEmpty(https)) https = Settings.Get("HTTPS");
+            if (string.IsNullOrEmpty(tray)) tray = Settings.Get("Tray");
+            if (string.IsNullOrEmpty(server)) server = Settings.Get("Server");
+            if (string.IsNullOrEmpty(webRoot)) webRoot = Settings.Get("WebRoot");
+            if (string.IsNullOrEmpty(rootLog)) rootLog = Settings.Get("RootLog");
 
-            Install(Settings.Get("HTTPS"), Settings.Get("Tray"), Settings.Get("Server"), 
-                Settings.Get("WebRoot"), Settings.Get("Company"), Settings.Get("RootLog"));
+            if (!Install(https, tray, server, webRoot, Settings.Get("Company"), rootLog))
+            {
+                var installLog = File.ReadAllLines(Log.FilePath);
+                Log.FilePath = Path.Combine(Settings.Location, "fog.log");
+                if (Settings.Get("RootLog").Equals("1") && Settings.OS == Settings.OSType.Windows)
+                    Log.FilePath = @"C:\fog.log";
+                foreach (var line in installLog)
+                {
+                    Log.Entry(LogName, line);
+                }
+                Environment.Exit(1);
+            }
 
             File.Copy(settingsFile, 
                 Path.Combine(Helper.Instance.GetLocation(), "settings.json"), true);
@@ -435,7 +453,6 @@ namespace FOG
         private static bool DoAction(string action, Func<bool> method )
         {
             Log.Action(action);
-            Log.Output = Log.Mode.File;
             var success = false;
 
             try
@@ -448,7 +465,6 @@ namespace FOG
                 Log.Error(LogName, ex);
             }
 
-            Log.Output = Log.Mode.Console;
             Log.ActionResult(success);
 
             return success;
@@ -458,11 +474,9 @@ namespace FOG
         {
             Log.Action("Starting FOG Service");
 
-            Log.Output = Log.Mode.File;
             var controlPath = Path.Combine(Helper.Instance.GetLocation(), "control.sh");
 
             var returnCode = ProcessHandler.Run("/bin/bash", controlPath + " start");
-            Log.Output = Log.Mode.Console;
             Log.ActionResult(returnCode == 0);
             Log.NewLine();
         }
