@@ -41,6 +41,7 @@ namespace FOG.Modules.PrinterManager
         {
             Compatiblity = Settings.OSType.Windows;
             Name = "PrinterManager";
+            ShutdownFriendly = false;
             LogName = Name;
             _configuredPrinters = new List<string>();
 
