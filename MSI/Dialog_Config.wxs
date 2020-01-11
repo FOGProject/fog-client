@@ -38,6 +38,8 @@
         <Control Property="ROOTLOG" Type="CheckBox" Id="LogFile" Width="247" Height="20" X="11" Y="94"
                  Text="Put Log File in filesystem root (Otherwise will be in Installation Directory)" CheckBoxValue="1"
                  TabSkip="yes" />
+        <Control Property="HTTPS" Type="CheckBox" Id="https" Width="160" Height="17" X="11" Y="115"
+                 Text="Use HTTPS to connect to FOG server" Default="no" CheckBoxValue="1" TabSkip="yes" />
       </Dialog>
     </UI>
   </Fragment>

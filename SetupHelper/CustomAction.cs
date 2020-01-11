@@ -45,7 +45,7 @@ namespace SetupHelper
         {
             try
             {
-                if (GenericSetup.PinServerCert(session.CustomActionData["sHTTPS"],
+                if (GenericSetup.PinServerCert((session.CustomActionData["sHTTPS"].Equals("1")) ? "1" : "0",
                     session.CustomActionData["sWEBADDRESS"], 
                     session.CustomActionData["sWEBROOT"], 
                     session.CustomActionData["sINSTALLDIR"]))
@@ -70,8 +70,8 @@ namespace SetupHelper
         {
             try
             {
-
-                GenericSetup.SaveSettings(session.CustomActionData["sHTTPS"], session.CustomActionData["sUSETRAY"], 
+                var sHttps = session.CustomActionData["sHTTPS"];
+                GenericSetup.SaveSettings((sHttps.Equals("1")) ? "1" : "0", session.CustomActionData["sUSETRAY"],
                     session.CustomActionData["sWEBADDRESS"], session.CustomActionData["sWEBROOT"], "FOG",
                     session.CustomActionData["sROOTLOG"], session.CustomActionData["sProductVersion"], session.CustomActionData["sINSTALLDIR"]);
 

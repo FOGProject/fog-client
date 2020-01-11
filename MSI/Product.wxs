@@ -71,7 +71,6 @@
     <Property Id="WEBROOT" Value="/fog" />
     <Property Id="ROOTLOG" Value="1" />
     <Property Id="WEBADDRESS" Value="fogserver" />
-    <Property Id="HTTPS" Value="0" />
 
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
 
