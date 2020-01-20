@@ -199,8 +199,9 @@ namespace FOG
             if (string.IsNullOrEmpty(server)) server = Settings.Get("Server");
             if (string.IsNullOrEmpty(webRoot)) webRoot = Settings.Get("WebRoot");
             if (string.IsNullOrEmpty(rootLog)) rootLog = Settings.Get("RootLog");
+            var lastInstallDir = Path.GetDirectoryName(Settings.Location);
 
-            if (!Install(https, tray, server, webRoot, Settings.Get("Company"), rootLog))
+            if (!Install(https, tray, server, webRoot, Settings.Get("Company"), rootLog, false, lastInstallDir))
             {
                 var installLog = File.ReadAllLines(Log.FilePath);
                 Log.FilePath = Path.Combine(Settings.Location, "fog.log");
@@ -419,7 +420,7 @@ namespace FOG
         }
 
         private static bool Install(string https, string tray, string server, 
-            string webRoot, string company, string rootLog, bool skipSave= false)
+            string webRoot, string company, string rootLog, bool skipSave= false, string location = null)
         {
             Log.NewLine();
             Log.Header("Installing");
@@ -427,7 +428,7 @@ namespace FOG
 
             if (!DoAction("Getting things ready", Helper.Instance.PrepareFiles))
                 return false;
-            if (!DoAction("Installing files",() => Helper.Instance.Install(https, tray, server, webRoot, company, rootLog)))
+            if (!DoAction("Installing files",() => Helper.Instance.Install(https, tray, server, webRoot, company, rootLog, location)))
                     return false;
 
             if (Settings.OS == Settings.OSType.Windows)

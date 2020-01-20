@@ -55,7 +55,7 @@ namespace FOG
             return AddControlScripts();
         }
 
-        public bool Install(string https, string tray, string server, string webRoot, string company, string rootLog)
+        public bool Install(string https, string tray, string server, string webRoot, string company, string rootLog, string location)
         {
             return Install();
         }

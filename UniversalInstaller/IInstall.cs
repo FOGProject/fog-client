@@ -23,7 +23,7 @@ namespace FOG
     {
         bool PrepareFiles();
         bool Install();
-        bool Install(string https, string tray, string server, string webRoot, string company, string rootLog);
+        bool Install(string https, string tray, string server, string webRoot, string company, string rootLog, string location);
         bool Configure();
         string GetLocation();
         void PrintInfo();

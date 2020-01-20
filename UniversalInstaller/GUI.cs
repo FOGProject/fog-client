@@ -128,7 +128,7 @@ namespace FOG
                     case InstallSection.Install:
                         success = Helper.Instance.Install("0", "0", 
                             addressTxtBox.Text, webRootTxtBox.Text, "FOG",
-                            (logSwitch.Checked) ? "1" : "0");
+                            (logSwitch.Checked) ? "1" : "0", null);
                         break;
                     case InstallSection.Configure:
                         success = Configure();
