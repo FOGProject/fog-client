@@ -87,19 +87,19 @@ namespace FOG
             }
 
             // Defaults
-            if (server == null)
+            if (server == null && !upgrade)
                 server = DEFAULT_SERVER;
-            if (webRoot == null)
+            if (webRoot == null && !upgrade)
                 webRoot = DEFAULT_WEBROOT;
 
             // If no server was set, show help
-            if (string.IsNullOrWhiteSpace(server))
+            if (string.IsNullOrWhiteSpace(server) && !upgrade)
             {
                 ShowHelp(p);
                 return;
             }
             // A blank webroot is equal to /
-            if (string.IsNullOrWhiteSpace(webRoot))
+            if (string.IsNullOrWhiteSpace(webRoot) && !upgrade)
             {
                 webRoot = DEFAULT_WEBROOT;
             }
