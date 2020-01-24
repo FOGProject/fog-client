@@ -109,8 +109,6 @@ namespace FOG
                 LogPath = logFile;
                 Log.FilePath = LogPath;
                 Log.Output = Log.Mode.File;
-                if (File.Exists(LogPath))
-                    File.Delete(LogPath);
             }
 
             if (args.Length == 1)
