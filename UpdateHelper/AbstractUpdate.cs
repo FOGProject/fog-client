@@ -27,6 +27,8 @@ namespace FOG
 {
     abstract class AbstractUpdate :  IUpdate
     {
+        private static readonly string LogName = "UpdateHelper";
+
         public int ApplyUpdate()
         {
             var temp = Environment.GetEnvironmentVariable("TEMP", EnvironmentVariableTarget.Machine);
@@ -36,7 +38,13 @@ namespace FOG
                 Directory.CreateDirectory(temp);
             var logFilePath = Path.Combine(temp, "FOGService.install.log");
 
-            return ProcessHandler.RunClientEXE("SmartInstaller.exe", $"/upgrade /log=\"{logFilePath}\"");
+            var ret = ProcessHandler.RunClientEXE("SmartInstaller.exe", $"/upgrade /log=\"{logFilePath}\"");
+            if (ret != 0)
+            {
+                Log.Error(LogName, "Failed to apply update, SmartInstaller returned exit code " + ret);
+                Log.Error(LogName, "Check log file " + logFilePath);
+            }
+            return ret;
         }
 
         public abstract void StartService();
