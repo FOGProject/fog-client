@@ -48,6 +48,7 @@
             <File Id="Newtonsoft.Json" Name="Newtonsoft.Json.dll" Source="..\libs\Newtonsoft.Json.dll" />
             <File Id="EngineIoClientDotNet" Name="EngineIoClientDotNet.dll" Source="..\bin\EngineIoClientDotNet.dll" />
             <File Id="log4net" Name="log4net.dll" Source="..\bin\log4net.dll" />
+            <File Id="SuperSocketClientEngine" Name="SuperSocket.ClientEngine.dll" Source="..\bin\SuperSocket.ClientEngine.dll" />
             <File Id="SuperSocketCommon" Name="SuperSocket.Common.dll" Source="..\bin\SuperSocket.Common.dll" />
             <File Id="SuperSocketSocketBase" Name="SuperSocket.SocketBase.dll" Source="..\bin\SuperSocket.SocketBase.dll" />
             <File Id="SuperSocketSocketEngine" Name="SuperSocket.SocketEngine.dll" Source="..\bin\SuperSocket.SocketEngine.dll" />
