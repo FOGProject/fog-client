@@ -28,7 +28,7 @@ namespace FOG
     public static class Helper
     {
         private const string LogName = "Installer";
-        public const string ClientVersion = "0.11.17";
+        public const string ClientVersion = "0.11.18";
 
         public static IInstall Instance { get;  }
 
