@@ -163,6 +163,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.ro.resx</DependentUpon>
     </Compile>
+    <Compile Include="Strings.pl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.pl.resx</DependentUpon>
+    </Compile>
     <Compile Include="Strings.pt.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -241,6 +246,10 @@
     <EmbeddedResource Include="Strings.ro.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.ro.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.pl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.pl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Strings.pt.resx">
       <Generator>ResXFileCodeGenerator</Generator>

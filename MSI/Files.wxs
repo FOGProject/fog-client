@@ -156,6 +156,11 @@
               <File Id="ShutdownGUIro" Name="FOGShutdownGUI.resources.dll" Source="..\bin\ro\FOGShutdownGUI.resources.dll" />
               <File Id="Modulesro" Name="Modules.resources.dll" Source="..\bin\ro\Modules.resources.dll" />
             </Component>
+          <Directory Id="plDirectory" Name="pl">
+            <Component Id="PolishComponent" Guid="07b3e50e-881b-4152-8be3-4254d494f90a" DiskId="1">
+              <File Id="ShutdownGUIpl" Name="FOGShutdownGUI.resources.dll" Source="..\bin\pl\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulespl" Name="Modules.resources.dll" Source="..\bin\pl\Modules.resources.dll" />
+            </Component>
           </Directory>
         </Directory>
       </Directory>

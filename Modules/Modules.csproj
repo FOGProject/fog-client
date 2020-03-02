@@ -186,6 +186,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ALOStrings.ro.resx</DependentUpon>
     </Compile>
+    <Compile Include="AutoLogOut\ALOStrings.pl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ALOStrings.pl.resx</DependentUpon>
+    </Compile>
     <Compile Include="DataContracts\AutoLogOut.cs" />
     <Compile Include="DataContracts\SnapinConfigFile.cs" />
     <Compile Include="DisplayManager\Display.cs" />
@@ -224,6 +229,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SnapinStrings.ro.resx</DependentUpon>
+    </Compile>
+    <Compile Include="SnapinClient\SnapinStrings.pl.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SnapinStrings.pl.resx</DependentUpon>
     </Compile>
     <Compile Include="SnapinClient\SnapinStrings.hu.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -322,6 +332,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ALOStrings.ro.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="AutoLogOut\ALOStrings.pl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>ALOStrings.pl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.hu.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SnapinStrings.hu.Designer.cs</LastGenOutput>
@@ -361,6 +375,10 @@
     <EmbeddedResource Include="SnapinClient\SnapinStrings.ro.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SnapinStrings.ro.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SnapinClient\SnapinStrings.pl.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SnapinStrings.pl.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="SnapinClient\SnapinStrings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
