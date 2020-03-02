@@ -151,6 +151,12 @@
               <File Id="Modulescs" Name="Modules.resources.dll" Source="..\bin\cs\Modules.resources.dll" />
             </Component>
           </Directory>
+          <Directory Id="roDirectory" Name="ro">
+            <Component Id="RomanianComponent" Guid="36a063e4-a534-4a33-8d9a-49103c7b46b3" DiskId="1">
+              <File Id="ShutdownGUIro" Name="FOGShutdownGUI.resources.dll" Source="..\bin\ro\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesro" Name="Modules.resources.dll" Source="..\bin\ro\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
