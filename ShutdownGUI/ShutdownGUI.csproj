@@ -285,7 +285,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
+      <LastGenOutput>Strings.Designer.it</LastGenOutput>
+    </EmbeddedResource>
+    <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.Design</EmbeddedResource>
     </EmbeddedResource>
     <EmbeddedResource Include="themes.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
