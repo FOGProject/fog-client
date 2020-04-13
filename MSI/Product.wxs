@@ -114,6 +114,7 @@
       <ComponentRef Id="CzechComponent"/>
       <ComponentRef Id="RomanianComponent"/>
       <ComponentRef Id="PolishComponent"/>
+     <ComponentRef Id="ItalianComponent"/>
       <ComponentRef Id="FOGUserServiceShortcutComponenet" />
     </Feature>
   </Product>
