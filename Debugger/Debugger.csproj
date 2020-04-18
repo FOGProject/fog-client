@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>FOG</RootNamespace>
     <AssemblyName>Debugger</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <TargetFrameworkProfile />
     <NoWin32Manifest>False</NoWin32Manifest>

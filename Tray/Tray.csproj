@@ -7,7 +7,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>FOG</RootNamespace>
     <AssemblyName>FOGTray</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <AppDesignerFolder>Properties</AppDesignerFolder>
