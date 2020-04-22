@@ -33,18 +33,22 @@ namespace FOG.Modules.PowerManagement
     /// </summary>
     public class PowerManagement : AbstractModule<DataContracts.PowerManagement>
     {
-        private readonly ISchedulerFactory _schedulerFactory;
-        private readonly IScheduler _scheduler;
+        private ISchedulerFactory _schedulerFactory;
+        private IScheduler _scheduler;
 
-        private readonly Dictionary<string, TriggerKey> _triggers; 
+        private Dictionary<string, TriggerKey> _triggers;
 
         public PowerManagement()
         {
             Name = "PowerManagement";
+            InitPowerManagement();
+        }
 
+        private async void InitPowerManagement()
+        {
             _schedulerFactory = new StdSchedulerFactory();
-            _scheduler = _schedulerFactory.GetScheduler();
-            _scheduler.Start();
+            _scheduler = await _schedulerFactory.GetScheduler();
+            await _scheduler.Start();
 
             _triggers = new Dictionary<string, TriggerKey>(StringComparer.OrdinalIgnoreCase);
         }
@@ -181,17 +185,17 @@ namespace FOG.Modules.PowerManagement
 
     internal class ShutdownJob : IJob
     {
-        void IJob.Execute(IJobExecutionContext context)
+        async System.Threading.Tasks.Task IJob.Execute(IJobExecutionContext context)
         {
-            Power.Shutdown("FOG PowerManagement");
+            await Power.Shutdown("FOG PowerManagement");
         }
     }
 
     internal class RestartJob : IJob
     {
-        void IJob.Execute(IJobExecutionContext context)
+        async System.Threading.Tasks.Task IJob.Execute(IJobExecutionContext context)
         {
-            Power.Restart("FOG PowerManagement");
+            await Power.Restart("FOG PowerManagement");
         }
     }
 
