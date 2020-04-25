@@ -97,7 +97,7 @@ Copy-Item "$PSScriptRoot\themes.xml" "$PSScriptRoot\bin\themes.xml"
 ##################################################
 if ($sign) {
 	$currDate = Get-Date
-	$signDate = $currDate.AddDays(-550)
+	[datetime]$signDate = "07/15/2018 09:38:10 AM"
 	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 		Start-Process powershell -Verb RunAs -Wait "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Date -Date '$signDate'`"";
 	}
@@ -137,7 +137,7 @@ Invoke-Expression ($msbuild + $msiConfig) | out-null
 $InstallerMSI = "$PSScriptRoot\UniversalInstaller\Scripts\FOGService.msi"
 if ($sign) {
 	$currDate = Get-Date
-	$signDate = $currDate.AddDays(-550)
+	[datetime]$signDate = "07/15/2018 09:38:10 AM"
 	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 		Start-Process powershell -Verb RunAs -Wait "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Date -Date '$signDate'`"";
 	}
@@ -160,7 +160,7 @@ Invoke-Expression ($ilMerge + $smartInstallerMerge )
 
 if ($sign) {
 	$currDate = Get-Date
-	$signDate = $currDate.AddDays(-550)
+	[datetime]$signDate = "07/15/2018 09:38:10 AM"
 	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 		Start-Process powershell -Verb RunAs -Wait "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Date -Date '$signDate'`"";
 	}
@@ -181,7 +181,7 @@ Invoke-Expression ($ilMerge + $debuggerMerge)
 
 if ($sign) {
 	$currDate = Get-Date
-	$signDate = $currDate.AddDays(-550)
+	[datetime]$signDate = "07/15/2018 09:38:10 AM"
 	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 		Start-Process powershell -Verb RunAs -Wait "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Date -Date '$signDate'`"";
 	}
@@ -202,7 +202,7 @@ Invoke-Expression ($ilMerge + $printerMerge)
 
 if ($sign) {
 	$currDate = Get-Date
-	$signDate = $currDate.AddDays(-550)
+	[datetime]$signDate = "07/15/2018 09:38:10 AM"
 	if (!([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
 		Start-Process powershell -Verb RunAs -Wait "-NoProfile -ExecutionPolicy Bypass -Command `"Set-Date -Date '$signDate'`"";
 	}
