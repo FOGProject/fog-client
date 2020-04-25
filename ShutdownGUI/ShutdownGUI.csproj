@@ -168,6 +168,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.pl.resx</DependentUpon>
     </Compile>
+    <Compile Include="Strings.it.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.it.resx</DependentUpon>
+    </Compile>
     <Compile Include="Strings.pt.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -250,6 +255,10 @@
     <EmbeddedResource Include="Strings.pl.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Strings.pl.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.it.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Strings.it.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Strings.pt.resx">
       <Generator>ResXFileCodeGenerator</Generator>

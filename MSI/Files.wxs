@@ -163,6 +163,12 @@
               <File Id="Modulespl" Name="Modules.resources.dll" Source="..\bin\pl\Modules.resources.dll" />
             </Component>
           </Directory>
+          <Directory Id="itDirectory" Name="it">
+            <Component Id="ItalianComponent" Guid="4059eb9b-cd44-4059-a7ff-d6c9376b7d4e" DiskId="1">
+              <File Id="ShutdownGUIit" Name="FOGShutdownGUI.resources.dll" Source="..\bin\it\FOGShutdownGUI.resources.dll" />
+              <File Id="Modulesit" Name="Modules.resources.dll" Source="..\bin\it\Modules.resources.dll" />
+            </Component>
+          </Directory>
         </Directory>
       </Directory>
       <Directory Id="StartupFolder" Name="Startup">
