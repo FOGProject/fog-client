@@ -224,4 +224,4 @@ if ($publish) {
 	Invoke-Expression ($plink + $plinkConfig)
 	Write-Host "Sending build to server"
 	Invoke-Expression ($pscp + $pscpConfig)
- }
+}
