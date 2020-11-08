@@ -124,6 +124,9 @@ namespace FOG
 
         public bool Uninstall()
         {
+            var systemd = isSystemd();
+            var initd = isInitd();
+
             if (Directory.Exists(GetLocation()))
             {
                 if (Settings.Location.Contains(GetLocation()))
@@ -140,9 +143,13 @@ namespace FOG
                 }
             }
 
-            ProcessHandler.Run("systemctl", "disable FOGService");
-            ProcessHandler.Run("sysv-rc-conf", "FOGService off");
-            ProcessHandler.Run("chkconfig", "FOGService off");
+            if (systemd)
+                ProcessHandler.Run("systemctl", "disable FOGService");
+            else if (initd)
+            {
+                ProcessHandler.Run("sysv-rc-conf", "FOGService off");
+                ProcessHandler.Run("chkconfig", "FOGService off");
+            }
 
             if (File.Exists("/etc/init.d/FOGService"))
                 File.Delete("/etc/init.d/FOGService");
