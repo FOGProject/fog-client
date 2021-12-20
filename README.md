@@ -38,10 +38,10 @@ To checkout and build the entire client (including the Installer) Windows is req
   * Default install settings are fine.
 * [WiX Toolset](http://wixtoolset.org/)
   * Download installer wix???.exe from github repo linked on that website.
-* [Powershell / WMF 4.0+](https://www.microsoft.com/en-us/download/details.aspx?id=40855) **(Windows 7 ships with 3.0)**
+* **(Windows 7 only/Windows 10 included already)** [Powershell / WMF 4.0+](https://www.microsoft.com/en-us/download/details.aspx?id=40855)
   * See Install Instructions on that page to find the correct package for your system
 * [.NET v4.6](https://www.microsoft.com/en-us/download/details.aspx?id=48130)
-* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159)
+* [MSBuild Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159) or [MS Visual Studio](https://visualstudio.microsoft.com/de/downloads/)
   * Included with Visual Studios 2015 if you have that already
   * Add to PATH - for instructions see below
 * [Windows SDK 7, .NET 4](https://www.microsoft.com/en-us/download/details.aspx?id=8279)
