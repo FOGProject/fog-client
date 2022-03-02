@@ -388,7 +388,7 @@ namespace FOG
 
             Log.Header("Finished");
             Log.NewLine();
-            Log.WriteLine($"See {LogPath} for more information.", _infoColor);
+            Log.WriteLine($"See {Log.FilePath} for more information.", _infoColor);
             Log.NewLine();
         }
 
@@ -452,6 +452,7 @@ namespace FOG
         private static bool DoAction(string action, Func<bool> method )
         {
             Log.Action(action);
+            Log.Output = Log.Mode.File;
             var success = false;
 
             try
@@ -464,6 +465,7 @@ namespace FOG
                 Log.Error(LogName, ex);
             }
 
+            Log.Output = Log.Mode.Console;
             Log.ActionResult(success);
 
             return success;
@@ -473,9 +475,11 @@ namespace FOG
         {
             Log.Action("Starting FOG Service");
 
+            Log.Output = Log.Mode.File;
             var controlPath = Path.Combine(Helper.Instance.GetLocation(), "control.sh");
 
             var returnCode = ProcessHandler.Run("/bin/bash", controlPath + " start");
+            Log.Output = Log.Mode.Console;
             Log.ActionResult(returnCode == 0);
             Log.NewLine();
         }
