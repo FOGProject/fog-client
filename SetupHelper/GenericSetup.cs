@@ -55,11 +55,6 @@ namespace FOG
             try
             {
                 var keyPath = Path.Combine(location, "ca.cert.der");
-
-                var cert = RSA.ServerCertificate();
-                if (cert != null) UnpinServerCert();
-
-
                 var downloaded = Communication.DownloadFile("/management/other/ca.cert.der", keyPath);
                 if (!downloaded)
                 {
@@ -67,6 +62,14 @@ namespace FOG
                     return false;
                 }
 
+                if (Settings.OS != Settings.OSType.Windows)
+                {
+                    Log.Entry(LogName, "Successfully pinned server CA cert stored in " + keyPath);
+                    return true;
+                }
+
+                var cert = RSA.ServerCertificate();
+                if (cert != null) UnpinServerCert();
                 cert = new X509Certificate2(keyPath);
 
                 var status = RSA.InjectCA(cert);
@@ -114,6 +117,9 @@ namespace FOG
 
         public static bool UnpinServerCert()
         {
+            if (Settings.OS != Settings.OSType.Windows)
+                return true;
+
             var cert = RSA.ServerCertificate();
             if (cert == null) return false;
 
@@ -136,6 +142,11 @@ namespace FOG
 
         public static bool InstallFOGCert(string location)
         {
+            // No need to install the FOG Project CA cert on non Windows systems
+            // as this is only needed for auto-updating the fog-client on Windows
+            if (Settings.OS != Settings.OSType.Windows)
+                return true;
+
             try
             {
                 var cert = new X509Certificate2(location);
@@ -175,6 +186,11 @@ namespace FOG
 
         public static void UninstallFOGCert()
         {
+            // No need to uninstall the FOG Project CA cert on non Windows systems
+            // as this only exists on Windows, see install function above
+            if (Settings.OS != Settings.OSType.Windows)
+                return;
+
             var cert = new X509Certificate2();
             try
             {
