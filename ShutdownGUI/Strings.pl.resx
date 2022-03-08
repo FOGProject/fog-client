@@ -118,13 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CANCEL" xml:space="preserve">
-    <value>Zrušit</value>
+    <value>Anuluj</value>
   </data>
   <data name="DEFAULT_MESSAGE" xml:space="preserve">
-    <value>{0} je vyžadována údržba tohoto počítače. Uložte prosím Vaši práci a ukončete všechny programy.</value>
+    <value>{0} przeprowadza prace konserwacyjne na tym komputerze. Proszę zapisać wszystkie prace i zamknąć otwarte programy.</value>
   </data>
   <data name="HIDE" xml:space="preserve">
-    <value>Ascunde</value>
+    <value>Ukryj</value>
   </data>
   <data name="HOUR" xml:space="preserve">
     <value>godzina</value>
