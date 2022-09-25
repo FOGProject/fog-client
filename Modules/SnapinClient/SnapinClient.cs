@@ -153,7 +153,7 @@ namespace FOG.Modules.SnapinClient
                     Directory.Delete(extractionPath, true);
                 Directory.CreateDirectory(extractionPath);
                 var fz = new FastZip();
-                ZipConstants.DefaultCodePage = 850;
+                ZipStrings.CodePage = 850;
                 fz.CreateEmptyDirectories = true;
                 fz.ExtractZip(localPath, extractionPath, null);
 
