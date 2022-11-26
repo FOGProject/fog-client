@@ -34,7 +34,7 @@ namespace FOG.Modules.PrinterManager
         private void PrintUI(string cmdLine, bool verbose = false)
         {
             if (!verbose)
-                cmdLine = cmdLine + " /q";
+                cmdLine = "/q " + cmdLine;
 
             try
             {
