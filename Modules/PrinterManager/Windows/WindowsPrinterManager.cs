@@ -20,6 +20,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.ServiceProcess;
@@ -131,8 +132,33 @@ namespace FOG.Modules.PrinterManager
 
             if (string.IsNullOrEmpty(printer.ConfigFile)) return;
 
-            Log.Entry(LogName, "Configuring " + printer.Name);
-            PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
+            if (File.Exists(printer.ConfigFile))
+            {
+                Log.Entry(LogName, "Configuring " + printer.Name);
+                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
+                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f u p", verbose);
+            }
+            else {
+                // We assume the file may have been passed with parameters, eg 'C:\ConfigFile.dat m f u p', in this case, try to see if a valid file can be found.
+                try
+                {
+                    int endOfPath = printer.ConfigFile.ToLower().LastIndexOf(".dat") + 4;
+                    string varibles = printer.ConfigFile.Substring(endOfPath, printer.ConfigFile.Length - endOfPath).Trim();
+                    string filePath = printer.ConfigFile.Replace(varibles, "");
+
+                    if (File.Exists(filePath))
+                    {
+                        Log.Entry(LogName, "Configuring " + printer.Name);
+                        PrintUI($"/Sr /n \"{printer.Name}\" /a \"{filePath}\" {varibles}", verbose);
+                    }
+                    else
+                        throw new FileNotFoundException("Config file not found after trying to parse");
+                }
+                catch
+                {
+                    Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {printer.ConfigFile}");
+                }
+            }
         }
 
         public override void ApplyChanges()
