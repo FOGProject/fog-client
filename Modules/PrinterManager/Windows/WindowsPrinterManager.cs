@@ -154,9 +154,14 @@ namespace FOG.Modules.PrinterManager
                     else
                         throw new FileNotFoundException("Config file not found after trying to parse");
                 }
-                catch
+                catch (FileNotFoundException)
                 {
                     Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {printer.ConfigFile}");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(LogName, $"Failed to configure {printer.Name}!");
+                    Log.Error(LogName, ex);
                 }
             }
         }
