@@ -138,25 +138,32 @@ namespace FOG.Modules.PrinterManager
                 PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
                 PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f u p", verbose);
             }
-            else {
+            else
+            {
                 // We assume the file may have been passed with parameters, eg 'C:\ConfigFile.dat m f u p', in this case, try to see if a valid file can be found.
+                // if a .dat file is not found, an error is logged.
                 try
                 {
-                    int endOfPath = printer.ConfigFile.ToLower().LastIndexOf(".dat") + 4;
-                    string varibles = printer.ConfigFile.Substring(endOfPath, printer.ConfigFile.Length - endOfPath).Trim();
-                    string filePath = printer.ConfigFile.Replace(varibles, "");
-
-                    if (File.Exists(filePath))
+                    int endOfPath = printer.ConfigFile.ToLower().LastIndexOf(".dat");
+                    if (endOfPath > 1)
                     {
-                        Log.Entry(LogName, "Configuring " + printer.Name);
-                        PrintUI($"/Sr /n \"{printer.Name}\" /a \"{filePath}\" {varibles}", verbose);
+                        endOfPath += 4;
+                        string filePath = printer.ConfigFile.Substring(0, endOfPath).Trim();
+                        string variables = printer.ConfigFile.Replace(filePath, "").Trim();
+
+                        if (File.Exists(filePath))
+                        {
+                            Log.Entry(LogName, "Configuring " + printer.Name);
+                            if (variables.Length > 1) 
+                                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{filePath}\" {variables}", verbose);
+                        }
+                        else throw new FileNotFoundException(filePath);
                     }
-                    else
-                        throw new FileNotFoundException("Config file not found after trying to parse");
+                    else Console.WriteLine($"Failed to configure {printer.Name}! Couldn't find a .dat file in path: {printer.ConfigFile}");
                 }
-                catch (FileNotFoundException)
+                catch (FileNotFoundException filePath)
                 {
-                    Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {printer.ConfigFile}");
+                    Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {filePath}");
                 }
                 catch (Exception ex)
                 {
