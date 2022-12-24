@@ -132,45 +132,45 @@ namespace FOG.Modules.PrinterManager
 
             if (string.IsNullOrEmpty(printer.ConfigFile)) return;
 
-            if (File.Exists(printer.ConfigFile))
+            int endOfPath = printer.ConfigFile.ToLower().IndexOf(".dat");
+            if (endOfPath > 1)
             {
-                Log.Entry(LogName, "Configuring " + printer.Name);
-                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
-                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f u p", verbose);
-            }
-            else
-            {
-                // We assume the file may have been passed with parameters, eg 'C:\ConfigFile.dat m f u p', in this case, try to see if a valid file can be found.
-                // if a .dat file is not found, an error is logged.
-                try
+                if (File.Exists(printer.ConfigFile))
                 {
-                    int endOfPath = printer.ConfigFile.ToLower().LastIndexOf(".dat");
-                    if (endOfPath > 1)
+                    Log.Entry(LogName, "Configuring " + printer.Name);
+                    PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f g p", verbose);
+                    PrintUI($"/Sr /n \"{printer.Name}\" /a \"{printer.ConfigFile}\" m f u p", verbose);
+                }
+                else
+                {
+                    // We assume the file may have been passed with parameters, eg 'C:\ConfigFile.dat m f u p', in this case, try to see if a valid file can be found
+                    try
                     {
                         endOfPath += 4;
                         string filePath = printer.ConfigFile.Substring(0, endOfPath).Trim();
-                        string variables = printer.ConfigFile.Replace(filePath, "").Trim();
+                        string variables = printer.ConfigFile.Replace(filePath, "").Replace("&","``").Replace("|","``").Trim();
 
                         if (File.Exists(filePath))
                         {
                             Log.Entry(LogName, "Configuring " + printer.Name);
-                            if (variables.Length > 1) 
-                                PrintUI($"/Sr /n \"{printer.Name}\" /a \"{filePath}\" {variables}", verbose);
+                            if (variables.Length > 1)
+                            {
+                                if (!variables.Contains("``"))
+                                    PrintUI($"/Sr /n \"{printer.Name}\" /a \"{filePath}\" {variables}", verbose);
+                                else
+                                    Log.Error(LogName, $"Failed to configure {printer.Name}! Invalid characters in path: {printer.ConfigFile}");
+                            }
                         }
-                        else throw new FileNotFoundException(filePath);
+                        else Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {filePath}");
                     }
-                    else Console.WriteLine($"Failed to configure {printer.Name}! Couldn't find a .dat file in path: {printer.ConfigFile}");
-                }
-                catch (FileNotFoundException filePath)
-                {
-                    Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find {filePath}");
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(LogName, $"Failed to configure {printer.Name}!");
-                    Log.Error(LogName, ex);
+                    catch (Exception ex)
+                    {
+                        Log.Error(LogName, $"Failed to configure {printer.Name}!");
+                        Log.Error(LogName, ex);
+                    }
                 }
             }
+            else Log.Error(LogName, $"Failed to configure {printer.Name}! Couldn't find a .dat file in path: {printer.ConfigFile}");
         }
 
         public override void ApplyChanges()
