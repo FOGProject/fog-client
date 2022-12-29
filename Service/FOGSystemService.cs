@@ -202,14 +202,18 @@ namespace FOG
         {
             CleanTmpFolder();
             JITCompile();
-            Authenticate();
+            if (Authenticate())
+            {
+                base.ModuleLooper();
 
-            base.ModuleLooper();
+                if (Power.Updating)
+                    UpdateHandler.BeginUpdate();
 
-            if (Power.Updating)
-                UpdateHandler.BeginUpdate();
+                Process.GetCurrentProcess().Kill();
+            }
+            else
+                Log.Error("Client-Info", $"Failed to authenticate, will not run Module Looper.");
 
-            Process.GetCurrentProcess().Kill();
         }
 
         private void JITCompile()
@@ -218,7 +222,7 @@ namespace FOG
             ProcessHandler.RunClientEXE("FOGShutdownGUI.exe", "jit");
         }
 
-        private void Authenticate()
+        private bool Authenticate()
         {
             var maxTries = 5;
             for(int i = 0; i < maxTries; i ++)
@@ -228,9 +232,10 @@ namespace FOG
                 Log.Entry("Client-Info", $"Version: {Settings.Get("Version")}");
                 Log.Entry("Client-Info", $"OS:      {Settings.OS}");
 
-                if (Authentication.HandShake()) break;
+                if (Authentication.HandShake()) return true;
             }
             Log.NewLine();
+            return false;
         }
 
         protected override int? GetSleepTime()
