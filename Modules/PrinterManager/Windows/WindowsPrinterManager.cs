@@ -39,20 +39,25 @@ namespace FOG.Modules.PrinterManager
 
             try
             {
-                using (var proc = Process.Start("rundll32.exe", $" printui.dll,PrintUIEntry {cmdLine}"))
-                {
-                    proc.WaitForExit(30*1000);
-
-                    if (proc.HasExited)
-                    {
-                        Log.Entry(LogName, "PrintUI return code = " + proc.ExitCode);
-                    }
-                    else
-                    {
-                        Log.Entry(LogName, "PrintUI has not finished in a timely fashion, abandoning process");
-
-                    }
+              var proc = new Process
+              {
+                StartInfo = {
+                  FileName = @"c:\windows\system32\rundll32.exe",
+                  Arguments = "printui.dll,PrintUIEntry " + cmdLine,
+                  UseShellExecute = true
                 }
+              };
+              proc.Start();
+              proc.WaitForExit(30*1000);
+
+              if (proc.HasExited)
+              {
+                  Log.Entry(LogName, "PrintUI return code = " + proc.ExitCode);
+              }
+              else
+              {
+                  Log.Entry(LogName, "PrintUI has not finished in a timely fashion, abandoning process");
+              }
             }
             catch (Exception ex)
             {
