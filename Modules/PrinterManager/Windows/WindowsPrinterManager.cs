@@ -43,8 +43,7 @@ namespace FOG.Modules.PrinterManager
               {
                 StartInfo = {
                   FileName = @"c:\windows\system32\rundll32.exe",
-                  Arguments = "printui.dll,PrintUIEntry " + cmdLine,
-                  UseShellExecute = true
+                  Arguments = "printui.dll,PrintUIEntry " + cmdLine
                 }
               };
               proc.Start();
