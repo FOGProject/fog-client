@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("PrinterManagerHelper")]
-[assembly: AssemblyCopyright("Copyright © 2014-2022")]
+[assembly: AssemblyCopyright("Copyright © 2014-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FOG")]
 [assembly: AssemblyProduct("FOG:Modules")]
-[assembly: AssemblyCopyright("Copyright © 2014-2022")]
+[assembly: AssemblyCopyright("Copyright © 2014-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

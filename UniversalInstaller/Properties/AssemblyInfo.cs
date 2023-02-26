@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("FOG")]
 [assembly: AssemblyProduct("SmartInstaller")]
-[assembly: AssemblyCopyright("Copyright FOG © 2014-2022")]
+[assembly: AssemblyCopyright("Copyright FOG © 2014-2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
