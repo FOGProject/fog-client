@@ -50,15 +50,22 @@ short-circuits. What Let's Encrypt cannot be is `srvpublic.crt` — and it shoul
 not be, because that is a zone FOG generates for itself and has no business
 outsourcing.
 
-`fog-docs`' `external-ca-lets-encrypt.md` says otherwise: that you cannot drop an
-LE certificate onto the vhost and expect clients to keep working, and that the
-recommended answer is to run an internal ACME CA such as step-ca. **That describes
-the pre-1.6 layout**, where `.srvprivate.key` was simultaneously the web server's
-TLS key *and* the key decrypting every fog-client handshake — the exact coupling
-the PKI zone split removed, and which `pki-zones.md` records as the reason for the
-split. The server-side fix already shipped; the documentation has not caught up.
-Correcting that page is follow-up work, and the residual client-side problem is
-narrower than it claims.
+The documentation says otherwise, and is **internally inconsistent** about it.
+`fogproject`'s `docs/EXTERNAL_CA_AND_LETSENCRYPT.md` (and its `fog-docs` twin,
+`docs/kb/integrations/external-ca-lets-encrypt.md`) opens its *How FOG uses
+certificates* section with a callout that already states the correct position —
+the zones are independent now, *"so the web certificate can be replaced without
+disturbing fog-client"*. The body beneath that callout, and the TL;DR at the top
+of the file, still say the opposite: that you cannot drop an LE certificate on
+the vhost, that *"fog-client is the actual constraint"*, and that an internal
+ACME CA such as step-ca is the best fit.
+
+The callout is right; the surrounding text describes the **pre-zone-split
+layout**, where `.srvprivate.key` was simultaneously the web server's TLS key
+*and* the key decrypting every fog-client handshake. That is the exact coupling
+`PKI_ZONES.md` records the split as having removed. The server-side fix shipped;
+the prose around it did not follow. Correcting those two pages is follow-up work,
+and the residual client-side problem is narrower than they claim.
 
 None of which makes the current design *right*. It makes the diagnosis different.
 
