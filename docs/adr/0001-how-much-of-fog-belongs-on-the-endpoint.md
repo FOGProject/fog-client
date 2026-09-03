@@ -7,8 +7,10 @@
 It exists to make one decision decidable by laying out both futures with the
 same rigour, because the choice governs everything downstream:
 [ADR-0002](0002-runtime-if-a-compiled-agent-survives.md) is conditional on it,
-and only [ADR-0003](0003-client-identity-in-the-application-layer.md) is
-independent of it. The FOG maintainers settle this one in review.
+while [ADR-0003](0003-client-identity-in-the-application-layer.md) and
+[ADR-0004](0004-the-client-api-is-described-in-fogs-own-openapi-document.md) are
+independent of it and can be settled first. The FOG maintainers settle this one
+in review.
 
 What this ADR *does* decide is narrower and, I think, uncontroversial: that
 agentless **push** is rejected in both futures, and that a "thin agent" middle

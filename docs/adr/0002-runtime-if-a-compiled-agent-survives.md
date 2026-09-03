@@ -284,7 +284,10 @@ unit, systemd user unit for the agent, `.deb`/`.rpm` packaging, and
 Windows user agent to connect in.
 
 **Phase 4 — protocol**, against `working-1.6`. See
-[ADR-0003](0003-client-identity-in-the-application-layer.md).
+[ADR-0003](0003-client-identity-in-the-application-layer.md) for the credential
+and [ADR-0004](0004-the-client-api-is-described-in-fogs-own-openapi-document.md)
+for describing the operations — under 0004 the HTTP layer this phase would
+otherwise hand-write is generated instead, whichever runtime wins.
 
 The strangler property that makes this safe: **if everything stops after Phase 1,
 FOG is still better off** — a supported runtime, live CI, 64-bit, six fewer
