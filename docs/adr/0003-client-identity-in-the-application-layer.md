@@ -443,7 +443,6 @@ one-line fix that closes a live issue today.
 
 ## References
 
-- `fogproject` [ADR-0043](https://github.com/FOGProject/fogproject/blob/working-1.6/docs/adr/0043-a-host-proves-itself-with-a-key-not-a-mac.md) — the server half of this decision
 - `fogproject` ADR-0039 — firmware identity at boot; read it before this ADR's Wall 1
 - `fogproject` ADR-0027 — "API tokens are a separate, hashed credential", the same argument one layer up
 - `fogproject` ADR-0036 / 0037 / 0040 — the PKI direction that rejecting per-client X.509 keeps faith with
