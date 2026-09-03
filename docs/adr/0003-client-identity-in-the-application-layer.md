@@ -9,8 +9,12 @@ settled. Both futures need a client identity, and the answer is the same either
 way. **That makes this the safest of the three to decide first**, and it should
 not wait on the endpoint-shape debate.
 
-It targets `working-1.6`: the PHP server, the `hosts` schema and `installfog.sh`
-may all change, and a new client may require a new server.
+It targets **`working-1.6` only**. The `dev-branch`/1.5 line is explicitly out of
+scope: its layout differs (`lib/fog/*.class.php` against 1.6's
+`packages/web/src/`), and nothing here is intended to be backported. Every server
+path cited below is a `working-1.6` path, verified against that branch. On
+`working-1.6` the PHP server, the `hosts` schema and `installfog.sh` may all
+change, and a new client may require a new server.
 
 A live vulnerability was found while writing this. It is **deliberately not
 described here**, because this document is public and the fix is small enough
@@ -73,20 +77,54 @@ cannot bootstrap itself", and it deserves the same prominence.
 
 ### Wall 1 — a MAC address is not an identity
 
-`FOGBase::getHostItem()` resolves a host from the `mac=` query parameter, which
-the client self-reports from `Configuration.MACAddresses()`. The server's own
-source comment in `authorize()` states the problem: *"authorize() is reachable
-before login and resolves the host from a request 'mac' alone, which is spoofable
-by design on an imaging LAN."*
+`FOGBase::getHostItem()` (`packages/web/src/Base/FOGBase.php`) resolves a host
+from the `mac=` query parameter, which the client self-reports from
+`Configuration.MACAddresses()`. The server's own source comment in `authorize()`
+(`packages/web/src/Base/FOGPage.php`) states the problem: *"authorize() is
+reachable before login and resolves the host from a request 'mac' alone, which is
+spoofable by design on an imaging LAN."*
 
-The obvious fix was already tried and abandoned. `fogbase.class.php` carries a
-commented-out `sysuuid` resolution path, disabled because MSI boards ship
-duplicate SMBIOS UUIDs. **Record this, or a reviewer will propose it again.** It
-also forecloses the naive version of Wall 3's mitigation.
+**The obvious next step has already been taken on `working-1.6`, and it is not
+enough — which is the useful part.** `fogproject` ADR-0039 ("A booting machine is
+identified by its MAC first and its firmware second") landed
+`packages/web/src/Base/SmbiosIdentity.php`: four SMBIOS fields in a scored order,
+a placeholder table drawn from hardware seen in the wild, and a
+repeated-character rule that handles the all-`F` MSI UUID which sank the 2018
+attempt. `HostManager::resolveHostBySmbios()` wraps it; `IpxeBootMenu` and
+`Registration` use it.
 
-Alongside the MAC there is a bearer token in `token.dat`, rotated each handshake
-with one generation of grace. It is symmetric, lives in one place, and is copied
-verbatim by any disk clone.
+Read ADR-0039 before this section — it is deliberate about its scope. It keeps
+**the MAC as the identity**, ships the firmware check in `log` mode, and states
+plainly that *"FOS and the FOG client need no change."*
+
+So the 1.5-era objection — "duplicate SMBIOS UUIDs make hardware identifiers
+unusable" — **no longer holds on this branch, and this ADR should not repeat it.**
+Two things follow instead, and they point in opposite directions:
+
+- **`authorize()` does not use any of it, by design.** ADR-0039 scoped itself to
+  the boot path. The client path still resolves by MAC alone, and that is a
+  consequence of that scoping rather than an oversight in it.
+- **It would still not be enough**, and this is the wall. `SmbiosIdentity`
+  answers *"which host is this?"* extremely well. It cannot answer *"is this
+  really that host?"*, because every value it reads is a string the caller
+  supplies — readable by anything on the machine and settable by anything
+  claiming to be it. **Identification is not authentication.** A better
+  identifier narrows who can impersonate a host from "anyone who can spoof a MAC"
+  to "anyone who can also read four SMBIOS strings", which is not a meaningful
+  bar against an attacker already on the LAN.
+
+That distinction is what the rest of this ADR turns on: FOG's identity
+*resolution* is now good, and its identity *proof* is a bearer token in
+`token.dat` — symmetric, stored in one place, rotated each handshake with one
+generation of grace, and copied verbatim by any disk clone.
+
+**`SmbiosIdentity` does make the binding defence below cheaper**, and that use
+does not reopen what ADR-0039 settled. 0039 declined to let firmware *decide*
+which host is which. Defence 3 does not ask it to: the signature decides, and the
+fingerprint is a consistency check on a credential that has already proved
+itself, whose only outcome is a refusal and a flag for an administrator. Reuse
+the class rather than writing a second one — it already encodes which firmware
+values are worthless.
 
 ### Wall 2 — the client holds one notion of "the FOG certificate" for two unrelated jobs
 
@@ -168,7 +206,7 @@ core PHP since 7.2, no extension to install — against roughly two hundred line
 
 Revocation is `UPDATE hosts SET hostSignKey='' WHERE id=?`. That is *precisely*
 what the existing **"Reset Encryption Data"** button already does to
-`pub_key`/`sec_tok` via `FOGPage::clearAES()`, so the UI hook, its group-level
+`pub_key`/`sec_tok` via `FOGPage::clearAES()` (`packages/web/src/Base/FOGPage.php`), so the UI hook, its group-level
 variant for bulk re-enrollment after a lab rebuild, and the administrator's mental
 model all already exist.
 
@@ -304,12 +342,12 @@ and deletes the blob. The server validates the nonce as single-use, binds the ke
 to that host row, and burns it.
 
 FOG already has this pattern: `hostInfoKey` plus `hostInfoLock` is a single-use,
-lock-protected, server-issued, task-scoped token that `hostinfo.php` rotates on
+lock-protected, server-issued, task-scoped token that `service/hostinfo.php` rotates on
 consumption.
 
 **Be honest about what this leans on, in the same breath.** The blob is only as
 trustworthy as the FOS-to-server channel, and that channel is currently
-unauthenticated: `status/hostgetkey.php` is MAC-resolved with no authentication —
+unauthenticated: `packages/web/status/hostgetkey.php` is MAC-resolved with no authentication —
 the maintainers' own in-source comment labels it "Aisle 016" and notes that its
 `FOG_HOSTKEY_ALLOWED_SOURCES` mitigation **defaults to empty** — and FOS fetches
 with `curl -Lks` (`-k`, no verification) in `bin/fog` and four places in
@@ -326,12 +364,21 @@ impersonation. But name the dependency plainly: **fixing the FOS channel
 (`--cacert` instead of `-k`) is a prerequisite for this to be worth much**, and
 `FOG_HOSTKEY_ALLOWED_SOURCES` should stop defaulting to empty.
 
-**3. Bind and detect.** Record a fingerprint at enrollment — MAC set, SMBIOS UUID,
-machine SID. If a signature verifies but the presenting machine's fingerprint does
-not match the binding, refuse, mark the host, and surface it in the UI as a
-possible cloned credential. **This is detection, not prevention**, and explicitly
-*not* identity — Wall 1 is why. It catches the sloppy-capture case loudly instead
-of silently, which is the failure mode administrators will actually hit.
+**3. Bind and detect.** Record a fingerprint at enrollment and check it on each
+use. If a signature verifies but the presenting machine's fingerprint does not
+match the binding, refuse, mark the host, and surface it in the UI as a possible
+cloned credential.
+
+**Do not write a new fingerprint for this — `SmbiosIdentity` already is one.**
+Per Wall 1, `working-1.6` already computes a scored, placeholder-aware identity
+from four SMBIOS fields, with a repeated-character rule for the firmware values
+that ship identical across a whole model line. `hostSignBinding` should store what
+`SmbiosIdentity::usable()` returns at enrollment, and the check is a comparison
+against the same function later.
+
+**This is detection, not prevention**, and explicitly *not* identity — Wall 1 is
+why. It catches the sloppy-capture case loudly instead of silently, which is the
+failure mode administrators will actually hit.
 
 ## TPM: a pluggable provider, not a baseline
 
@@ -389,6 +436,10 @@ one-line fix that closes a live issue today.
 
 ## References
 
+- `fogproject` [ADR-0043](https://github.com/FOGProject/fogproject/blob/working-1.6/docs/adr/0043-a-host-proves-itself-with-a-key-not-a-mac.md) — the server half of this decision
+- `fogproject` ADR-0039 — firmware identity at boot; read it before this ADR's Wall 1
+- `fogproject` ADR-0027 — "API tokens are a separate, hashed credential", the same argument one layer up
+- `fogproject` ADR-0036 / 0037 / 0040 — the PKI direction that rejecting per-client X.509 keeps faith with
 - The private security advisory covering the validation bypass and the immediate fixes (filed per `fogproject`'s `SECURITY.md`)
 - [GHSA-94p8-jg9j-99v4](https://github.com/FOGProject/fogproject/security/advisories/GHSA-94p8-jg9j-99v4) — the advisory behind the PKI zone split
 - `FOGProject/fos` `docs/adr/0009` — "trust cannot bootstrap itself", the same shape of constraint
